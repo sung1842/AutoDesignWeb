@@ -228,7 +228,7 @@ F(type, purpose, variant) = { L2 조합 | 각 파라미터 값 ∈ type.allowed_
                               ∧ depth.shadow_level ≠ "3" ∧ (media.treatment = duotone ⇒ signature = SIG-10) }
 J(L2) = Σ_k w_k · (predictL1(L2)_k − t_k)²  +  0.02 · (#파라미터 중 앵커 프리셋 값과 다른 수)
         w_k = 1 / (σ_k² + 0.05²) 정규화(Σ w_k = 1)
-        predictL1 = 03장 L2→L1 가중치표(05장 toL1과 동일 계수)
+        predictL1 = 03장 L2→L1 가중치표로 계산한 의도값. toL1(05장 5.5.4)은 렌더 측정값이며, 둘의 차이는 05장 5.9 왕복 검증으로 관리한다(S-09)
 
 snapToFeasible(l2_0, t, …):
   l2 = l2_0가 F에 속하면 l2_0, 아니면 앵커 프리셋 L2
@@ -451,7 +451,14 @@ SlotValueRaw =
 - 모든 호출은 Vercel AI SDK `generateObject`(zod 스키마)로 한다. 스키마 검증 실패 시 zod 오류 경로를 붙여 같은 호출을 1회 재요청(`repair_schema`)하고, 그래도 실패하면 해당 후보를 폐기한다.
 - 네트워크 오류·5xx: 지수 백오프(2s) 재시도 1회, 429는 `Retry-After` 준수(최대 10s, 초과 시 실패 처리). 1차 모델이 같은 잡에서 2회 연속 실패하면 `models.yaml`의 `fallback` 모델로 전환한다(QA-11).
 - 레이아웃 호출은 카피 텍스트를 보지 않는다. 덱 키와 각 키의 `kind`/길이 메타만 받는다. 그래서 카피 덱과 레이아웃 6개를 **병렬**로 호출한다(지연 단축).
-- 정적 프리픽스(시스템 + 카탈로그 + few-shot)는 6개 호출에서 바이트 동일하게 구성해 공급자의 프롬프트 캐시를 쓴다(→ §4.17 비용).
+- 정적 프리픽스(시스템 + 카탈로그 + few-shot)는 6개 호출에서 바이트 동일하게 구성해 공급자의 프롬프트 캐시를 쓴다(→ §4.17 비용). few-shot이 0개(B19 temp)면 `[FEWSHOT]` 블록을 빼고 프롬프트 버전은 그대로 둔다(S-09).
+
+**`gen_copy` 실패 규칙(S-12, AI2-04)**: 카피 덱이 없으면 레이아웃 후보 6개가 모두 쓸모없어지므로 다음 순서로 반드시 덱을 확보한다.
+1. 스키마 실패 → `repair_schema` 1회(`CopyDeckPatch` 아님, 전체 재요청).
+2. 여전히 실패하거나 타임아웃이면, 잡 경과 ≤ 60초일 때만 `models.yaml`의 fallback 모델로 1회 호출한다.
+3. 그래도 실패하면 **템플릿 덱** `buildTemplateDeck(brand, purpose)`(`config/copy_templates.json`(B20) + 4.6.2 키 집합)으로 대체하고 레이아웃 후보는 그대로 진행한다. 이 잡은 `generation_jobs.copy_source='template'`, 경고 `COPY_FALLBACK`(06장 6.4.2)를 남기고, 종료 상태는 R-15 계산값과 `partial` 중 낮은 쪽이다(템플릿 덱이면 `succeeded` 금지). 한도 차감은 R-15를 그대로 따른다.
+4. 공급자 안전 거부(content policy refusal)는 우회 재요청하지 않는다. 잡은 `failed` + `BLOCKED_BRAND{reason:'content_policy'}`이고 한도는 환불한다.
+- 기대 결과는 07장 TC-R-16~18, Mock 시나리오는 09장 9.6.2 `copy_*@gen_copy`.
 
 ### 4.7.2 프롬프트 블록 (`packages/llm/prompts/gen_layout@v1.md`, `packages/llm/prompts/gen_copy@v1.md`, `packages/llm/prompts/judge_vision@v1.md`, 버전 관리 대상, R-12)
 
@@ -835,7 +842,7 @@ for v in [v_true, v_fit, v_bal]:
 | n_real ∈ {1, 2} | `partial` | 차감 | 비폴백 + 폴백("기본 구성" 배지)으로 3칸 채움, "다시 만들기" |
 | n_real = 0 ∧ n_fallback ≥ 1 | `fallback` | 환불(차감하지 않음) | 폴백만 노출 + "다시 만들기" |
 | 노출 0 | `failed` | 환불 | 재시도 화면, 잡 오류 코드(`NO_ELIGIBLE`, `GEN_TIMEOUT`, `RENDER_ERROR` 등 06장) |
-| 사용자 취소 | `canceled` | 환불 | — |
+| 사용자 취소 | `canceled` | 취소 시점의 비폴백 노출 수(`n_real`)가 ≥ 1이면 차감(노출된 시안은 계속 볼 수 있음), 0이면 환불. `queued`·`running`은 구분하지 않는다(S-16, 원천 06장 6.2.3) | 노출된 시안은 유지 |
 
 폴백 비율은 `generation_jobs.n_fallback`과 `mockups.is_fallback`으로 집계한다(별도 이벤트 없음, 품질 지표 → 07장).
 
@@ -1068,14 +1075,15 @@ H < 80과 TM은 저장·내보내기 차단 사유가 아니다(사용자 선택
 | **기본 경로 합계** | | | **≈ $0.23** |
 | **상한 경로 합계(강등 전)** | | | ≈ $0.33 → 아래 강등으로 ≤ $0.30 |
 
-예산 가드(`cost_guard`, 매 LLM 호출 전 실행): 잡 누적 비용 + 이번 호출 예상 비용(입력 토큰 실측 + 최대 출력 토큰 × 단가)이
-- > $0.24이면 비전 채점 생략(기록 전용이라 품질 영향 없음),
-- > $0.27이면 수정 루프·카피 패치 생략(누락 변형은 폴백),
-- > $0.30이면 호출하지 않는다(하드 상한).
+예산 가드(`cost_guard`)의 판정식·추정식·예약-정산 동작의 원천은 06장 6.9.4이고 이 절은 참조만 한다(S-13). 요약: 잡 단위 뮤텍스 아래 `spent + reserved + est ≤ generation.costGuard.capUsd`로 판정하고, `est`는 실측 입력 × 1.1 기준 식 하나다. 단계 생략 임계는
+- `spent + reserved ≥ generation.costGuard.skipVisionUsd`(0.24)이면 비전 채점 생략(기록 전용이라 품질 영향 없음),
+- `≥ generation.costGuard.skipRepairUsd`(0.27)이면 수정 루프·카피 패치 생략(누락 변형은 폴백),
+- 판정식을 넘으면 호출하지 않는다(하드 상한 `capUsd` 0.30).
+위 비용표의 단가는 mock 고정 단가(06장 6.9.2 `pricing["mock/*"]`)와 같다. 실제 청구가 추정을 넘어 0.30을 넘으면 잡은 죽지 않고 A11 경고로 기록된다(06장 CHECK ≤ 0.36).
 일·월 지출 상한은 00장 IF-09 플래그 `GEN_DAILY_BUDGET_USD = 10`, `GEN_MONTHLY_BUDGET_USD = 150`(R-22). 초과 시 신규 생성 503 `GEN_BUDGET_EXCEEDED`, 80% 도달 시 운영자 알림. 판정 위치·SQL은 06장 6.10.3. 상한 생략이 발생하면 잡 오류 코드 `COST_CAP`를 종료 상태와 별개로 기록한다(06장). 모든 호출은 `llm_calls`에 토큰·비용·지연·프롬프트 버전 기록.
 
 **AC-04-36** 골든 세트 전체 실행(32케이스 × 3회, R-11)에서 첫 시안 카드 노출 p50 ≤ 45s, 잡 p50 ≤ 60s, p95 ≤ 90s(R-25), 잡당 비용 최대값 ≤ $0.30, 평균 ≤ $0.25(07장 골든 M14·M15). 수치는 `generation_jobs`·`llm_calls` SQL로 산출된다.
-**AC-04-37** 통합 테스트: MockProvider 단가를 10배로 설정하면 비전 채점·수정 루프가 순서대로 생략되고 잡 비용이 $0.30을 넘지 않는다. 일일 예산 초과 시 신규 요청이 503을 받는다.
+**AC-04-37** 통합 테스트(06장 AC-06-56과 같은 픽스처): MockProvider 단가를 10배(`cost_spike`)로 설정하면 비전 채점·수정 루프가 순서대로 생략되고 잡 비용이 $0.30을 넘지 않는다. 일일 예산 초과 시 신규 요청이 503을 받는다.
 
 ---
 
@@ -1204,3 +1212,7 @@ H < 80과 TM은 저장·내보내기 차단 사유가 아니다(사용자 선택
 | LG-03 | 4.10.6 | 정책·임계값 원본 08장 8.3, MVP 범위는 R-20 |
 | LG-06 | 4.18 | 약관 조항은 08장 |
 | decisions_v2 R-01~04, 09, 11~18, 20~22, 25, 27, 28, 30, 33, 34, 36~38 | 4.0~4.19 전반 | 장 간 충돌 해소 반영(코드값·임계값 파일·골든 32·judge 기록 전용·오류 코드·잡 상태·편집 미리보기·테이블명·원본 유사도·SLO·l2 18키·axe 게이트) |
+| S-09(04) | 4.3 predictL1 = 의도값·toL1 = 측정값, 4.7.1 few-shot 0개 처리 | |
+| S-12 | 4.7.1 gen_copy 실패 규칙(repair_schema → fallback ≤60s → 템플릿 덱, 안전 거부 비우회) | 기대 결과는 07 TC-R-16~18 |
+| S-13(04) | 4.17.2 가드는 06 6.9.4 참조, 키 경로 | |
+| S-16(04) | 4.12 취소 한도 규칙 | 원천 06 6.2.3 |
