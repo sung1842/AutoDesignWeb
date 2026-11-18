@@ -84,6 +84,27 @@ flowchart LR
 | R-3 | 브라우저 번들에서 `@supabase/supabase-js`는 `auth.*` 호출만 한다. `.from(`·`.rpc(`·`.storage` 호출 0건 | 빌드 산출물 정적 검사 |
 | R-4 | `@tastefit/renderer`와 `evaluateTokens`는 isomorphic이어야 한다(Node·브라우저 공용, `fs`·`path`·네트워크 import 0). apps/web 클라이언트 컴포넌트는 이 둘만 생성 계열 패키지에서 import할 수 있다(R-17) | 번들 검사 + 브라우저 단위 테스트 |
 
+### 6.1.3 구성요소 × 데이터 항목 흐름표 (S-26, LG2-03)
+
+이 표가 개인정보 흐름의 원천이고 `legal/data-flows.yaml`이 그 코드다. 열은 08장 8.7.2의 처리 항목 P1~P13이다. ● = 처리·저장, ○ = 통과·일시 처리. 국내 리전에서 실행하는 국외 법인 호스팅을 국외 이전으로 볼지는 사람 확인 전까지 보수적으로 표에 넣는다(08장 8.14 Q5).
+
+| 구성요소(processor_id) | P1 | P2 | P3 | P4 | P5 | P6 | P7 | P8 | P9 | P10 | P11 | P12 | P13 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| web / Vercel(`vercel`) | ○ | ○ | ○ | ○ | ○ |  |  | ○ | ○ | ○ | ● |  | ○ |
+| worker / Fly.io(`flyio`) |  | ○ | | ○ | ● | ○ | ○ |  |  |  | ● | |  |
+| Supabase(`supabase`) | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● |  |  | ● |
+| LLM `gen_layout`·`gen_copy`(`llm-primary`, `llm-secondary`) |  |  |  | ○ |  |  |  |  |  |  |  |  |  |
+| LLM `judge_vision`(`llm-judge`) |  |  |  |  | ○ |  |  |  |  |  |  |  |  |
+| LLM `ref_tagger`(`llm-primary`, 관리자 로컬) |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Sentry(`sentry`) |  |  |  |  |  |  |  |  |  |  |  | ● |  |
+| Resend(`email-sender`) |  |  | ○ |  |  |  |  |  |  |  |  |  | ○ |
+| Cloudflare Turnstile(`turnstile`) |  |  |  |  |  |  |  |  |  | ○ | ○ |  |  |
+
+- 최소 기대값(CI `compliance:flows`가 검사): `flyio ⊇ {P2, P4, P5, P6}`, `vercel ⊇ {P1, P2, P3, P4, P8, P9, P11, P13}`, `llm-judge ⊇ {P5}`.
+- `compliance:flows` 검사: ① `legal/processors.yaml`의 각 `processor_id`의 `items` ⊇ 이 표의 해당 행(● ∪ ○) ② `models.yaml`의 역할 4개 각각의 `processor_id`가 processors.yaml에 있음(`llm-judge` 포함) ③ 모든 항목의 `country`가 비어 있지 않음. `processors.yaml.items`는 이 파일에서 파생하고 손으로 따로 쓰지 않는다.
+- `ref_tagger`는 레퍼런스 사이트 화면만 다루며 이용자 개인정보 항목이 없다(05장).
+- 수용 기준 AC-06-58: 위 표와 다른 `data-flows.yaml`(행 1칸 삭제)로 `pnpm compliance:flows` → FAIL. processors.yaml에서 `llm-judge`를 빼면 FAIL.
+
 ## 6.2 처리 흐름
 
 ### 6.2.1 동기/비동기 분류
@@ -757,6 +778,7 @@ create table generation_jobs (
   design_spec      jsonb null,                        -- DesignSpec ×3 변형(→04장)
   copy_deck        jsonb null,                        -- CopyDeck(→04장)
   copy_source      text not null default 'llm' check (copy_source in ('llm','template')),  -- template = gen_copy 실패 시 템플릿 덱(S-12)
+  warnings         text[] not null default '{}',     -- 잡 경고 코드(6.4.2): COPY_FALLBACK 등
   n_real           smallint not null default 0 check (n_real between 0 and 3),
   n_fallback       smallint not null default 0 check (n_fallback between 0 and 3),
   repair_rounds    smallint not null default 0 check (repair_rounds between 0 and 1),
@@ -1167,9 +1189,9 @@ ErrorBody = { error: { code: ErrorCode, message: string /* 개발자용 영문 *
 | `VERSION_GATE_NOT_PASSED` | 409 | 게이트 완료 후 | 게이트 `pending`/`failed` 버전 내보내기·공유 | `{gateStatus}` |
 | `IDEMPOTENCY_KEY_REUSED` | 422 | 아니오 | 같은 키·다른 본문 | — |
 | `IDEMPOTENCY_KEY_REQUIRED` | 400 | 아니오 | 필수 헤더 누락 | — |
-| `BLOCKED_BRAND` | 422 | 아니오 | 고위험 브랜드 또는 피싱 문구(08장 8.9.2) | `{reason:'high_risk'|'phishing_term'}` |
+| `BLOCKED_BRAND` | 422 | 아니오 | 고위험 브랜드·피싱 문구·금지 업종(08장 8.9.2) 또는 공급자 안전 거부(S-12) | `{reason:'high_risk'|'phishing_term'|'prohibited_category'|'content_policy'}`. **reason enum의 원천은 이 표다(S-24)**. `content_policy`는 생성 잡 `failed`의 오류로만 쓰고 한도는 환불 |
 | `BRAND_ATTESTATION_REQUIRED` | 422 | 체크 후 | 레퍼런스 사이트명 일치(08장 8.9.2) | — |
-| `EDIT_GATE_FAILED` | 422 | 아니오 | 저장 시 서버 재컴파일 후 동기 게이트 실패(R-17, 07장 TC-D-06) | `{failed: ['GATE_FAILED:G-01', …], violations:[{gateId, nodeId?, slotId?, value?, required?}]}` |
+| `EDIT_GATE_FAILED` | 422 | 아니오 | 저장 시 서버 재컴파일 후 동기 게이트 실패(R-17, 07장 TC-D-06). 편집 텍스트 슬롯의 남용 판정 실패는 `GATE_FAILED:G-13`(S-24) | `{failed: ['GATE_FAILED:G-01', …], violations:[{gateId, nodeId?, slotId?, value?, required?, reason?: 'high_risk'|'phishing_term'|'prohibited_category'}]}` |
 | `DRAFT_EXPIRED` | 410 | 아니오 | 24시간 지난 브리프 임시본(R-26) | — |
 | `RATE_LIMITED` | 429 | `Retry-After` | 6.10.1 빈도 한도 | `{retryAfterS}` |
 | `QUOTA_DAY` / `QUOTA_MONTH` | 429 | 리셋 후 | 00장 9.3 한도 | `{limit, resetAt}` |
@@ -1179,7 +1201,9 @@ ErrorBody = { error: { code: ErrorCode, message: string /* 개발자용 영문 *
 | `SIGNUP_DISABLED` | 503 | 아니오 | KS-4(신규 가입 콜백에서) | — |
 | `INTERNAL` | 500 | 1회 | 처리 안 된 예외(Sentry 보고) | — |
 
-**게이트 상세 코드**(R-13): `GATE_FAILED:<id>`(`<id>` = 04장 4.10.2의 `G-01`~`G-12` 및 R-28 axe 게이트 ID). `EDIT_GATE_FAILED.details.failed`, `mockup_versions.gate_report.failed`, `candidates.quality_report`에서 같은 문자열을 쓰고 화면 문구는 01장이 매핑한다.
+**게이트 상세 코드**(R-13): `GATE_FAILED:<id>`(`<id>` = 04장 4.10.2의 `G-01`~`G-13`(G-13 `abuse_terms`, S-24) 및 R-28 axe 게이트 ID). `EDIT_GATE_FAILED.details.failed`, `mockup_versions.gate_report.failed`, `candidates.quality_report`에서 같은 문자열을 쓰고 화면 문구는 01장이 매핑한다.
+
+**잡 경고 코드**(`generation_jobs.warnings[]`, 종료 상태와 별개): `COPY_FALLBACK`(gen_copy 실패로 템플릿 덱 사용, S-12).
 
 **잡 오류 코드**(`generation_jobs.error_code`, `exports.error_code`, HTTP 아님): `GEN_TIMEOUT`, `WORKER_LOST`, `ENQUEUE_FAILED`, `COST_CAP`(일부 단계 생략, 종료 상태와 별개로 기록), `NO_ELIGIBLE`, `RENDER_ERROR`, `EXPORT_ERROR`, `EXPORT_LICENSE_MISSING`(레지스트리 미등록·라이선스 파일 없음·재배포 불가 자산 포함 시, zip 미생성, 08장 8.4.4·D-0815), `GEN_DISABLED`.
 
@@ -1254,8 +1278,11 @@ GenerationView = { jobId, status: JobStatus, phase: JobPhase, progressPct, queue
   mockups: MockupCard[] /* 노출 확정분, 0~3 */, errorCode: string | null, pollAfterMs: number | null /* 종료 시 null */ }
 MockupCard = { mockupId, variant: 'v_true'|'v_fit'|'v_bal', isFallback, harmonyScore, tasteScore,
   previewUrl /* PREVIEW_ORIGIN 서명 URL, 15분 */, screenshotUrl /* 1280 첫 화면, 서명 5분 */, labelKey,
-  brandColorNotice: null | 'adjusted' | 'demoted_to_accent' /* 해당 변형 DesignSpec, 04장, D-0114 */,
-  useSampleContent: boolean /* 프로젝트, D-0114 */ }
+  brandColorNotice: null | 'adjusted' | 'demoted_to_accent' | 'used_as_tint' | 'ignored' /* 해당 변형 DesignSpec, 04장·03장 보정 종료 순서, S-37 */,
+  useSampleContent: boolean /* 프로젝트, D-0114 */,
+  movedAxes: { axis: AxisId; direction: 'up'|'down'; reason: 'type'|'purpose'|'distance' }[] /* |Δ| 큰 순 최대 2, calibration_trace에서 결정론, S-32 */,
+  diffFromTrue: DiffKey[] /* 04장 4.4 L2 차이 7키 중 v_true와 다른 키. v_true는 [], S-32 */ }
+// 화면 문구 키(calib.purpose·calib.type·calib.distance)와 L2 쉬운 말 사전은 01장 1.7.1. LLM 호출 없음.
 ```
 
 - `queuePosition` = `status='queued'`이면서 `queued_at`이 더 이른 잡 수 + 1.
@@ -1326,7 +1353,7 @@ MockupCard = { mockupId, variant: 'v_true'|'v_fit'|'v_bal', isFallback, harmonyS
    04장 BRAND_DATA 경계 문자열(`<<<BRAND_DATA_`) 제거 → 연속 공백 1개로 → trim
 3. 정규화 후 길이 재검사(01장 한도), 직렬화 총 길이 ≤ 2,000자
 4. maskPII() (08장 8.7.5 M1~M7) → 마스킹 건수 반환
-5. 고위험 브랜드·피싱 문구 판정(08장 8.9.2) → 422 BLOCKED_BRAND
+5. 고위험 브랜드·피싱 문구·금지 업종 판정(08장 8.9.2, `packages/compliance/abuse.ts`) → 422 BLOCKED_BRAND{reason}
 6. 레퍼런스 사이트명 일치 → brandAttested 아니면 422, 맞으면 consents(brand_attestation) 기록
 7. 저장(projects.brand) — 원문은 어디에도 남기지 않는다
 ```
@@ -1685,7 +1712,8 @@ async function callLlm(req) {
 | 버전 저장 | `ver:min:u:<uid>` | 30회/분 | 429 |
 | 내보내기 | `exp:hour:u:<uid>` | 30회/시간 | 429 |
 | 공유 생성·전환 | `share:day:u:<uid>`/`a:<anon>` | 30회/일 | 429 |
-| 신고·문의·권리 요청 | `rep:hour:a:<anon>` | 5회/시간 | 429 |
+| 신고·문의·권리 요청 | `rep:hour:a:<anon>` + `rep:day:ip:<hmac>` | 5회/시간, IP 10회/일(S-27). 세 창구 모두 Turnstile 토큰 필수 | 429 |
+| 접수 확인 메일 | `mail:day:to:<sha256(email)>` | 수신 주소당 1통/일(고정 템플릿, 사용자 입력 미포함, S-27) | 발송 생략(접수는 정상) |
 | 이벤트 | `evt:min:a:<anon>` | 120개/분(00장 8.2) | 429 |
 | 매직링크·가입 | `auth:day:ip:<hmac>` | 10회/일 | 429(Supabase 내장 한도와 별도) |
 | 공유 페이지 조회 | `view:min:ip:<hmac>` | 120회/분 | 429 |
@@ -1765,7 +1793,15 @@ async function callLlm(req) {
 
 ### 6.11.2 입력 방어
 
-6.4.5 순서를 모든 사용자 텍스트 입력(브리프, 편집 텍스트 슬롯, 신고·문의 본문)에 적용한다. 편집 텍스트 슬롯은 04장 슬롯 길이 한도와 금지 사전 검사를 추가로 통과해야 저장된다. 인젝션 의심 문구(예: "이전 지시", "ignore previous", "system prompt")는 차단하지 않고 `projects.brand`와 별도로 로그 카운터 `injection_suspect`만 올린다(오탐 방지, 방어는 구조로 한다).
+입력별로 어느 단계(정규화·`maskPII`·고위험/피싱/금지 업종 판정)를 적용하는지는 08장 8.9.2 "입력별 적용 단계 표"가 원천이다(S-24). 판정 함수는 `packages/compliance/abuse.ts` 하나이고 브리프 판정·편집 저장·렌더 게이트 G-13이 같은 함수를 부른다. 요약: 브리프는 전 단계 적용 후 422 `BLOCKED_BRAND{reason}`, 편집 텍스트 슬롯은 전 단계 적용 후 422 `EDIT_GATE_FAILED`(`GATE_FAILED:G-13`), 신고·문의·권리 요청 본문은 정규화만 하고 판정하지 않는다(증거 보존). 편집 텍스트 슬롯은 04장 슬롯 길이 한도와 금지 사전 검사도 통과해야 저장된다. 인젝션 의심 문구(예: "이전 지시", "ignore previous", "system prompt")는 차단하지 않고 `projects.brand`와 별도로 로그 카운터 `injection_suspect`만 올린다(오탐 방지, 방어는 구조로 한다).
+
+**관리자 접근 통제(S-28, LG2-06)**:
+- `/admin/*`·`/api/admin/*`는 `aal2` 세션만 허용한다. `aal1`이면 API는 404(존재 은닉, AC-00-19), 화면은 `/admin/mfa`로 보낸다. supabase 프로파일은 Supabase Auth MFA(TOTP), native는 `AuthPort` local의 otplib TOTP로 시험한다(실제 Supabase MFA는 `gotrue-mfa` needs_ci).
+- 관리자 역할은 매 요청마다 `ADMIN_EMAILS`를 다시 확인한다. 목록에서 빠지면 즉시 404다(자동 강등, `users.role`은 다음 로그인 때 갱신).
+- 개인정보를 돌려주는 관리자 GET(`users`, `support`, `reports`, `rights-requests`, `jobs/:id`, 서명 URL 발급)은 `admin_audit_logs(action='pii_view', target_type, target_id)`를 1행 남긴다.
+- `admin_audit_logs.before/after`에는 PII 키(`email`, `brand`, `details`, `requester_email`)를 넣지 않는다. 저장 전 6.12.1 리댁션 함수를 거친다.
+- 접속기록(감사 로그)은 기본 1년 보관하고 월 1회 점검한다(09장 운영 체크리스트). 보관 기간 1년/2년의 적정성은 사람 확인(08장 8.14 Q16). 콘솔 MFA·service role 키 보관은 08장 8.15 수동 항목이다.
+- 수용 기준 AC-06-57: `aal1` 관리자 세션의 `/api/admin/users` → 404, `aal2` → 200 + `pii_view` 감사 행 1개. `ADMIN_EMAILS`에서 뺀 직후 요청 → 404. 감사 행 `before/after`에 PII 키 0개.
 
 ### 6.11.3 LLM 출력 사후 검사(`postCheck`)
 
@@ -2140,7 +2176,7 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 
 ## 6.17 수용 기준 총괄
 
-이 장의 AC는 각 절 끝에 있다(AC-06-01~37, 45~56). 검증 위치는 다음과 같다(테스트 ID 체계 →07장 D-0707).
+이 장의 AC는 각 절 끝에 있다(AC-06-01~37, 45~58). 검증 위치는 다음과 같다(테스트 ID 체계 →07장 D-0707).
 
 | AC 범위 | 내용 | 계층 | 마일스톤(→09장) |
 |---|---|---|---|
@@ -2193,7 +2229,7 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 | D-0619 | 폰트 페이지 서브셋은 `/fonts/tf-<fontId>-<weight>.<hash>.woff2?cs=` Route Handler(hb-subset)로 WEB·PREVIEW 오리진에서 생성·CDN 캐시, 워커·내보내기는 같은 함수를 로컬 실행 | 03장 D-0308 런타임 서브셋의 서빙 방식 | 03, 04, 09 | 신규 |
 | D-0620 | 브리프 임시본 API `POST /api/brief-drafts`·`GET /api/brief-drafts/:id`, 만료 시 410 `DRAFT_EXPIRED`, 로그인 시 `attach_anon`이 귀속 | 01장 D-0103 요청 | 01, 08 | 신규 |
 | D-0621 | 결과 API 확장: `PATCH /api/surveys/:id/anchor-override`, `GET /api/surveys?mine=1`, `ResultView`(인접 유형·신뢰도·flags·축 state·override), `ShareView.isOwner·surveyId`, `rating` 응답의 `suggestedTypes` | 01장 D-0113, R-36 | 01, 02 | 신규 |
-| D-0622 | `MockupCard.brandColorNotice`·`useSampleContent`, 버전 `trigger`(`autosave`·`manual`·`pre_export`·`pre_share`)와 `change_source` 값 | 01장 D-0114·D-0115 | 01, 04 | 신규 |
+| D-0622 | `MockupCard.brandColorNotice`·`useSampleContent`, 버전 `trigger`(`autosave`·`manual`·`pre_export`·`pre_share`)와 `change_source` 값 | 01장 D-0114·D-0115 | 01, 04 | 신규. brandColorNotice 값 5종·movedAxes·diffFromTrue는 S-32·S-37로 확장 |
 | D-0623 | 편집 저장 시 렌더 불필요 게이트(G-01·02·03·09·10·12)는 동기 422 `EDIT_GATE_FAILED{failed:['GATE_FAILED:<id>']}`, 렌더 게이트(G-04~08, axe)는 `render` 잡에서 `gate_status` 갱신 | R-17 "저장 시 서버 재검사"의 실행 분할 | 01, 04, 07 | 신규 |
 | D-0624 | `GET /api/me/export`(동기 ≤ 60s, JSON zip, 3회/일)와 잡 오류 코드 `EXPORT_LICENSE_MISSING` | 08장 D-0814·D-0815 | 01, 08 | 신규 |
 | D-0625 | `survey_items.alt_text`(R-07 이름)를 쓴다. 02·01장의 `alt_ko`는 같은 필드다 | R-07과 02장 표기 차이 | 01, 02 | 신규 |
@@ -2292,3 +2328,8 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 | S-14 | Major | 6.2.5, 6.13.2 `WORKER_GEN_CONCURRENCY`, 6.16 용량·근거·p95 추정식, AC-06-37 | |
 | S-16 | Major | 6.2.3 취소 한도 규칙, AC-06-55 | |
 | S-19(06) | — | 6.10.4 `BETA_INVITE_ONLY` 설명 | |
+| S-24(06) | Major | 6.4.2 BLOCKED_BRAND reason 4값(원천)·EDIT_GATE_FAILED G-13·COPY_FALLBACK 경고, 6.4.5 ⑤, 6.11.2 | 적용 단계 표 원천은 08 8.9.2 |
+| S-26 | Major | 6.1.3 구성요소 × P1~P13 흐름표, `compliance:flows`, AC-06-58 | |
+| S-27(06) | Major | 6.10.1 `rep:day:ip`·`mail:day:to`, Turnstile 필수 | 절차 본문은 08 |
+| S-28 | Major | 6.11.2 관리자 접근 통제(aal2, ADMIN_EMAILS 매 요청, pii_view, 리댁션, 1년 보관), AC-06-57 | |
+| S-32·S-37(06) | Major | 6.4.3 MockupCard `movedAxes`·`diffFromTrue`·brandColorNotice 5값 | |
