@@ -40,7 +40,7 @@
 | 계약 | zod + 스냅샷 | 레이아웃 트리·CopyDeck 스키마(→04장), `packages/llm/prompts/<role>@v<N>.md`(R-12) 해시(prompts.lock), API 요청/응답·오류 코드(→06장), 이벤트 스키마(→00장 §8.3) | 스키마 검증 100%. 프롬프트 파일 변경은 새 `@vN` + prompts.lock 갱신으로만 가능하고, 변경 시 L3 골든 세트 실행이 필수 | PR |
 | 통합 | Vitest + Supabase 로컬(Docker) + pg-boss 실인스턴스 | API ↔ DB ↔ 잡 큐 ↔ 워커, 마이그레이션 up/down, RLS | 실패 0. 마이그레이션 up→down→up 왕복 성공 | PR |
 | E2E | Playwright | 사용자 흐름 전 구간(01장 S01~S15), 생성은 `mock` | 핵심 시나리오 E2E-01~06 실패 0 | PR·마일스톤: chromium(09장 D-0911), 야간·M8: 9개 조합(→7.6) |
-| 시각 회귀(서비스 UI) | Playwright `toHaveScreenshot` | 01장 1.12.1 화면×상태 매트릭스(D-0109, `?__state=`로 재현) × 3뷰포트 | `maxDiffPixelRatio ≤ 0.01`. 기준 이미지는 worker Docker 이미지에서만 생성(09장 D-0910) | PR |
+| 시각 회귀(서비스 UI) | Playwright `toHaveScreenshot` | 01장 1.12.1 화면×상태 매트릭스(D-0109, `?__state=`로 재현) × 3뷰포트 | `maxDiffPixelRatio ≤ 0.01`. 기준 이미지는 렌더 환경 지문별 `e2e/__screenshots__/<RENDER_ENV_ID>/`에 단독 커밋으로 생성(09장 9.4.1·D-0910, S-02). Docker 이미지 기준선은 CI 전용(`visual-docker-baseline` needs_ci) | PR |
 | 시각 회귀(렌더러) | Playwright `toHaveScreenshot` | 고정 레이아웃 트리 픽스처: 프리셋 8 × 대표 페이지 3 = 24장(1280×800, 09장 D-0910) | 같은 기준 | PR |
 | 생성물 구조 검사 | Playwright + 04장 하드 게이트 모듈 | LLM 생성물(mock·replay·live) | G-01~G-12 통과 100%(픽셀 스냅샷은 쓰지 않음, 5개 뷰포트는 G-04~G-06이 검사) | PR, L3 |
 | 접근성 | `@axe-core/playwright`, Lighthouse CI, 키보드 전용 E2E | 서비스 UI 전 화면, 생성물(G-08), 내보낸 사이트 | → 7.7 | PR + 야간 |
@@ -645,7 +645,7 @@ ID 체계: TC-E(진단 입력) / TC-B(브랜드 입력) / TC-R(장애·복원력
 
 | 수준 | 조합 | 시나리오 | 주기 |
 |---|---|---|---|
-| 자동 | Playwright projects = {chromium, webkit, firefox} × {Desktop 1280×800, Pixel 7, iPhone 14} = 9 | E2E-01~04, E2E-06 | 야간 + M8 + 릴리스(G5) |
+| 자동 | Playwright projects = {chromium, webkit, firefox} × {Desktop 1280×800, Pixel 7, iPhone 14} = 9. 로컬에 없는 엔진의 project는 `needs_ci`(`browser-webkit`·`browser-firefox`)로 기록하고, chromium 3조합은 로컬에서 반드시 pass여야 한다. 지원 범위(R-33)는 바꾸지 않는다(S-02) | E2E-01~04, E2E-06 | 야간 + M8 + 릴리스(G5) |
 | 자동(축소) | chromium Desktop | 전 E2E | PR, M0~M7(09장 D-0911) |
 | 수동 | 실기기 iPhone(iOS 최신) 1대 + Android(Samsung Internet) 1대 | `release/manual-checklist.md`의 기기 스모크(진단 완주, 생성, S08 시안 비교, 내보내기 다운로드, 가로 회전) | 릴리스 전 1회(G5) |
 | MVP 제외 | 클라우드 실기기 팜, 태블릿 전용 레이아웃 검증 | — | Phase 2 |
@@ -1160,6 +1160,7 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
 | UI-19 | 서비스 UI 접근성·반응형 | 7.7.1, 7.6.2 |
 | R-01~R-04 | 식별자 | 머리말, 7.2.2~7.2.3, 전 절 |
 | R-05 | 진단 합격선 | 7.3.1, `release.surveySim` |
+| S-01·S-02(07) | native 프로파일 보류 단계, 시각 기준선 지문, 브라우저 매트릭스 needs_ci | 7.1.2, 7.7 테스트 조합, 7.12.1 deferrable |
 | S-04 | 사람 없는 기준 고정점(`spec:extract`, `spec-lock`, `qa:trace --audit`) | 7.12.2 5~7단계·사람 없는 운영 표, 7.12.3, AC-07-16~18 |
 | S-05 | thresholds 키 구조 단일화 | 7.12.1 전체 JSON 블록·옛 키 대응표, 7.2.5 |
 | S-03 | 보류 상태 enum·허용표·종료 코드, 진단 API 부하 로컬 측정 | 7.1.5, 7.11.2, 7.5.1, AC-07-19 |

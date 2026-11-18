@@ -601,23 +601,7 @@ BLOCKED.md 항목 형식:
 
 **사람의 잠금 갱신 절차**(에이전트는 실행하지 않는다): 파일 수정 → `pnpm guard:relock --human <경로>` → 커밋 → `git tag -f human-lock`(사람만). GitHub 저장소를 쓰면 `CODEOWNERS`에 잠금 경로를 사람 계정으로 지정하고 브랜치 보호를 켠다.
 
-**`config/thresholds.json` 키(값의 원천은 각 장)**
-
-```json
-{
-  "harmonyMin": 80, "tasteMin": 75,                     // D-23
-  "contrastBodyMin": 4.5, "contrastLargeMin": 3.0,      // D-23, WCAG AA
-  "overflowMax": 0, "overlapMax": 0, "lintErrorMax": 0, // D-23
-  "regenMax": 1, "candidates": 6, "visible": 3,          // D-22, D-23
-  "genP50Sec": 60, "genP95Sec": 90, "genFallbackSec": 120, "genKillSec": 180, // D-24
-  "costPerRequestUsd": 0.30, "firstCardP50Sec": 45,     // D-24, R-25
-  "sigmaStop": 0.08, "maxQuestions": 16, "beta": 8, "sigma0": 0.25, // D-12, D-13
-  "viewports": [375, 768, 1024, 1280, 1920],            // D-25
-  "firstViewFontKbMax": 300                              // D-27
-}
-```
-
-(JSON 파일 자체에는 주석을 넣지 않는다. 위 주석은 출처 표시용.) 07장이 정한 출시 지표 임계값은 같은 파일의 `release` 객체에 추가한다.
+**`config/thresholds.json` 키**: 키 구조와 값의 원천은 07장 7.12.1 `spec:thresholds` 블록 하나다(S-05). 이 장은 키를 다시 정의하지 않는다. 최상위는 `diagnosis`·`generation`·`perf`·`release`이고 camelCase다. 옛 평면 키(`harmonyMin`, `genP95Sec`, `costPerRequestUsd` 등)는 폐지했으며 대응표는 07장 7.12.1에 있다. 파일은 `pnpm spec:extract`로 만들고 직접 편집하지 않는다(07장 7.12.2 5~6단계).
 
 ---
 
@@ -958,7 +942,7 @@ pnpm seed:temp | pnpm db:seed | pnpm survey:build | pnpm eval:golden --mode mock
 | R-11 | B16 골든 32, D-0905 대체 |
 | R-12 | 레포 구조 `prompts/<role>@v<N>.md`, Mock 역할명 |
 | R-19 | 인터페이스 표 S01~S15 |
-| R-25 | thresholds 예시 `firstCardP50Sec: 45` |
+| R-25 | thresholds `perf.firstExposeP50Sec`(옛 `firstCardP50Sec`, S-05로 대체) |
 | 미완 | M1·M5·M7 통과 조건을 06장 최종 DDL·API·오류 코드 목록과 1:1 대조(P1 다음 작업) |
 | S-01·S-02(09) | 9.1.1 로컬 인프라·브라우저, 9.4.1 보류 상태·시각 회귀 지문, 9.5.3 환경 실패·HALT, 9.6.3, 9.9.1·9.9.2, M5 ①, M6 ④, B6, D-0909·D-0910 |
 | S-23 | 9.5.7 무인 세션 운용 매핑, 9.4.1 단절 내성, 9.5.3 90분, 9.9.2 3회 연속, AC-09-15·16 |

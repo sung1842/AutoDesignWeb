@@ -2096,7 +2096,7 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 | 모델·프롬프트 | models.yaml 승격 커밋 revert → worker 배포 | ≤ 15분 |
 | 긴급 차단 | `GEN_ENABLED=false`(≤ 60초 반영) | ≤ 1분 |
 
-**AC-06-32**: 필수 환경 변수 하나를 지우고 web·worker를 기동하면 종료 코드 1 + 해당 변수명 출력. `APP_ENV=prod`에서 `LLM_MODE=mock` 또는 `RETENTION_NOW` 설정 시 기동 거부. **AC-06-33**: CI가 직전 릴리스 태그 스키마에 신규 마이그레이션을 적용·롤백·재적용해 성공한다. **AC-06-34**: worker Docker 이미지의 Playwright 버전이 `package.json`과 다르면 CI 실패.
+**AC-06-32**: 필수 환경 변수 하나를 지우고 web·worker를 기동하면 종료 코드 1 + 해당 변수명 출력. `APP_ENV=prod`에서 `LLM_MODE=mock` 또는 `RETENTION_NOW` 설정 시 기동 거부. **AC-06-33**: CI가 직전 릴리스 태그 스키마에 신규 마이그레이션을 적용·롤백·재적용해 성공한다. **AC-06-34**: 검사 방향은 "패키지 버전 → 이미지 태그"다(S-02). `package.json`에 고정한 `@playwright/test` 정확 버전(사전 설치 Chromium 리비전과 짝, `scripts/env/check-browsers.ts`)에서 worker 이미지 태그를 파생하고, 이미지의 Playwright 버전이 그와 다르면 CI 실패(`worker-image-build` needs_ci). 로컬에서는 `check-browsers`가 설치 리비전과 패키지 버전 불일치를 종료 코드 1로 잡는다.
 
 ## 6.14 스택 선정 근거
 

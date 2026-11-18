@@ -825,7 +825,7 @@ function replay(log, purpose, items, cfg): EngineState {
 | κ 구간(0.75 / 0.50)과 보조 동작 | 04장 4.3 | 04, 01 | 이 장은 κ만 산출 |
 | 닮은 사이트 입력 `similar_site_candidates`, 출력 `{title, domain, url, match_axes[2]}` | 2.14 | 05, 01 | 확인됨 |
 | 이벤트 `survey_answer`(00장 §8.3 + 01장 D-0106 확장), `survey_back`, `survey_exit`, `survey_complete`, `result_view` | 2.3.3, 2.5.4 | 00, 01 | `answer` 값 집합 동일, `sigma_max_after` = 응답 후 max σ |
-| 시뮬레이션 리포트 `sim/reports/<date>.json`, 합격선 `release.surveySim` | 2.16 | 07, 09 | 07장 AC-07-08의 `qa/thresholds.yaml` 표기 → R-09에 따라 교체 필요 |
+| 시뮬레이션 리포트 `sim/reports/<date>.json`, 합격선 `release.surveySim` | 2.16 | 07, 09 | 교체 완료(07장 7.12.1 `release.surveySim`, S-05·S-08) |
 
 ---
 
