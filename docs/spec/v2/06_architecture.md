@@ -295,7 +295,7 @@ erDiagram
 ```sql
 -- ===== 0001_init: 확장·공통 함수 =====
 create extension if not exists pgcrypto;
-create extension if not exists vector;              -- reference_features.embedding (05장 D-055)
+-- pgvector는 MVP에서 쓰지 않는다(S-22). Phase 2 임베딩은 additive 마이그레이션으로 확장·컬럼을 추가한다(05장 D-055)
 
 create or replace function is_l1(v jsonb, lo numeric default 0, hi numeric default 1)
 returns boolean language sql immutable as $$
@@ -592,10 +592,8 @@ create table reference_features (
   capture_id      uuid primary key references reference_captures(id) on delete cascade,
   raw             jsonb not null,                     -- F01~F30
   l2_auto         jsonb null,
-  originality_sig jsonb null,                         -- 08장 8.3 G2 7속성
-  embedding       vector null,                        -- Phase 2 전용(R-38). MVP에서 항상 null
-  embedding_model text null
-);
+  originality_sig jsonb null                          -- 08장 8.3 G2 7속성
+);                                                    -- embedding·embedding_model은 Phase 2 additive(S-22)
 create table normalizers (                            -- version = 시즌 ID(R-30), 패치 '.n'
   version     text primary key check (version ~ '^\d{4}-S[1-4](\.\d+)?$'),
   status      text not null check (status in ('draft','released','superseded')),
@@ -1046,7 +1044,7 @@ create table alert_state (                            -- 알림 중복 억제(6.
 
 ### 6.3.6 수용 기준(데이터 모델)
 
-- **AC-06-01**: 빈 DB에 마이그레이션 전체 적용 후 `supabase db reset` 2회 연속 성공, `supabase db lint` 오류 0.
+- **AC-06-01**: `STACK_PROFILE=supabase`: 빈 DB에 마이그레이션 전체 적용 후 `supabase db reset` 2회 연속 성공, `supabase db lint` 오류 0. `STACK_PROFILE=native`(S-01): shim 위에 빈 DB(drop/create) 적용 2회가 `psql -v ON_ERROR_STOP=1`로 성공. `supabase db lint`는 `needs_ci`(`supabase-db-lint`).
 - **AC-06-02**: `pg_tables where schemaname='public'`의 모든 테이블이 `rowsecurity = true`이고 `forcerowsecurity = true`이다(테스트가 목록을 동적으로 조회).
 - **AC-06-03**: RLS 테스트 — 사용자 B의 JWT로 사용자 A의 projects·generation_jobs·candidates·mockups·mockup_versions·exports·share_links를 조회하면 각 0행, `anon` 키로 diagnosis_sessions·survey_answers·brief_drafts·reference_sites를 조회하면 0행.
 - **AC-06-04**: `is_l1` CHECK — 키가 4개이거나 `A1` 키를 쓰거나 값이 1.01인 벡터를 `survey_items.x_card`에 넣으면 INSERT가 실패한다. 데스크톱 자산 `bytes=143361`인 자극물 INSERT도 실패한다(R-07).
@@ -1304,7 +1302,7 @@ MockupCard = { mockupId, variant: 'v_true'|'v_fit'|'v_bal', isFallback, harmonyS
 | 첫 로그인 | `users` 행 생성 → `/onboarding/consent`(08장 8.7.4 B) → 거부 시 `auth.admin.deleteUser` |
 | 가입 차단 | `SIGNUP_ENABLED=false`면 콜백에서 신규 사용자(`users.created_at` < 10초)를 삭제하고 `/login?error=SIGNUP_DISABLED`로 이동 |
 | 로그아웃 | Supabase 세션 폐기 + `anon_id` 쿠키 **재발급**(로그아웃 후 익명 진단이 이전 계정에 귀속되지 않게) |
-| 테스트 | 테스트 전용 로그인 라우트를 두지 않는다. E2E는 로컬 Mailpit 매직링크(09장 D-0909). 07장 TC-S-09는 "라우트 부재"로 통과 |
+| 테스트 | 테스트 전용 로그인 라우트를 두지 않는다. E2E는 같은 매직링크 흐름으로 로그인한다. supabase 프로파일은 Mailpit, native 프로파일은 `AuthPort` local 드라이버가 기록한 `dev_mail_outbox`를 테스트 픽스처 함수(HTTP 라우트 아님)로 읽는다(S-01, 09장 D-0909). 07장 TC-S-09는 "라우트 부재"로 통과 |
 
 ### 6.5.3 익명 → 계정 귀속(`attach_anon`)
 
@@ -1752,6 +1750,8 @@ Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
 Cross-Origin-Opener-Policy: same-origin
 ```
 
+**환경별 기대값(S-01)**: 위 문자열은 `APP_ENV∈{staging, prod}` 기대값이다. `APP_ENV=local`에서는 CSP 끝의 `; upgrade-insecure-requests`와 `Strict-Transport-Security` 헤더를 뺀다(http 로컬). 그 밖의 바이트는 같다. AC-06-25·서비스 CSP 테스트는 `tests/fixtures/csp/{local,prod}.txt` 두 벌을 오리진 치환 후 바이트 비교한다. 쿠키 `Secure` 속성은 localhost에서도 유지한다(브라우저가 localhost를 보안 컨텍스트로 취급).
+
 Sentry 브라우저 SDK는 `tunnel: '/api/monitoring'`로 보내 `connect-src`에 외부 도메인을 추가하지 않는다. 공유 페이지(`/r/*`, `/p/*`)는 추가로 `X-Robots-Tag: noindex, nofollow`.
 
 ### 6.11.5 비밀 관리
@@ -1786,7 +1786,7 @@ TOCTOU 잔여 위험(DNS 재바인딩): 관리자 전용·수동 큐레이션 UR
 ### 6.11.7 수용 기준(보안)
 
 - **AC-06-24**: 컴파일러 산출물(미리보기 HTML, html_zip, react_zip) 정적 검사에서 `<script`, ` on\w+=`, `javascript:`, `dangerouslySetInnerHTML`, `type="password"`, `action=` 0건(픽스처 30 × 프리셋 8).
-- **AC-06-25**: preview 응답의 CSP 헤더가 6.11.4 문자열(오리진 치환 후)과 바이트 단위로 같다. iframe 안에서 `parent.document` 접근 시도가 SecurityError(07장 TC-S-06).
+- **AC-06-25**: preview 응답의 CSP 헤더가 6.11.4 문자열(오리진 치환 후, `APP_ENV`별 기대값)과 바이트 단위로 같다. iframe 안에서 `parent.document` 접근 시도가 SecurityError(07장 TC-S-06).
 - **AC-06-26**: 서명이 틀리거나 만료된 preview URL → 403, 남의 candidate ID로 서명 URL 발급 요청 → 404. 편집 화면 DOM에서 표시 iframe은 `sandbox=""`, 측정용 iframe은 `sandbox="allow-same-origin"`이며 두 iframe 모두 `allow-scripts` 0, `srcdoc` 첫 요소가 6.11.4(b) meta CSP이고, 브리프에 `<img src=x onerror=…>`를 넣어도 부모 창의 `window.__xss` 0(07장 TC-S-01·06).
 - **AC-06-27**: 존재하지 않는 공유 ID 10,000개 무작위 조회 → 전부 404, 2분 안에 IP당 120회 초과 시 429.
 - **AC-06-28**: 운영 모드 렌더에서 `render_blocked_requests` = 0(정상 픽스처), 외부 URL이 포함된 조작 HTML 렌더 시 외부 요청 0건·차단 카운터 ≥ 1.
@@ -1861,11 +1861,39 @@ KPI(WAM·퍼널)는 →00장 8.5 쿼리를 뷰로 만든다.
 
 | 환경 | web | worker | DB·Auth·Storage | LLM | 용도 |
 |---|---|---|---|---|---|
-| local | `next dev` | docker compose | Supabase CLI 로컬(+Mailpit) | `mock`(기본) | 개발·CI·에이전트 자율 구현 |
+| local | `next dev`(:3000) | `STACK_PROFILE`에 따름(아래) | `STACK_PROFILE`에 따름(아래) | `mock`(기본) | 개발·CI·에이전트 자율 구현 |
 | staging | Vercel Preview(브랜치 `main` 자동) | Fly 앱 `tastefit-worker-stg`(머신 1, `shared-cpu-2x`) | Supabase 별도 프로젝트(서울) | `live`, `GEN_DAILY_BUDGET_USD=2` | 출시 전 스모크·골든 live 실행 |
 | prod | Vercel Production(`icn1` 함수 리전) | Fly 앱 `tastefit-worker`(`nrt`) | Supabase 운영 프로젝트(`ap-northeast-2`) | `live` | 운영 |
 
 리전 가용성·가격은 출시 전 원문 확인(D-0607). 원격 배포·원격 마이그레이션은 **사람이 수동 트리거하는 CI 잡**으로만 실행한다(09장 D-0912).
+
+#### 스택 프로파일 (S-01, TL2-01)
+
+local 환경은 두 프로파일 중 하나로 돈다. `STACK_PROFILE=supabase|native`. 지정이 없으면 `pnpm dev:stack`이 `docker info` 성공 여부로 고른다(성공 → supabase). env로 강제할 수 있다. 같은 verify 스크립트가 두 프로파일에서 돌고, 프로파일에 따라 달라지는 것은 아래 표의 드라이버뿐이다.
+
+| 구성 | `supabase` 프로파일 | `native` 프로파일(Docker 없음) |
+|---|---|---|
+| DB | Supabase CLI 로컬 Postgres | 시스템 PostgreSQL 16. `pnpm dev:stack`이 `initdb` → `/tmp/tastefit-pg`(포트 54322) → 기동. 마이그레이션 전에 `packages/db/shim/0000_supabase_shim.sql` 적용 |
+| shim 내용 | 적용 안 함(파일 상단 가드가 `auth` 스키마 존재 시 건너뜀) | 역할 `anon`·`authenticated`·`service_role`(bypassrls), 스키마 `auth`, `auth.users(id uuid pk, email text, raw_user_meta_data jsonb, created_at)`, `auth.identities(id, user_id, provider, identity_data jsonb, created_at)`, `auth.uid()`·`auth.role()`·`auth.jwt()` = `current_setting('request.jwt.claims', true)::jsonb`의 `sub`·`role`·전체. RLS 테스트는 `set local role authenticated; set local request.jwt.claims = '{"sub":…,"aal":…}'` |
+| 마이그레이션 검사(AC-06-01) | `supabase db reset` 2회 + `supabase db lint` | 빈 DB(drop/create) 적용 2회, `psql -v ON_ERROR_STOP=1`. lint는 `needs_ci` |
+| Storage | `StoragePort` 드라이버 `supabase` | 드라이버 `fs`: `/tmp/tastefit-storage/<bucket>/<path>`. 서명 URL = `/api/_storage/<bucket>/<path>?exp&sig`(HMAC). 이 라우트는 `APP_ENV=local`일 때만 등록 |
+| Auth | `AuthPort`(`issueMagicLink`·`exchange`·`getUser`·`signOut`·`enrollTotp`·`verifyTotp`) 드라이버 `supabase`(GoTrue + Mailpit) | 드라이버 `local`: 매직링크를 발송하지 않고 `dev_mail_outbox(to, subject, body, created_at)`에 기록. 링크는 실제와 같은 `/auth/callback` 경로. 세션 = HS256 JWT(`LOCAL_JWT_SECRET`, 클레임 `sub`·`role`·`aal`). 관리자 MFA는 otplib TOTP로 검증 후 `aal2` 발급 |
+| 메일·봇 방어 | `MailPort`·`TurnstilePort` 실제 드라이버 | `MailPort=local`(outbox 기록), `TurnstilePort=local`(항상 성공, 토큰 형식만 검사) |
+| worker | worker 컨테이너(Docker) | `node apps/worker` 프로세스. 브라우저는 `/opt/pw-browsers` Chromium(09장) |
+| 오리진 | `WEB_ORIGIN=http://localhost:3000`, `PREVIEW_ORIGIN=http://127.0.0.1:3001` | 같음 |
+
+규칙:
+1. `localhost`와 `127.0.0.1`은 서로 다른 site이므로 미리보기 격리(6.11.4)의 "다른 등록 도메인" 요건을 로컬에서 대신한다. 미리보기 서버는 web 프로세스가 3001 포트에서 함께 연다.
+2. **E2E 로그인**: native는 테스트 픽스처 함수가 DB의 `dev_mail_outbox`를 읽어 링크를 연다. HTTP 우회 라우트는 0개이므로 R-10과 TC-S-09가 유지된다. 우회가 아니라 같은 매직링크 흐름의 발송 수단만 바뀐다.
+3. **기동 거부**: `APP_ENV≠local`인데 `AUTH_DRIVER=local`, `STORAGE_DRIVER=fs`, `MAIL_DRIVER=local`, `TURNSTILE_DRIVER=local` 중 하나라도 설정되면 기동을 거부한다(종료 코드 1, 변수 이름 출력). `dev_mail_outbox` 테이블은 local 전용 마이그레이션 `9000_local_only.sql`에만 있고 staging·prod 마이그레이션 목록에 들어가지 않는다.
+4. **CI 위임**: native에서 확인할 수 없는 단계는 `needs_ci`로 기록한다. 목록은 07장 7.12.1 `deferrable.needs_ci`가 원천이다(`supabase-db-lint`, `supabase-storage-policy`, `gotrue-magiclink-e2e`, `gotrue-mfa`, `gotrue-google-metadata`, `worker-image-build`, `visual-docker-baseline`, `browser-webkit`, `browser-firefox`, `net-isolation-docker`, `lock-digest`). GitHub Actions(ubuntu, Docker 있음)에서 같은 verify를 `STACK_PROFILE=supabase`로 돌리고 에이전트는 `gh run watch`로 결과를 받는다. 워크플로 push가 권한으로 거부되면 HUMAN_TODO에 적고 needs_ci로 계속한다.
+5. 이 대체가 적용된 `env` 사유는 09장 BLOCKED·HALT 계산에서 뺀다(09장 9.5.3).
+
+| 수용 기준 | 내용 |
+|---|---|
+| AC-06-50 | Docker 데몬이 없는 컨테이너에서 `pnpm dev:stack`이 120초 안에 native로 기동하고 `GET /api/health`가 200 `{db:"ok", queue:"ok"}`를 반환한다. |
+| AC-06-51 | native에서 06장 DDL 전체가 shim 위에 적용되고 AC-06-02~07의 RLS·제약 테스트가 통과한다. |
+| AC-06-52 | native E2E: 익명 진단 → 매직링크(`dev_mail_outbox`) → 귀속 → 시안 3개가 통과한다. 프로덕션 빌드에 `dev_mail_outbox`를 읽는 HTTP 라우트가 0개이고, `APP_ENV=prod` + `AUTH_DRIVER=local`이면 기동이 거부된다. |
 
 ### 6.13.2 환경 변수
 
@@ -1874,6 +1902,9 @@ KPI(WAM·퍼널)는 →00장 8.5 쿼리를 뷰로 만든다.
 | 이름 | 서비스 | 필수 | 기본값 | 설명 |
 |---|---|---|---|---|
 | `APP_ENV` | 전부 | 필수 | — | `local`\|`staging`\|`prod` |
+| `STACK_PROFILE` | 전부(local) | 선택 | 자동(`docker info`) | `supabase`\|`native`(6.13.1 스택 프로파일) |
+| `AUTH_DRIVER`, `STORAGE_DRIVER`, `MAIL_DRIVER`, `TURNSTILE_DRIVER` | web, worker | 선택 | 프로파일에 따름 | `supabase`·실제 \| `local`·`fs`. `APP_ENV≠local`에서 local·fs면 기동 거부 |
+| `LOCAL_JWT_SECRET` | web | native일 때 필수 | — | ≥32바이트. local 드라이버 전용, 커밋 금지(`.env.local`) |
 | `WEB_ORIGIN` | web, worker | 필수 | — | 서비스 오리진(CSP·CSRF·메일 링크) |
 | `PREVIEW_ORIGIN` | web, worker | 필수 | — | 미리보기 오리진(다른 등록 도메인) |
 | `NEXT_PUBLIC_SUPABASE_URL` | web | 필수 | — | |
@@ -2017,13 +2048,14 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 
 ## 6.17 수용 기준 총괄
 
-이 장의 AC는 각 절 끝에 있다(AC-06-01~37, 45~49). 검증 위치는 다음과 같다(테스트 ID 체계 →07장 D-0707).
+이 장의 AC는 각 절 끝에 있다(AC-06-01~37, 45~52). 검증 위치는 다음과 같다(테스트 ID 체계 →07장 D-0707).
 
 | AC 범위 | 내용 | 계층 | 마일스톤(→09장) |
 |---|---|---|---|
-| AC-06-01~07 | 스키마·RLS·제약 | 통합(로컬 Supabase) | M1 |
+| AC-06-01~07 | 스키마·RLS·제약 | 통합(현재 `STACK_PROFILE`, 6.13.1) | M1 |
 | AC-06-08~14, 45~49 | API 계약·멱등·CSRF·소유·임시본·앵커·내보내기·내 데이터 | 계약·통합·E2E | M4~M7 |
-| AC-06-15~18 | 인증·귀속·쿠키 | E2E(Mailpit) | M5 |
+| AC-06-15~18 | 인증·귀속·쿠키 | E2E(supabase: Mailpit, native: `dev_mail_outbox` 픽스처) | M5 |
+| AC-06-50~52 | 스택 프로파일(native) 기동·DDL·E2E | 통합·E2E(native) | M0·M1·M5 |
 | AC-06-19~23 | 레이트리밋·킬 스위치·원가·승인 공급자 | 통합(MockProvider 시나리오) | M5·M7 |
 | AC-06-24~28 | 보안(컴파일러 산출물·CSP·서명·SSRF) | 정적 검사·E2E | M2·M8 |
 | AC-06-29~31 | 관측성·알림 | 통합 | M7 |
@@ -2153,8 +2185,10 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 | R-31 | — | 6.10.1 | |
 | R-33 | — | 6.14.1 | |
 | R-36 | — | `diagnosis_results.anchor_override_type_id`, 6.4.3 | |
-| R-38 | — | `reference_features.embedding`(Phase 2) | |
+| R-38 | — | `reference_features.embedding`(Phase 2, MVP DDL에서 제거 → S-22) | |
 | 01장 D-0103·D-0106·D-0113·D-0114·D-0115 | — | 6.3.3, 6.4.3, D-0620~0622 | |
 | 04장 D-0413·D-0414·D-0416 | — | 6.11.4, `fewshot_examples`, `candidates` | |
 | 05장 5.17 | — | 6.3.3 0003, 6.10.4 | |
 | 08장 D-0814·D-0815, 8.6 | — | 6.4.3, 6.4.2, AC-06-48·49 | |
+| S-01 | Blocker | 6.13.1 스택 프로파일, 6.13.2, 6.11.4, 6.5, AC-06-01·25·50~52 | 드라이버 4종, 오리진, env별 CSP |
+| S-22 | Major | 6.3.3 | pgvector 확장·embedding 컬럼 제거(Phase 2 additive) |
