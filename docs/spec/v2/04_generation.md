@@ -383,7 +383,7 @@ SlotValueRaw =
 
 | 키 | 개수 | 길이 | 용도 | 비고 |
 |---|---|---|---|---|
-| `hero.headline` | 3 | 8–24 | 공통 | 각 항목에 `kind: factual|benefit|emotive` 필수, 3개 kind 모두 달라야 함 |
+| `hero.headline` | 3 | 8–24 | 공통 | 각 항목에 `kind: factual|benefit|emotive` 필수, 3개 kind 모두 달라야 함. 3개 중 ≥1개는 `headlineBudget(presetTokens, variant, viewport)`(03장, 1280·375 중 작은 값)의 `maxChars` 이하여야 하고 G-01이 검사한다(S-39). 프롬프트에 `maxChars`를 변수로 넣는다 |
 | `hero.sub` | 2 | 30–80 | 공통 | |
 | `hero.eyebrow` | 2 | 2–14 | 공통 | "New/신규/출시/✨" 금지(AIL-04) |
 | `cta.primary` | 3 | 2–10 | 공통 | 동사 종결, 용도별 권장 동사 목록에서 시작 |
@@ -596,6 +596,20 @@ AIL-12 항목 4개 미만 bento, CTA 블록 3개 이상, 같은 deck 참조 반�
                              ∧ 이 페이지에서 미사용
 asset_id = 후보집합[ sha256(job_seed ‖ section.id ‖ slot_id) mod |후보집합| ]   # 정렬 = asset_id 오름차순
 후보집합이 비면 → 블록의 no-image 대체 variant(블록 메타 `fallback_variant`)로 치환하고 G-01 재검사
+
+톤·업종 규칙(S-34, PD2-03):
+tonePref = warm  if t.temperature ≥ 0.60
+           cool  if t.temperature ≤ 0.40
+           neutral 그 밖
+후보집합 정렬 1순위 = 같은 톤, 2순위 = neutral. 반대 톤은 후보집합에서 제외한다.
+페이지의 첫 사진이 정한 톤을 나머지 슬롯도 따른다.
+업종 태그 = config/image_tag_keywords.json(B24, 약 50항목, 결정론 사전)으로
+            BrandInput.description·key_points의 명사 → 허용 태그 부분집합.
+업종 매칭 0건 → hero 외 사진 슬롯은 fallback_variant 또는 shape-graphic으로 대체,
+                hero는 storefront·common.texture-*만 허용.
+                01장 S08 안내 키 drafts.photoSubstituted 표시.
+portfolio work.items·showcase 이미지 슬롯 → placeholder: true
+                (미리보기 오버레이·README "교체 필요 이미지"·E-12 경고 대상. 생성 HTML에는 표시하지 않음)
 ```
 이미지 원천은 03장 이미지 팩(192건, `ImageTag` 21종, R-34)뿐이다. 사용자 업로드(로고·사진)는 MVP 제외(R-21), AI 생성 이미지도 MVP 제외(D-27).
 
@@ -635,8 +649,13 @@ asset_id = 후보집합[ sha256(job_seed ‖ section.id ‖ slot_id) mod |후보
 | G-10 | 브랜드명 존재 | 브랜드명(NFC)이 nav(워드마크)·hero·footer 텍스트에 각각 ≥ 1회 | 3곳 모두 | 수정 루프 |
 | G-11 | 원본 유사도 가드(R-20) | §4.10.6(08장 8.3 G1·G2·G3·G5) | 위반 0 | 하드 게이트 실패. 수정 루프(다른 패턴·hero 강제) → 폐기 |
 | G-12 | 명세 무결성 | `deriveTokens(l2) == tokens`, 렌더 computed style의 색·font-size·spacing·radius가 토큰 집합 안(AIL-17) | 불일치 0 | 컴파일러 버그, 후보 폐기 + 알림 |
+| G-13 | 남용 문구(`abuse_terms`, S-24) | 최종 트리의 모든 텍스트(LLM 출력 + 편집 결과)를 `packages/compliance/abuse.ts`(브리프 판정과 같은 함수, 08장 8.9.2)로 판정: 고위험 브랜드(B21)·피싱 문구·금지 업종(B22) | 0건 | 생성 후보: 수정 루프 없이 폐기. 편집 저장: 422 `EDIT_GATE_FAILED`(`GATE_FAILED:G-13`, `violations[].reason`) |
+
+**헤드라인 줄 넘침 처리(S-39)**: 렌더 측정에서 hero 헤드라인이 줄 예산(03장 3.8.1)을 넘으면 결정론 순서로 처리한다. ① 짧은 덱 옵션으로 교체 → ② 해당 role의 단계를 한 단계 내림(display → t-1 → t-2, 최대 1회, `spec.render_adjustments[]`에 기록, H6 위반 아님) → ③ 그래도 넘치면 AIL-24 warn. 골든에서 ③은 0건이어야 하고 ② 비율(≤ 25%)은 기록한다(03장 AC-03-26).
 
 ### 4.10.3 조화 점수 H (0~100)
+
+아래 표는 03장 `data/taxonomy/harmony.json`(D-0310)에서 생성한 사본이다(S-38). 다르면 원천이 이기고, `pnpm spec:check-harmony`가 표와 JSON의 차이를 CI에서 잡는다. 텍스트 크기는 시맨틱 태그(h1 등)가 아니라 `data-role`과 단계 토큰(`t-display`, `t-1`, … → 03장 3.1.5a, `data/taxonomy/text-roles.json` B25)으로 판정한다.
 
 렌더 결과(1280 computed style + 확정 트리)에서 계산한다. 노출 조건 H ≥ 80(D-23). 배점·상수의 원천은 03장 `data/taxonomy/harmony.json`(3.14.3, D-0310)이며 아래 표는 같은 내용이다. 임계값 80은 `config/thresholds.json`의 `generation.harmony_floor`.
 
@@ -648,7 +667,7 @@ asset_id = 후보집합[ sha256(job_seed ‖ section.id ‖ slot_id) mod |후보
 | H4 | 폰트 패밀리 | 사용 패밀리 수(mono·아이콘 제외) | 8 | ≤ 2: 8, 3: 0 |
 | H5 | weight 종류 | 한 페이지 font-weight 고유값 | 5 | ≤ 3: 5, 4: 2, ≥ 5: 0 |
 | H6 | 타입 스케일 준수 | 텍스트 요소 font-size가 토큰 단계(±0.5px)에 속하는 비율 | 10 | ≥ 95%: 10, 90–95%: 5, < 90%: 0 |
-| H7 | display/body 비 | 1280에서 h1 font-size / body font-size | 8 | 2.5–8.0: 8, 밖: 0 |
+| H7 | display/body 비 | 1280에서 display 토큰 계산값 / base(body) font-size(03장 정의, 원천 `harmony.json` D-0310, S-38) | 8 | 2.5–8.0: 8, 밖: 0 |
 | H8 | 간격 준수 | margin·padding·gap 값 중 4pt 스케일(03장) 소속 비율 | 10 | ≥ 95%: 10, 90–95%: 5, < 90%: 0 |
 | H9 | radius 계열 | 사용 radius 값이 선택 family 집합 안에 있는 비율 | 8 | 100%: 8, ≥ 95%: 4, 미만 0 |
 | H10 | 상충 조합 | 아래 상충 목록 위반 수 | 10 | 0건: 10, 1건 이상: 0 **그리고 H 상한 79(치명)** |
@@ -739,7 +758,7 @@ MVP에서 비전 채점은 **기록 전용**이다(R-12, `JUDGE_VISION_MODE` 기
 QualityReport = {
   candidate_id, variant, pattern_id, spec_id, compile_hash,
   // 07장 게이트 리포트 계약 필드(hard, harmony, tasteMatch, sFree, lint, clipped)를 그대로 포함한다
-  hard: { id: "G-01".."G-12", status: "pass"|"fail", measured: any, limit: any, viewport?: 375|768|1024|1280|1920,
+  hard: { id: "G-01".."G-13", status: "pass"|"fail", measured: any, limit: any, viewport?: 375|768|1024|1280|1920,
           code?: `GATE_FAILED:${id}` }[],          // R-13 상세 코드
   harmony: number,                                  // 0~100
   harmonyItems: { id: "H1".."H12", score: number, measured: any }[],
@@ -758,8 +777,8 @@ QualityReport = {
 }
 ```
 
-**AC-04-19** `quality/` 모듈은 G-01~G-12, H1~H12 각각을 독립 순수 함수(렌더 측정값 입력)로 구현하고, 항목당 통과·실패 픽스처 ≥ 2개 테스트를 가진다.
-**AC-04-20** 모든 후보(노출·비노출)의 `QualityReport`가 `candidates.quality_report`에 저장되고 `harmony_score`·`taste_score`·`eligible`·`rank_score` 컬럼과 일치한다(06장). 노출 시안 100%가 G-01~G-12 통과, H ≥ 80, TM ≥ 75, S_free ≥ 65(폴백 시안은 §4.12 예외 규칙)다.
+**AC-04-19** `quality/` 모듈은 G-01~G-13, H1~H12 각각을 독립 순수 함수(렌더 측정값 입력)로 구현하고, 항목당 통과·실패 픽스처 ≥ 2개 테스트를 가진다.
+**AC-04-20** 모든 후보(노출·비노출)의 `QualityReport`가 `candidates.quality_report`에 저장되고 `harmony_score`·`taste_score`·`eligible`·`rank_score` 컬럼과 일치한다(06장). 노출 시안 100%가 G-01~G-13 통과, H ≥ 80, TM ≥ 75, S_free ≥ 65(폴백 시안은 §4.12 예외 규칙)다.
 **AC-04-21** 레퍼런스 1개의 토큰·레이아웃 패턴을 그대로 넣은 복제 픽스처 10건과, 레퍼런스 첫 화면 pHash 거리 0·밝기 ±10%·JPEG 재압축 변형 픽스처를 G-11이 100% 차단한다(08장 AC-08-12와 같은 픽스처).
 
 ---
@@ -821,7 +840,7 @@ for v in [v_true, v_fit, v_bal]:
 
 결정론적 폴백 `fallback(v)`:
 - 구성(`buildFallback`): 해당 변형의 DesignSpec(토큰 그대로) + 03장 `standardTree(typeId, purpose)`의 사전 검증 트리(용도 표준 패턴 PS-1/PL-1/PP-1과 같은 순서) + 템플릿 카피(`config/copy_templates.json`: `name`·`description`·`primary_action` 라벨·`key_points` 치환, 나머지 `[예시]` 플레이스홀더). LLM 호출 0. `candidates.origin='fallback'`, `mockups.is_fallback=true`.
-- 검사: 하드 게이트 G-01~G-12 필수. H ≥ 80 필수. TM·S_free·judge 조건 면제.
+- 검사: 하드 게이트 G-01~G-13 필수. H ≥ 80 필수. TM·S_free·judge 조건 면제.
 - 표시: 카드 라벨에 "기본 구성" 배지 + "이 방향은 자동 구성 대신 기본 구성으로 준비했어요" 안내(→ 01장).
 - 8유형 × 3용도 × 3변형 = 72개 폴백 조합을 CI에서 매 커밋 렌더해 하드 게이트를 검증한다(폴백 자체 실패 가능성 제거).
 
@@ -848,7 +867,7 @@ for v in [v_true, v_fit, v_bal]:
 
 **AC-04-24** 골든 세트 전체 실행(32케이스 × 3회, R-11)에서 `succeeded` 비율과 시안 ≥ 1개 보장률이 07장 합격선(`thresholds.json` `golden.full_success_min`, `golden.min_guarantee = 1.0`)을 충족한다.
 **AC-04-24a** n_real·n_fallback 조합 5가지 픽스처에서 `status`와 한도 차감·환불이 위 표와 일치한다(통합 테스트).
-**AC-04-25** 72개 폴백 조합 전부가 CI에서 G-01~G-12 통과, H ≥ 80.
+**AC-04-25** 72개 폴백 조합 전부가 CI에서 G-01~G-13 통과, H ≥ 80.
 
 ---
 
@@ -877,7 +896,7 @@ S→C→T에서 error가 나오면 렌더하지 않고 바로 수정 루프로 �
 | AIL-03 | 기본 서체 | S, D | (a) 사용 패밀리(mono·아이콘 제외)가 1종이고 ∈ {Inter, Roboto, Arial, system-ui, Geist, Pretendard, Noto Sans KR}, 또는 (b) 헤딩 font-family 첫 항목 ∈ {Inter, Geist, Roboto, Arial, system-ui} | error | M, U | 명조 헤드라인 + Pretendard 본문 | 전부 Pretendard |
 | AIL-04 | 중앙 히어로 + 배지 | T, C | hero variant `align=center` ∧ eyebrow가 pill 스타일 ∧ 텍스트가 `/new|beta|introducing|✨|🚀|신규|출시|NEW/i` | error | M | 좌측 정렬 hero + "성수동 로스터리" eyebrow | 중앙 hero + "✨ New" 배지 |
 | AIL-05 | 3열 아이콘 카드 | T, D | 한 섹션에 형제 카드 정확히 3개, 너비 차 ≤ 2%, 각 카드 = 아이콘(svg ≤ 48px)+제목+본문 | 페이지 1회 warn, 2회 이상 error | M, U | 번호형 리스트 01/02/03 | 아이콘 카드 3열이 두 섹션에 반복 |
-| AIL-06 | 균일 rounded + 흐린 그림자 | S, D | 카드류 요소의 ≥ 80%가 radius 12–16px ∧ shadow blur ≥ 16px ∧ α ≤ 0.15 | error(프리셋 메타 `allow_soft_round_shadow=true`면 warn) | M, U | soft radius + hairline 테두리 | 모든 카드 `rounded-xl shadow-lg` |
+| AIL-06 | 균일 rounded + 흐린 그림자 | S, D | 카드류 요소의 ≥ 80%가 radius 12–16px ∧ shadow blur ≥ 16px ∧ α ≤ 0.15 | error(프리셋 메타 `allowSoftRoundShadow=true`면 warn. T3·T4·T6 = true, 03장 Preset, S-33) | M, U | soft radius + hairline 테두리 | 모든 카드 `rounded-xl shadow-lg` |
 | AIL-07 | 동일 섹션 리듬 | T | (a) 인접 동일 variant, (b) 모든 섹션 pad 동일 → error / (c) 같은 bg 3연속, (d) 6섹션 이상 bg 엄격 교대, (e) 중앙 정렬 비율 > 40% → 각 warn | error / warn | M | pad +1 섹션 1개, inverse 1개 | 7섹션 모두 pad 0, 중앙 정렬 5개 |
 | AIL-08 | 컬러 블롭 | D | absolute/fixed 장식 요소에 `filter: blur(≥ 40px)` 또는 radial-gradient 원형 블롭(요소 면적 ≥ 뷰포트 5%) | error | M, U | 장식 없음 또는 grain | 히어로 뒤 보라 블러 원 2개 |
 | AIL-09 | 의미 없는 글래스 | S, P | (a) `backdrop-filter` 사용 ∧ spec depth.style ≠ glass, (b) 글래스 요소 뒤 영역 휘도 표준편차 < 4(0–255) | error | M, U | 사진 위 글래스 내비 | 흰 단색 위 반투명 카드 |
@@ -966,9 +985,9 @@ S→C→T에서 error가 나오면 렌더하지 않고 바로 수정 루프로 �
 
 | 시점 | 검사 | 결과 처리 |
 |---|---|---|
-| 조작 직후(클라이언트, 순수 함수 `evaluateTokens(tokens, layout_tree)`, ≤ 50ms) | 토큰 쌍 대비(G-02/G-03 토큰 계산), H1~H5·H9~H12 정적 계산, LT 제약, 직접 입력 카피의 AIL-13·21·23 | AA 위반 → 03장 스냅 규칙으로 텍스트 색 토큰을 가장 가까운 통과 단계로 자동 보정(`auto_fix` op, 원인 op와 함께 undo). 보정 불가면 조작 거부 + 사유. H < 80 → 적용 + 경고 + "추천값으로 되돌리기". 카피 AIL error → 적용하되 저장 시 거부 |
-| 저장(서버, 06장 `POST /api/mockups/:id/versions`) | 서버가 `EditState`를 같은 규칙으로 `tokens`·`layout_tree`에 적용하고 다시 컴파일(R-17) → 토큰 대비 검사(렌더 없음) | 실패 시 422 `EDIT_GATE_FAILED`(`details.violations`). 통과 시 `gate_status='pending'`으로 INSERT 후 `render` 잡 투입 |
-| 렌더 게이트(워커, p95 ≤ 15s) | 5개 뷰포트 G-02~G-08, G-10, G-11(원본 유사도, 08장 8.3.1 ④), G-12 + AIL error | `gate_status = passed | failed`, `gate_report`에 `hard[].code = GATE_FAILED:<id>`(R-13) 기록. 실패 항목은 편집 화면에 표시(→ 01장) |
+| 조작 직후(클라이언트, 순수 함수 `evaluateTokens(tokens, layout_tree)`, ≤ 50ms) | 토큰 쌍 대비(G-02/G-03 토큰 계산), H1~H5·H9~H12 정적 계산, LT 제약, 토큰만으로 판정하는 S 단계 규칙 AIL-03·06·09·16(S-33), 직접 입력 카피의 AIL-13·21·23 | AA 위반 → 03장 스냅 규칙으로 텍스트 색 토큰을 가장 가까운 통과 단계로 자동 보정(`auto_fix` op, 원인 op와 함께 undo). 보정 불가면 조작 거부 + 사유. H < 80 → 적용 + 경고 + "추천값으로 되돌리기". 카피 AIL error → 적용하되 저장 시 거부 |
+| 저장(서버, 06장 `POST /api/mockups/:id/versions`) | 서버가 `EditState`를 같은 규칙으로 `tokens`·`layout_tree`에 적용하고 다시 컴파일(R-17) → 토큰 대비 검사 + 편집 텍스트 슬롯 G-13 남용 판정(렌더 없음, 08장 8.9.2 적용 단계 표) | 실패 시 422 `EDIT_GATE_FAILED`(`details.violations`). 통과 시 `gate_status='pending'`으로 INSERT 후 `render` 잡 투입 |
+| 렌더 게이트(워커, p95 ≤ `perf.versionGateP95Sec`) | 5개 뷰포트 G-02~G-08, G-10, G-11(원본 유사도, 08장 8.3.1 ④), G-12, G-13 + AIL error | `gate_status = passed | failed`, `gate_report`에 `hard[].code = GATE_FAILED:<id>`(R-13) 기록. 실패 항목은 편집 화면에 표시(→ 01장) |
 | 내보내기·공유 | `gate_status = passed`인 버전만 | 아니면 409 `VERSION_GATE_NOT_PASSED`(R-13) |
 
 H < 80과 TM은 저장·내보내기 차단 사유가 아니다(사용자 선택 존중). 하드 게이트는 항상 차단한다.
@@ -1021,7 +1040,7 @@ H < 80과 TM은 저장·내보내기 차단 사유가 아니다(사용자 선택
 |---|---|---|---|
 | E-01 | 외부 의존 | 외부 CDN·폰트·스크립트·URL 참조 0, `file://`로 열어도 동일 렌더 | 정적 grep + 오프라인 Playwright |
 | E-02 | 시각 일치 | 내보낸 HTML·React 빌드 렌더 vs 미리보기 렌더 픽셀 차 ≤ 1%(1280, 375) | pixelmatch |
-| E-03 | 하드 게이트 | 내보낸 결과가 G-02~G-10·G-12 재통과(axe 포함, R-28) | worker |
+| E-03 | 하드 게이트 | 내보낸 결과가 G-02~G-10·G-12·G-13 재통과(axe 포함, R-28) | worker |
 | E-04 | HTML 유효성 | vnu 오류 0 | vnu-jar |
 | E-05 | 접근성 | axe serious/critical 0, Lighthouse 접근성 ≥ 95 | Lighthouse CI |
 | E-06 | 성능 | Lighthouse 모바일 Performance ≥ 90, LCP ≤ 2.5s, CLS ≤ 0.05, 첫 화면 폰트 ≤ 300KB(D-27) | Lighthouse CI |
@@ -1216,3 +1235,8 @@ H < 80과 TM은 저장·내보내기 차단 사유가 아니다(사용자 선택
 | S-12 | 4.7.1 gen_copy 실패 규칙(repair_schema → fallback ≤60s → 템플릿 덱, 안전 거부 비우회) | 기대 결과는 07 TC-R-16~18 |
 | S-13(04) | 4.17.2 가드는 06 6.9.4 참조, 키 경로 | |
 | S-16(04) | 4.12 취소 한도 규칙 | 원천 06 6.2.3 |
+| S-24(04) | 4.10.2 G-13 `abuse_terms`, 게이트 범위 G-01~G-13, 4.15.2 저장·렌더 게이트 | |
+| S-33(04) | AIL-06 `allowSoftRoundShadow`, 4.15.2 클라이언트 S 단계 규칙 | |
+| S-34 | 4.9.4 톤·업종 규칙, placeholder 표시 | |
+| S-38(04) | H7 정의를 03장으로 통일, 4.10.3 표 = harmony.json 생성본 | |
+| S-39 | 4.6.2 헤드라인 maxChars 제약, 4.10.2 뒤 줄 넘침 처리 순서 | |
