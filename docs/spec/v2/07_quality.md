@@ -123,7 +123,7 @@ LLM 모드의 원천은 09장 9.6.1(D-0908)이다. 이 장의 사용 규칙:
 | 야간 | 매일 03:00 KST | PR 전체 + replay 회귀 + E2E 9조합 + Lighthouse CI + 내보내기 검증(골든 5케이스) + k6 스모크 + 골든 스모크(L3, 8케이스×1회, 평가 키가 있을 때) | ≤60분 |
 | 릴리스 | `pnpm release:check` 수동 | 야간 전체 3회 연속 + 골든 전체(L3, 32×3) + `pnpm compliance:check`(08장 D-0812) + G1~G7 집계 | ≤3시간 |
 
-`pnpm release:check` 출력과 종료 코드의 원천은 09장 9.9.1이다: `reports/release-check.json`에 게이트별 `{id: "G1".."G7", status: pass|fail|temp|manual|needs_live, evidence[]}`와 `thresholdsSha256`, `commit`을 기록하고, 종료 코드 0(출시 가능) / 2(자동 게이트 PASS, 사람 입력 대기) / 1(실패). 수동 항목은 `release/manual-checklist.md`.
+`pnpm release:check` 출력과 종료 코드의 원천은 09장 9.9.1이다: `reports/release-check.json`에 게이트별 `{id: "G1".."G7", status, steps[], evidence[]}`와 `thresholdsSha256`, `commit`을 기록한다. 상태 enum은 `pass|fail|temp|manual|needs_live|needs_ci` 하나이고(S-03) 07 7.11.2·09 9.9.1이 같은 값을 쓴다. 종료 코드는 7.11.2 규칙을 따른다(0 = 전부 pass, 2 = fail 0이고 모든 보류가 허용표 안, 1 = 그 밖). 수동 항목은 `release/manual-checklist.md`.
 
 ### 7.1.6 flaky·커버리지·금지 패턴 정책
 
@@ -172,14 +172,14 @@ LLM 모드의 원천은 09장 9.6.1(D-0908)이다. 이 장의 사용 규칙:
   "purpose": "saas",                       // saas | portfolio | local_business (R-02)
   "persona": {
     "thetaStar": { "expression": 0.20, "temperature": 0.30, "shape": 0.25, "density": 0.40, "depth": 0.20 },
-    "simulator": { "beta": 16, "policy": "argmax", "seed": 101 }
+    "simulator": { "beta": 16, "policy": "argmax", "seed": 1 }   // seed = 케이스 번호(S-07)
   },
   "answers": [ /* 시뮬레이터로 사전 생성해 고정한 응답 로그(02장 survey_answers 행 형식) */ ],
   "brand": { /* 01장 1.5.5.2 BrandInput 그대로 (R-21) */ },
   "expected": {
     "typeId": "T1",
     "anchorPresetId": "PS-T1",
-    "muRange": { "expression": [0.08, 0.32], "temperature": [0.18, 0.42], "shape": [0.13, 0.37], "density": [0.28, 0.52], "depth": [0.08, 0.32] },  // θ* ± 0.12
+    "muRef": { "expression": 0.212345, "temperature": 0.298761, "shape": 0.251002, "density": 0.388410, "depth": 0.207733 },  // build-answers 재생값, 소수 6자리(S-07)
     "flags": [],                           // 02장 type.flags 문자열: low_signal | conflict | tie | position_bias | fast_answers
     "brandNameIn": ["nav", "hero", "footer"],   // 04장 G-10
     "mustNotLint": ["error:*"],
@@ -188,7 +188,11 @@ LLM 모드의 원천은 09장 9.6.1(D-0908)이다. 이 장의 사용 규칙:
 }
 ```
 
-응답 로그는 `pnpm eval:golden:build-answers`(사람이 실행, 결과 커밋)로 1회 생성해 고정한다. 진단 알고리즘(`algo_version`)이 바뀌어도 로그는 바꾸지 않는다. 바뀐 알고리즘이 같은 로그에서 `expected.typeId`·`muRange`를 벗어나면 진단 회귀로 판정한다(02장 알고리즘 변경 배포 조건과 연결).
+응답 로그는 `pnpm eval:golden:build-answers`로 1회 생성해 고정한다(S-07). 규칙:
+- seed = 케이스 번호(GS-01 → 1)로 고정한다. 재시도로 다른 seed를 고르지 않는다(운 좋은 로그 선택 금지).
+- 생성한 로그를 현재 엔진으로 재생해 typeId만 검사한다. 불일치하면 θ*의 오프셋 축을 (A1, A2)에서 (A3, A4)로 바꾸는 결정론 규칙을 1회 적용해 다시 만든다. 그래도 불일치하면 빌드 실패이고 BLOCKED다.
+- 통과하면 재생한 μ를 소수 6자리로 `expected.muRef`에 기록한다. `muRange`는 폐지한다.
+- 진단 알고리즘이 바뀌어도 로그는 바꾸지 않는다. 같은 로그에서 M1a가 깨지면 진단 회귀다. `engine_version` major가 바뀌면 02장 2.15 재생으로 muRef를 다시 만들고 사람 승인을 받는다(`manual`, HUMAN_TODO).
 
 ### 7.2.3 구성표
 
@@ -247,7 +251,8 @@ LLM 모드의 원천은 09장 9.6.1(D-0908)이다. 이 장의 사용 규칙:
 
 | 지표 | 정의 |
 |---|---|
-| M1 진단 재현 | 핵심 24케이스에서 `typeId == expected.typeId` 비율, μ가 `muRange` 안에 있는 축 비율 |
+| M1a 진단 회귀(차단) | 핵심 24케이스에서 `typeId == expected.typeId`인 수, \|μ − `expected.muRef`\| ≤ `release.golden.m1.muRefAbsMax`인 축 수(120축) |
+| M1b 진단 여유(기록) | \|μ − θ*\| ≤ `m1.marginZ`·σ_display인 축 비율. `m1.marginCoverageWarnMin` 미만이면 `margin_warning` |
 | M2 스키마 유효율(최초) | `gen_layout`·`gen_copy` 최초 응답이 스키마(G-01)를 통과한 비율(후보 단위) |
 | M3 스키마 유효율(수리 후) | 04장 repair 후 통과 비율(후보 단위) |
 | M4 노출 하드 통과 | 노출된 모든 시안이 G-01~G-12 전부 통과한 비율 |
@@ -279,7 +284,8 @@ R = Between / max(Within, 0.05)
 
 | 지표 | 합격선(전체 실행 96잡 기준) | 근거 |
 |---|---|---|
-| M1 | 유형 일치 100%(24/24), 축 범위 내 ≥95%(120축 중 ≥114) | 응답 로그 고정이므로 결정론 |
+| M1a | 유형 24/24, muRef ±0.02 이내 120/120 | 응답 로그 고정·결정론 재생이므로 회귀 검출용(S-07). 정확도 차단 판정은 진단 시뮬레이션(7.3.1, R-05) 한 곳에만 둔다 |
+| M1b | 기록 전용(비차단). 1.645σ 포함률 <0.85면 경고 | RMSE ≤0.12에서 \|e\| ≤0.12 비율은 약 68%이므로 '95%가 ±0.12'는 R-05와 모순(S-07) |
 | M2 | ≥90% | QA-12 |
 | M3 | ≥99% | AI-06, 06장 승격 `schema_error_rate ≤0.01` |
 | M4 | 100% | D-23 |
@@ -579,7 +585,7 @@ ID 체계: TC-E(진단 입력) / TC-B(브랜드 입력) / TC-R(장애·복원력
 | 편집 반영 | p95 ≤200ms(스타일) / ≤500ms(구조)(R-17, TC-D-01) | E2E 20회 | G3 |
 | JS 전송량 | S02 초기 JS ≤200KB(gzip) | 빌드 리포트 | G3 |
 | 폰트 | 첫 화면 ≤300KB | TC-F-02 | G3 |
-| 진단 API | k6 10 VU 5분, p95 ≤300ms, 오류율 0%(레이트리밋 06장 D-0618 범위 내 부하) | staging | k6 | G3 |
+| 진단 API | 10 VU × 5분, p95 ≤ `perf.surveyApiP95Ms`, 오류율 0%(레이트리밋 06장 D-0618 범위 내 부하) | 로컬 스택(현재 `STACK_PROFILE`, S-01·S-03). staging 재측정은 `k6-staging`(manual, 비차단 기록) | k6, 없으면 같은 프로파일의 autocannon | G3 |
 
 ### 7.5.2 생성 파이프라인 (R-25)
 
@@ -808,7 +814,18 @@ P-1b "AI 같다" 판정률(04장 AC-04-41, 00장 A3와 같은 데이터):
 판정 규칙:
 - 게이트는 같은 커밋(태그 `rc-<n>`)에 대해 판정한다. 판정 후 코드가 바뀌면 G1·G2·G3를 재판정한다(G7은 생성 경로 코드·`packages/llm/prompts/**`·models.yaml·매핑표가 바뀌지 않았으면 유지).
 - 게이트 실패 시 출시 불가. 예외 승인(waiver)은 MVP에서 허용하지 않는다(1인 운영에서 승인자와 실행자가 같다). "Phase 2" 표시 기준은 MVP 게이트가 아니다.
-- `pnpm release:check`는 G1~G7 상태를 `reports/release-check.json`에 `pass|fail|temp|manual|needs_live`로 기록하고 09장 9.9.1 종료 코드를 반환한다.
+- `pnpm release:check`는 G1~G7과 그 하위 단계 상태를 `reports/release-check.json`에 `pass|fail|temp|manual|needs_live|needs_ci`로 기록한다(S-03).
+- **보류 허용표**: 단계가 보류 상태(`temp`·`manual`·`needs_live`·`needs_ci`)를 반환할 수 있는 경우는 `config/test-policy.json`의 `deferrable`(원천 7.12.1 `spec:test-policy` 블록, 잠금)에 그 단계 ID가 그 상태로 등록된 때뿐이다. `*`는 접두어 일치다. 각 보류에는 조건이 붙는다.
+
+  | 상태 | 조건(맞지 않으면 fail) | 등록 단계 |
+  |---|---|---|
+  | `temp` | 해당 데이터 묶음의 `provenance`가 `temp`(09장 9.8) | `font-budget`, `asset-license-verify`, `normalizer-human`, `extractor-human-label`, `fewshot-count`, `high-risk-domains`, `legal-text` |
+  | `needs_live` | `LLM_MODE≠live` | `golden-live`, `judge-vision-live`, `model-promotion` |
+  | `manual` | 사람 입력 파일(`release/manual-checklist.md`·`eval/blind/reports/*`)이 비어 있음 | `blind-*`, `usability-*`, `k6-staging`, `processor-approval` |
+  | `needs_ci` | 로컬 실행이고 `STACK_PROFILE=native` 또는 필요 브라우저·변수 부재(S-01) | `lock-digest`, `supabase-db-lint`, `supabase-storage-policy`, `gotrue-magiclink-e2e`, `gotrue-mfa`, `gotrue-google-metadata`, `worker-image-build`, `visual-docker-baseline`, `browser-webkit`, `browser-firefox`, `net-isolation-docker` |
+
+- **종료 코드**: 0 = 모든 단계 `pass`. 2 = `fail` 0이고 모든 보류가 허용표 안이며 조건 충족. 1 = 그 밖(표에 없는 단계의 보류, 조건 불충족 보류 포함). 종료 코드 0은 `needs_ci`·`temp`가 하나라도 있으면 불가다.
+- 메타 테스트: 허용표에 없는 단계 ID가 `temp`를 반환하는 가짜 단계를 넣으면 `release:check`가 1을 반환한다(AC-07-19).
 
 ---
 
@@ -1033,6 +1050,8 @@ P-1b "AI 같다" 판정률(04장 AC-04-41, 00장 A3와 같은 데이터):
 | AC-07-16 | Given 7.12.1 `spec:thresholds` 블록과 값 1개가 다른 `config/thresholds.json`, When `pnpm guard`, Then spec 대조 단계가 FAIL하고 다른 키 경로를 출력한다. 블록에 없는 키 1개를 추가하거나 있는 키 1개를 지워도 `thresholds-schema` 단계가 FAIL한다. |
 | AC-07-17 | Given `human-lock`·`spec-lock` 태그가 모두 없는 저장소, When `pnpm guard`, Then FAIL. `spec-lock`만 있으면 guard:lock이 그 커밋을 baseRef로 판정하고, 그 이후 `docs/spec/**`가 바뀐 커밋에서 FAIL한다. |
 | AC-07-18 | Given 수용 테스트 본문에 `expect(h).toBeGreaterThanOrEqual(80)` 같은 허용 목록 밖 수치 리터럴, When `pnpm qa:trace --audit`, Then FAIL하고 파일·줄을 출력한다. |
+| AC-07-19 | Given 허용표(`deferrable`)에 없는 단계가 `temp`를 반환하거나, `LLM_MODE=live`인데 `golden-live`가 `needs_live`를 반환, When `pnpm release:check`, Then 종료 코드 1. 모든 보류가 허용표 안이고 fail 0이면 2, 전부 pass면 0. |
+| AC-07-20 | 변이 테스트: 진단 엔진의 β를 8.0 → 8.5로 바꾸고 골든 M1a를 실행하면 FAIL한다. `build-answers`를 같은 커밋에서 2회 실행하면 바이트가 같다. |
 
 ---
 
@@ -1129,6 +1148,9 @@ P-1b "AI 같다" 판정률(04장 AC-04-41, 00장 A3와 같은 데이터):
 | R-05 | 진단 합격선 | 7.3.1, `release.surveySim` |
 | S-04 | 사람 없는 기준 고정점(`spec:extract`, `spec-lock`, `qa:trace --audit`) | 7.12.2 5~7단계·사람 없는 운영 표, 7.12.3, AC-07-16~18 |
 | S-05 | thresholds 키 구조 단일화 | 7.12.1 전체 JSON 블록·옛 키 대응표, 7.2.5 |
+| S-03 | 보류 상태 enum·허용표·종료 코드, 진단 API 부하 로컬 측정 | 7.1.5, 7.11.2, 7.5.1, AC-07-19 |
+| S-07 | 골든 M1a·M1b, muRef, build-answers 결정론 | 7.2.2, 7.2.4, 7.2.5, AC-07-20 |
+| S-06 f | 골든 리포트 경로 `eval/reports/<reportId>.json` 하나 | 7.2.1, 7.2.7, 7.11.2 G2 |
 | R-07 | 설문 이미지 규격 | 7.5.1 |
 | R-09 | 임계값 파일·잠금 | 7.12 |
 | R-10 | 테스트 로그인 우회 철회 | 7.1.2 E2E, TC-S-09, AC-07-13 |
