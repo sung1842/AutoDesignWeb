@@ -1394,7 +1394,7 @@ MockupCard = { mockupId, variant: 'v_true'|'v_fit'|'v_bal', isFallback, harmonyS
 | 봇 방어 | Supabase Auth 캡차 = Cloudflare Turnstile(매직링크 요청에 필수, 08장 D-0810). IP당 가입·링크 요청 10회/일(`rl_hit`) |
 | 매직링크 메일 | Supabase 커스텀 SMTP = Resend(미국, `legal/processors.yaml`의 `email-sender` 확정값, R-29). 링크 유효 1시간, 1회용 |
 | 세션 | `@supabase/ssr` 쿠키(액세스 1시간, 리프레시 회전), 미들웨어에서 갱신 |
-| Google 범위 | `openid email`만. 프로필 이름·사진 미수집(08장 8.7.1) |
+| Google 범위 | `openid email`을 요청하되, 공급자가 보낸 프로필 필드(이름·사진)는 `minimize_auth_metadata` 트리거가 저장 직후 지운다(6.3.3, S-25, 08장 8.7.1) |
 | 첫 로그인 | `users` 행 생성 → `/onboarding/consent`(08장 8.7.4 B) → 거부 시 `auth.admin.deleteUser` |
 | 가입 차단 | `SIGNUP_ENABLED=false`면 콜백에서 신규 사용자(`users.created_at` < 10초)를 삭제하고 `/login?error=SIGNUP_DISABLED`로 이동 |
 | 로그아웃 | Supabase 세션 폐기 + `anon_id` 쿠키 **재발급**(로그아웃 후 익명 진단이 이전 계정에 귀속되지 않게) |

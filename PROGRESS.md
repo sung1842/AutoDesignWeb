@@ -5,7 +5,7 @@
 - phase: P2
 - lock: {owner: 2026-11-18T21:07Z, since: 2026-11-18T21:07Z}
 - limit.next_reset_kst: 2026-11-19 07:42
-- 마지막 갱신: 2026-11-19 06:31 KST (예약 세션: 07·06·09·04·03·02·05·01 반영)
+- 마지막 갱신: 2026-11-19 06:32 KST (예약 세션: 00 제외 전 장 반영)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -26,7 +26,7 @@
 
 ## P2. 리뷰 루프
 - 라운드 2: [x] PM [x] 프로덕트 디자이너 [x] UX [x] UI [x] 테크 리드 [x] AI/ML [x] QA [x] 법무 → [x] decisions_v3(S-01~S-41) [ ] 반영(아래 20단위)
-- 라운드 2 반영 단위(decisions_v3.md "반영 순서" 참고): [x] 07-a [x] 07-b [x] 07-c [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 09-a [x] 09-b [x] 09-c [x] 04-a [x] 04-b [x] 04-c [x] 03 [x] 02 [x] 05 [x] 01 [ ] 08 [ ] 00 [ ] 잔여 표기 grep
+- 라운드 2 반영 단위(decisions_v3.md "반영 순서" 참고): [x] 07-a [x] 07-b [x] 07-c [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 09-a [x] 09-b [x] 09-c [x] 04-a [x] 04-b [x] 04-c [x] 03 [x] 02 [x] 05 [x] 01 [x] 08 [ ] 00 [ ] 잔여 표기 grep
 - 판정 기록(라운드별 C1/C2/C3):
   - R2 PM: FAIL/FAIL/FAIL (Blocker 0, Major 5: 예산-목표 불일치, 취소 시 한도 규칙 충돌, KPI 쿼리 분모, 검증 표본 확보, 00↔07·09 불일치)
   - R2 UX: FAIL/FAIL/FAIL (1라운드 19/19 해결, Blocker 0, Major 3: 결과 신뢰 문구 01↔02 불일치, 진단 카드 크기 규칙이 실제 화면에서 불성립, 편집 가능 판정을 화면 폭으로 해 200% 확대 시 편집 소실)
@@ -47,6 +47,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 06:32 | 08 반영: 보관표(노출되지 않은 후보·diagnosis_sessions·consents_archive·sanctions·접속기록), 8.9.2 입력별 적용 단계 표·금지 업종·reason enum·AC-08-41b~d, 익명 창구 방어·AC-08-43b, privacy_request 확인, AC-08-23 release 모드, AC-08-29 메타데이터, 국외 이전 문구·데이터 흐름 원천, Q5·Q6·Q13 보강·Q16 신설, 8.15 수동 항목(06 Google 범위 행 포함)
 - 2026-11-19 06:31 | 01 반영: 결과 안내 키·우선순위·신뢰도 1줄·axes[].state, 카피 표 우선 원칙·키 22개 추가, 진단 카드 mobile 고정 창·desktop w_min·cardScale, 편집 허용=기기·배치=뷰포트(1열 탭), 보정 칩·diffFromTrue·v_true 문구, notice 5값, BLOCKED_BRAND 2행·G-13 행, 취소 문구, 편집 폰트·측정
 - 2026-11-19 06:29 | 05 반영: 5.9 temp 분기·왕복 키, 추출기 키 camelCase(07 블록에 reliableAxesMin 3 추가), embedding 컬럼 제거·D-055
 - 2026-11-19 06:28 | 02 반영: 상수 블록 diagnosis 아래로(평면 키 폐지), 안내 키·순서·신뢰도 1줄·axes[].state, mobile 자산 필터, muRef 재생 규칙, 시뮬 gate/dev 시드·판정·조정 공간·상한
