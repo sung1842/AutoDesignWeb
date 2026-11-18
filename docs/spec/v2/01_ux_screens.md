@@ -123,7 +123,7 @@ S12 내 기록 /me ─▶ S03 / S07·S08 / S09
 
 - 지원 폭 360~1920px, 360px에서 가로 스크롤 0. 기기 구분은 00장 §8.2 규칙(< 768 mobile, 768~1023 tablet, ≥ 1024 desktop)과 같다.
 - 지원 브라우저(R-33): Chrome/Edge ≥ 111, Safari·iOS Safari ≥ 16.4, Firefox ≥ 128, Samsung Internet ≥ 22. 미지원 브라우저는 S01 상단에 "이 브라우저에서는 일부 기능이 동작하지 않을 수 있어요" 배너(차단하지 않음).
-- S01~S08, S12, S13은 360px에서 끝까지 완료 가능해야 한다. S09 편집은 ≥ 768px에서 전 기능, < 768px에서는 미리보기·공유만 제공한다(00장 §7.1, 1.8.7).
+- S01~S08, S12, S13은 360px에서 끝까지 완료 가능해야 한다. S09 **편집 허용은 기기로 판정**한다: `matchMedia('(pointer: fine)').matches || screen.width >= 768`이면 편집을 허용하고, 터치 전용 소형 기기(휴대폰)만 1.8.7 읽기 전용 모드를 쓴다. **배치는 CSS 뷰포트로 정한다**: 편집 허용 상태에서 뷰포트 < 768이면 1열 편집 레이아웃(1.8.7)이다. 그래서 200% 확대로 뷰포트가 줄어도 편집이 사라지지 않는다(S-31, 00장 §7.1).
 
 ### 1.3.2 헤더·푸터
 
@@ -186,11 +186,12 @@ S12 내 기록 /me ─▶ S03 / S07·S08 / S09
 
 | 기기 | 1단계(4지) | 2단계(A/B) |
 |---|---|---|
-| desktop/wide | 2×2 그리드. 카드 폭 `w = min((vw − 64 − 24)/2, ((vh − 64 − 56 − 64 − 24)/2) × 1.6, 588)` px, 비율 16:10. 클릭 = 선택. | 좌우 나란히, 각 폭 `min((vw − 64 − 24)/2, 588)`. 이미지는 문항 데이터 `focus_region` 영역을 우선 노출(→ 02장 2.4.4). 클릭 = 선택. |
+| desktop/wide | 2×2 그리드. 카드 폭 `w = min((vw − 64 − 24)/2, ((vh − 64 − 56 − 64 − 24)/2) × 1.6, 588)` px, 비율 16:10. 폭 하한 `w_min = 480px`(축소율 ≥ 0.375). 공식 결과가 `w_min`보다 작으면 높이 제약을 풀고 2×2 그리드를 세로 스크롤로 보여 준다(S-30). 클릭 = 선택. | 좌우 나란히, 각 폭 `min((vw − 64 − 24)/2, 588)`. 이미지는 문항 데이터 `focus_region` 영역을 우선 노출(→ 02장 2.4.4). 클릭 = 선택. |
 | tablet | 2×2 그리드(같은 공식, 여백 48). 탭 = 확대 보기, 확대 화면의 "이걸로 할게요" = 선택. | 좌우 나란히, 탭 = 선택. |
-| mobile | **전체 폭 페이저**: 카드 1장 폭 `vw − 32`(360px에서 328px), 모바일 자산(780×1560, 1:2)을 폭에 맞춰 표시, 세로 스크롤 없이 상단 70%를 보이고 나머지는 카드 안 스크롤. 좌우 스와이프·하단 썸네일 스트립(4칸, 각 64px)으로 이동, "2 / 4" 표시, 카드 아래 "이걸로 할게요"(높이 48px). 썸네일 탭은 이동만. | **토글 비교**: 같은 위치에 A 또는 B를 표시, 상단 세그먼트 [A][B]로 전환(스크롤 위치 유지). 처음 표시 = `items[0]`. 두 장 모두 1회 이상 본 뒤에만 "A로 할게요/B로 할게요/차이를 모르겠어요" 활성(비활성 시 안내 "B도 한 번 봐 주세요"). |
+| mobile | **전체 폭 페이저**(S-30): 카드 1장 폭 `vw − 32`(360px에서 328px), 고정 높이 창 `card_h = 100dvh − 232`(헤더 56 + 진행률 8 + 제목 48 + 하단 고정 바 120). 모바일 자산(780×1560, 1:2)을 `object-fit: cover; object-position: top`으로 표시하고 **카드 안 스크롤은 없다**. 전체를 보려면 "크게 보기"(세로 스크롤 라이트박스). 하단 고정 바(120) 한 줄에 "이걸로 할게요"(48px) + 썸네일 4칸(각 64px) + "2 / 4". "다 별로예요"는 하단 바 위 텍스트 버튼(44px). 좌우 스와이프로도 이동, 썸네일 탭은 이동만. `card_h < 300`(가로 모드 등)이면 "세로로 돌려 주세요" 안내 | **토글 비교**: 같은 위치에 A 또는 B를 표시, 상단 세그먼트 [A][B]로 전환(스크롤 위치 유지). 처음 표시 = `items[0]`. 두 장 모두 1회 이상 본 뒤에만 "A로 할게요/B로 할게요/차이를 모르겠어요" 활성(비활성 시 안내 "B도 한 번 봐 주세요"). |
 
 - mobile 1단계는 일부만 보고 선택할 수 있다(강제 순회 없음). 실제로 본 카드를 `ux.viewedItemIds`로 기록.
+- 응답마다 `ux.viewportClass` 옆에 `ux.cardScale`(실제 카드 폭 / 자산 폭, 소수 2자리)을 기록한다(S-30). mobile 자산이 없는 문항은 mobile 세션의 후보에서 빠진다(02장 2.6.1 (f)). 출시 데이터 검사에서 mobile 자산 누락은 0건이어야 한다.
 - 이미지는 R-07의 2벌 자산만 쓴다(추가 해상도 생성 없음). 다음 문항 이미지는 응답 직후 선로딩(02장 2.4.5).
 
 ### 1.4.4 선택 인터랙션
@@ -379,7 +380,7 @@ mobile: 헤드라인 → 보조 → 정보 줄 → 예시 1(전체 폭) → 예�
 | # | 영역 | 내용 | 규칙 |
 |---|---|---|---|
 | ① | 유형 헤더 | 라벨 "나의 디자인 성향 유형", 유형 이름(디스플레이 40/56px), 설명 2문장, 키워드 3개 | 02장 유형 텍스트 고정값만(R-04). LLM 생성 금지. 성격검사식 알파벳 코드 표기 금지(D-01) |
-| ② | 경계·신뢰 안내 | 신뢰도 문구(02장 2.13 확정): high "뚜렷한 편이에요" / medium "대체로 이쪽이에요" / low "여러 취향이 섞여 있어요 — 다시 해 보면 더 정확해져요". `is_boundary`면 "{1순위 이름} · {2순위 이름} 쪽에도 가까워요" + "{r1}% : {100−r1}%"(02장 2.13.2, 5% 단위). `flags`에 `low_signal`이면 "취향 신호가 부족해요" + [다시 진단하기](02장 2.12.2). 시즌 재생으로 유형이 바뀐 결과의 첫 방문에는 "디자인 기준 업데이트로 결과가 조정되었어요" 1회 | 02장 2.13이 정한 수치 외 백분율 표기 금지 |
+| ② | 경계·신뢰 안내 | 표시 조건·우선순위는 02장 2.13.1이 원천이다(S-29). 순서 `low_signal` → `conflict` → κ < 0.50 → `is_boundary` 중 **첫 번째 하나만** 문구로 표시하고(`result.notice.lowSignal`(+ [다시 진단하기]) / `result.notice.conflict` / `result.notice.lowConsistency` / `result.notice.boundary`), 그 아래에 신뢰도 한 줄(`result.confidence.{high,medium,low}`)을 붙인다. 시즌 재생으로 유형이 바뀐 결과의 첫 방문에는 `result.notice.seasonAdjusted` 1회. 문구 원문은 1.15.3 | 백분율 표기 0건 |
 | ③ | 유형 미니 페이지 | 앵커 프리셋 사전 렌더 이미지 desktop 1장 + mobile 1장 | 1px `--svc-frame` 테두리, 그림자 없음 |
 | ④ | 5축 프로필 | 양극 막대 5개(1.5.2.1) + 같은 내용 `<table>` | 레이더 차트 금지 |
 | ⑤ | 내 유형 디자인 가이드 | 서체 페어링명(한글·영문), 팔레트 칩 4~6개(색 이름 + HEX), radius 계열명 + "복사" | 00장 D-001. 읽기 전용. "복사" = CSS 변수 텍스트를 클립보드로, 토스트 "복사했어요" (`guide_copy{field}`) |
@@ -401,7 +402,7 @@ mobile: 헤드라인 → 보조 → 정보 줄 → 예시 1(전체 폭) → 예�
 
 - 표시값 = `round(μ × 100)`. 0~100 수평 트랙에 지름 12px 점 + 값. 40~60 구간 `--svc-band` 음영 + "균형" 라벨.
 - 불확실 구간 μ ± 1.645·σ_display(02장 2.13.2)를 [0,100]으로 잘라 트랙 위 연한 음영(`--svc-frame`, 불투명도 0.35)으로 표시.
-- 축 상태 `open`이고 σ_display > 0.10: 속 빈 원 + 점선 트랙 + "아직 확실하지 않아요". `insensitive`: "이 부분은 크게 신경 쓰지 않으시는 편이에요"(02장 2.13.2).
+- 축 상태는 서버 `axes[].state`만 쓴다(판정 기준은 02장 2.13.2, S-29). `open`: 속 빈 원 + 점선 트랙 + `result.axis.open`. `insensitive`: `result.axis.insensitive`.
 - 색만으로 의미 전달 금지(점선·속 빈 원·텍스트 병행).
 - `<table>`(축, 왼쪽 라벨, 오른쪽 라벨, 값, 확실도 텍스트) 5행. 시각적으로는 "표로 보기" 토글, 스크린리더에는 항상 노출(막대 SVG는 `aria-hidden="true"`).
 
@@ -548,13 +549,13 @@ type ProjectCreate = {
 | 6 | 용도 미선택 | "사이트 용도를 골라 주세요" |
 | 서버 | 직렬화 총 길이 ≤ 2,000자, 미지 필드 거부(06장 6.4.5) | `VALIDATION_FAILED` → 필드 오류 |
 | 서버 | `maskPII()`(08장 8.7.5) 적용 후 `maskedFields` 건수 반환 | 안내 배너 "개인정보로 보이는 값을 가렸어요: 전화번호 1건" |
-| 서버 | 고위험 브랜드·피싱 문구(08장 8.9.2) | 1.12 `BLOCKED_BRAND`(`details.reason = high_risk | phishing_term`, R-13) |
+| 서버 | 고위험 브랜드·피싱 문구·금지 업종(08장 8.9.2, S-24) | 1.12 `BLOCKED_BRAND`(`details.reason = high_risk | phishing_term | prohibited_category`, R-13) |
 | 서버 | 레퍼런스 사이트명 일치 | 1.12 `BRAND_ATTESTATION_REQUIRED` → 체크박스 "이 브랜드의 소유자이거나 사용 권한이 있습니다" 표시 후 `brandAttested: true`로 재제출(R-13) |
 
 - 태그 형태 문자열은 정규화에서 제거되고 남은 텍스트는 항상 이스케이프 렌더한다(07장 TC-B-05, 실행 0). 이모지는 허용하고 grapheme으로 센다(07장 TC-B-03).
 - 검증 시점: blur + 제출. 제출 실패 시 첫 오류 필드로 포커스, 상단 요약 "고칠 곳이 {n}군데 있어요"(`role="alert"`).
 - 서버 검증 실패 응답은 400 `VALIDATION_FAILED` + `details.issues[{path, code}]`(06장 6.4.2). 클라이언트는 `path`로 필드를 찾아 1.5.5.3 문구를 표시한다.
-- 브랜드 컬러 UI: HEX 입력 + 네이티브 색 선택기 + 색 칩 + 색 이름(03장 `colorName`). 취향과 충돌 처리 → 04장. 결과 시안의 `brand_color_notice`(04장: `adjusted` → "접근성을 위해 색을 조정했어요(원본 #xxxxxx)", `demoted_to_accent` → "브랜드 컬러를 포인트 색으로 썼어요")를 S08 카드·S09 상단에 표시.
+- 브랜드 컬러 UI: HEX 입력 + 네이티브 색 선택기 + 색 칩 + 색 이름(03장 `colorName`). 취향과 충돌 처리 → 04장. 결과 시안의 `brand_color_notice`(04장·03장 3.13.2, S-37: `adjusted` → `brandColor.adjusted`, `demoted_to_accent` → `brandColor.demoted`, `used_as_tint` → `brandColor.tint`, `ignored` → `brandColor.ignored`, 문구는 1.15.3)를 S08 카드·S09 상단에 표시.
 
 #### 1.5.5.4 예시로 채우기
 
@@ -617,7 +618,7 @@ type JobPhase  = 'queued' | 'compiling' | 'generating' | 'rendering' | 'scoring'
 //                    previewUrl, screenshotUrl /* 1280 첫 화면 */, labelKey, brandColorNotice, useSampleContent }
 ```
 
-- `MockupCard`에는 `brandColorNotice: null | 'adjusted' | 'demoted_to_accent'`와 `useSampleContent: boolean`도 있다(06장 D-0622).
+- `MockupCard`에는 `brandColorNotice: null | 'adjusted' | 'demoted_to_accent' | 'used_as_tint' | 'ignored'`, `useSampleContent: boolean`, `movedAxes`, `diffFromTrue`도 있다(06장 6.4.3, S-32·S-37).
 - `harmonyScore`·`tasteScore`는 화면에 표시하지 않는다(1.7.1).
 
 ### 1.6.2 단계 표시(`phase` → 라벨, 06장이 01장에 위임)
@@ -655,7 +656,7 @@ type JobPhase  = 'queued' | 'compiling' | 'generating' | 'rendering' | 'scoring'
 
 ### 1.6.5 취소·이탈
 
-- [만들기 취소] → 확인 시트 → `POST /api/generations/:jobId/cancel`. 문구: 아직 시안이 노출되지 않았으면 "취소해도 생성 횟수는 줄지 않아요", 비폴백 시안이 1개 이상 노출됐으면 "이미 나온 시안이 있어서 생성 횟수 1회가 사용돼요"(R-15: 비폴백 노출 ≥ 1일 때만 차감) → `canceled`.
+- [만들기 취소] → 확인 시트 → `POST /api/generations/:jobId/cancel`. 문구: 비폴백 시안이 아직 노출되지 않았으면(`queued`·`running` 구분 없음) "취소해도 생성 횟수는 줄지 않아요", 비폴백 시안이 1개 이상 노출됐으면 "이미 나온 시안이 있어서 생성 횟수 1회가 사용돼요"(S-16, 원천 06장 6.2.3: 취소 시점 비폴백 노출 ≥ 1이면 차감, 0이면 환불) → `canceled`.
 - 탭을 닫아도 잡은 계속된다. `/g/[jobId]` 재접속 또는 S12 "진행 중 작업"으로 복귀.
 - 완료 알림(이메일·브라우저 알림) = **[P2]**.
 
@@ -697,11 +698,13 @@ desktop 1440
 | 기타 | [전체 화면으로 보기](미리보기 도메인 새 탭), [같은 정보로 다시 만들기](확인 시트 "생성 횟수 1회가 사용돼요(오늘 남은 {d}회)" → `POST /api/projects/:id/generations {kind:'regenerate'}`), [다른 정보로 만들기](S06, 같은 결과) | 같음 |
 
 - 변형 라벨(R-03)과 정의 1줄(고정 문구, `labelKey`로 카피 표에서 찾음):
-  - `v_true` "취향 그대로" — "진단한 취향을 그대로 살렸어요"
+  - `v_true` "취향 그대로" — "진단한 취향에 가장 가깝게 만들었어요"(S-32. 보정이 있었다면 이 카드에도 아래 보정 칩이 붙는다)
   - `v_fit` "용도 최적" — "{용도 라벨}에 맞게 구성과 대비를 조정했어요"
   - `v_bal` "균형" — "취향과 용도 사이에서 균형을 잡았어요"
   - `isFallback = true`: 변형 라벨은 그대로 두고 "기본 구성" 배지 + "이 방향은 자동 구성 대신 기본 구성으로 준비했어요"(04장 4.12)
-- 그 아래 브랜드 컬러 안내(`brand_color_notice`, 1.5.5.3), `useSampleContent`면 "예시 콘텐츠" 배지.
+- **보정 칩**(S-32): `MockupCard.movedAxes`(최대 2)를 문구 템플릿으로 보여 준다. `reason=purpose` → `calib.purpose` "{용도}에서는 {축}을 {방향}으로 조정했어요", `reason=type` → `calib.type` "{유형 이름}의 범위 안에서 {축}을 {방향}으로 맞췄어요", `reason=distance` → `calib.distance` "다른 시안과 구분되도록 {축}을 {방향}으로 옮겼어요". {축}·{방향}은 02장 축 쉬운 말(1.5.2.1 양 끝 라벨).
+- **취향 그대로와 다른 점**(S-32): `v_fit`·`v_bal`에는 `MockupCard.diffFromTrue` 상위 2개를 L2 쉬운 말 사전(`l2.plain.<key>.<value>`, 1.15.3, 예: "더 촘촘한 여백 · 각진 모서리")으로 보여 준다. `v_true`는 표시하지 않는다. "원래대로 보기" 토글은 [P2](00장 §7.1).
+- 그 아래 브랜드 컬러 안내(`brand_color_notice` 5값, 1.5.5.3), `useSampleContent`면 "예시 콘텐츠" 배지. 업종에 맞는 사진이 없어 일부를 색면으로 바꾼 시안은 `drafts.photoSubstituted`를 표시한다(S-34, 04장 4.9.4).
 - 점수(`harmonyScore`·`tasteScore`) 숫자는 표시하지 않는다(노출 시안은 모두 기준 통과).
 - 카드 순서 고정: `v_true`, `v_fit`, `v_bal`. 위치 편향은 `mockup_select.variant`로 사후 점검.
 - 미리보기를 처음 볼 때 `mockup_view` 1회(변형별).
@@ -787,12 +790,13 @@ tablet(768~1023): 패널은 왼쪽 드로어(폭 320px, [편집 패널] 버튼�
 
 - **미리보기 갱신**: 조작마다 `EditState`를 갱신하고 `deriveTokens` + isomorphic 컴파일러(04장 4.9)로 브라우저에서 HTML 전체를 다시 만들어, 표시용 iframe(`sandbox=""`, 스크립트 0)의 `srcdoc`을 통째로 교체한다. postMessage 프로토콜은 쓰지 않는다. 표시 iframe은 내부 스크롤을 쓰지 않는다: 측정용 iframe에서 잰 문서 높이로 iframe `height`를 지정하고 스크롤은 부모의 미리보기 컨테이너가 담당한다(교체해도 스크롤 위치 유지). 깜빡임을 막기 위해 새 `srcdoc`을 숨김 iframe에 먼저 넣고 `load` 후 표시 iframe과 교대(더블 버퍼)한다. 구조 변경 시 바뀐 섹션 위치를 `slotRects`로 찾아 컨테이너를 그 위치로 스크롤하고 오버레이 하이라이트 1초.
 - **슬롯 선택**: 같은 HTML을 화면 밖 측정용 iframe(`sandbox="allow-same-origin"`, 스크립트 불가)에 넣어 `data-slot-id` 요소의 `getBoundingClientRect()`로 `slotRects`(slot_id → 사각형 목록)를 계산한다(04장 D-0413). 부모 페이지가 미리보기 위에 투명 오버레이를 그리고, 호버 시 1px `--svc-fg` 점선 외곽선, 클릭 시 해당 슬롯 선택·패널 포커스. 오버레이 슬롯은 키보드로도 순회 가능(Tab, 접근 가능한 이름 = "{섹션 이름} {슬롯 이름} 편집").
-- **반영 시간**: 스타일 조작 → 표시 p95 ≤ 200ms, 구조 변경(섹션·variant·텍스트·이미지) → p95 ≤ 500ms(R-17).
+- **반영 시간**: 스타일 조작 → 표시 p95 ≤ `perf.editStyleP95Ms`(200ms), 구조 변경(섹션·variant·텍스트·이미지) → p95 ≤ `perf.editStructP95Ms`(500ms)(R-17). 서체의 첫 로드는 측정에서 제외하고, 같은 서체 재사용 시에는 포함한다(S-40).
+- **폰트**(S-40, 03장 3.7.5): 편집 미리보기와 후보 카드는 `ks-x-1001` 정적 서브셋 + `page` 보충 파일(서브셋 밖 글자만, 디바운스 1초)을 쓴다. 측정용 iframe은 `document.fonts.ready` 이후 `slotRects`를 계산한다.
 - **즉시 검증**(조작마다, 순수 함수 `evaluateTokens(tokens, layout_tree)` ≤ 50ms, 04장 4.15.2):
   - 대비 AA 위반 → 03장 스냅 규칙으로 텍스트 색 토큰 자동 보정(`auto_fix` op) + 배너 "글자가 잘 읽히도록 글자색을 조정했어요". 보정 불가면 조작 거부 + "이 조합은 글자 대비가 부족해서 쓸 수 없어요"(07장 TC-D-04).
   - 조화 점수 < 80 → 적용 + 배너 "조화 점수가 기준보다 낮아졌어요 — {규칙 이름}" + [추천값으로 되돌리기]. 80 이상이 되면 자동 해제. 저장·내보내기 차단 사유는 아니다.
   - 직접 입력 카피의 AI 티 린터 error → 적용하되 텍스트 탭에 "이 문구는 저장할 수 없어요 — {사유}" 표시, 저장 시 거부.
-- **서버 재검사**: 저장 시 서버가 같은 입력으로 다시 컴파일·대비 검사(실패 422 `EDIT_GATE_FAILED`), 통과하면 버전 `gate_status='pending'` → 렌더 게이트(p95 ≤ 15초) → `passed | failed`(1.8.6).
+- **서버 재검사**: 저장 시 서버가 같은 입력으로 다시 컴파일·대비 검사·편집 텍스트 남용 판정(G-13)(실패 422 `EDIT_GATE_FAILED`), 통과하면 버전 `gate_status='pending'` → 렌더 게이트(p95 ≤ `perf.versionGateP95Sec`) → `passed | failed`(1.8.6).
 
 ### 1.8.6 undo·저장·버전·원본 비교
 
@@ -818,9 +822,11 @@ type EditOp = {
 - `409 VERSION_CONFLICT`(다른 창에서 저장) → 배너 "다른 창에서 수정된 내용이 있어요" [최신 내용 불러오기](이 창의 미저장 op 폐기 경고).
 - 편집 신호는 `events.mockup_edit`와 `mockup_versions`에만 남는다(R-18). 취향 벡터 반영은 [P2](04장 4.15.3).
 
-### 1.8.7 mobile(<768) 편집 화면
+### 1.8.7 좁은 뷰포트(<768) 편집 화면 (S-31)
 
-00장 §7.1에 따라 mobile에서는 편집하지 않는다. `/edit/[mockupId]`를 mobile에서 열면:
+**편집 허용 + 뷰포트 < 768**(데스크톱 200% 확대, 좁은 창, 태블릿 분할 화면 등): 1열 편집 레이아웃. 상단 탭 [미리보기][편집]을 전환하고, 편집 탭은 패널 3탭을 전체 폭으로, 미리보기 탭은 375 뷰포트로 보여 준다. 컨트롤 컴포넌트는 desktop과 같다(새 컴포넌트 없음, 배치만 바뀜). 내보내기도 가능하다.
+
+**편집 불허(터치 전용 소형 기기)**: 00장 §7.1에 따라 편집하지 않는다. `/edit/[mockupId]`를 이런 기기에서 열면:
 - 상단 바(← / 브랜드명 / [공유]) + 미리보기 전체 폭(375) + 하단 안내 카드 "편집은 태블릿이나 PC에서 할 수 있어요" [링크 복사](현재 URL 복사, 로그인 후 다른 기기에서 이어서).
 - 공유(S11)는 가능, 내보내기는 숨김.
 
@@ -947,8 +953,11 @@ type EditOp = {
 | `IDEMPOTENCY_KEY_REUSED` / `IDEMPOTENCY_KEY_REQUIRED` | 422 / 400 | — | (클라이언트 버그) S15(`INTERNAL`과 같은 화면) | — | [다시 시도] |
 | `BLOCKED_BRAND` (`reason: high_risk`) | 422 | S06 브랜드명 필드 | 필드 오류 | "금융·공공기관 등 사칭 위험이 큰 이름은 시안을 만들 수 없어요. 본인 소유 브랜드라면 문의해 주세요." | [문의하기] |
 | `BLOCKED_BRAND` (`reason: phishing_term`) | 422 | S06 소개·강점·고객 필드 | 필드 오류 | "이 문구에는 쓸 수 없는 표현이 들어 있어요. 오해라면 문의해 주세요." | [문의하기] |
+| `BLOCKED_BRAND` (`reason: prohibited_category`) | 422 | S06 소개·강점·고객 필드 | 필드 오류 | "이 서비스로 만들 수 없는 업종이에요. 오해라면 문의해 주세요." | [문의하기](`/support`) |
+| `BLOCKED_BRAND` (`reason: content_policy`) | 422(잡 `failed`) | S07 → 재시도 화면 | 인라인 박스 | "입력한 내용으로는 시안을 만들 수 없었어요. 생성 횟수는 줄지 않았어요. 내용을 바꿔 다시 시도하거나 문의해 주세요." | [브리프 수정](S06), [문의하기] |
 | `BRAND_ATTESTATION_REQUIRED` | 422 | S06 | 필드 아래 체크박스 | "이 이름과 같은 공개 사이트가 있어요. 브랜드 소유자이거나 사용 권한이 있다면 확인해 주세요." | 체크 후 `brandAttested: true` 재제출 |
 | `EDIT_GATE_FAILED` | 422 | S09 | 배너 + 마지막 op 되돌림 | "글자 대비가 부족한 조합이라 저장하지 않았어요. 바로 전 상태로 되돌렸어요." | — |
+| `EDIT_GATE_FAILED`(`GATE_FAILED:G-13`) | 422 | S09 텍스트 탭 | 해당 슬롯 오류 + 마지막 op 되돌림 | "이 문구에는 쓸 수 없는 표현이 들어 있어요. 바로 전 상태로 되돌렸어요."(`reason`별 문구는 `BLOCKED_BRAND`와 같음, S-24) | — |
 | `RATE_LIMITED` | 429 | S02 시작·S06·S10·신고 | 토스트 | "요청이 많아 잠시 쉬어 가요. {retryAfterS}초 뒤에 다시 시도해 주세요." | 카운트다운 후 버튼 재활성(수치 원천 06장 6.10.1, R-31) |
 | `QUOTA_DAY` | 429 | S06·S08 | 인라인 박스 | "오늘 만들 수 있는 시안 3회를 모두 썼어요. 입력하신 내용은 저장돼 있어요. 내일 0시에 다시 만들 수 있어요." | [만든 시안 보기](S12), "더 많이 만들고 싶다면"(`paywall_view{placement:'quota_day'}`) |
 | `QUOTA_MONTH` | 429 | S06·S08 | 같음 | "이번 달 만들 수 있는 시안 15회를 모두 썼어요. 다음 달 1일에 다시 열려요." | 같음(`placement:'quota_month'`) |
@@ -1148,6 +1157,8 @@ type EditOp = {
 
 ### 1.15.3 핵심 문구(키 → 문구)
 
+**이 카피 표가 본문을 이긴다**(S-29). 본문 다른 절에 문구가 적혀 있어도 구현은 이 표의 키와 문구를 쓰고, 다르면 이 표가 맞다.
+
 | 키 | 문구 |
 |---|---|
 | `landing.headline` | 4분 동안 마음에 드는 쪽만 고르세요 |
@@ -1163,7 +1174,14 @@ type EditOp = {
 | `quiz.exit.confirm` | 지금까지 응답은 저장돼요. 언제든 이어서 할 수 있어요 |
 | `result.label` | 나의 디자인 성향 유형 |
 | `result.cta` | 이 취향으로 내 사이트 시안 만들기 |
-| `result.lowSignal` | 고른 화면이 적어서 결과가 넓게 나왔어요 |
+| `result.notice.lowSignal` | 고른 화면이 적어서 결과가 넓게 나왔어요 |
+| `result.notice.conflict` | 두 가지 성향이 함께 보여 {1순위} 기준으로 정리했어요 |
+| `result.notice.lowConsistency` | 고른 화면들의 방향이 조금씩 달라요 — 다시 해 보면 더 정확해져요 |
+| `result.notice.boundary` | {1순위}에 가깝고, {2순위} 성향도 있어요 |
+| `result.notice.seasonAdjusted` | 디자인 기준 업데이트로 결과가 조정되었어요 |
+| `result.confidence.high` / `.medium` / `.low` | 뚜렷한 편이에요 / 대체로 이쪽이에요 / 여러 취향이 섞여 있어요 |
+| `result.axis.open` | 이 축은 아직 확실하지 않아요 |
+| `result.axis.insensitive` | 이 부분은 크게 가리지 않는 편이에요 |
 | `result.rating.q` | 이 결과가 내 취향과 얼마나 맞나요? |
 | `result.adjacent.q` | 이 중에 더 가까운 유형이 있나요? |
 | `brief.cta` | 시안 만들기 |
@@ -1171,8 +1189,17 @@ type EditOp = {
 | `gen.title` | 시안을 만들고 있어요 |
 | `gen.slow` | 평소보다 조금 걸리고 있어요. 이 화면을 닫아도 계속 만들어요 |
 | `drafts.partial` | 기준을 통과한 시안만 보여드려요 |
+| `drafts.photoSubstituted` | 업종에 맞는 사진이 없어 일부는 색면으로 구성했어요 |
+| `calib.purpose` | {용도}에서는 {축}을 {방향}으로 조정했어요 |
+| `calib.type` | {유형 이름}의 범위 안에서 {축}을 {방향}으로 맞췄어요 |
+| `calib.distance` | 다른 시안과 구분되도록 {축}을 {방향}으로 옮겼어요 |
+| `l2.plain.<key>.<value>` | L2 값마다 쉬운 말 1개(예: `l2.plain.density.compact` "더 촘촘한 여백", `l2.plain.radius_family.sharp` "각진 모서리"). 키 집합은 03장 3.2 L2 enum 전체 |
+| `brandColor.adjusted` | 접근성을 위해 색을 조정했어요(원본 {hex}) |
+| `brandColor.demoted` | 브랜드 컬러를 포인트 색으로 썼어요 |
+| `brandColor.tint` | 브랜드 컬러가 너무 밝아서 배경 색조로 반영했어요 |
+| `brandColor.ignored` | 이 색은 글자와 함께 쓰기 어려워 반영하지 못했어요 |
 | `edit.contrastFixed` | 글자가 잘 읽히도록 글자색을 조정했어요 |
-| `edit.mobile` | 편집은 태블릿이나 PC에서 할 수 있어요 |
+| `edit.mobile` | 편집은 태블릿이나 PC에서 할 수 있어요(터치 전용 소형 기기 전용 안내) |
 | `export.done` | 내려받았어요 |
 | `share.p.cta` | 나도 내 취향으로 만들기 |
 
@@ -1280,7 +1307,7 @@ type EditOp = {
 | D-0109 | 1.12.1 화면×상태 목록 = 07장 시각 회귀·axe 대상, `?__state=`는 비운영 환경에서만 | UX-10, UI-02 | 07, 09 | 유효(07장 반영 완료) |
 | D-0110 | 화면 route 확정 S01~S15 | UX-01, UI-02 | 06, 07, 09 | → R-19로 대체. route 값은 1.2(결과 `/r/[shareId]`, 브리프 `/brief?result=[resultId]`, 편집 `/edit/[mockupId]`, 동의 `/onboarding/consent`) |
 | D-0111 | 03장이 `colorName(hex) → 한국어 색 이름` 함수와 색 이름 사전(기본 색상 ≥ 40개, 명도·채도 수식어 규칙)을 제공하고, 02장 `survey_items`에 `dominant_colors`(hex 3개, 빌드 시 추출) 필드를 추가 | UX-11(색각 대응) | 02, 03 | `dominant_colors`는 06장 `survey_items`에 반영(02장 미반영). `colorName`은 유효(03장 미반영) |
-| D-0112 | 편집 기기 범위: ≥ 768 전체(768~1023은 패널 드로어), < 768 미리보기·공유만 | UI-19, 00장 §7.1 | 00, 07 | 유효 |
+| D-0112 | 편집 기기 범위: 편집 허용 = `(pointer: fine) \|\| screen.width ≥ 768`(기기), 배치 = 뷰포트(≥ 1024 3단, 768~1023 패널 드로어, < 768 1열 탭). 터치 전용 소형 기기는 미리보기·공유만 | UI-19, 00장 §7.1 | 00, 07 | S-31로 갱신 |
 | D-0113 | 06장 API 추가 요청: ① `PATCH /api/surveys/:id/anchor-override {typeId: string \| null}`(anon/user 소유, R-36) ② `ResultView`에 2·3순위 유형 `{id, nameKo, descriptionKo}[2]`, `confidence`, `flags`, 축별 `state('open'|'confirmed'|'insensitive')`·`sigmaDisplay`, `anchorOverrideTypeId` 포함 ③ `GET /api/surveys?mine=1`(user, 결과 목록: `resultId, typeId, nameKo, taxonomyVersion, shareId, completedAt`) ④ 결과 `ShareView`에 `isOwner: boolean`과 소유자일 때 `surveyId` | 1.5.2, 1.11 | 02, 06 | 06장 D-0621로 반영 완료(rating 응답 `suggestedTypes` 포함) |
 | D-0114 | 06장 `MockupCard`에 `brandColorNotice: null \| 'adjusted' \| 'demoted_to_accent'`(04장 DesignSpec)와 `useSampleContent: boolean`(프로젝트) 추가 | 1.6.1, 1.7.1 | 04, 06 | 06장 D-0622로 반영 완료 |
 | D-0115 | 편집 서버 저장 시점: 마지막 op 후 5초 무입력·[저장]·내보내기/공유 직전에 버전 생성(append-only), op마다 localStorage 백업. `EditState.ops`에 최근 50 op 포함 | 04장 4.15.3 위임, 07장 TC-N-06 | 04, 06 | 06장 D-0622로 반영 완료(`trigger` 값) |
@@ -1360,3 +1387,10 @@ type EditOp = {
 | PD-13 편집 경험 | Major | 1.8 | 편집 → 벡터 반영은 [P2](04장 4.15.3) |
 | PD-15 슬라이더·스냅 모순 | Major | 1.8.1, 1.8.3 | 연속값 UI 0(AC-01-35) |
 | PD-17 결과 화면·공유 | Major | 1.5.2 | 4글자 코드 미채택(D-01), 유형 공용 페이지 [P2] |
+| S-16(01) | — | 1.6.5 취소 문구 | |
+| S-24(01) | — | 1.5.5.3, 1.12.2 `prohibited_category`·`content_policy`·G-13 행 | |
+| S-29 | Major | 1.5.2 ②·축 상태, 1.15.3 키·우선 원칙 | |
+| S-30 | Major | 1.4.3 mobile 고정 창·desktop w_min, ux.cardScale | |
+| S-31 | Major | 1.3.1, 1.8.7, 1.9, D-0112 | |
+| S-32·S-34·S-37(01) | Major | 1.7.1 보정 칩·차이·v_true 문구·photoSubstituted, 1.5.5.3 notice 5값, 1.15.3 키 | |
+| S-40(01) | — | 1.8.5 폰트·측정 규칙 | |
