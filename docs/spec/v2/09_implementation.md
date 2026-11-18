@@ -380,7 +380,7 @@ M0 스캐폴드·가드레일
 | 산출물 | `packages/db/supabase/migrations/*.sql`, `packages/db/src/types.gen.ts`, data/ 임시 묶음(필요 시) |
 | 의존성 | M0 |
 | 검증 | `pnpm verify:m1` |
-| 통과 조건 | ① `data:validate` 17개 묶음 전부 유효, 교차 참조 고아 0 ② 수량: 축 5, 유형 8, 프리셋 8(유형당 앵커 정확히 1), 용도 3, 폰트 한글 12·영문 14, 페어링 20(전부 한글 포함), 카드 계획 48, A/B 계획 120, 레퍼런스 60, 골든 30 ③ 유형 centroid 쌍별 최소 거리 ≥ 02장 기준(미정 시 0.35) ④ `seed:temp` 2회 실행 결과 바이트 동일, human 파일 변경 0 ⑤ 빈 DB에 마이그레이션 적용 성공, `supabase db reset` 2회 연속 성공 ⑥ `db:seed` 2회 실행 후 행 수 동일(멱등) ⑦ RLS 테스트: 사용자 B가 사용자 A의 project·job·mockup 조회 시 0행, 익명 키로 진단 세션 직접 조회 0행(→ 06·08장 정책) ⑧ 생성 타입이 web·worker 양쪽에서 컴파일 |
+| 통과 조건 | ① `data:validate` 17개 묶음 전부 유효, 교차 참조 고아 0 ② 수량: 축 5, 유형 8, 프리셋 8(유형당 앵커 정확히 1), 용도 3, 폰트 한글 12·영문 14, 페어링 20(전부 한글 포함), 카드 계획 48, A/B 계획 120, 레퍼런스 60, 골든 32(R-11) ③ 유형 centroid는 03장 3.4.7 표와 값이 일치하고 쌍별 최소 거리 ≥ 0.50(03장 계산값 0.546) ④ `seed:temp` 2회 실행 결과 바이트 동일, human 파일 변경 0 ⑤ 빈 DB에 마이그레이션 적용 성공, `supabase db reset` 2회 연속 성공 ⑥ `db:seed` 2회 실행 후 행 수 동일(멱등) ⑦ RLS 테스트: 사용자 B가 사용자 A의 project·job·mockup 조회 시 0행, 익명 키로 진단 세션 직접 조회 0행(→ 06·08장 정책) ⑧ 생성 타입이 web·worker 양쪽에서 컴파일 ⑨ 06장 데이터 모델 절의 `create table` 목록 전부(MVP 표시분)가 마이그레이션에 존재하고 컬럼·제약이 일치(`pnpm verify:schema-parity`: 06장 DDL 블록을 파싱해 `information_schema`와 비교, 차이 0) |
 
 ### 9.4.4 M2 — 컴파일러·렌더러·폴백 시안
 
@@ -440,7 +440,7 @@ M0 스캐폴드·가드레일
 | 산출물 | 위 기능, `reports/golden/<date>-<promptVersion>-<model>.json` |
 | 의존성 | M5(M6과 병렬 가능 항목 9.3) |
 | 검증 | `pnpm verify:m7` |
-| 통과 조건 | ① 06장 한도 + 1번째 요청 → 429 + `Retry-After` ② 비관리자로 `/admin`·`/api/admin/*` → 403(미들웨어·RLS 모두) ③ 계정 삭제 E2E 후 해당 user_id 행이 06장 개인 데이터 테이블 전부에서 0, 해당 Storage 경로 객체 0 ④ 가짜 시계로 91일 경과 시 보관 기간 잡이 대상 스크린샷 삭제, 89일은 유지 ⑤ opt-out 접수 → 레퍼런스가 즉시 결과 노출에서 제외(다음 요청부터) ⑥ `eval:golden --mode mock`이 30케이스 실행 후 07장 지표 필드를 모두 가진 리포트 JSON 생성(스키마 검증), mock 기준 스키마 유효율 100%·노출 ≥1 100% ⑦ `LLM_MODE=live`이고 키가 없으면 기동 시 종료 코드 1 + 변수명 출력 ⑧ worker Docker 이미지 빌드 성공 ⑨ gitleaks 탐지 0 ⑩ `NODE_ENV=production`에서 `LLM_MODE=mock`이면 기동 거부 |
+| 통과 조건 | ① 06장 한도 + 1번째 요청 → 429 + `Retry-After` ② 비관리자로 `/admin`·`/api/admin/*` → 403(미들웨어·RLS 모두) ③ 계정 삭제 E2E 후 해당 user_id 행이 06장 개인 데이터 테이블 전부에서 0, 해당 Storage 경로 객체 0 ④ 가짜 시계로 91일 경과 시 보관 기간 잡이 대상 스크린샷 삭제, 89일은 유지 ⑤ opt-out 접수 → 레퍼런스가 즉시 결과 노출에서 제외(다음 요청부터) ⑥ `eval:golden --mode mock`이 30케이스 실행 후 07장 지표 필드를 모두 가진 리포트 JSON 생성(스키마 검증), mock 기준 스키마 유효율 100%·노출 ≥1 100% ⑦ `LLM_MODE=live`이고 키가 없으면 기동 시 종료 코드 1 + 변수명 출력 ⑧ worker Docker 이미지 빌드 성공 ⑨ gitleaks 탐지 0 ⑩ `NODE_ENV=production`에서 `LLM_MODE=mock`이면 기동 거부 ⑪ 06장 API 명세의 엔드포인트 전부가 `@tastefit/api-contract`에 zod 계약으로 있고 계약 테스트 통과(`pnpm verify:api-parity`: 06장 엔드포인트 목록과 라우트 파일 대조, 누락 0), 06장 오류 코드 카탈로그 전 항목이 enum과 `copy/ko.ts`에 존재 |
 
 ### 9.4.10 M8 — 하드닝·출시 판정
 
