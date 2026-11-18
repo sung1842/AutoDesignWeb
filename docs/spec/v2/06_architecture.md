@@ -234,7 +234,7 @@ SLO(R-25, 07장 M15): 첫 시안 카드 노출(첫 mockups.created_at − queued
 | `generate` | web | `{jobId}` | 전역 `GEN_MAX_CONCURRENT_JOBS`(기본 5, R-16) | 0 | 200s | 잡 내부에서 재생성·폴백 처리. 큐 재시도 없음 |
 | `render` | web, worker | `{target:'version', versionId}` | 2 | 2 / 지수(2s, 8s) | 60s | 버전 저장 후 렌더 게이트(G-04~G-08)·썸네일 |
 | `export` | web | `{exportId}` | 2 | 2 / 지수 | 120s | |
-| `account-delete` | web | `{userId}` | 1 | 5 / 지수(최대 1h) | 600s | |
+| `account-delete` | web | `{userId}` | 1 | 5 / 지수(최대 1h) | 600s | 아래 단계 ①~⑦(S-21) |
 | `retention` | 크론 `0 18 * * *`(UTC = 03:00 KST) | `{}` | 1 | 3 | 1800s | 08장 8.7.7 보관 기간표 실행(`retention:sweep`) |
 | `survey-build` | `pnpm survey:build`(로컬·CI만) | `{taxonomyVersion}` | 1 | 0 | 3600s | 운영 워커에서는 컨슈머 미등록 |
 | `alerts` | 크론 `*/5 * * * *` | `{}` | 1 | 0 | 120s | 6.12 알림 규칙 |
@@ -246,6 +246,22 @@ SLO(R-25, 07장 M15): 첫 시안 카드 노출(첫 mockups.created_at − queued
 - `reconcile` 규칙: (1) `status='queued' AND queued_at < now()-60s`이고 pg-boss에 해당 singletonKey 잡이 없으면 재투입(최대 3회, 이후 `failed/ENQUEUE_FAILED`). (2) `status='running' AND heartbeat_at < now()-60s`이면 `failed/WORKER_LOST`로 바꾸고 한도를 환불한다(발생한 원가는 `llm_calls`에 이미 기록되어 예산 집계에 남는다).
 - 워커는 실행 중인 잡마다 10초 간격으로 `generation_jobs.heartbeat_at`을, 프로세스 단위로 30초 간격으로 `worker_heartbeats`를 갱신한다.
 - `SIGTERM` 수신 시 새 잡을 가져오지 않고 최대 30초 기다린다. 끝나지 않은 잡은 `reconcile`이 처리한다. Fly 머신 `kill_timeout = 40`.
+
+**`account-delete` 절차(S-21, LG2-04)**. 단계마다 멱등이다. 실패하면 큐 재시도(5회)로 처음부터 다시 돌며, 이미 끝난 단계는 건너뛴다. 5회 모두 실패하면 A8 알림과 `admin_audit_logs(action='account_delete_failed')`를 남긴다.
+
+| 단계 | 동작 | 멱등 근거 |
+|---|---|---|
+| ① | `users.status='deleting'`, 세션 폐기(`auth.admin.signOut(uid,'global')`), 소유 공유 링크 비공개 | 같은 값 재설정 |
+| ② | `llm_calls where owner_id=:uid`의 `llm-payloads` 객체 삭제(이 단계는 ⑥보다 먼저다. 그 뒤에는 `owner_id`가 null이 되어 객체를 찾을 수 없다) | 없는 객체 삭제는 성공 처리 |
+| ③ | `renders/<uid>/`·`exports/<uid>/` 객체 삭제 | 같음 |
+| ④ | `consents where user_id=:uid` → `consents_archive(user_hash, doc_type, doc_version, agreed, agreed_at)`로 복사 후 원본 삭제(한 트랜잭션) | 원본이 없으면 건너뜀 |
+| ⑤ | `users.status ∈ {gen_suspended, suspended}`였으면 `sanctions(email_hash, level, until, reason_code)` upsert. `until`은 남은 정지 기간, 최대 1년 | upsert |
+| ⑥ | `auth.admin.deleteUser(uid)` → `users`·소유 행 cascade | 없는 사용자면 성공 처리 |
+| ⑦ | `admin_audit_logs(action='account_deleted', target_type='user', target_id=user_hash)` | `target_id` 기준 중복 삽입 방지(존재 확인 후 삽입) |
+
+- 재가입: auth.users INSERT 트리거가 `sanctions`에 같은 `email_hash`가 있고 `until > now()`면 `users.status`를 그 `level`로 만든다. 이 사용자의 생성 API는 403 `ACCOUNT_SUSPENDED`다.
+- 관리자 계정 삭제도 같은 절차다. `admin_audit_logs`는 FK가 없어 행 수가 그대로 남는다.
+- 수용 기준 AC-06-53: 계정 삭제 E2E 후 해당 사용자의 `llm-payloads` 객체 0건, `consents` 0행, `consents_archive`에 같은 수의 행, `auth.users` 0행. 정지 계정 탈퇴 → 같은 이메일 재가입 → 생성 API 403 `ACCOUNT_SUSPENDED`. 관리자 계정 삭제 성공, 감사 로그 행 수 불변. 단계 ③ 직후 강제 실패를 주입해도 재시도 후 최종 상태가 같다.
 
 ## 6.3 데이터 모델
 
@@ -319,13 +335,35 @@ create table users (                                  -- 00장 IF-07, 08장의 p
   role            text not null default 'user' check (role in ('user','admin')),
   is_internal     boolean not null default false,     -- 운영자·지인 테스트 계정(KPI 제외)
   display_name    text null check (char_length(display_name) <= 40),  -- 자동 채움 금지(08장 8.7.1)
-  status          text not null default 'active' check (status in ('active','gen_suspended','suspended')),
+  status          text not null default 'active' check (status in ('active','gen_suspended','suspended','deleting')),  -- deleting = account-delete 진행 중(S-21)
   quota_day_override   smallint null check (quota_day_override between 0 and 50),   -- ADM-06
   quota_month_override smallint null check (quota_month_override between 0 and 500),
   created_at      timestamptz not null default now(),
   last_login_at   timestamptz not null default now()
 );
 -- auth.users INSERT 트리거로 users 1행 생성(security definer). ADMIN_EMAILS 포함 이메일이면 role='admin'.
+-- 같은 트리거가 sanctions에서 email_hash 일치 행(until > now())을 찾으면 users.status를 그 level로 이어받는다(S-21).
+
+-- OAuth 메타데이터 최소화(S-25, 08장 8.7.1): 공급자가 보낸 이름·사진 등을 저장하지 않는다.
+create or replace function minimize_auth_metadata() returns trigger
+language plpgsql security definer set search_path = public, auth as $$
+declare keep text[] := array['email','email_verified','provider_id','sub','iss'];
+begin
+  if tg_table_name = 'users' then
+    new.raw_user_meta_data := (select coalesce(jsonb_object_agg(k, v), '{}'::jsonb)
+                               from jsonb_each(coalesce(new.raw_user_meta_data, '{}'::jsonb)) as e(k, v) where k = any(keep));
+  else
+    new.identity_data := (select coalesce(jsonb_object_agg(k, v), '{}'::jsonb)
+                          from jsonb_each(coalesce(new.identity_data, '{}'::jsonb)) as e(k, v) where k = any(keep));
+  end if;
+  return new;
+end $$;
+create trigger auth_users_minimize before insert or update on auth.users
+  for each row execute function minimize_auth_metadata();
+create trigger auth_identities_minimize before insert or update on auth.identities
+  for each row execute function minimize_auth_metadata();
+-- native 프로파일은 shim의 auth.users·auth.identities에 공급자 형태 행을 직접 넣어 시험한다.
+-- 실제 Google 흐름의 키 덤프는 needs_ci(gotrue-google-metadata), 결과는 docs/compliance/auth-metadata.md.
 
 create table identity_links (                         -- 00장 8.4
   anon_id    text not null,                           -- events.anon_id와 같은 text 표기(uuid 문자열)
@@ -348,6 +386,26 @@ create table consents (                               -- 08장 8.7.4 C
   check (user_id is not null or anon_id is not null)
 );
 create index on consents (user_id, doc_type, doc_version);
+
+create table consents_archive (                       -- 탈퇴 후 동의 증빙 1년(S-21, 08장 8.7.7)
+  id           uuid primary key default gen_random_uuid(),
+  user_hash    text not null,                         -- HMAC-SHA256(user_id, CONSENT_HASH_KEY). 키는 교체하지 않는다
+  doc_type     text not null,
+  doc_version  text not null,
+  agreed       boolean not null,
+  agreed_at    timestamptz null,
+  archived_at  timestamptz not null default now()
+);
+create index on consents_archive (archived_at);
+
+create table sanctions (                              -- 정지 이력 재가입 방지(S-21, 08장 8.9.5). 보관 근거는 사람 확인(08 8.14 Q6)
+  email_hash   text primary key,                      -- HMAC-SHA256(lower(trim(email)), CONSENT_HASH_KEY)
+  level        text not null check (level in ('gen_suspended','suspended')),
+  until        timestamptz not null check (until <= created_at + interval '1 year'),
+  reason_code  text not null,
+  created_at   timestamptz not null default now()
+);
+-- consents_archive·sanctions는 RLS 켜고 정책 0개(service_role 전용).
 
 create table invites (                                -- 00장 7.2, BETA_INVITE_ONLY
   code        text primary key check (code ~ '^[A-Z0-9]{8,16}$'),
@@ -697,6 +755,7 @@ create table generation_jobs (
   config_snapshot  jsonb not null,                    -- 6.9.3
   design_spec      jsonb null,                        -- DesignSpec ×3 변형(→04장)
   copy_deck        jsonb null,                        -- CopyDeck(→04장)
+  copy_source      text not null default 'llm' check (copy_source in ('llm','template')),  -- template = gen_copy 실패 시 템플릿 덱(S-12)
   n_real           smallint not null default 0 check (n_real between 0 and 3),
   n_fallback       smallint not null default 0 check (n_fallback between 0 and 3),
   repair_rounds    smallint not null default 0 check (repair_rounds between 0 and 1),
@@ -921,7 +980,7 @@ create table idempotency_keys (
 
 create table admin_audit_logs (                       -- 00장 10.1, append-only
   id          uuid primary key default gen_random_uuid(),
-  admin_id    uuid null references users(id) on delete set null,   -- null = 시스템 배치
+  admin_hash  text null,                             -- HMAC-SHA256(관리자 user_id, CONSENT_HASH_KEY). FK 없음: append-only라 참조 동작 UPDATE 불가(S-21). null = 시스템 배치
   action      text not null,
   target_type text not null,
   target_id   text null,
@@ -1001,6 +1060,15 @@ create table alert_state (                            -- 알림 중복 억제(6.
   rule_id       text primary key,
   last_fired_at timestamptz null,
   last_value    numeric null
+);
+
+-- ===== 9000_local_only: APP_ENV=local 전용(S-01). staging·prod 마이그레이션 목록에서 제외 =====
+create table dev_mail_outbox (                        -- AuthPort·MailPort local 드라이버 발송함
+  id          bigserial primary key,
+  to_email    text not null,
+  subject     text not null,
+  body        text not null,
+  created_at  timestamptz not null default now()
 );
 ```
 
@@ -1362,13 +1430,19 @@ MockupCard = { mockupId, variant: 'v_true'|'v_fit'|'v_bal', isFallback, harmonyS
 - 사용자 API는 `renders`·`exports` 외 버킷의 서명 URL을 발급하지 않는다. 서명 URL 발급 함수는 버킷 이름을 enum으로 받고 `ref-screenshots`·`llm-payloads`·`eval-artifacts`는 관리자 라우트에서만 import할 수 있다(guard 검사).
 - `pnpm compliance:check`(08장 AC-08-08)는 Storage API로 버킷 목록을 조회해 위 `공개` 열과 다르면 실패한다.
 
-**보관 실행(`retention` 잡, 매일 03:00 KST)**: 08장 8.7.7의 각 행을 아래 형태의 규칙 레코드로 코드화한다(`apps/worker/src/retention/rules.ts`). 규칙별 삭제 건수만 `admin_audit_logs(action='retention_sweep')`에 남긴다.
+**보관 실행(`retention` 잡, 매일 03:00 KST)**: 08장 8.7.7의 각 행을 아래 형태의 규칙 레코드로 코드화한다(`apps/worker/src/retention/rules.ts`). 이 규칙 레코드가 보관 대상 정의의 원천이다(S-20). 규칙마다 1,000행씩 별도 트랜잭션으로 돌린다. 한 규칙이 실패해도 다른 규칙은 계속하고, 규칙별 삭제 건수와 실패 규칙 ID를 `admin_audit_logs(action='retention_sweep', after={rule, deleted, error?})`에 남긴다. 실패 규칙이 있으면 잡은 실패로 끝나 A8 알림이 뜨지만 성공한 규칙의 삭제는 유지된다.
 
 ```ts
 RetentionRule = { id: string, table?: string, bucket?: string,
-  where: string /* 파라미터화된 SQL 조건, now()는 주입 시계 */, storageColumns?: string[], batch: 500 }
+  where: string /* 파라미터화된 SQL 조건, now()는 주입 시계 */, storageColumns?: string[], batch: 1000 }
 // 예: { id:'anon_survey_30d', table:'diagnosis_sessions',
-//       where:"user_id is null and last_active_at < $now - interval '30 days'", batch:500 }
+//       where:"user_id is null and last_active_at < $now - interval '30 days'", batch:1000 }
+//     { id:'candidates_unexposed_30d', table:'candidates',      // 노출되지 않은 후보만. 노출 시안의 후보는 '시안' 범주(계정 존속)
+//       where:"created_at < $now - interval '30 days' and not exists (select 1 from mockups m where m.candidate_id = candidates.id)", batch:1000 }
+//     { id:'renders_orphan', bucket:'renders',                  // renders/<owner>/<hash>/ 는 같은 hash를 참조하는 candidates·mockup_versions 행이 0개일 때만 삭제
+//       where:"not exists (select 1 from candidates c where c.render_hash = $hash) and not exists (select 1 from mockup_versions v where v.render_hash = $hash)", batch:1000 }
+//     { id:'consents_archive_1y', table:'consents_archive', where:"archived_at < $now - interval '1 year'", batch:1000 }
+//     { id:'sanctions_expired', table:'sanctions', where:"until < $now", batch:1000 }
 //     { id:'ref_shot_90d', table:'reference_captures', bucket:'ref-screenshots',
 //       where:"screenshot_deleted_at is null and captured_at < $now - interval '90 days'",
 //       storageColumns:['screenshot_first_path','screenshot_full_path'] }  → 객체 삭제 후 screenshot_deleted_at 설정
@@ -1377,6 +1451,9 @@ RetentionRule = { id: string, table?: string, bucket?: string,
 포함 규칙 예: `brief_drafts_24h`(`expires_at < $now`, R-26 → 08장 표 행), 운영 규칙 `idempotency_24h`·`rate_limits_48h`(이 장 소유). `impressions`·`survey_answers`는 세션 삭제에 cascade.
 
 시계는 `RETENTION_NOW` 주입(테스트 전용, production 기동 거부)으로 바꿀 수 있다(09장 M7 ④).
+
+- 수용 기준 AC-06-54: `RETENTION_NOW=+31d`에서 노출되지 않은 후보 행과 그 전용 렌더 객체는 0개, 노출 시안의 후보·버전·썸네일은 남고 종료 코드 0. 일부러 실패하는 규칙 1개를 주입해도 다른 규칙의 삭제 건수가 감사 로그에 남는다. `RETENTION_NOW=+366d`에서 `consents_archive` 만료 행 0건.
+- `verify:schema-parity`(09장 M1 ⑨)는 08장 8.7.7 보관표의 "구현 기준" 열에 나온 테이블·컬럼이 이 장 DDL에 모두 있는지 함께 검사한다(S-20).
 
 ## 6.7 캐싱
 
@@ -1917,6 +1994,7 @@ local 환경은 두 프로파일 중 하나로 돈다. `STACK_PROFILE=supabase|n
 | `PREVIEW_SIGNING_SECRET` | web | 필수 | — | ≥32바이트 base64 |
 | `PREVIEW_SIGNING_SECRET_PREV` | web | 선택 | — | 교체 중 이전 키 |
 | `IP_HMAC_KEY` | web | 필수 | — | |
+| `CONSENT_HASH_KEY` | web, worker | 필수 | — | ≥32바이트. `consents_archive.user_hash`·`sanctions.email_hash`·`admin_audit_logs.admin_hash`용. 교체하지 않는다(S-21) |
 | `ADMIN_EMAILS` | web | 필수 | — | 쉼표 구분 |
 | `LLM_MODE` | worker, 스크립트 | 필수 | `mock`(local) | `mock`\|`replay`\|`record`\|`live`, prod는 `live`만 |
 | `LLM_PRIMARY_API_KEY`, `LLM_SECONDARY_API_KEY` | worker | `live`일 때 필수 | — | processors.yaml id에 대응(공급자 확정 후 이름 고정) |
@@ -2048,7 +2126,7 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 
 ## 6.17 수용 기준 총괄
 
-이 장의 AC는 각 절 끝에 있다(AC-06-01~37, 45~52). 검증 위치는 다음과 같다(테스트 ID 체계 →07장 D-0707).
+이 장의 AC는 각 절 끝에 있다(AC-06-01~37, 45~54). 검증 위치는 다음과 같다(테스트 ID 체계 →07장 D-0707).
 
 | AC 범위 | 내용 | 계층 | 마일스톤(→09장) |
 |---|---|---|---|
@@ -2192,3 +2270,7 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 | 08장 D-0814·D-0815, 8.6 | — | 6.4.3, 6.4.2, AC-06-48·49 | |
 | S-01 | Blocker | 6.13.1 스택 프로파일, 6.13.2, 6.11.4, 6.5, AC-06-01·25·50~52 | 드라이버 4종, 오리진, env별 CSP |
 | S-22 | Major | 6.3.3 | pgvector 확장·embedding 컬럼 제거(Phase 2 additive) |
+| S-20 | Major | 6.6 보관 실행(RetentionRule 원천, 1,000행 별도 트랜잭션, 후보·렌더 규칙), AC-06-54 | 08장 표기는 08 단위에서 |
+| S-21 | Major | 6.3.3 `consents_archive`·`sanctions`·`admin_hash`·`users.status='deleting'`, 6.2.5 account-delete ①~⑦, AC-06-53, `CONSENT_HASH_KEY` | |
+| S-25 | Major | 6.3.3 `minimize_auth_metadata` 트리거 | |
+| S-41(06) | — | 6.3.3 `generation_jobs.copy_source`, `9000_local_only`의 `dev_mail_outbox` | |

@@ -615,7 +615,7 @@ recordLlmCall(...);                            // llm_calls.cost_usd (→ 06장)
 ### 10.1 어드민 기능 목록 (`/admin`)
 
 - 접근: `users.role = 'admin'`인 로그인 계정만(API 경로 → 06장 6.4.3 관리자 표). 최초 admin은 환경변수 `ADMIN_EMAILS`(쉼표 구분)로 부여. 미들웨어에서 서버측 검사, 실패 시 404(존재 은닉).
-- 감사 로그: 모든 변경 작업은 `admin_audit_logs`(R-18, DDL → 06장 6.3.3: `id, admin_id, action, target_type, target_id, before, after, ip_hmac, created_at`)에 기록. 삭제 불가(append-only, RLS로 update/delete 금지).
+- 감사 로그: 모든 변경 작업은 `admin_audit_logs`(R-18, DDL → 06장 6.3.3: `id, admin_hash, action, target_type, target_id, before, after, ip_hmac, created_at`)에 기록. 삭제 불가(append-only, RLS로 update/delete 금지).
 - 대상 표기: 운영자. UI는 서비스 디자인 시스템을 쓰되 밀도 높은 표 레이아웃 허용(→ 01장).
 
 | ID | 메뉴 | 기능 | 입력/출력 | 단계 |

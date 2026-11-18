@@ -5,7 +5,7 @@
 - phase: P2
 - lock: {owner: 2026-11-18T21:07Z, since: 2026-11-18T21:07Z}
 - limit.next_reset_kst: 2026-11-19 07:42
-- 마지막 갱신: 2026-11-19 06:15 KST (예약 세션: 07-a~c·06-a 반영)
+- 마지막 갱신: 2026-11-19 06:16 KST (예약 세션: 07-a~c·06-a·06-b 반영)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -26,7 +26,7 @@
 
 ## P2. 리뷰 루프
 - 라운드 2: [x] PM [x] 프로덕트 디자이너 [x] UX [x] UI [x] 테크 리드 [x] AI/ML [x] QA [x] 법무 → [x] decisions_v3(S-01~S-41) [ ] 반영(아래 20단위)
-- 라운드 2 반영 단위(decisions_v3.md "반영 순서" 참고): [x] 07-a [x] 07-b [x] 07-c [x] 06-a [ ] 06-b [ ] 06-c [ ] 06-d [ ] 09-a [ ] 09-b [ ] 09-c [ ] 04-a [ ] 04-b [ ] 04-c [ ] 03 [ ] 02 [ ] 05 [ ] 01 [ ] 08 [ ] 00 [ ] 잔여 표기 grep
+- 라운드 2 반영 단위(decisions_v3.md "반영 순서" 참고): [x] 07-a [x] 07-b [x] 07-c [x] 06-a [x] 06-b [ ] 06-c [ ] 06-d [ ] 09-a [ ] 09-b [ ] 09-c [ ] 04-a [ ] 04-b [ ] 04-c [ ] 03 [ ] 02 [ ] 05 [ ] 01 [ ] 08 [ ] 00 [ ] 잔여 표기 grep
 - 판정 기록(라운드별 C1/C2/C3):
   - R2 PM: FAIL/FAIL/FAIL (Blocker 0, Major 5: 예산-목표 불일치, 취소 시 한도 규칙 충돌, KPI 쿼리 분모, 검증 표본 확보, 00↔07·09 불일치)
   - R2 UX: FAIL/FAIL/FAIL (1라운드 19/19 해결, Blocker 0, Major 3: 결과 신뢰 문구 01↔02 불일치, 진단 카드 크기 규칙이 실제 화면에서 불성립, 편집 가능 판정을 화면 폭으로 해 200% 확대 시 편집 소실)
@@ -47,6 +47,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 06:16 | 06-b 반영: consents_archive·sanctions·admin_hash·copy_source·users.status deleting·OAuth 메타데이터 최소화 트리거·9000_local_only(dev_mail_outbox), account-delete ①~⑦, RetentionRule 원천화(1,000행 별도 트랜잭션, 후보·렌더 규칙), AC-06-53·54, CONSENT_HASH_KEY. native PG16에서 DDL 2회 적용 성공(51테이블), 메타데이터 트리거 동작 확인
 - 2026-11-19 06:15 | 06-a 반영: 6.13.1 스택 프로파일(supabase/native, shim·드라이버·오리진·기동 거부·CI 위임), env별 CSP, env 변수, AC-06-50~52, pgvector 제거. native PG16에서 shim+DDL 적용 확인(public 48테이블)
 - 2026-11-19 06:14 | 07-c 반영: TC-R-15~18(mixed·copy_*), 출시 단계 명칭 정리·완료율 65%·7.9.1 참조화·D-0716, P-2s·P-4b·P-1a 층화, KPI 분모 참조
 - 2026-11-19 06:12 | 07-b 반영: 상태 enum 6종·보류 허용표·종료 코드(7.11.2), 진단 API 부하 로컬 측정, 골든 M1a/M1b·muRef·build-answers 결정론, AC-07-19~20
