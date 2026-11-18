@@ -3,8 +3,9 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P1
-- lock: 
-- 마지막 갱신: 2026-11-18 (초기 이관)
+- lock: {owner: interactive-2026-11-18T13:12Z, since: 2026-11-18T13:12Z}
+- limit.next_reset_kst: 2026-11-19 02:40
+- 마지막 갱신: 2026-11-18 22:12 KST (대화 세션에서 P1 진행 중)
 
 ## 배경
 - v1 기획서 → 1라운드 역할별 리뷰 8개(전원 FAIL, Blocker 약 52·Major 약 105) → 결정 레지스터 → v2 10개 장 작성 → 장 간 충돌 통합 결정 R-01~R-38 반영.
