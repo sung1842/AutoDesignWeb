@@ -3,8 +3,8 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P2
-- lock: {owner: interactive-2026-11-18T13:12Z, since: 2026-11-18T13:39Z}
-- limit.next_reset_kst: 2026-11-19 02:40
+- lock: {owner: sched-2026-11-18T17:42Z, since: 2026-11-18T17:43Z}
+- limit.next_reset_kst: 2026-11-19 07:42
 - 마지막 갱신: 2026-11-18 22:12 KST (대화 세션에서 P1 진행 중)
 
 ## 실행 환경 사실(2026-11-18 점검)
