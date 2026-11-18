@@ -427,7 +427,7 @@ M0 스캐폴드·가드레일
 | 산출물 | 설문 자산(Storage) + `data/survey/manifest.lock.json`(assetId → sha256, 실측 L1), 진단·결과 화면 |
 | 의존성 | M3 |
 | 검증 | `pnpm verify:m4` |
-| 통과 조건 | ① `survey:build` 산출: 활성 카드 ≥ 48 중 approved 전부, A/B 120쌍 중 approved 쌍이 축별 ≥19쌍(S-06 g), 이미지 규격·용량은 02·06장 기준 ② `survey:build` 2회차 실행 시 업로드 0건, DB 변경 0행 ③ 설문 갱신 입력은 x_card(실측 L1)이며 계획 L1이 아님(단위 테스트) ④ 시뮬레이션: `pnpm sim:survey` 결과가 `config/thresholds.json`의 `diagnosis`·`release.surveySim` 합격선(R-05, 02장 2.16)을 모두 통과하고 종료 문항 수 ≤ 16, 1단계 정확히 8(D-13). 09장은 별도 수치를 두지 않는다. 미달 시 임계값을 바꾸지 말고 02장 2.16.2 조정 절차(판별 항 가중치부터)를 따른다 ⑤ 무작위 응답 사용자 100명 전원 16문항 이내 종료, 오류 0 ⑥ 진단 중 LLM 호출·렌더 호출 0(스파이) ⑦ 응답 제출 API p95 ≤ 200ms(06장 D-0608), 로컬 200요청 ⑧ E2E(375×812, 1280×800): 익명 진단 완료 → 결과에 유형명·5축 차트·닮은 사이트 3개 링크·비제휴 고지 표시 ⑨ E2E: 진행 중 새로고침 후 같은 문항에서 재개, 뒤로가기 1회 후 응답 수정 시 벡터가 재계산됨 ⑩ 화면 텍스트에 "MBTI" 0건(D-01, 빌드 산출물 grep) |
+| 통과 조건 | ① `survey:build` 산출: 활성 카드 ≥ 48 중 approved 전부, A/B 120쌍 중 approved 쌍이 축별 ≥19쌍(S-06 g), 이미지 규격·용량은 02·06장 기준 ② `survey:build` 2회차 실행 시 업로드 0건, DB 변경 0행 ③ 설문 갱신 입력은 x_card(실측 L1)이며 계획 L1이 아님(단위 테스트) ④ 시뮬레이션(S-08): `pnpm sim:survey --gate`가 `release.surveySim.seeds.gate` 5개 × 1,000명(P-A는 800명) 풀링 점추정으로 `diagnosis`·`release.surveySim` 합격선(R-05, 02장 2.16, `anchorAccPABeta8Min`·`priorTypeChangeMax`·`robustNoneRmseMax` 포함)을 모두 통과하고 종료 문항 수 ≤ `diagnosis.maxQuestions`, 1단계 정확히 `diagnosis.stage1Questions`(D-13). 적응형 이득은 공통 난수 쌍체로 계산하고 부트스트랩 95% 구간을 리포트에 넣는다. 구간이 합격선에 걸치면 `margin_warning`(비차단). 09장은 별도 수치를 두지 않는다. 미달 시 임계값을 바꾸지 말고 02장 2.16.2 조정 절차를 따른다: 튜닝은 `seeds.dev`로만 하고(gate와 교집합 0), 조정 공간은 {typeDiscWeight ∈ {2,3,5,8}, (llChance, llRef) 3쌍, calibKappa ∈ {1.2,1.3,1.4}, R ∈ {200,400}, priorWeight ∈ {0.2,0.3}, 브리지 재배치 1회}로 닫으며 좌표 순차 탐색 dev 시도 ≤ `maxTuningTrials`, gate 실행 ≤ `maxGateRuns`다. 상한에 닿으면 BLOCKED.md·HUMAN_TODO에 BLK를 등록하고 G2-진단은 fail로 둔 채 M5 이후를 계속한다(HALT 계산 제외). 시드·합격선·조정 공간 변경은 금지(F20). `qa:trace`는 02장 2.16.2의 모든 행이 `release.surveySim` 키에 연결되는지 검사한다 ⑤ 무작위 응답 사용자 100명 전원 16문항 이내 종료, 오류 0 ⑥ 진단 중 LLM 호출·렌더 호출 0(스파이) ⑦ 응답 제출 API p95 ≤ 200ms(06장 D-0608), 로컬 200요청 ⑧ E2E(375×812, 1280×800): 익명 진단 완료 → 결과에 유형명·5축 차트·닮은 사이트 3개 링크·비제휴 고지 표시 ⑨ E2E: 진행 중 새로고침 후 같은 문항에서 재개, 뒤로가기 1회 후 응답 수정 시 벡터가 재계산됨 ⑩ 화면 텍스트에 "MBTI" 0건(D-01, 빌드 산출물 grep) |
 
 ### 9.4.7 M5 — 인증·브랜드 입력·생성 파이프라인(Mock)
 
@@ -457,7 +457,7 @@ M0 스캐폴드·가드레일
 | 산출물 | 위 기능, 골든 리포트 `eval/reports/<reportId>.json`(07장 7.2.7, 경로 하나, S-06 f) |
 | 의존성 | M5(M6과 병렬 가능 항목 9.3) |
 | 검증 | `pnpm verify:m7` |
-| 통과 조건 | ① 06장 한도 + 1번째 요청 → 429 + `Retry-After` ② 비관리자로 `/admin`·`/api/admin/*` → 403(미들웨어·RLS 모두) ③ 계정 삭제 E2E 후 해당 user_id 행이 06장 개인 데이터 테이블 전부에서 0, 해당 Storage 경로 객체 0 ④ 가짜 시계로 91일 경과 시 보관 기간 잡이 대상 스크린샷 삭제, 89일은 유지 ⑤ opt-out 접수 → 레퍼런스가 즉시 결과 노출에서 제외(다음 요청부터) ⑥ `eval:golden --mode mock`이 32케이스 실행 후 07장 지표 필드를 모두 가진 리포트 JSON 생성(스키마 검증), mock 기준 스키마 유효율 100%·노출 ≥1 100% ⑦ `LLM_MODE=live`이고 키가 없으면 기동 시 종료 코드 1 + 변수명 출력 ⑧ worker Docker 이미지 빌드 성공(native에서는 `worker-image-build` needs_ci, S-01) ⑨ gitleaks 탐지 0 ⑩ `NODE_ENV=production`에서 `LLM_MODE=mock`이면 기동 거부 ⑪ 06장 API 명세의 엔드포인트 전부가 `@tastefit/api-contract`에 zod 계약으로 있고 계약 테스트 통과(`pnpm verify:api-parity`: 06장 엔드포인트 목록과 라우트 파일 대조, 누락 0), 06장 오류 코드 카탈로그 전 항목이 enum과 `copy/ko.ts`에 존재 |
+| 통과 조건 | ① 06장 한도 + 1번째 요청 → 429 + `Retry-After` ② 비관리자·`aal1` 관리자로 `/admin`·`/api/admin/*` → 404(존재 은닉, 00장 AC-00-19 원천, 미들웨어·RLS 모두, S-19·S-28) ③ 계정 삭제 E2E 후 해당 user_id 행이 06장 개인 데이터 테이블 전부에서 0, 해당 Storage 경로 객체 0 ④ 가짜 시계로 91일 경과 시 보관 기간 잡이 대상 스크린샷 삭제, 89일은 유지 ⑤ opt-out 접수 → 레퍼런스가 즉시 결과 노출에서 제외(다음 요청부터) ⑥ `eval:golden --mode mock`(기본 시나리오 `mixed`)이 32케이스 실행 후 07장 지표 필드를 모두 가진 리포트 JSON 생성(스키마 검증), mock 기준 스키마 유효율(수리 후) 100%·노출 ≥1 100%, 그리고 `llm_calls.call_kind='repair_quality'` ≥1, 다양성 재호출 ≥1, `status=partial` ≥1, 모든 노출 시안 04장 AC-04-20 충족(S-11) ⑦ `LLM_MODE=live`이고 키가 없으면 기동 시 종료 코드 1 + 변수명 출력 ⑧ worker Docker 이미지 빌드 성공(native에서는 `worker-image-build` needs_ci, S-01) ⑨ gitleaks 탐지 0 ⑩ `NODE_ENV=production`에서 `LLM_MODE=mock`이면 기동 거부 ⑪ 06장 API 명세의 엔드포인트 전부가 `@tastefit/api-contract`에 zod 계약으로 있고 계약 테스트 통과(`pnpm verify:api-parity`: 06장 엔드포인트 목록과 라우트 파일 대조, 누락 0), 06장 오류 코드 카탈로그 전 항목이 enum과 `copy/ko.ts`에 존재 |
 
 ### 9.4.10 M8 — 하드닝·출시 판정
 
@@ -567,6 +567,7 @@ BLOCKED.md 항목 형식:
 | F17 | 원격 배포·원격 DB 마이그레이션 실행 | `supabase db push`, `vercel`, `fly deploy` 명령이 스크립트·CI의 수동 트리거 잡 외에 존재하면 실패 |
 | F18 | temp 확인 필드 위조: `verified_by`·`approved`·`tos_checked_at`·`robots_checked_at`·`provenance`를 temp 값에서 다른 값으로 바꾸는 에이전트 커밋(S-10) | 직전 커밋 대비 JSON·YAML 필드 diff, 작성자가 사람 계정이 아니면 실패 |
 | F19 | 정규화기 b0·b1을 홀드아웃(앵커·카드·A/B) 왕복 결과에 맞춰 재적합, 정규화기 파일을 `seed:temp` 산출 외 커밋으로 변경(S-09) | `data/normalizers/**` 변경 커밋의 메시지·작성 스크립트 확인, `seed:temp` 재실행 결과와 바이트 비교 |
+| F20 | 진단 시뮬레이션 시드 집합(`gate`·`dev`)·합격선·조정 공간 변경, gate 시드로 튜닝(S-08) | `sim/config.json`·thresholds 잠금 해시, `sim/reports/*.json`의 `seedSet` 필드 검사 |
 
 ### 9.5.6 해시 잠금
 
@@ -658,35 +659,43 @@ BLOCKED.md 항목 형식:
 
 ### 9.6.2 MockProvider 명세
 
-**합성 규칙**(`role=page_generate`, 시나리오 `ok`):
+역할은 R-12의 4개(`gen_layout`, `gen_copy`, `judge_vision`, `ref_tagger`)이고, 역할마다 결정적 응답을 낸다(S-11, AI2-05). 공통 시드 = `hash(designSpec.hash + candidateIndex + role)`의 하위 32비트. 프롬프트 파일 경로는 `packages/llm/prompts/<role>@v<N>.md`다(06장 6.9.3).
 
-1. 시드 = `hash(designSpec.hash + candidateIndex)`의 하위 32비트.
-2. 섹션 목록 = 용도 `requiredSections` 전부 + `optionalSections`에서 시드로 0~2개, 04장 순서 규칙 적용.
-3. variant = 섹션별 허용 variant 중 `(candidateIndex + 섹션 순번) mod 개수` → 같은 잡 후보 간 variant가 다르게 분포.
-4. 카피 = BrandInput 필드(이름·소개·서비스·연락처)를 섹션 슬롯 템플릿에 채움. 슬롯 길이 제한(04장)을 넘으면 문장 경계에서 자름. 일반론 금지어(B14) 미사용.
-5. 이미지 슬롯 키 = 용도 `imageTags`에서 시드로 선택.
-6. usage: `inputTokens = ceil(프롬프트 문자 수 / 3)`, `outputTokens = ceil(출력 JSON 문자 수 / 3)`. models.yaml의 `mock-page` 모델 단가는 운영 기본 모델 단가와 같게 설정해 비용 로직을 실제처럼 검증한다.
-7. 지연: `MOCK_LLM_LATENCY_MS`(기본 200).
+| 역할 | Mock 합성 규칙(시나리오 `ok`) |
+|---|---|
+| `gen_copy` | 04장 4.6.2 키 표의 개수·길이 하한·`kind`를 지키는 CopyDeck을 BrandInput 필드로 결정적으로 합성한다. 슬롯 길이 상한을 넘으면 문장 경계에서 자른다. 일반론 금지어(B14) 미사용 |
+| `gen_layout` | 입력 `[PATTERN].section_order_hint`와 `[DESIGN_SPEC].allowed_variants`로 LayoutTreeRaw를 만든다. 텍스트는 CopyDeck **덱 참조만** 쓰고 텍스트 리터럴은 0이다. variant = 허용 variant 중 `(candidateIndex + 섹션 순번) mod 개수` |
+| `judge_vision` | `hash(candidateIds)`로 정한 `JudgeResult`(04장 형식, 항목 5개 winner). 고정 점수는 쓰지 않는다 |
+| `ref_tagger` | 05장 5.6.2 스키마(score 1~5, 입력 해시 기반) |
 
-`ok` 시나리오 출력은 렌더 시 하드 게이트를 통과하도록 합성기가 보장한다(M5 ① 근거). 다른 역할(`gen_copy`, `judge_vision`, `ref_tagger`, R-12 → 06장 models.yaml)도 같은 방식의 결정적 응답을 갖는다. `vision_score` mock은 항상 0.70을 반환한다.
+- 이미지 선택은 mock이 하지 않는다(컴파일러 몫, 04장 4.9.4).
+- usage: `inputTokens = ceil(프롬프트 문자 수 / 3)`, `outputTokens = ceil(출력 JSON 문자 수 / 3)`. 단가는 06장 6.9.2 `pricing["mock/mock-page"]`·`["mock/mock-vision"]` 고정값(S-13)이다.
+- 지연: `MOCK_LLM_LATENCY_MS`(기본 200).
+- `ok` 시나리오 출력은 렌더 시 하드 게이트를 통과하도록 합성기가 보장한다(M5 ① 근거).
 
-**장애 주입 시나리오**: `MOCK_LLM_SCENARIO` env 또는 요청 헤더 `x-mock-scenario`(`LLM_MODE=mock`이고 `NODE_ENV≠production`일 때만 허용, 잡의 `config_snapshot`에 기록). 시나리오는 `scenario@candidateIndex` 형식으로 특정 후보에만 적용할 수 있다.
+**장애 주입 시나리오**: `MOCK_LLM_SCENARIO` env 또는 요청 헤더 `x-mock-scenario`(`LLM_MODE=mock`이고 `NODE_ENV≠production`일 때만 허용, 잡의 `config_snapshot`에 기록). 적용 범위는 `scenario`(전 호출), `scenario@candidateIndex`(특정 후보), `scenario@role`(특정 역할) 세 형식이다. 이 장은 **Mock 동작만** 정한다. 시스템 기대 결과(상태·한도·노출)의 원천은 07장 7.4.3 TC-R·7.1.4 매핑이다(S-06 d·e).
 
-| 시나리오 | Mock 동작 | 시스템 기대 결과(→ 04장 실패 처리 규칙) |
+| 시나리오 | Mock 동작 | 기대 결과 |
 |---|---|---|
-| `ok` | 유효 출력 | 노출 3개, status=succeeded |
-| `invalid_json` | JSON 아님 | 해당 후보 수리 재시도 → 그래도 실패 시 후보 폐기, 나머지로 노출 |
-| `schema_violation` | 필드 누락·길이 초과 | zod 오류 경로를 피드백으로 재요청, 수리 성공 시 정상 처리 |
-| `forbidden_field` | `style`, `className`, `<script>` 포함 | 스키마 거부 → 후보 폐기, 실행 가능 코드 노출 0 |
-| `lint_error` | 금지어 2건 + eyebrow "✨ New" | 린터 error → 재생성 1회 → 실패 시 해당 후보 숨김 |
-| `low_score@*` | 모든 후보가 조화 <80 | 재생성 1회 → 여전히 미달 → 폴백 시안 1개 노출, status=partial |
-| `timeout` | 응답 없음(abort까지 대기) | 호출 타임아웃 → 해당 후보 실패, 잡 경과 120초 시 폴백 경로, 180초 강제 종료 |
-| `slow` | 각 호출 25초 지연 | 120초 폴백 경로 진입, 완료된 후보 + 폴백으로 최소 1개 |
-| `rate_limit` | 429 | 백오프 후 재시도, 연속 2회 시 fallback 모델 전환(`llm_calls.fallback=true`) |
-| `server_error` | 500 | `rate_limit`과 동일 규칙 |
-| `injection_echo` | 카피·href에 `https://evil.example`, 전화번호 위조 삽입 | 사후 검사가 BrandInput에 없는 URL·연락처 제거, 최종 출력 0건 |
-| `cost_spike` | usage를 10배 보고 | 요청당 $0.30 상한 초과 예상 → 남은 호출 중단, 확보된 후보 + 폴백 |
-| `budget_exhausted` | (사전 조건: 일일 지출을 상한까지 채움) | 신규 생성 503, 진행 중 잡은 완료 |
+| `ok` | 유효 출력 | → 07 E2E-02 |
+| `mixed` | 후보 인덱스별 결정적 할당. 0: ok / 1: 이웃 후보와 같은 block 시퀀스 / 2: expression을 낮추는 variant 선택(TM·S_free 미달) / 3: 범위 밖 덱 index / 4: warn 3개 / 5: ok. `eval:golden --mode mock`의 기본값 | → 07 TC-R-15 |
+| `invalid_json` | JSON 아님 | → 07 TC-R-04 |
+| `schema_violation` | 필드 누락·길이 초과 | → 07 TC-R-05 |
+| `forbidden_field` | `style`, `className`, `<script>` 포함 | → 07 TC-S-02 |
+| `lint_error` | 금지어 2건 + eyebrow "✨ New" | → 07 TC-R-06 |
+| `low_score@*` | 모든 후보가 조화 <80 | → 07 TC-R-14 |
+| `timeout` | 응답 없음(abort까지 대기) | → 07 TC-R-01·07 |
+| `slow` | 각 호출 25초 지연 | → 07 TC-R-08 |
+| `rate_limit` | 429 | → 07 TC-R-03 |
+| `server_error` | 500 | → 07 TC-R-02 |
+| `injection_echo` | 카피·href에 `https://evil.example`, 전화번호 위조 삽입 | → 07 TC-S-11 |
+| `cost_spike` | usage를 10배 보고 | → 07 TC-R-09, 06 AC-06-56 |
+| `budget_exhausted` | (사전 조건: 일일 지출을 상한까지 채움) | → 07 TC-C-01 |
+| `copy_schema_fail@gen_copy` | `gen_copy`가 스키마 위반을 반복(수리·fallback 모델 포함) | → 07 TC-R-16 |
+| `copy_timeout@gen_copy` | `gen_copy` 응답 없음(가짜 시계) | → 07 TC-R-17 |
+| `copy_refusal@gen_copy` | 공급자 안전 거부 응답 | → 07 TC-R-18 |
+
+- 수용 기준(계약 테스트): mock `gen_layout` 응답 JSON의 텍스트 슬롯 리터럴 0건(덱 참조만). 시나리오 키 파서가 세 형식을 모두 받고, 모르는 시나리오는 기동 오류다.
 
 ### 9.6.3 키 없는 전체 흐름 구성
 
@@ -955,3 +964,4 @@ pnpm seed:temp | pnpm db:seed | pnpm survey:build | pnpm eval:golden --mode mock
 | S-23 | 9.5.7 무인 세션 운용 매핑, 9.4.1 단절 내성, 9.5.3 90분, 9.9.2 3회 연속, AC-09-15·16 |
 | S-06 a·b·c·f·g | 9.2.3 B16 스키마 삭제, 9.2.4 B16 32행, M2 ②·M3 ② 72조합, M3 ③ roundtripAbsMax, M3 ⑤ versionGateP95Sec, M4 ① ≥19쌍, M7 산출물 경로·⑥ 32, D-0904 키 |
 | S-09·S-10·S-41(09) | 9.2.2 B17 경로·B18~B25, 9.2.4 temp 규칙·자산 temp 공통 규칙, F18·F19, M1 ① 25묶음 |
+| S-08·S-11·S-12·S-19(09) | M4 ④ 시뮬레이션 판정·조정 상한, 9.6.2 역할별 Mock·`mixed`·`copy_*@gen_copy`·기대 결과 열 삭제, M7 ② 404·⑥ mixed 조건, F20 |
