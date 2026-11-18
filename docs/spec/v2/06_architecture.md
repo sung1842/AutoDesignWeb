@@ -182,8 +182,7 @@ queued ──claim──▶ running ──▶ 종료 상태 판정(노출 확정
 |---|---|---|
 | succeeded, partial | 예약 확정 | 동일 값 |
 | fallback, failed | 환불(`quota_ledger.kind='refund'`) | 동일 값 |
-| canceled(`queued`에서 취소) | 환불 | 이벤트 미발생 |
-| canceled(`running`에서 취소) | 확정(이미 원가 발생) | 이벤트 미발생 |
+| canceled | 취소 시점의 비폴백 노출 수(`n_real`)가 ≥ 1이면 차감(노출된 시안은 계속 볼 수 있음), 0이면 환불. `queued`·`running`은 구분하지 않는다(S-16, 00장 §9.3·04장 4.12·01장 1.6.5와 같은 문장). 노출 전 취소로 생긴 원가 남용은 레이트리밋(계정 2회/분)과 A4 경보로 감시한다 | 이벤트 미발생 |
 
 | phase | 의미 | progressPct |
 |---|---|---|
@@ -196,6 +195,8 @@ queued ──claim──▶ running ──▶ 종료 상태 판정(노출 확정
 | `fallback` | 누락 변형 폴백 시안 생성 | 90 |
 | `selecting` | 노출 선택·저장 | 95 |
 | `done` | 종료 | 100 |
+
+- 수용 기준 AC-06-55(S-16 통합 테스트 3건): ① `queued` 취소 → 잔여 한도 불변 ② `running`·노출 0에서 취소 → 불변 ③ `running`·비폴백 1개 노출 후 취소 → 1 감소.
 
 `phase` 값과 라벨 문구의 매핑은 →01장 생성 대기 화면이 정한다.
 
@@ -231,7 +232,7 @@ SLO(R-25, 07장 M15): 첫 시안 카드 노출(첫 mockups.created_at − queued
 
 | 큐 | 생산자 | 페이로드 | 머신당 동시 처리 | retryLimit / backoff | expireIn | 비고 |
 |---|---|---|---|---|---|---|
-| `generate` | web | `{jobId}` | 전역 `GEN_MAX_CONCURRENT_JOBS`(기본 5, R-16) | 0 | 200s | 잡 내부에서 재생성·폴백 처리. 큐 재시도 없음 |
+| `generate` | web | `{jobId}` | 머신당 `WORKER_GEN_CONCURRENCY`(기본 2), 전역 실효 상한 `min(GEN_MAX_CONCURRENT_JOBS=5, 머신 수 × 2)`(S-14) | 0 | 200s | 잡 내부에서 재생성·폴백 처리. 큐 재시도 없음 |
 | `render` | web, worker | `{target:'version', versionId}` | 2 | 2 / 지수(2s, 8s) | 60s | 버전 저장 후 렌더 게이트(G-04~G-08)·썸네일 |
 | `export` | web | `{exportId}` | 2 | 2 / 지수 | 120s | |
 | `account-delete` | web | `{userId}` | 1 | 5 / 지수(최대 1h) | 600s | 아래 단계 ①~⑦(S-21) |
@@ -240,7 +241,7 @@ SLO(R-25, 07장 M15): 첫 시안 카드 노출(첫 mockups.created_at − queued
 | `alerts` | 크론 `*/5 * * * *` | `{}` | 1 | 0 | 120s | 6.12 알림 규칙 |
 | `reconcile` | 크론 `* * * * *` | `{}` | 1 | 0 | 50s | 큐 누락·고아 잡 복구 |
 
-- 전역 동시 잡 수는 `generation_jobs.status='running'` 행 수로 판정한다. 워커는 `generate` 잡을 가져온 뒤 `claim_generation_job()`(6.3.4)에서 `pg_advisory_xact_lock(hashtext('gen_slots'))` 아래 `count(running) < GEN_MAX_CONCURRENT_JOBS`를 확인하고, 자리가 없으면 잡을 5초 뒤로 다시 넣는다(`startAfter`). Chromium 컨텍스트는 머신당 세마포어 `RENDER_MAX_CONTEXTS`(기본 3)로 따로 제한한다.
+- 전역 동시 잡 수는 `generation_jobs.status='running'` 행 수로 판정한다. 워커는 `generate` 잡을 가져온 뒤 `claim_generation_job()`(6.3.4)에서 `pg_advisory_xact_lock(hashtext('gen_slots'))` 아래 `count(running) < min(GEN_MAX_CONCURRENT_JOBS, 살아 있는 워커 수 × WORKER_GEN_CONCURRENCY)`를 확인하고(살아 있는 워커 = `worker_heartbeats.last_beat_at > now()-60s`), 자리가 없으면 잡을 5초 뒤로 다시 넣는다(`startAfter`). Chromium 컨텍스트는 머신당 세마포어 `RENDER_MAX_CONTEXTS`(기본 3)로 따로 제한하고, 렌더 큐는 잡별 라운드로빈으로 꺼낸다(한 잡이 컨텍스트를 독점하지 않음, S-14). 초과 잡은 대기 순번으로 표시한다.
 - 큐 투입: web은 pg-boss를 **생산자 전용**(`supervise:false`, `schedule:false`, `migrate:false`)으로 Lambda 인스턴스당 1개 지연 생성하고 `DATABASE_URL_POOLED`(풀 크기 1)로 연결한다. pg-boss 스키마 생성·마이그레이션은 worker만 한다(`migrate:true`).
 - M0 스파이크에서 서버리스 생산자 모드가 동작하지 않으면 다음 대체안을 쓴다(추가 결정 불필요): web은 `generation_jobs`·`exports` 행만 INSERT하고, worker의 `reconcile`(1초 간격 루프로 실행)이 `queued`이면서 큐 미투입인 행을 `send`한다.
 - `reconcile` 규칙: (1) `status='queued' AND queued_at < now()-60s`이고 pg-boss에 해당 singletonKey 잡이 없으면 재투입(최대 3회, 이후 `failed/ENQUEUE_FAILED`). (2) `status='running' AND heartbeat_at < now()-60s`이면 `failed/WORKER_LOST`로 바꾸고 한도를 환불한다(발생한 원가는 `llm_calls`에 이미 기록되어 예산 집계에 남는다).
@@ -761,7 +762,7 @@ create table generation_jobs (
   repair_rounds    smallint not null default 0 check (repair_rounds between 0 and 1),
   tokens_in        int not null default 0,
   tokens_out       int not null default 0,
-  cost_usd         numeric(10,5) not null default 0 check (cost_usd >= 0 and cost_usd <= 0.30),  -- IF-02, D-24
+  cost_usd         numeric(10,5) not null default 0 check (cost_usd >= 0 and cost_usd <= 0.36),  -- IF-02. 저장 제약 = cap × 1.2(S-13). 가드 상한 0.30 초과는 A11 경고
   error_code       text null,
   error_message    text null check (char_length(error_message) <= 500),
   worker_id        text null,
@@ -1118,7 +1119,7 @@ create table dev_mail_outbox (                        -- AuthPort·MailPort loca
 - **AC-06-04**: `is_l1` CHECK — 키가 4개이거나 `A1` 키를 쓰거나 값이 1.01인 벡터를 `survey_items.x_card`에 넣으면 INSERT가 실패한다. 데스크톱 자산 `bytes=143361`인 자극물 INSERT도 실패한다(R-07).
 - **AC-06-05**: 같은 사용자가 `queued` 잡이 있는 상태에서 두 번째 잡을 INSERT하면 `gen_one_active_per_user` 위반으로 실패한다.
 - **AC-06-06**: `admin_audit_logs`에 대한 UPDATE·DELETE는 service role에서도 실패한다.
-- **AC-06-07**: `generation_jobs.cost_usd`에 0.30001을 쓰면 CHECK 위반이다(원가 가드 버그의 최종 차단선).
+- **AC-06-07**: `generation_jobs.cost_usd`에 0.36001을 쓰면 CHECK 위반이다. 0.30~0.36은 저장되고 A11 경고 알림이 뜬다(S-13. 실제 청구가 추정을 넘어도 잡이 죽지 않게 하는 저장 제약).
 
 ## 6.4 API 명세
 
@@ -1575,8 +1576,9 @@ roles:
   judge_vision: { primary: {…, params: {temperature: 0, maxOutputTokens: 300}, timeout_ms: 30000}, fallbacks: [], prompt: {id: judge_vision, version: 1}, max_input_tokens: 4000, max_images: 2 }
   ref_tagger:   { primary: {…, params: {temperature: 0, maxOutputTokens: 400}, timeout_ms: 30000}, fallbacks: [], prompt: {id: ref_tagger, version: 1}, max_input_tokens: 3000, max_images: 1 }
 pricing:                              # USD, 출시 전 공급자 가격표 원문 확인
-  "llm-primary/<모델 ID>": { input_per_mtok: 0, output_per_mtok: 0, cached_input_per_mtok: 0, per_image: 0, source_url: "", checked_at: "YYYY-MM-DD" }
-  "mock/mock-page":       { input_per_mtok: <운영 기본 모델과 동일>, output_per_mtok: <동일>, … }   # 09장 9.6.2
+  "llm-primary/<모델 ID>": { input_per_mtok: 0, output_per_mtok: 0, cached_input_per_mtok: 0, cache_write_per_mtok: 0, per_image: 0, source_url: "", checked_at: "YYYY-MM-DD" }
+  "mock/mock-page":       { input_per_mtok: 3, output_per_mtok: 15, cached_input_per_mtok: 0.30, cache_write_per_mtok: 3.75, per_image: 0, source_url: "fixed-mock", checked_at: "2026-11-19" }   # S-13 고정값
+  "mock/mock-vision":     { input_per_mtok: 1, output_per_mtok: 5, cached_input_per_mtok: 0.10, cache_write_per_mtok: 1.25, per_image: 0, source_url: "fixed-mock", checked_at: "2026-11-19" }
 retry:
   network_or_5xx: { max: 1, backoff_ms: 2000 }
   rate_limited:   { max: 1, respect_retry_after_max_ms: 10000 }
@@ -1611,13 +1613,14 @@ async function callLlm(req) {
   for (const target of [cfg.primary, ...cfg.fallbacks]) {
     assertApproved(target.processor_id);                          // UnapprovedProcessorError
     if (breaker.isOpen(target)) continue;
-    const worst = worstCost(target, cfg.max_input_tokens, target.params.maxOutputTokens, images);
-    if (!req.ctx.budget.canSpend(worst)) return log({ status: 'budget_skipped' });   // 00장 9.2
-    if (!(await dailyBudgetOk(worst))) return log({ status: 'budget_skipped', errorCode: 'GEN_BUDGET_EXCEEDED' });
+    const est = estimateCost(target, req.promptInputTokens, target.params.maxOutputTokens, images, req.cacheState); // 아래 식(S-13)
+    const resv = await req.ctx.budget.reserve(est);               // 잡 단위 뮤텍스: spent + reserved + est ≤ generation.costGuard.capUsd
+    if (!resv) return log({ status: 'budget_skipped', errorCode: 'COST_CAP' });          // 00장 9.2
+    if (!(await dailyBudgetOk(est))) { await req.ctx.budget.release(resv); return log({ status: 'budget_skipped', errorCode: 'GEN_BUDGET_EXCEEDED' }); }
     for (let attempt = 1; attempt <= 2; attempt++) {              // 재시도 1회(retry 표)
       const r = await provider(target).generateObject({ schema, prompt, signal: anySignal(req.ctx.signal, timeout(target.timeout_ms)) });
       const cost = priceOf(target, r.usage);                     // 실제 usage로 계산
-      req.ctx.budget.add(cost);                                   // 잡 누적, generation_jobs.cost_usd 원자적 증가
+      await req.ctx.budget.settle(resv, cost);                    // 예약 → 실비 정산, generation_jobs.cost_usd 원자적 증가
       if (r.ok) {
         const post = postCheck(r.value, req);                     // 6.11.3
         return log({ status: post.ok ? 'ok' : 'output_rejected', cost, ... });
@@ -1636,7 +1639,13 @@ async function callLlm(req) {
 
 - 모든 호출(성공·실패·생략)은 `llm_calls` 1행을 남긴다. `is_fallback`은 primary가 아닌 대상으로 성공·실패한 호출에 true.
 - 원문(`llm-payloads`)은 `live`·`record` 모드에서만 저장하고, 마스킹된 브리프만 들어 있다.
-- 비용 계산은 `cost = in/1e6·input_per_mtok + cached/1e6·cached_input_per_mtok + out/1e6·output_per_mtok + images·per_image`, 소수 5자리 반올림(09장 M5 ⑤는 4자리 일치 검사).
+- 비용 계산은 `cost = in/1e6·input_per_mtok + cached/1e6·cached_input_per_mtok + cacheWrite/1e6·cache_write_per_mtok + out/1e6·output_per_mtok + images·per_image`, 소수 5자리 반올림(09장 M5 ⑤는 4자리 일치 검사).
+- **잡 예산 예약-정산(S-13, 원천은 이 절. 04장 4.17.2는 참조만)**:
+  - `JobBudget`은 잡 단위 뮤텍스로 보호한다. `reserve(est)` → 호출 → `settle(id, actual)`. 호출 실패·abort·재시도 사이에 남은 예약은 `release(id)`. 판정은 `spent + reserved + est ≤ generation.costGuard.capUsd` 하나다.
+  - 추정식(단일): `est = (실측 입력 토큰 × 1.1) × 입력 단가(캐시 적중분은 cached, 잡 첫 호출은 cache_write) + maxOutputTokens × 출력 단가 + 이미지 수 × per_image`. 입력 토큰은 프롬프트 조립 후 토크나이저(없으면 문자 수/3)로 센다. `max_input_tokens`를 넘으면 호출 전 실패한다. `worstCost`는 폐지한다. 기본 경로 7호출의 추정 합계는 약 $0.23이다(추정 정확도 교정, 상한 불변).
+  - 단계 생략: `spent + reserved ≥ generation.costGuard.skipVisionUsd`면 `judge_vision` 생략, `≥ skipRepairUsd`면 수정 루프 생략(04장 4.17.2 규칙을 이 가드가 실행).
+  - 실제 청구가 추정을 넘어 합계가 cap을 넘으면 예외 없이 저장하고(CHECK ≤ 0.36) A11 경고를 낸다.
+  - 수용 기준 AC-06-56: Mock `ok`에서 기본 경로 7호출 중 `budget_skipped` 0건, 잡 비용이 $0.23 ± 10%. Mock `cost_spike`에서 7개 병렬 호출 후에도 `sum(llm_calls.cost_usd) ≤ 0.30`, DB 예외·`WORKER_LOST` 0건, 상태 ∈ {partial, fallback}. 동시 `reserve` 20회 단위 테스트에서 `spent + reserved`가 cap을 넘는 순간 0회.
 
 ### 6.9.5 폴백·장애 처리 요약(04장 4.7.1과 동일 규칙)
 
@@ -1695,8 +1704,8 @@ async function callLlm(req) {
 
 | 계층 | 시점 | 판정 | 동작 |
 |---|---|---|---|
-| 잡 상한 | 매 LLM 호출 직전 | `job.cost_usd + worst ≤ JOB_COST_CAP_USD(0.30)` | 호출 생략(`budget_skipped`, `COST_CAP`), 확보된 후보로 진행(00장 9.2) |
-| 일 상한(KS-1) | 잡 생성 시 + 매 LLM 호출 직전 | `spend_today() + 0.30 ≤ GEN_DAILY_BUDGET_USD`(생성 시), `spend_today() + worst ≤ 상한`(호출 시) | 생성 시: 503 `GEN_BUDGET_EXCEEDED`. 진행 중 잡: 00장 KS-1에 따라 **끝까지 수행** — 단 호출 시 판정이 실패하면 남은 호출 생략 후 폴백(일 상한 초과 원가 ≤ 진행 중 잡 수 × US$0.30) |
+| 잡 상한 | 매 LLM 호출 직전 | 예약-정산 `spent + reserved + est ≤ generation.costGuard.capUsd`(= `JOB_COST_CAP_USD` 0.30, 6.9.4) | 호출 생략(`budget_skipped`, `COST_CAP`), 확보된 후보로 진행(00장 9.2) |
+| 일 상한(KS-1) | 잡 생성 시 + 매 LLM 호출 직전 | `spend_today() + 0.30 ≤ GEN_DAILY_BUDGET_USD`(생성 시), `spend_today() + est ≤ 상한`(호출 시) | 생성 시: 503 `GEN_BUDGET_EXCEEDED`. 진행 중 잡: 00장 KS-1에 따라 **끝까지 수행** — 단 호출 시 판정이 실패하면 남은 호출 생략 후 폴백(일 상한 초과 원가 ≤ 진행 중 잡 수 × US$0.30) |
 | 월 상한(KS-1) | 잡 생성 시 | `spend_month() + 0.30 ≤ GEN_MONTHLY_BUDGET_USD` | 503 `GEN_BUDGET_EXCEEDED` |
 | 수동 중단(KS-2) | 잡 생성 시 + 워커 claim 시 | `GEN_ENABLED` | 신규 503 `GEN_DISABLED`, `queued` 잡은 `failed(GEN_DISABLED)` + 한도 환불, `running` 잡은 완료 |
 | 공급자 콘솔 | 상시 | 공급자 대시보드 월 지출 상한·50/80/100% 메일 | 사람이 출시 전 설정(09장 9.9.3) |
@@ -1716,7 +1725,7 @@ async function callLlm(req) {
 | `GEN_ENABLED` | boolean | true | web, worker |
 | `SIGNUP_ENABLED` | boolean | true | web |
 | `SHARE_PUBLIC_ENABLED` | boolean | true | web |
-| `BETA_INVITE_ONLY` | boolean | true(P0-β) | web |
+| `BETA_INVITE_ONLY` | boolean | true(비공개 베타) | web |
 | `GEN_MAX_CONCURRENT_JOBS` | int, 1~20 | 5(R-16) | worker |
 | `JUDGE_VISION_MODE` | `off`\|`log`(MVP). `rank`는 Phase 2 편입 조건 충족 후 enum에 추가 | `log`(R-12) | worker |
 | `REF_TAGGING_BUDGET_USD` | number, 0~100 | 10(05장 D-05C) | ingest CLI만(생성 예산과 별도 집계, `llm_calls.role='ref_tagger'`) |
@@ -2003,6 +2012,7 @@ local 환경은 두 프로파일 중 하나로 돈다. `STACK_PROFILE=supabase|n
 | `RETENTION_NOW` | worker | 선택 | — | 테스트 시계, prod 설정 시 기동 거부 |
 | `JOB_COST_CAP_USD`, `GEN_DAILY_BUDGET_USD`, `GEN_MONTHLY_BUDGET_USD`, `GEN_ENABLED`, `SIGNUP_ENABLED`, `SHARE_PUBLIC_ENABLED`, `BETA_INVITE_ONLY`, `GEN_MAX_CONCURRENT_JOBS`, `JUDGE_VISION_MODE` | web, worker | 선택 | 6.10.4 | `feature_flags` 행이 우선 |
 | `RENDER_MAX_CONTEXTS` | worker | 선택 | `3` | |
+| `WORKER_GEN_CONCURRENCY` | worker | 선택 | `2` | 머신당 동시 생성 잡(S-14) |
 | `REF_TAGGING_BUDGET_USD` | ingest CLI | 선택 | `10` | 05장 D-05C |
 | `SENTRY_DSN`, `NEXT_PUBLIC_SENTRY_DSN` | 전부 | 선택 | — | 미설정 시 no-op |
 | `ALERT_WEBHOOK_URL`, `ALERT_EMAIL_TO` | worker | 선택 | — | 미설정 시 콘솔 |
@@ -2115,18 +2125,22 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 
 ## 6.16 용량 가정과 확장
 
-| 항목 | MVP 가정(공개 베타) | 병목 | 확장 순서 |
+| 항목 | MVP 가정(공개 출시) | 병목 | 확장 순서 |
 |---|---|---|---|
 | 진단 | 일 2,000세션, 피크 20 rps | Vercel 함수·DB 커넥션 | Supavisor 풀 크기 상향 → 읽기 캐시 |
-| 생성 | 일 200잡, 피크 동시 5 | LLM 공급자 레이트리밋, Chromium CPU | ① 워커 머신 +1(동시 슬롯 상향) ② 렌더 캐시 적중률 ③ `JUDGE_VISION_MODE=off` ④ Phase 2에서 관리형 브라우저 검토 |
+| 생성 | 월 ≤ 600잡(일 약 20잡, 00장 §9.4 예산 검산 S-15), 피크 동시 2(머신 1대 × `WORKER_GEN_CONCURRENCY` 2) | LLM 공급자 레이트리밋, Chromium CPU | ① 렌더 캐시 적중률 ② `JUDGE_VISION_MODE=off` ③ 예산 증액 결정 후 워커 머신 +1(사람 결정, 유료) ④ Phase 2에서 관리형 브라우저 검토 |
 | 저장 | 잡당 스크린샷 ≈ 6×(1280 전체 ≈ 400KB + 375 ≈ 150KB) ≈ 3.3MB, 미선택 30일 삭제 → 상시 ≈ 20GB | Storage 비용 | 미선택 후보 스크린샷 보관 30일 → 7일로 단축(08장 협의) |
 | DB | `events` 일 5만 행, `llm_calls` 일 2,000행 | 테이블 크기 | `events` 월 파티션(Phase 2) |
 
-**AC-06-37**(07장 TC-C-02와 동일 조건): MockProvider 고정 지연 20s로 생성 10건을 동시에 요청하면 전원 완료, 동시 `running` ≤ `GEN_MAX_CONCURRENT_JOBS`, 대기 순번이 단조 감소, 최대 대기 ≤ 2 × p95.
+**피크 2가 충분한 근거(S-14)**: 일 20잡이 활성 시간 12시간에 고르게 오면 시간당 약 1.7잡이고, 잡 p95 90초 기준 평균 동시 실행은 약 0.04다. 포아송 가정에서 동시 요청 3건 이상이 생길 확률은 0.1% 미만이므로 피크 2 + 대기 순번으로 충분하다. 유료 머신은 추가하지 않는다.
+
+**p95 추정식(S-14)**: `p95_est = t_llm_p95 + ceil(C × 6 / RENDER_MAX_CONTEXTS) × t_render_p95 + t_gate`(C = 실효 동시 잡 수 2). `pnpm bench:render`가 Chromium 1장 렌더 p95를 재서 `reports/bench-render.json`에 쓰고, `release:check`가 `p95_est ≤ perf.latencyP95Sec`를 확인한다.
+
+**AC-06-37**(07장 TC-C-02와 동일 조건): MockProvider 고정 지연 20s로 생성 10건을 동시에 요청하면 전원 완료, 동시 `running` ≤ 실효 상한(머신 1대면 2), 대기 순번이 단조 감소, 최대 대기 ≤ 2 × p95.
 
 ## 6.17 수용 기준 총괄
 
-이 장의 AC는 각 절 끝에 있다(AC-06-01~37, 45~54). 검증 위치는 다음과 같다(테스트 ID 체계 →07장 D-0707).
+이 장의 AC는 각 절 끝에 있다(AC-06-01~37, 45~56). 검증 위치는 다음과 같다(테스트 ID 체계 →07장 D-0707).
 
 | AC 범위 | 내용 | 계층 | 마일스톤(→09장) |
 |---|---|---|---|
@@ -2274,3 +2288,7 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 | S-21 | Major | 6.3.3 `consents_archive`·`sanctions`·`admin_hash`·`users.status='deleting'`, 6.2.5 account-delete ①~⑦, AC-06-53, `CONSENT_HASH_KEY` | |
 | S-25 | Major | 6.3.3 `minimize_auth_metadata` 트리거 | |
 | S-41(06) | — | 6.3.3 `generation_jobs.copy_source`, `9000_local_only`의 `dev_mail_outbox` | |
+| S-13 | Major | 6.9.2 pricing(cache_write, mock 고정 단가), 6.9.4 예약-정산·추정식·단계 생략, 6.10.3, 6.3.3 CHECK 0.36, AC-06-07·56 | worstCost 폐지 |
+| S-14 | Major | 6.2.5, 6.13.2 `WORKER_GEN_CONCURRENCY`, 6.16 용량·근거·p95 추정식, AC-06-37 | |
+| S-16 | Major | 6.2.3 취소 한도 규칙, AC-06-55 | |
+| S-19(06) | — | 6.10.4 `BETA_INVITE_ONLY` 설명 | |
