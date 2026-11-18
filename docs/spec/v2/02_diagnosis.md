@@ -20,21 +20,21 @@
 | `engine_version` | semver, 초기 `diag-1.0.0`(06장 `diagnosis_sessions.versions`) | 2.5~2.12 수식·상수·규칙 변경(상수 = minor, 규칙 = major) |
 | `axis_set_version` | `L1-5.v1` | 축 정의·앵커 변경 |
 
-상수의 단일 원천은 `config/thresholds.json`이다(R-09, 해시 잠금 → 09장 9.5.6). 09장이 정한 평면 키 `beta`, `sigma0`, `sigmaStop`, `maxQuestions`는 그대로 쓰고, 나머지 진단 상수는 같은 파일의 `diagnosis` 객체에 둔다. 용도 사전분포 중심은 04장 `config/calibration.json`의 c_p를 읽는다(2.8.1). 엔진 코드에 상수 리터럴 0개(AC-02-30).
+상수의 단일 원천은 `config/thresholds.json`의 `diagnosis` 객체이고, 키 구조의 원천은 07장 7.12.1 `spec:thresholds` 블록이다(R-09, S-05). 평면 키는 폐지했으며 `beta`·`sigma0`·`sigmaStop`·`maxQuestions`·`stage1Questions`도 `diagnosis.*` 아래에 있다. 아래 블록은 설명용 사본이고 다르면 07장 블록이 이긴다. 용도 사전분포 중심은 04장 `config/calibration.json`의 c_p를 읽는다(2.8.1). 엔진 코드에 상수 리터럴 0개(AC-02-30).
 
 ```json
 {
-  "beta": 8, "sigma0": 0.25, "sigmaStop": 0.08, "maxQuestions": 16,
   "diagnosis": {
+    "beta": 8, "sigma0": 0.25, "sigmaStop": 0.08, "maxQuestions": 16, "stage1Questions": 8,
     "lambda": [1,1,1,1,1], "calibKappa": 1.3, "priorWeight": 0.3,
-    "stage1Questions": 8,
     "stage1": { "candidateSamples": 200, "minPairDist": 0.35, "minDistinctTypes": 3, "maxAppearPerVector": 3, "epsilonExplore": 0.10, "typeDiscWeight": 5.0 },
     "noneAvoidDist": 0.35, "noneExploreAfter": 3, "cantTellInsensitiveAfter": 2,
     "consistency": { "llChance": -0.15, "llRef": 0.25, "checkBonus": 0.05, "minScored": 4 },
     "typing": { "tieEps": 0.01, "boundaryEps": 0.05, "conflictMinPicks": 3, "conflictMinCenterDist": 0.60, "lowSignalMinPicks": 4 },
     "positionBias": { "sameSlotRatio": 0.80, "minAnswers": 5 },
     "similarSites": { "maxScore": 0.45, "tau": 0.05, "count": 3 },
-    "fastAnswerMs": 1000
+    "fastAnswerMs": 1000,
+    "surveyAssetL1AbsMax": 0.15
   }
 }
 ```
@@ -409,13 +409,14 @@ template(seq) = ['tpl-hero','tpl-grid','tpl-text'][(seq-1) % 3]
   (c) 직전 문항에 나온 SV 제외
   (d) 1단계 전체에서 SV별 등장 ≤ 3회
   (e) none_of_these 직후면 2.5.4 추가 제약
+  (f) 클라이언트가 mobile(S-30)이면 mobile 자산(780×1560)이 없는 카드는 후보에서 뺀다. 제시 크기는 응답 로그 `ux.cardScale`에 기록(01장 1.4 표시 규칙, 06장 survey_answers)
 정책: rng < ε(0.10) 이거나 none_streak ≥ 3 이면 explore = 제약 만족 첫 조합
       그 외 dopt = argmax_S  score(S)
         score(S) = Σ_k log( 1/σ_k² + H_kk(S; μ) )                       # D-최적(대각)
                  + w_type · Σ_{i∈S} | P(i | c_m1, S) − P(i | c_m2, S) |  # 유형 판별 항, w_type = 5.0
         m1, m2 = 현재 μ의 거리 1·2순위 유형, P(·|c,S) = β=8 다항 로짓 확률(2.5.1)을 θ = c로 계산
 동점: 조합 ID(카드 ID 정렬 후 결합 문자열) 사전순 첫 번째
-제약 만족 후보 0개: (c)(d)(e) 순으로 하나씩 해제해 재시도. (a)(b)는 해제하지 않음
+제약 만족 후보 0개: (c)(d)(e) 순으로 하나씩 해제해 재시도. (a)(b)(f)는 해제하지 않음
 위치: 선택된 4장을 rng 셔플해 slot 0~3 배정
 ```
 
@@ -605,12 +606,12 @@ type_id_second = m2 (항상 저장, 00장 D-014)
 | `low` | `low_signal` 또는 `conflict` 또는 κ < 0.50 또는 (`fast_answers` 그리고 margin < 0.10) |
 | `medium` | 그 외 |
 
-S03 ② 안내 문구 선택(문구 원문은 01장): `low_signal` → 신호 부족 문구 + [다시 진단하기] / `conflict` → "두 가지 성향이 함께 보여 {1순위} 기준으로 정리했어요" / κ < 0.50 → 일관성 낮음 문구 / `is_boundary` → "{1순위}에 가깝고, {2순위} 성향도 있어요". 여러 개가 해당하면 이 순서로 첫 번째 하나만 표시한다. 백분율 표기는 하지 않는다(01장).
+S03 ② 안내 표시 규칙(S-29). 조건과 우선순위는 이 장이, 문구는 01장 1.15.3 카피 표(`copy/ko.ts`)가 소유한다. 이 장은 키만 적는다. 순서 `low_signal` → `result.notice.lowSignal`(+ [다시 진단하기]) / `conflict` → `result.notice.conflict` / κ < 0.50 → `result.notice.lowConsistency` / `is_boundary` → `result.notice.boundary`. 여러 개가 해당하면 이 순서로 첫 번째 하나만 표시하고, 그 아래에 신뢰도 한 줄(`type.confidence`)을 붙인다. 시즌 재생으로 유형이 바뀐 경우는 `result.notice.seasonAdjusted`(2.15). 백분율 표기는 0건이다. 백분율 표기는 하지 않는다(01장).
 
 ### 2.13.2 축 표시
 
 - 점수 = round(μ_k × 100). 양극 막대(레이더 차트 금지), 양 끝 라벨은 01장 1.5.2.1.
-- 상태 표시: `open`(σ > 0.08) → 속 빈 원 + 점선 트랙 + "이 축은 아직 확실하지 않아요". `insensitive` → "이 부분은 크게 가리지 않는 편이에요"(01장 문구).
+- 상태 표시: 서버가 `axes[].state`를 계산해 내려 주고 화면은 이 값만 쓴다(S-29). `open` ⇔ σ_k > `diagnosis.sigmaStop`(0.08) → 속 빈 원 + 점선 트랙 + 문구 키 `result.axis.open`. `insensitive` → `result.axis.insensitive`. 문구 원문은 01장 1.15.3.
 - 불확실 구간 음영 = μ_k ± 1.645·σ_display,k를 [0,1]로 자른 범위(표시 선택 사항, 01장이 쓰면 이 값을 쓴다).
 - 화면에 "σ", "벡터", "토큰" 같은 용어를 노출하지 않는다(01장 MC-8).
 
@@ -654,7 +655,7 @@ function replay(log, purpose, items, cfg): EngineState {
 | 새로고침·재방문·기기 변경 | 서버가 로그 재생으로 상태 복원, 같은 seq 문항 재표시(07장 TC-N) |
 | 로그인 귀속 | `user_id`만 채우고 재생 불필요. 검증용으로 재생 결과가 저장 프로필과 6자리까지 같아야 함 |
 | 시즌 릴리스(05장 SR-7) | 새 시즌 `survey_items` 행의 x_card(같은 id)로 전체 완료 세션 재생 → 새 결과 행(`recomputed_from`). 유형 유지율 ≥ 85% 미달 시 릴리스 보류(05장) |
-| 알고리즘 변경(`engine_version` major) | 골든 32케이스 로그(07장, R-11)와 전체 세션 재생 리포트(유형 변경률) 첨부 후 배포 |
+| 알고리즘 변경(`engine_version` major) | 골든 32케이스 로그(07장, R-11)를 재생해 `expected.muRef`(소수 6자리)를 다시 만들고 사람 승인을 받는다(manual, S-07). 전체 세션 재생 리포트(유형 변경률)를 첨부해 배포. minor 변경에서는 muRef가 그대로여야 한다(골든 M1a) |
 
 - 재생 입력은 로그 행과 `survey_items.x_card`뿐이다. 문항 선택 함수는 재생 중 호출하지 않는다(제시된 선택지는 로그에 있음).
 - `survey_items`는 시즌(`taxonomy_version`)별 행으로 x_card 이력을 보존한다(2.3.6). 은퇴 자극물도 행 삭제 금지.
@@ -674,10 +675,10 @@ function replay(log, purpose, items, cfg): EngineState {
 | 모집단 | P-U: θ* ~ U[0.1, 0.9]^5 / P-C: m ~ U{T1..T8}, θ* = clip(c_m + N(0, 0.10²), 0.02, 0.98) / P-A: θ* = c_m 그대로(유형당 동수) |
 | 응답 모델 | 이상점 MNL, β_true ∈ {16, 8, 4, 2}, 엔진과 같은 x 사용 |
 | 변형 | V-NONE: 1단계 문항마다 10% `none_of_these`, A/B마다 10% `cant_tell` / V-RAND: 1단계 explore만·2단계 축과 수준쌍 무작위(이득 비교용) / V-PRIOR: 용도 3종 사전 + 같은 로그를 중립 사전으로 재생 |
-| 규모 | 조건당 가상 사용자 1,000명, PRNG 시드 20261116 |
+| 규모·시드(S-08) | 판정(`--gate`): `release.surveySim.seeds.gate` = [20261117..20261121] 5개 × 조건당 1,000명(P-A는 800명) 풀링 점추정. 튜닝(`--dev`): `seeds.dev` = [20261116, 20261122, 20261123]만 사용. 두 집합은 교집합 0이고 잠금 대상이다 |
 | 정답 | 축: θ*. 유형: nearestType(θ*) |
 | 산출 | `sim/reports/<date>.json`(07장 AC-07-08) + 같은 이름 `.md`. 조건별 표, 문항 수 대비 RMSE 곡선(1~16) |
-| 판정 | 합격선은 `config/thresholds.json`의 `release.surveySim`(R-09)에서 읽는다 |
+| 판정 | 합격선은 `config/thresholds.json`의 `release.surveySim`(R-09)에서 읽는다. 점추정이 합격선을 충족하면 PASS. 부트스트랩 95% 구간이 합격선에 걸치면 `margin_warning`(비차단). 적응형 이득은 같은 θ*·같은 난수열을 V-RAND와 공유하는 공통 난수 쌍체로 계산하고 부트스트랩 구간을 리포트에 넣는다 |
 
 ### 2.16.2 지표와 합격선 (R-05)
 
@@ -688,7 +689,7 @@ function replay(log, purpose, items, cfg): EngineState {
 | 유형 top-1 | P-C, β=8 | ≥ 85% |
 | 유형 top-1 | P-C, β=4 | ≥ 70% |
 | 유형 top-1 / top-2 | P-U, β=8 | ≥ 62% / ≥ 85% |
-| 앵커 정답 | P-A, β=8, 유형당 20명 × 시드 | ≥ 95%(09장 M4 ④) |
+| 앵커 정답 | P-A, β=8, 시드당 800명(유형당 100명), gate 시드 5개 풀링 | ≥ 95%(`anchorAccPABeta8Min`) |
 | 불확실성 보정 | P-U, β=8, μ ± 1.645·σ_display 포함률 | 85~95% |
 | 일관성 분리 | P-U 평균 κ | β=16 ≥ 0.50, β=2 ≤ 0.25(07장 값) |
 | 적응형 이득 | P-U, β=8, V-RAND 대비 | RMSE ≥ 5% 감소 그리고 top-1 ≥ +3%p |
@@ -697,7 +698,11 @@ function replay(log, purpose, items, cfg): EngineState {
 | 강건성 | V-NONE, β=8 | RMSE ≤ 0.13, 오류 0 |
 | 성능 | `nextQuestion`+`applyAnswer` 1회 | Node p95 ≤ 20ms(1단계 후보 200개 포함) |
 
-미달 시 조정 순서(상수만, `engine_version` minor): ① `typeDiscWeight`(1단계 유형 판별 가중, 범위 2~8) ② consistency 상수(llChance, llRef) ③ calibKappa ④ 1단계 R ⑤ priorWeight ⑥ 브리지 SV 재배치(2.4.2 규칙). β·σ0·sigmaStop·문항 수는 결정 레지스터 값이므로 바꾸지 않는다.
+모든 행은 `release.surveySim` 또는 `diagnosis` 키에 연결된다(`qa:trace` 검사, S-08). 키: RMSE `rmseBeta8Max`·`rmseBeta4Max`, top-1 `typeAccPCBeta8Min`·`typeAccPCBeta4Min`·`top1PUMin`·`top2PUMin`, 앵커 `anchorAccPABeta8Min`, 포함률 `coverage90`, κ `consistencyBeta16Min`·`consistencyBeta2Max`, 이득 `adaptiveRmseGainMin`·`adaptiveTop1GainMinPp`, 사전 `priorTypeChangeMax`, 문항 `diagnosis.maxQuestions`·`stage1Questions`, 강건성 `robustNoneRmseMax`. 성능 20ms는 `perf`가 아니라 단위 벤치(비게이트 기록)다.
+
+미달 시 조정 절차(상수만, `engine_version` minor, S-08). 튜닝은 `seeds.dev`로만 하고 조정 공간은 아래 값 집합으로 닫는다. 좌표 순차 탐색(① → ⑥ 순서, 각 좌표에서 dev 지표가 가장 좋은 값 채택)으로 dev 시도 ≤ `maxTuningTrials`(15)회, gate 실행 ≤ `maxGateRuns`(3)회다.
+① `typeDiscWeight` ∈ {2, 3, 5, 8} ② (llChance, llRef) ∈ {(−0.15, 0.25), (−0.20, 0.25), (−0.15, 0.30)} ③ calibKappa ∈ {1.2, 1.3, 1.4} ④ 1단계 R ∈ {200, 400} ⑤ priorWeight ∈ {0.2, 0.3} ⑥ 브리지 SV 재배치 1회(2.4.2 규칙).
+상한에 닿아도 미달이면 HUMAN_TODO·BLOCKED.md에 BLK를 등록하고 G2-진단은 fail로 둔 채 M5 이후를 계속한다(HALT 계산 제외, 09장 M4 ④). β·σ0·sigmaStop·문항 수·시드 집합·합격선은 바꾸지 않는다(09장 F20).
 
 ### 2.16.3 실사용 검증 (출시 전후, 비차단 기록)
 
@@ -798,7 +803,7 @@ function replay(log, purpose, items, cfg): EngineState {
 | D-0211 | "다른 유형 보기" = `anchor_override_type_id`, μ 불변 | 이탈 방지·재검사 신뢰도 | 01, 04 | → R-36로 대체 |
 | D-0212 | 1단계 문항 점수에 유형 판별 항(w_type = 5.0, `diagnosis.stage1.typeDiscWeight`)을 더한다(2.6.1). | 03장 3.4.7 새 중심에서 D-최적만으로는 R-05 유형 정확도·09장 앵커 정답 기준에 미달(2.16.4) | 07, 09 | 신규 |
 | D-0213 | 브리지 기준 벡터는 [0.15, 0.85], 기준 유형은 L∞ 최근접(≤ 0.45)으로 배치하고 03장 3.4.7이 바뀌면 2.4.2 규칙으로 다시 배치한다. | 축 끝 브리지는 σ 과소추정과 유형 정확도 하락을 일으킴(2.16.4) | 03, 05, 09 | 신규 |
-| D-0214 | 진단 상수는 `config/thresholds.json`의 평면 키(beta, sigma0, sigmaStop, maxQuestions) + `diagnosis` 객체, 시뮬레이션 합격선은 `release.surveySim` 객체에 둔다. | R-09 단일 원천 안에서 키 위치 확정 | 07, 09 | 신규 |
+| D-0214 | 진단 상수는 `config/thresholds.json`의 `diagnosis` 객체(평면 키 폐지), 시뮬레이션 합격선은 `release.surveySim` 객체에 둔다. 키 구조 원천은 07장 7.12.1 | R-09 단일 원천 안에서 키 위치 확정 | 07, 09 | S-05로 갱신 |
 
 ---
 
@@ -866,3 +871,8 @@ function replay(log, purpose, items, cfg): EngineState {
 | R-35 사용자 로그 미사용 | 결정 v2 | 2.3.4, 2.8.3, AC-02-32 |
 | R-36 다른 유형 보기 | 결정 v2 | 2.13.3 |
 | R-38 닮은 사이트 = L1 거리 | 결정 v2 | 2.14 |
+| S-05(02) | 결정 v3 | 2.0 상수 블록 diagnosis 아래로 이동, D-0214 갱신 |
+| S-07(02) | 결정 v3 | 2.15 engine_version major 시 muRef 재생·사람 승인 |
+| S-08 | 결정 v3 | 2.16.1 gate/dev 시드·판정 규칙, 2.16.2 키 연결·조정 공간·상한 |
+| S-29(02) | 결정 v3 | 2.13.1 안내 키·순서·신뢰도 1줄, 2.13.2 axes[].state |
+| S-30(02) | 결정 v3 | 2.6.1 (f) mobile 자산 필터, ux.cardScale |
