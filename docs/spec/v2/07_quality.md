@@ -275,7 +275,7 @@ R = Between / max(Within, 0.05)
 
 ### 7.2.5 합격선
 
-`config/thresholds.json`의 `release.golden` 키로 잠근다(7.12.1).
+출시 전용 값은 `config/thresholds.json`의 `release.golden`, 운영 하한과 같은 값은 `generation.*`·`perf.*` 키를 그대로 쓴다(S-05, 7.12.1). 예: M7 최솟값 = `generation.harmonyFloor`, M8 최솟값 = `generation.tasteFloor`·`generation.sFreeFloor`, M9 = `generation.lint.*` + `release.golden.lintWarnMeanMax`, M14 최대 = `generation.costGuard.capUsd`, M15 = `perf.firstExposeP50Sec`·`latencyP50Sec`·`latencyP95Sec`.
 
 | 지표 | 합격선(전체 실행 96잡 기준) | 근거 |
 |---|---|---|
@@ -816,12 +816,12 @@ P-1b "AI 같다" 판정률(04장 AC-04-41, 00장 A3와 같은 데이터):
 
 자율 구현 에이전트가 테스트·임계값을 고쳐서 통과시키는 것을 기술적으로 막는다. 금지 행동 목록·`pnpm guard` 동작·사람/자체 잠금 구분·`human-lock` 태그 절차의 원천은 09장 9.5.5~9.5.6이고, 이 절은 07장 소관 파일과 이중 검증을 정의한다.
 
-### 7.12.1 잠금 대상 (07장 소관, 모두 사람 잠금)
+### 7.12.1 잠금 대상 (07장 소관. 사람 잠금, 사람이 없으면 `spec-lock` 기준 — 7.12.2)
 
 | 경로 | 내용 |
 |---|---|
-| `config/thresholds.json` | 임계값 단일 원천. 품질·SLO·진단(09장 9.5.6 키) + 이 장의 `release` 객체 |
-| `config/test-policy.json` | 재시도·타임아웃·커버리지·시각 회귀 `maxDiffPixelRatio` |
+| `config/thresholds.json` | 임계값 단일 원천. 아래 블록에서 `spec:extract`로 생성(S-04·S-05). 최상위 `diagnosis`·`generation`·`perf`·`release` |
+| `config/test-policy.json` | 재시도·커버리지·시각 회귀 `maxDiffPixelRatio`·보류 허용표 `deferrable`. 아래 블록에서 `spec:extract`로 생성 |
 | `config/forbidden-allowlist.json` | 금지 패턴 예외 경로 |
 | `tests/acceptance/**`(사람 제공분) | 각 장 AC 수용 테스트 |
 | `data/golden/**`, `eval/golden/baseline.json` | 골든 케이스, 기준선 reportId |
@@ -831,22 +831,65 @@ P-1b "AI 같다" 판정률(04장 AC-04-41, 00장 A3와 같은 데이터):
 | `playwright.config.ts`, `vitest.config.ts`, `lighthouserc.json`, `k6/*.js`, `.github/workflows/**` | 러너·CI 정의(값은 test-policy·thresholds 참조만) |
 | `config/lock/locked-hashes.json` | 위 파일과 09장 잠금 대상 전부의 SHA-256 |
 
-`config/thresholds.json`의 `release` 객체(값은 이 장 표와 일치해야 한다. JSON에는 주석을 넣지 않는다):
+**`config/thresholds.json` 전체 구조(S-05, 원천은 이 블록 하나)**
 
+- 이 블록이 `config/thresholds.json`의 바이트 원천이다. `pnpm spec:extract`가 `<!-- spec:thresholds -->` 표지 바로 다음 json 코드 블록을 파싱해 키 순서를 유지한 채 2칸 들여쓰기로 직렬화한다(S-04).
+- 최상위 객체는 `diagnosis`(02장 값), `generation`(04장 값), `perf`(06·07장 런타임 SLO와 서비스 UI 접근성), `release`(07장 출시 전용) 네 개뿐이다. 키는 camelCase다. 평면 키(`harmonyMin`, `beta` 등 최상위 숫자)와 snake_case 키(`harmony_floor`, `golden.full_success_min` 등)는 폐지한다.
+- 한 의미는 키 하나에만 둔다. 출시 판정이 운영 하한과 같은 값을 쓰면 `release`에 복제하지 않고 `generation`·`perf` 키를 참조한다. 예: 골든 조화 하한은 `generation.harmonyFloor`, 골든 비용 상한은 `generation.costGuard.capUsd`, 골든 p95는 `perf.latencyP95Sec`.
+- 다른 장은 숫자를 다시 쓰지 않고 키 경로만 적는다(04 AC-04-43, 02 D-0214, 09 9.5.6·M3·M4). 본문 표의 수치는 설명용 사본이며 다르면 이 블록이 이긴다.
+- 린터 탐지 상수(AIL-xx 표의 hue 범위·blur px 등 규칙 정의값)는 임계값이 아니라 규칙 정의다. 원천은 04장 4.13.2 표이고 `packages/linter/data/rule-params.json`에 두며 자체 잠금한다(AD-006). `generation.lint`에는 게이트 판정값만 둔다.
+- `scripts/guard/thresholds-schema.ts`는 zod `.strict()` 스키마로 파일 전체를 검사한다. 모르는 키, 빠진 키, 타입이 다른 값이 하나라도 있으면 FAIL이다.
+
+<!-- spec:thresholds -->
 ```json
 {
+  "diagnosis": {
+    "beta": 8, "sigma0": 0.25, "sigmaStop": 0.08, "maxQuestions": 16, "stage1Questions": 8,
+    "lambda": [1, 1, 1, 1, 1], "calibKappa": 1.3, "priorWeight": 0.3,
+    "stage1": { "candidateSamples": 200, "minPairDist": 0.35, "minDistinctTypes": 3, "maxAppearPerVector": 3, "epsilonExplore": 0.10, "typeDiscWeight": 5.0 },
+    "noneAvoidDist": 0.35, "noneExploreAfter": 3, "cantTellInsensitiveAfter": 2,
+    "consistency": { "llChance": -0.15, "llRef": 0.25, "checkBonus": 0.05, "minScored": 4 },
+    "typing": { "tieEps": 0.01, "boundaryEps": 0.05, "conflictMinPicks": 3, "conflictMinCenterDist": 0.60, "lowSignalMinPicks": 4 },
+    "positionBias": { "sameSlotRatio": 0.80, "minAnswers": 5 },
+    "similarSites": { "maxScore": 0.45, "tau": 0.05, "count": 3 },
+    "fastAnswerMs": 1000,
+    "surveyAssetL1AbsMax": 0.15
+  },
+  "generation": {
+    "harmonyFloor": 80, "tasteFloor": 75, "sFreeFloor": 65,
+    "contrastBodyMin": 4.5, "contrastLargeMin": 3.0,
+    "overflowMax": 0, "overlapMax": 0,
+    "lint": { "errorMax": 0, "warnPerMockupMax": 2 },
+    "candidates": 6, "visible": 3, "regenMax": 1, "repairCallsMax": 3,
+    "taste": { "tau": 0.05, "lambdaLayout": 1.5, "d0": 0.40 },
+    "sFreeD0": 0.30,
+    "variant": { "targetDistTf": 0.50, "targetDistMin": 0.25, "l2DiffMin": 3, "renderDistMin": 0.15, "candidatePairDistMin": 0.20 },
+    "costGuard": { "skipVisionUsd": 0.24, "skipRepairUsd": 0.27, "capUsd": 0.30 },
+    "fallbackAtSec": 120, "killAtSec": 180,
+    "renderViewports": [375, 768, 1024, 1280, 1920],
+    "firstViewFontKbMax": 300
+  },
+  "perf": {
+    "firstExposeP50Sec": 45, "latencyP50Sec": 60, "latencyP95Sec": 90,
+    "versionGateP95Sec": 15,
+    "editStyleP95Ms": 200, "editStructP95Ms": 500,
+    "lcpMaxMs": 2500, "inpMaxMs": 200, "clsMax": 0.1,
+    "nextQuestionP95Ms": 150, "resultMaxMs": 1000, "surveyApiP95Ms": 300,
+    "surveyJsKbMax": 200, "cardImageDesktopKbMax": 140, "cardImageMobileKbMax": 160,
+    "a11y": { "axeSeriousCriticalMax": 0, "lighthouseA11yMin": 95, "touchTargetPx": 44 }
+  },
   "release": {
     "golden": {
       "cases": 32, "runsPerCase": 3,
       "schemaValidFirstMin": 0.90, "schemaValidRepairedMin": 0.99,
       "exposedHardPass": 1.0, "fullSuccessMin": 0.95, "minGuarantee": 1.0, "fallbackRatioMax": 0.15,
-      "harmonyMeanMin": 85, "harmonyFloor": 80,
-      "tasteTrueMeanMin": 82, "tasteFloor": 75, "tasteTrueGe80RatioMin": 0.90, "sFreeFloor": 65,
-      "lintErrorMax": 0, "lintWarnPerMockupMax": 2, "lintWarnMeanMax": 1.0,
-      "personalizationRatioMin": 2.0, "variantL2DiffViolationsMax": 0, "variantRenderDMin": 0.15, "variantRenderDRatioMin": 0.95,
+      "harmonyMeanMin": 85,
+      "tasteTrueMeanMin": 82, "tasteTrueGe80RatioMin": 0.90,
+      "lintWarnMeanMax": 1.0,
+      "personalizationRatioMin": 2.0, "variantL2DiffViolationsMax": 0, "variantRenderDRatioMin": 0.95,
       "runStdevMax": 5, "runStdevViolationCasesMax": 2,
-      "costMaxUsd": 0.30, "costMeanMaxUsd": 0.25,
-      "firstExposeP50Sec": 45, "latencyP50Sec": 60, "latencyP95Sec": 90
+      "costMeanMaxUsd": 0.25,
+      "m1": { "typeIdCases": 24, "muRefAbsMax": 0.02, "muRefAxes": 120, "marginZ": 1.645, "marginCoverageWarnMin": 0.85 }
     },
     "regression": {
       "ratioDropMaxPp": 2.0, "scoreDropMax": 2.0, "compositeDropMax": 1.0,
@@ -858,28 +901,71 @@ P-1b "AI 같다" 판정률(04장 AC-04-41, 00장 A3와 같은 데이터):
       "rmseBeta8Max": 0.12, "rmseBeta4Max": 0.18,
       "typeAccPCBeta8Min": 0.85, "typeAccPCBeta4Min": 0.70,
       "top1PUMin": 0.62, "top2PUMin": 0.85,
-      "coverage90": [0.85, 0.95], "maxQuestions": 16, "stage1Questions": 8,
+      "coverage90": [0.85, 0.95],
       "adaptiveRmseGainMin": 0.05, "adaptiveTop1GainMinPp": 3.0,
-      "consistencyBeta16Min": 0.5, "consistencyBeta2Max": 0.25
+      "consistencyBeta16Min": 0.5, "consistencyBeta2Max": 0.25,
+      "anchorAccPABeta8Min": 0.95, "priorTypeChangeMax": 0.06, "robustNoneRmseMax": 0.13,
+      "seeds": { "gate": [20261117, 20261118, 20261119, 20261120, 20261121], "dev": [20261116, 20261122, 20261123] },
+      "populationPerSeed": 1000, "populationPA": 800,
+      "maxTuningTrials": 15, "maxGateRuns": 3
     },
     "extractor": { "roundtripAbsMax": 0.10, "spearmanMin": 0.70, "maeMax": 0.15, "stabilityMax": 0.01 },
-    "perf": {
-      "lcpMaxMs": 2500, "inpMaxMs": 200, "clsMax": 0.1, "nextQuestionP95Ms": 150, "resultMaxMs": 1000,
-      "editStyleP95Ms": 200, "editStructP95Ms": 500, "surveyJsKbMax": 200,
-      "cardImageDesktopKbMax": 140, "cardImageMobileKbMax": 160, "surveyApiP95Ms": 300
-    },
-    "a11y": { "axeSeriousCriticalMax": 0, "lighthouseA11yMin": 95, "touchTargetPx": 44 },
     "export": { "pixelDiffMax": 0.01, "lighthousePerfMin": 90, "lighthouseA11yMin": 95, "lcpMaxMs": 2500, "clsMax": 0.05 },
     "blind": {
       "aiDetectMax": 0.65, "aiLikeRateMax": 0.25, "aiLikeVsBaselineMaxRatio": 0.5,
       "baselinePrefMin": 0.70, "baselinePrefLbMin": 0.60,
       "personalPrefMin": 0.70, "personalPrefLbMin": 0.50,
+      "strongBaselinePrefMin": 0.60, "strongBaselinePrefLbMin": 0.45, "personalOffsetPrefWarnMax": 0.55,
       "makerMeanMin": 3.5, "tmValidityMin": 0.75, "lintRecallMin": 0.80, "lintFalsePosMax": 0.10, "harmonyValidityMin": 0.80
     },
     "usability": { "taskSuccessMin": 0.80, "susMin": 70, "t1MedianMaxSec": 240, "blockerMax": 0 }
   }
 }
 ```
+
+**옛 키 → 새 키 대응(구현·다른 장 편집용, 옛 키는 모두 폐지)**
+
+| 옛 키(장) | 새 키 |
+|---|---|
+| `harmonyMin`(09), `generation.harmony_floor`(04), `release.golden.harmonyFloor`(07) | `generation.harmonyFloor` |
+| `tasteMin`(09), `generation.taste_floor`(04), `release.golden.tasteFloor`(07) | `generation.tasteFloor` |
+| `generation.sfree_floor`(04), `release.golden.sFreeFloor`(07) | `generation.sFreeFloor` |
+| `lintErrorMax`(09), `release.golden.lintErrorMax`(07) | `generation.lint.errorMax` |
+| `generation.lint_warn_max`(04), `release.golden.lintWarnPerMockupMax`(07) | `generation.lint.warnPerMockupMax` |
+| `costPerRequestUsd`(09), `release.golden.costMaxUsd`(07) | `generation.costGuard.capUsd` |
+| `generation.cost_guard_skip_judge_usd`, `…_skip_repair_usd`(04) | `generation.costGuard.skipVisionUsd`, `.skipRepairUsd` |
+| `firstCardP50Sec`(09), `generation.first_card_p50_s`(04), `release.golden.firstExposeP50Sec`(07) | `perf.firstExposeP50Sec` |
+| `genP50Sec`·`genP95Sec`(09), `generation.job_p50_s`·`job_p95_s`(04), `release.golden.latencyP50Sec`·`latencyP95Sec`(07) | `perf.latencyP50Sec`, `perf.latencyP95Sec` |
+| `genFallbackSec`·`genKillSec`(09), `generation.fallback_at_s`·`kill_at_s`(04) | `generation.fallbackAtSec`, `generation.killAtSec` |
+| `generation.edit_style_p95_ms`·`edit_struct_p95_ms`(04), `release.perf.editStyleP95Ms`·`editStructP95Ms`(07) | `perf.editStyleP95Ms`, `perf.editStructP95Ms` |
+| `release.perf.*`, `release.a11y.*`(07) | `perf.*`, `perf.a11y.*` |
+| `release.surveySim.maxQuestions`·`stage1Questions`(07) | `diagnosis.maxQuestions`, `diagnosis.stage1Questions` |
+| `beta`·`sigma0`·`sigmaStop`·`maxQuestions`(02·09 평면) | `diagnosis.beta` 등 |
+| `generation.taste_tau`·`taste_lambda_layout`·`taste_d0`(04) | `generation.taste.tau`, `.lambdaLayout`, `.d0` |
+| `generation.sfree_d0`(04) | `generation.sFreeD0` |
+| `generation.variant_*`, `candidate_pair_dist_min`(04) | `generation.variant.*` |
+| `generation.repair_calls_max`(04) | `generation.repairCallsMax` |
+| `viewports`(09) | `generation.renderViewports` |
+| `release.golden.variantRenderDMin`(07) | `generation.variant.renderDistMin` |
+| `golden.full_success_min`·`golden.min_guarantee`(04) | `release.golden.fullSuccessMin`, `.minGuarantee` |
+| `generation.lint.*`의 규칙 탐지 상수(04) | `packages/linter/data/rule-params.json`(임계값 아님) |
+
+<!-- spec:test-policy -->
+```json
+{
+  "retries": { "playwright": 0, "vitest": 0 },
+  "coverage": { "coreBranchMin": 90, "repoLineMin": 75, "changedFileLineMin": 75 },
+  "visual": { "maxDiffPixelRatio": 0.01 },
+  "deferrable": {
+    "temp": ["font-budget", "asset-license-verify", "normalizer-human", "extractor-human-label", "fewshot-count", "high-risk-domains", "legal-text"],
+    "needs_live": ["golden-live", "judge-vision-live", "model-promotion"],
+    "manual": ["blind-*", "usability-*", "k6-staging", "processor-approval"],
+    "needs_ci": ["lock-digest", "supabase-db-lint", "supabase-storage-policy", "gotrue-magiclink-e2e", "gotrue-mfa", "gotrue-google-metadata", "worker-image-build", "visual-docker-baseline", "browser-webkit", "browser-firefox", "net-isolation-docker"]
+  }
+}
+```
+
+`config/test-policy.json`도 위 블록(`<!-- spec:test-policy -->`)에서 `spec:extract`로 만든다. `deferrable`은 보류 허용표(S-03)이고 상태 enum·종료 코드 규칙은 7.11.2가 원천이다. 테스트 타임아웃 값은 04·06장이 정의하는 런타임 값과 별개로 러너 설정에만 두며 판정 기준이 아니다.
 
 ### 7.12.2 잠금 검사 (이중 검증)
 
@@ -893,13 +979,30 @@ P-1b "AI 같다" 판정률(04장 AC-04-41, 00장 A3와 같은 데이터):
 3. 판정 코드(scoring, linter, pipeline, eval, sim)에서 thresholds 키에 대응하는 숫자 리터럴 비교식
    (예: `>= 0.9`, `< 75`)을 AST로 탐지 → 1건이라도 있으면 FAIL (getThresholds() 경유만 허용, 09장 F04)
 4. 수용 테스트가 런타임 getThresholds() 값 = 스펙 표 값(이 장 7.2.5·7.3·7.5·7.7·7.8)임을 확인
+5. spec 대조(S-04): `pnpm spec:extract && git diff --exit-code config/thresholds.json config/test-policy.json`
+   → 다르면 FAIL. 이어서 scripts/guard/thresholds-schema.ts(zod strict)로 키 구조 검사
+6. 기준 ref(S-04): baseRef = `human-lock` 태그가 있으면 그것, 없으면 `spec-lock` 태그. 둘 다 없으면 FAIL.
+   09장 규칙 2의 "human-lock 시점 entries ⊆ HEAD entries"는 이 baseRef로 판정한다.
+   baseRef 시점의 docs/spec/** 와 HEAD의 docs/spec/** 가 다르면 FAIL(스펙 고정점 보호. 사람 relock만 예외)
+7. QA_LOCK_DIGEST가 없으면 2단계는 needs_ci(test-policy deferrable `lock-digest`). 이 상태로는 종료 코드 0 불가
 ```
+
+**사람 없는 운영(S-04)**: 이 저장소는 사람 없이 진행된다(저장소 CLAUDE.md). 그래서 기준 파일의 고정점을 사람 대신 스펙 문서에 둔다.
+
+| 단계 | 누가 | 무엇을 |
+|---|---|---|
+| P3 종료 | 에이전트 | `docs/spec/FINAL` 확정 커밋에 `spec-lock` 태그를 붙인다. 이후 `docs/spec/**` 변경은 guard FAIL이다 |
+| M0 | 에이전트 | `pnpm spec:extract`로 `config/thresholds.json`·`test-policy.json`을 만들고 `locked-hashes.json`에 `lockedBy:"spec"`으로 등록한다. 직접 편집은 금지다(5단계가 잡는다) |
+| 수용 테스트 자체 잠금 직전 | 에이전트 | `pnpm qa:trace --audit`. 테스트 본문의 수치 리터럴을 FAIL로 처리한다(허용 리터럴 {0, 1, 0.5, 100}만, 목록은 `config/forbidden-allowlist.json`). 기대값은 `getThresholds()` 키로만 쓴다 |
+| 사람이 생기면 | 사람 | 7.12.3 절차로 relock → `human-lock` 태그. 이후 baseRef는 `human-lock`이다 |
+
+`spec-lock`은 사람 승인을 대신하지 않는다. 기준이 "에이전트가 정한 값"이 아니라 "구현 전에 확정된 문서의 값"임을 기계적으로 보장할 뿐이다. 그래서 `release:check`는 `QA_LOCK_DIGEST`가 확인될 때까지 종료 코드 0을 내지 않는다(7.11.2).
 
 ### 7.12.3 변경 절차
 
 | 행위자 | 허용 | 금지 |
 |---|---|---|
-| 구현 에이전트 | 잠금 파일 읽기, 잠금 대상이 아닌 테스트 추가, `guard:self-lock`(09장, 새 파일만), 변경 요청서 `qa/LOCK_CHANGE_REQUEST.md`에 {파일, 현재값, 제안값, 근거, 실패 로그} 작성 후 BLOCKED.md에 기록 | 잠금 파일 수정·삭제·이동, `locked-hashes.json` 재생성, `guard:relock --human` 실행, CI 워크플로 수정, 판정 코드에 우회 분기 추가 |
+| 구현 에이전트 | `pnpm spec:extract` 실행(출력이 스펙과 같아야 함), P3 종료 커밋에 `spec-lock` 태그 1회(이미 있으면 금지), 잠금 파일 읽기, 잠금 대상이 아닌 테스트 추가, `guard:self-lock`(09장, 새 파일만), 변경 요청서 `qa/LOCK_CHANGE_REQUEST.md`에 {파일, 현재값, 제안값, 근거, 실패 로그} 작성 후 BLOCKED.md에 기록 | 잠금 파일 수정·삭제·이동, `locked-hashes.json` 재생성, `guard:relock --human` 실행, `spec-lock`·`human-lock` 태그 이동·삭제, `config/thresholds.json`·`test-policy.json` 직접 편집, CI 워크플로 수정, 판정 코드에 우회 분기 추가 |
 | 사람(저장소 소유자) | 요청서 검토 → 파일 수정 → `pnpm guard:relock --human <경로>` → `QA_LOCK_DIGEST` 갱신 → 커밋 `chore(qa-lock): <사유>` → `git tag -f human-lock` | — |
 
 추가 규칙:
@@ -927,6 +1030,9 @@ P-1b "AI 같다" 판정률(04장 AC-04-41, 00장 A3와 같은 데이터):
 | AC-07-13 | 프로덕션 빌드 산출물에 테스트 전용 로그인 라우트·인증 우회 코드가 없다(TC-S-09). E2E 로그인은 Mailpit 매직링크로만 수행된다. |
 | AC-07-14 | 7.4의 모든 TC([P2] 제외)가 테스트 이름에 ID를 포함해 자동화되어 있고(수동 지정 제외), 릴리스 실행에서 전부 통과한다. |
 | AC-07-15 | `pnpm eval:compare --finalize`는 블라인드 쌍 수 <40이면 `REJECT(blind_pairs)`, 40쌍 중 20승이면 Wilson 하한 0.352로 `blind_wilson_lb` 통과를 출력한다. |
+| AC-07-16 | Given 7.12.1 `spec:thresholds` 블록과 값 1개가 다른 `config/thresholds.json`, When `pnpm guard`, Then spec 대조 단계가 FAIL하고 다른 키 경로를 출력한다. 블록에 없는 키 1개를 추가하거나 있는 키 1개를 지워도 `thresholds-schema` 단계가 FAIL한다. |
+| AC-07-17 | Given `human-lock`·`spec-lock` 태그가 모두 없는 저장소, When `pnpm guard`, Then FAIL. `spec-lock`만 있으면 guard:lock이 그 커밋을 baseRef로 판정하고, 그 이후 `docs/spec/**`가 바뀐 커밋에서 FAIL한다. |
+| AC-07-18 | Given 수용 테스트 본문에 `expect(h).toBeGreaterThanOrEqual(80)` 같은 허용 목록 밖 수치 리터럴, When `pnpm qa:trace --audit`, Then FAIL하고 파일·줄을 출력한다. |
 
 ---
 
@@ -1021,6 +1127,8 @@ P-1b "AI 같다" 판정률(04장 AC-04-41, 00장 A3와 같은 데이터):
 | UI-19 | 서비스 UI 접근성·반응형 | 7.7.1, 7.6.2 |
 | R-01~R-04 | 식별자 | 머리말, 7.2.2~7.2.3, 전 절 |
 | R-05 | 진단 합격선 | 7.3.1, `release.surveySim` |
+| S-04 | 사람 없는 기준 고정점(`spec:extract`, `spec-lock`, `qa:trace --audit`) | 7.12.2 5~7단계·사람 없는 운영 표, 7.12.3, AC-07-16~18 |
+| S-05 | thresholds 키 구조 단일화 | 7.12.1 전체 JSON 블록·옛 키 대응표, 7.2.5 |
 | R-07 | 설문 이미지 규격 | 7.5.1 |
 | R-09 | 임계값 파일·잠금 | 7.12 |
 | R-10 | 테스트 로그인 우회 철회 | 7.1.2 E2E, TC-S-09, AC-07-13 |
