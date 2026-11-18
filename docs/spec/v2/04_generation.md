@@ -134,7 +134,7 @@ DesignSpec = {
   forbidden: { lint_rules_strict: LintRuleId[], conflict_ids: string[] },
   brand_color: null | { hex_in: string, hue_locked: number, role: "primary" | "accent",
                         adjusted_hex: string, delta_e_ok: number },   // BrandInput.brand_color(단일 값, 01장)
-  brand_color_notice: null | "adjusted" | "demoted_to_accent"           // 01장 S08 카드 표시용
+  brand_color_notice: null | "adjusted" | "demoted_to_accent" | "used_as_tint" | "ignored"  // 01장 S08 카드 표시용, 03장 3.13.2 종료 순서(S-37)
 }
 ```
 
@@ -177,6 +177,7 @@ compileSpec(taste, type, purpose, brand, variant, job_seed):
 | 입력 있음(hex 1개) | primary 후보로, OKLCH hue를 ±5° 이내로 고정하고 L·C만 조정해 `on-primary` 대비 ≥ 4.5:1, `primary` 대 `bg` 비텍스트 대비 ≥ 3:1을 만족시킨다. 조정은 L을 0.01 단위로 이동(최대 ±0.25), 이후 C를 0.01 단위로 감소 |
 | 조정 후 ΔE(OKLab) > 0.05 | `brand_color.delta_e_ok`에 기록, `brand_color_notice = "adjusted"`, 시안 카드·편집 화면에 "접근성을 위해 색을 조정했어요(원본 #xxxxxx)" 표시(→ 01장) |
 | 브랜드 hue가 팔레트 primary hue와 60° 이상 차이 + 유형 금지 채도(vivid 금지 유형에서 C > 0.15) | accent로 강등(`brand_color_notice = "demoted_to_accent"`), accent 면적 상한 10%(컴파일러가 accent 사용 블록 요소를 CTA·링크·라벨로 제한) |
+| 사전 가능성 판정 실패(시작 L ±0.25 안에 primary 해가 없음, S-37) | 03장 3.13.2 순서로 반드시 끝난다: primary → accent(비텍스트 3:1만, `on-accent` 쓰임 금지) → tint(`surface` 틴트, hue = h_b, C ≤ 0.035 또는 shape-graphic 색면 1개, `"used_as_tint"`) → 반영 안 함(`"ignored"`). 반복 상한 ≤ 74, 예외 없음 |
 | 로고 | 업로드는 MVP 제외(R-21). 항상 브랜드명을 `font.display`로 조판한 워드마크(03장 3.13.4). 심볼 생성 금지 |
 
 **AC-04-03** 임의 브랜드 hex 20개(채도·명도 극단값 포함) 입력 시 생성된 명세서 100%가 대비 게이트를 통과하고, primary hue 오차 ≤ 5°(accent로 강등된 경우 제외)다.
@@ -256,6 +257,8 @@ snapToFeasible(l2_0, t, …):
 **AC-04-05** `calibrate()`는 순수 함수이며, 단위 테스트 30건(κ 3구간 × 둔감 축 유무 × 용도 3종 + 경계값 12건)에서 기대 벡터와 소수 3자리까지 일치한다.
 **AC-04-06** 모든 명세서의 `target_vector`는 해당 용도 범위 안에 있다(위반 0건, 속성 기반 테스트 1,000회).
 **AC-04-07** `|v2_k − μ_k| ≥ 0.20`인 축이 있는 시안 100%에 사유 문구가 저장된다(`calibration_trace.moved_axes` 비어 있지 않음 ↔ UI 칩 노출).
+
+**변형 차이·보정 사유 노출(S-32)**: 06장 `MockupCard.movedAxes`는 `calibration_trace.moved_axes`를 |to − from| 큰 순으로 최대 2개 골라 `{axis, direction: to > from ? 'up' : 'down', reason}`으로 만든다. `MockupCard.diffFromTrue`는 §4.4 L2 차이 7키 중 해당 변형이 `v_true`와 다른 키 목록이다(`v_true`는 []). 둘 다 결정론이고 LLM을 부르지 않는다. 화면 문구 키(`calib.purpose`·`calib.type`·`calib.distance`)와 L2 쉬운 말 사전은 01장 1.7.1이 소유한다. `v_true`에도 칩이 붙을 수 있다.
 
 ---
 
@@ -657,7 +660,7 @@ portfolio work.items·showcase 이미지 슬롯 → placeholder: true
 
 아래 표는 03장 `data/taxonomy/harmony.json`(D-0310)에서 생성한 사본이다(S-38). 다르면 원천이 이기고, `pnpm spec:check-harmony`가 표와 JSON의 차이를 CI에서 잡는다. 텍스트 크기는 시맨틱 태그(h1 등)가 아니라 `data-role`과 단계 토큰(`t-display`, `t-1`, … → 03장 3.1.5a, `data/taxonomy/text-roles.json` B25)으로 판정한다.
 
-렌더 결과(1280 computed style + 확정 트리)에서 계산한다. 노출 조건 H ≥ 80(D-23). 배점·상수의 원천은 03장 `data/taxonomy/harmony.json`(3.14.3, D-0310)이며 아래 표는 같은 내용이다. 임계값 80은 `config/thresholds.json`의 `generation.harmony_floor`.
+렌더 결과(1280 computed style + 확정 트리)에서 계산한다. 노출 조건 H ≥ 80(D-23). 배점·상수의 원천은 03장 `data/taxonomy/harmony.json`(3.14.3, D-0310)이며 아래 표는 같은 내용이다. 임계값 80은 `config/thresholds.json`의 `generation.harmonyFloor`(키 구조 원천 07장 7.12.1, S-05).
 
 | ID | 항목 | 측정 | 배점 | 감점 규칙 |
 |---|---|---|---|---|
@@ -696,7 +699,7 @@ portfolio work.items·showcase 이미지 슬롯 → placeholder: true
 
 ```
 입력: v = toL1(extractL2(render@1280))(05장, normalizer_version = 시즌 ID), 목표 t = spec.target_vector, σ(사용자)
-# 상수 τ, λ, D0(0.40), 노출 하한(75, 65)은 config/thresholds.json generation.* (R-09)
+# 상수 generation.taste.{tau,lambdaLayout,d0}, 노출 하한 generation.tasteFloor·sFreeFloor (R-09, 07장 7.12.1)
 λ_k  = 1.5 (A1, A4)  |  1.0 (A2, A3, A5)                # 레이아웃 영향 축 가중
 w_k  = λ_k / (σ_k² + τ²),  τ = 0.05,   Σ w_k = 1 로 정규화
 d    = sqrt( Σ_k w_k (v_k − t_k)² )
@@ -829,7 +832,7 @@ QualityReport = {
 ## 4.12 선택·폴백 규칙
 
 ```
-eligible(c) = 모든 G 통과 ∧ H ≥ 80 ∧ TM ≥ 75 ∧ S_free ≥ 65 ∧ warn ≤ 2      # 값은 thresholds.json generation.*
+eligible(c) = 모든 G 통과 ∧ H ≥ 80 ∧ TM ≥ 75 ∧ S_free ≥ 65 ∧ warn ≤ 2      # generation.harmonyFloor·tasteFloor·sFreeFloor·lint.warnPerMockupMax
 rank(c)     = 0.5625·TM + 0.4375·H                 # [P0]. judge는 기록 전용(R-12)
               # [P2] JUDGE_VISION_MODE=rank 편입 후: 0.45·TM + 0.35·H + 0.20·J
 for v in [v_true, v_fit, v_bal]:
@@ -865,7 +868,7 @@ for v in [v_true, v_fit, v_bal]:
 
 폴백 비율은 `generation_jobs.n_fallback`과 `mockups.is_fallback`으로 집계한다(별도 이벤트 없음, 품질 지표 → 07장).
 
-**AC-04-24** 골든 세트 전체 실행(32케이스 × 3회, R-11)에서 `succeeded` 비율과 시안 ≥ 1개 보장률이 07장 합격선(`thresholds.json` `golden.full_success_min`, `golden.min_guarantee = 1.0`)을 충족한다.
+**AC-04-24** 골든 세트 전체 실행(32케이스 × 3회, R-11)에서 `succeeded` 비율과 시안 ≥ 1개 보장률이 07장 합격선(`release.golden.fullSuccessMin`, `release.golden.minGuarantee`)을 충족한다.
 **AC-04-24a** n_real·n_fallback 조합 5가지 픽스처에서 `status`와 한도 차감·환불이 위 표와 일치한다(통합 테스트).
 **AC-04-25** 72개 폴백 조합 전부가 CI에서 G-01~G-13 통과, H ≥ 80.
 
@@ -883,7 +886,7 @@ for v in [v_true, v_fit, v_bal]:
 | D | 렌더 DOM + computed style | 렌더 후 | 예 |
 | P | 스크린샷 픽셀 | 렌더 후 | 예 |
 
-S→C→T에서 error가 나오면 렌더하지 않고 바로 수정 루프로 보낸다(렌더 비용 절감). 규칙의 수치 임계값은 `config/thresholds.json`의 `generation.lint.*`, 사전·기본값 목록은 `packages/linter/data/`(금지 사전, `defaults.json` = 03장 `harmony.json.defaultsBlacklist`와 동일 원천)에 둔다. 규칙 구현은 `packages/linter/rules/AIL-xx.ts` 1파일 1규칙, 메타 `{id, stage[], severity, applies_to[], message_ko, fix_hint}`. 심각도: **error** = G-09 하드 게이트(노출 불가), **warn** = 노출 시안당 ≤ 2개.
+S→C→T에서 error가 나오면 렌더하지 않고 바로 수정 루프로 보낸다(렌더 비용 절감). 규칙의 탐지 상수(아래 표의 수치 조건)는 `packages/linter/data/rule-params.json`(이 표가 원천, 자체 잠금, AD-006)에 두고, 게이트 판정값만 `config/thresholds.json`의 `generation.lint.{errorMax, warnPerMockupMax}`에 둔다. 사전·기본값 목록은 `packages/linter/data/`(금지 사전, `defaults.json` = 03장 `harmony.json.defaultsBlacklist`와 동일 원천)에 둔다. 규칙 구현은 `packages/linter/rules/AIL-xx.ts` 1파일 1규칙, 메타 `{id, stage[], severity, applies_to[], message_ko, fix_hint}`. 심각도: **error** = G-09 하드 게이트(노출 불가), **warn** = 노출 시안당 ≤ 2개.
 
 ### 4.13.2 규칙 전체 v1
 
@@ -1019,20 +1022,26 @@ H < 80과 TM은 저장·내보내기 차단 사유가 아니다(사용자 선택
 ├─ LICENSES.md          # 폰트(OFL 전문 포함)·아이콘(MIT)·이미지 라이선스 전문/링크
 ├─ CREDITS.md           # 이미지별 작가·출처 URL·라이선스, 폰트·아이콘 저작자
 ├─ AI_NOTICE.md         # AI 생성물 고지(문구 → 08장)
+├─ styleguide.html      # 스타일 가이드(S-35): 색 역할 칩+HEX/OKLCH+사용 전경/배경 쌍 대비값, 타입 스케일, spacing·radius·depth 샘플,
+│                       #   사용 컴포넌트 variant×state 샘플, 시그니처 1개+규칙 1줄, 유형·변형·시즌 ID. LLM 미사용(→ 아래)
 ├─ tokens/tokens.json   # ③ DTCG($type/$value, 시맨틱 → 원시 alias)
 ├─ html/                # ① 정적 HTML+CSS
 │   ├─ index.html
 │   ├─ styles.css       # tokens.css + base.css + 사용 블록 CSS만(tree-shake)
-│   └─ assets/{fonts,images,icons}/
+│   └─ assets/{fonts,images,icons}/   # fonts/extended/ = ks-x-1001 서브셋(S-40)
 └─ react/               # ② React(Next.js App Router) + Tailwind v4
     ├─ package.json     # 의존성: next, react, react-dom, tailwindcss(+ @tailwindcss/postcss)만, 버전 고정
     ├─ app/{layout.tsx,page.tsx,globals.css}   # globals.css에 @theme 토큰
     ├─ components/sections/<Block><Variant>.tsx
     ├─ components/icons/*.tsx                  # 인라인 SVG
-    └─ public/{fonts,images}/
+    └─ public/{fonts,images}/                  # fonts/extended/ = ks-x-1001 서브셋(S-40)
 ```
 
 생성 방법: 정적 HTML은 §4.9 컴파일러 출력 그대로. React는 같은 블록 템플릿의 TSX 판(`packages/blocks/<block>/<variant>.tsx`, 사람 작성)에 확정 트리 슬롯을 props로 넣어 생성한다. LLM 호출 0.
+
+`styleguide.html`은 `deriveTokens` 결과와 03장 컴포넌트 템플릿만으로 컴파일한다. 서체·팔레트 표기는 결과 화면 ⑤ 디자인 가이드 카드와 같은 함수(`ResultView.guide`, 01장 D-001)를 쓴다. 파일 목록은 03장 3.18과 같다.
+
+폰트(S-40, 원천 03장 3.7.5 맥락별 서브셋 표): 내보내기는 `page` 서브셋을 기본으로 넣고 `fonts/extended/`에 `ks-x-1001` 파일을 함께 넣는다. 두 번째 `@font-face`를 `unicode-range: U+AC00-D7A3`로 선언해 문구를 바꿔도 2,350자 안에서는 같은 서체가 유지된다. README "문구를 바꿀 때" 절에 안내한다.
 
 ### 4.16.2 품질 기준
 
@@ -1051,10 +1060,12 @@ H < 80과 TM은 저장·내보내기 차단 사유가 아니다(사용자 선택
 | E-11 | 고지·라이선스 | LICENSES.md·CREDITS.md·AI_NOTICE.md 존재, 사용 에셋 100%가 CREDITS에 기재 | 매니페스트 대조 |
 | E-12 | placeholder | `placeholder=true` 항목이 있으면 다운로드 전 경고 모달(→ 01장) + README 목록 일치. `[예시]` 접두는 내보내기에서도 유지 | 대조 |
 | E-13 | 크기 | zip ≤ 15MB | 크기 검사 |
+| E-14 | styleguide(S-35) | `styleguide.html` vnu 오류 0, axe serious/critical 0, 외부 참조 0, 시안에 쓰인 전경/배경 색 쌍 100%가 대비값(G-02 계산값, 소수 1자리)과 함께 표기 | 내보내기 요청마다 |
+| E-15 | 확장 폰트 폴백(S-40) | 내보낸 HTML·React에서 2,350자(KS X 1001) 범위 한글 텍스트 노드의 폰트 폴백 0(`document.fonts` 검사, 시스템 폰트로 떨어진 노드 0) | Playwright |
 
 시점: E-01·03·07·09·11·12·13은 내보내기 요청마다(p95 ≤ 20s). E-02(React)·04·05·06·08은 골든 5케이스로 야간 CI(07장 TC-X, 요청마다 실행하지 않음). 결과 이벤트는 `export_complete`/`export_failed`(00장 8.3), 실패 시 `exports.error_code = EXPORT_ERROR`.
 
-**AC-04-34** 골든 5케이스의 3형식 내보내기가 야간 CI에서 E-01~E-13을 모두 통과한다.
+**AC-04-34** 골든 5케이스의 3형식 내보내기가 야간 CI에서 E-01~E-15를 모두 통과한다.
 **AC-04-35** `gate_status ≠ passed`인 버전의 내보내기 요청은 409 `VERSION_GATE_NOT_PASSED`(`details.gateStatus`)로 거부된다(R-13).
 
 ---
@@ -1137,7 +1148,7 @@ H < 80과 TM은 저장·내보내기 차단 사유가 아니다(사용자 선택
 | AC-04-42 | TM 외부 타당성 30쌍 일치율 ≥ 75%(§4.10.4). 비전 채점은 기록 전용이며 편입 조건 평가 결과를 `reports/judge_eval.md`에 남긴다(R-12) |
 | AC-04-43 | `config/thresholds.json`의 `generation.*` 키(아래)가 존재하고, 코드에서 이 장의 임계값 리터럴 grep 결과 0건. 잠금 해시 검사(`config/lock/locked-hashes.json` + `QA_LOCK_DIGEST`) 통과 |
 
-`config/thresholds.json` `generation` 객체 키(v1 값): `harmony_floor 80`, `taste_floor 75`, `sfree_floor 65`, `taste_tau 0.05`, `taste_lambda_layout 1.5`, `taste_d0 0.40`, `sfree_d0 0.30`, `lint_warn_max 2`, `variant_target_dist_tf 0.50`, `variant_target_dist_min 0.25`, `variant_l2_diff_min 3`, `variant_render_dist_min 0.15`, `candidate_pair_dist_min 0.20`, `repair_calls_max 3`, `first_card_p50_s 45`, `job_p50_s 60`, `job_p95_s 90`, `fallback_at_s 120`, `kill_at_s 180`, `cost_guard_skip_judge_usd 0.24`, `cost_guard_skip_repair_usd 0.27`, `edit_style_p95_ms 200`, `edit_struct_p95_ms 500`, `lint.*`(§4.13.2 수치 조건). 비용 상한·예산은 00장 IF-09 플래그(R-22)를 참조한다.
+`config/thresholds.json`의 이 장 키는 07장 7.12.1 `spec:thresholds` 블록이 원천이고 이 장은 키 경로만 참조한다(S-05): `generation.harmonyFloor`, `tasteFloor`, `sFreeFloor`, `taste.{tau, lambdaLayout, d0}`, `sFreeD0`, `lint.{errorMax, warnPerMockupMax}`, `variant.{targetDistTf, targetDistMin, l2DiffMin, renderDistMin, candidatePairDistMin}`, `repairCallsMax`, `costGuard.{skipVisionUsd, skipRepairUsd, capUsd}`, `fallbackAtSec`, `killAtSec`, `perf.{firstExposeP50Sec, latencyP50Sec, latencyP95Sec, editStyleP95Ms, editStructP95Ms, versionGateP95Sec}`. snake_case 키는 폐지했다. 비용 상한·예산 플래그는 00장 IF-09(R-22).
 
 ---
 
@@ -1240,3 +1251,8 @@ H < 80과 TM은 저장·내보내기 차단 사유가 아니다(사용자 선택
 | S-34 | 4.9.4 톤·업종 규칙, placeholder 표시 | |
 | S-38(04) | H7 정의를 03장으로 통일, 4.10.3 표 = harmony.json 생성본 | |
 | S-39 | 4.6.2 헤드라인 maxChars 제약, 4.10.2 뒤 줄 넘침 처리 순서 | |
+| S-05(04) | 4.0 ④·4.10.3·4.11·4.12·4.13·AC-04-24·AC-04-43 키 경로 camelCase | |
+| S-32(04) | AC-04-07 뒤 movedAxes·diffFromTrue 도출 규칙 | |
+| S-35 | 4.16.1 styleguide.html, E-14 | |
+| S-37(04) | DesignSpec brand_color_notice 5값, 종료 순서 행 | 원천 03 3.13.2 |
+| S-40(04) | 4.16.1 fonts/extended, E-15 | 원천 03 3.7.5 |
