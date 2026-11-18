@@ -674,8 +674,8 @@ create table reference_features (
   l2_auto         jsonb null,
   originality_sig jsonb null                          -- 08장 8.3 G2 7속성
 );                                                    -- embedding·embedding_model은 Phase 2 additive(S-22)
-create table normalizers (                            -- version = 시즌 ID(R-30), 패치 '.n'
-  version     text primary key check (version ~ '^\d{4}-S[1-4](\.\d+)?$'),
+create table normalizers (                            -- version = 시즌 ID(R-30), 패치 '.n'. S0 = temp 합성 부트스트랩 전용(S-09, AD-007)
+  version     text primary key check (version ~ '^\d{4}-S[0-4](\.\d+)?$'),
   status      text not null check (status in ('draft','released','superseded')),
   body        jsonb not null,
   corpus_hash text not null,

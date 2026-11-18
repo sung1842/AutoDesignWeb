@@ -156,7 +156,15 @@ interface Bundle<T> {
 | B14 | 린터 데이터 | `data/linter/cliche_ko.json`, `data/linter/cliche_en.json` | → 04장 | 04 | M3 | 예 |
 | B15 | 린터 예시 | `data/linter/examples/<ruleId>/{pos,neg}-<n>.json` | 규칙당 pos ≥1, neg ≥1 | 04 | M3 | 예 |
 | B16 | 골든 세트 | `data/golden/<caseId>.json` | 32 (R-11) | 07 | M7, M8 | 예 |
-| B17 | 법무 고지 문안 | `data/legal/{terms,privacy,ai-notice,non-affiliation}.md` | 4 | 08(D-50, D-51) | M7 | 예(자리표시 문안) |
+| B17 | 법무 원문 | `legal/{terms,privacy,sources}.md`(08장 경로가 원천, S-10). AI 고지·비제휴 고지 고정 문구는 `copy/ko.ts`가 소유 | 3 | 08(D-50, D-51) | M7 | 예(자리표시 문안) |
+| B18 | 정규화기 | `data/normalizers/<version>.json`(05장 5.8.2 스키마) | 1(시즌당) | 05 | M3, M4 | 예(합성 부트스트랩 `2026-S0`, S-09) |
+| B19 | few-shot 예시 | `data/fewshot/*.json` | 48(→ 04장) | 04 | M5 | **아니오**(human 전용, S-09) |
+| B20 | 카피 템플릿·축 힌트 | `config/copy_templates.json`, `config/axis_hints.json` | → 04장 4.6.2 키 | 04 | M5 | 예(`[임시]` 문장) |
+| B21 | 고위험 브랜드 | `config/high_risk_brands.json` | ≥80(temp) | 08(8.9.2) | M5 | 예 |
+| B22 | 금지 업종 | `config/prohibited_categories.json` | 범주 6 × 키워드 ≥10 | 08(8.9.2, S-24) | M5 | 예 |
+| B23 | 처리위탁·데이터 흐름 | `legal/processors.yaml`, `legal/data-flows.yaml` | → 08장 8.7.6, 06장 6.1.3 | 08·06 | M5, M7 | 예(`approved:false`) |
+| B24 | 이미지 태그 키워드 | `config/image_tag_keywords.json` | 약 50항목 | 04(4.9.4, S-29) | M5 | 예 |
+| B25 | 텍스트 역할 | `data/taxonomy/text-roles.json` | → 03장 3.1.5a | 03(S-38) | M2 | 예 |
 
 아이콘(Phosphor/Tabler/Iconoir, D-27)은 npm 패키지로 설치하므로 사람 준비 대상이 아니다. 단 renderer는 아이콘을 빌드 시 SVG로 인라인하고 런타임 외부 요청을 만들지 않는다.
 
@@ -265,13 +273,7 @@ interface LinterExample {
 }
 
 // B16
-interface GoldenCase {
-  id: string; purpose: Purpose['id']; brand: BrandInput;       // BrandInput → 04·08장
-  persona:
-    | { kind: 'scripted'; responses: ScriptedResponse[] }      // 진단 응답 재생
-    | { kind: 'vector'; l1: number[] };                         // 진단 생략, 벡터 직접 주입
-  expected: { typeId?: string; minVisible: 1|3; mustNotViolate: string[]; tags: string[] };
-}
+// 스키마는 07장 7.2.2가 원천이다(S-06 c). 이 장은 다시 정의하지 않는다.
 ```
 
 교차 참조 검사(`pnpm data:validate`): 모든 참조 ID가 존재하고, 고아 항목 0, 중복 ID 0, 파일 `sha256` 일치, 수량이 9.2.2 표와 일치해야 통과한다.
@@ -295,12 +297,25 @@ interface GoldenCase {
 | B9 | 가상 브랜드 "한결"(업종 표현 없음, R-08), 고정 카피는 02장 문안. 없으면 `[임시]` 접두 문장. 템플릿 3종은 각 PageSchema 섹션 2~3개. |
 | B10 | 48 = 기준 벡터 16(앵커 8 + 브리지 8, 값은 02장 2.6·03장 3.4.7/3.4.8) × 템플릿 3(R-06). 브리지 카드는 `mapL1toL2(…, purpose=null)`로 L2를 만든다. `alt_text`는 02장 형식(유형명·평가어 금지, R-07). |
 | B11 | 120 = 축 5 × 기준 프리셋 8 × 수준쌍 3. 수준쌍 = (0.2, 0.5), (0.5, 0.8), (0.2, 0.8). 템플릿은 `tpl-hero` 고정. |
-| B12 | 9.4 M4의 자동 게이트(하드 게이트 통과, 린터 error 0, 추출 L1과 의도 L1의 축별 오차 ≤0.15)를 통과한 자산만 `approved`, 나머지 `rejected` + 사유. |
+| B12 | 9.4 M4의 자동 게이트(하드 게이트 통과, 린터 error 0, 추출 L1과 의도 L1의 축별 오차 ≤ `diagnosis.surveyAssetL1AbsMax`, D-0904)를 통과한 자산만 `approved`, 나머지 `rejected` + 사유. |
 | B13 | 60개. `url`=`https://tmp-ref-NN.invalid/`, `l1`=유형 centroid ± U(−0.15, 0.15) (유형당 7~8개), 결과 화면에는 노출되되 `[임시]` 배지. |
 | B14 | 04장 금지어 목록. 없으면 빈 배열 + 해당 규칙 테스트는 04장 정의 대기로 BLOCKED. |
 | B15 | 04장 규칙 정의로부터 에이전트가 작성하고 M3 시작 커밋에서 자체 잠금(9.5.6). |
-| B16 | 30 = 유형 8 × 용도 3(persona=vector, l1=centroid) + 엣지 6: ①1단계 전부 "다 별로" ②2단계 전부 "차이를 모르겠어요" ③전 축 0.0 ④전 축 1.0 ⑤상반 유형 2개를 번갈아 선택 ⑥브랜드명 40자 + 이미지 태그 없음. `brand`=`fixtures/brands/` 템플릿. |
-| B17 | `[임시 문안 — 08장 확정본으로 교체]` 1줄 + 08장 필수 항목 제목 목록. |
+| B16 | 07장 7.2.3 구성표 32행을 그대로 JSON화한다(스키마 7.2.2, S-06 c). `answers`는 `eval:golden:build-answers`로 `persona.simulator.seed` = 케이스 번호를 써서 만들고 `expected.muRef`를 기록한다(S-07). 브랜드 필드는 표 값을 쓰며 01장 BrandInput 검증을 100% 통과해야 한다(메타 테스트). 아래 옛 규칙은 폐지: ~~30 = 유형 8 × 용도 3(persona=vector, l1=centroid) + 엣지 6: ①1단계 전부 "다 별로" ②2단계 전부 "차이를 모르겠어요" ③전 축 0.0 ④전 축 1.0 ⑤상반 유형 2개를 번갈아 선택 ⑥브랜드명 40자 + 이미지 태그 없음. `brand`=`fixtures/brands/` 템플릿.~~ |
+| B17 | `legal/{terms,privacy,sources}.md`에 `[임시 문안 — 08장 확정본으로 교체]` 1줄 + 08장 필수 항목 제목 목록. `seed:temp`가 HUMAN_TODO에 "법무 문안 확정(변호사 검토 권장)"을 자동 추가한다(S-10). |
+| B18 | 합성 부트스트랩 정규화기 `version="2026-S0"`, `provenance:"temp"`, `inter_rater:"unverified"`(S-09). 코퍼스 = 프리셋 8 × 03장 3.4.5 `allowed` 변형 25개(seed 20261116) = 200 렌더(`standardTree` + tpl-hero 콘텐츠). 앵커 기본 L2 8개·설문 카드 48·A/B 120은 홀드아웃으로 코퍼스에서 뺀다. 매핑 가중치는 05장 5.5.4 `mapping.initial` 그대로이고 b0·b1만 `predictL1(l2)`를 목표로 축별 최소제곱으로 맞춘다. 홀드아웃 왕복 실패를 이유로 b0·b1을 재적합하는 것은 금지(F 목록). 정규화기 파일 변경은 `seed:temp` 산출 커밋만 허용(guard). 실패 축 처리는 05장 5.9 temp 분기 |
+| B19 | 생성하지 않는다. 0개면 `[FEWSHOT]` 블록을 빼고(프롬프트 버전 동일, 변수만 빈 값) `fewshot-count=temp`로 보고한다. |
+| B20 | 04장 4.6.2 키 표의 모든 키를 길이 하한을 맞춘 `[임시]` 문장으로 채운다. |
+| B21 | 08장 8.9.2 범주별로 일반적으로 알려진 기관·기업명 ≥80개, `domains: []`(도메인 판정은 temp에서 건너뜀), `provenance:"temp"`. 결과는 `high-risk-domains=temp`. |
+| B22 | 범주 `gambling\|adult\|illegal_loan\|drugs\|weapons\|counterfeit` 각 한국어 키워드 ≥10개, `provenance:"temp"`. 적정성은 사람 확인(08장 8.14 Q13). |
+| B23 | processors.yaml 전 항목 `approved:false`(mock에서는 승인 검사 생략, 08장 8.8.2), data-flows.yaml은 06장 6.1.3 표 그대로. 결과는 `processor-approval=manual`. |
+| B24 | 04장 4.9.4 태그별 키워드 약 50항목을 `[임시]` 표시 없이 일반 명사로 작성, `provenance:"temp"`. |
+| B25 | 03장 3.1.5a 표를 그대로 JSON화한다. |
+
+**자산·법무 temp 공통 규칙(S-10)**:
+- 자산 레지스트리(폰트·이미지) temp 항목은 `verified_by:'temp-agent'`, `verified_at:null`을 허용한다. temp 항목이 1건이라도 있으면 `asset-license-verify=temp`이고 종료 코드 0은 나올 수 없다(2는 가능). `verified_by≠'temp-agent'`인데 `verified_at=null`이면 fail이다.
+- Noto CJK(OFL-1.1)는 temp 전용 레지스트리 항목으로 둔다. 플레이스홀더 이미지의 `license_spdx`는 `LicenseRef-TasteFit-Generated`다.
+- guard는 에이전트 커밋이 `verified_by`·`approved`·`tos_checked_at`·`robots_checked_at`·`provenance`를 temp 값에서 다른 값으로 바꾸면 FAIL이다(F18).
 
 임시 유형 centroid(03장 값이 없을 때만 사용, 쌍별 유클리드 최소 거리 0.41):
 
@@ -382,7 +397,7 @@ M0 스캐폴드·가드레일
 | 산출물 | `packages/db/supabase/migrations/*.sql`, `packages/db/src/types.gen.ts`, data/ 임시 묶음(필요 시) |
 | 의존성 | M0 |
 | 검증 | `pnpm verify:m1` |
-| 통과 조건 | ① `data:validate` 17개 묶음 전부 유효, 교차 참조 고아 0 ② 수량: 축 5, 유형 8, 프리셋 8(유형당 앵커 정확히 1), 용도 3, 폰트 한글 12·영문 14, 페어링 20(전부 한글 포함), 카드 계획 48, A/B 계획 120, 레퍼런스 60, 골든 32(R-11) ③ 유형 centroid는 03장 3.4.7 표와 값이 일치하고 쌍별 최소 거리 ≥ 0.50(03장 계산값 0.546) ④ `seed:temp` 2회 실행 결과 바이트 동일, human 파일 변경 0 ⑤ 빈 DB에 마이그레이션 적용 성공, `supabase db reset` 2회 연속 성공 ⑥ `db:seed` 2회 실행 후 행 수 동일(멱등) ⑦ RLS 테스트: 사용자 B가 사용자 A의 project·job·mockup 조회 시 0행, 익명 키로 진단 세션 직접 조회 0행(→ 06·08장 정책) ⑧ 생성 타입이 web·worker 양쪽에서 컴파일 ⑨ 06장 데이터 모델 절의 `create table` 목록 전부(MVP 표시분)가 마이그레이션에 존재하고 컬럼·제약이 일치(`pnpm verify:schema-parity`: 06장 DDL 블록을 파싱해 `information_schema`와 비교, 차이 0) |
+| 통과 조건 | ① `data:validate` 25개 묶음(B19는 0개 허용) 전부 유효, 교차 참조 고아 0 ② 수량: 축 5, 유형 8, 프리셋 8(유형당 앵커 정확히 1), 용도 3, 폰트 한글 12·영문 14, 페어링 20(전부 한글 포함), 카드 계획 48, A/B 계획 120, 레퍼런스 60, 골든 32(R-11) ③ 유형 centroid는 03장 3.4.7 표와 값이 일치하고 쌍별 최소 거리 ≥ 0.50(03장 계산값 0.546) ④ `seed:temp` 2회 실행 결과 바이트 동일, human 파일 변경 0 ⑤ 06장 AC-06-01(현재 `STACK_PROFILE` 기준: supabase = `supabase db reset` 2회, native = shim 위 빈 DB 적용 2회 `ON_ERROR_STOP`) ⑥ `db:seed` 2회 실행 후 행 수 동일(멱등) ⑦ RLS 테스트: 사용자 B가 사용자 A의 project·job·mockup 조회 시 0행, 익명 키로 진단 세션 직접 조회 0행(→ 06·08장 정책) ⑧ 생성 타입이 web·worker 양쪽에서 컴파일 ⑨ 06장 데이터 모델 절의 `create table` 목록 전부(MVP 표시분)가 마이그레이션에 존재하고 컬럼·제약이 일치(`pnpm verify:schema-parity`: 06장 DDL 블록을 파싱해 `information_schema`와 비교, 차이 0) |
 
 ### 9.4.4 M2 — 컴파일러·렌더러·폴백 시안
 
@@ -392,7 +407,7 @@ M0 스캐폴드·가드레일
 | 산출물 | 위 패키지, `fixtures/layouts/*.json`(용도 3 × 10 = 30개 이상), 시각 회귀 기준선 |
 | 의존성 | M1 |
 | 검증 | `pnpm verify:m2` |
-| 통과 조건 | ① 레이아웃 픽스처 30개 이상 전부 스키마 유효 + 렌더 성공 ② 폴백 시안 24개(프리셋 8 × 용도 3) × 뷰포트 5에서 대비 AA 위반 0, 가로 넘침 0, 텍스트 겹침 0, 깨진 이미지 0(판정 함수는 M3 이전이므로 `scoring`의 하드 게이트 중 이 4개만 선구현) ③ 렌더 중 외부 도메인 요청 0(Playwright `request` 이벤트 집계) ④ 같은 입력 100회 컴파일·렌더 시 HTML SHA-256 동일 ⑤ 시각 회귀 기준선 24장(프리셋 8 × 대표 페이지 3) 커밋, 재실행 `maxDiffPixelRatio ≤ 0.01` ⑥ PageSchema에 `style`, `className`, `html`, `on*`, `script` 키가 존재할 수 있는 경로 0(JSON Schema 정적 검사) ⑦ deps 검사: renderer에 금지 의존성 0 ⑧ 미리보기 iframe에 `allow-scripts` 없음, 응답 CSP 헤더가 06·08장 정의와 문자열 일치 |
+| 통과 조건 | ① 레이아웃 픽스처 30개 이상 전부 스키마 유효 + 렌더 성공 ② 폴백 시안 72개(04장 AC-04-25 조합, S-06 b) × 뷰포트 5에서 대비 AA 위반 0, 가로 넘침 0, 텍스트 겹침 0, 깨진 이미지 0(판정 함수는 M3 이전이므로 `scoring`의 하드 게이트 중 이 4개만 선구현) ③ 렌더 중 외부 도메인 요청 0(Playwright `request` 이벤트 집계) ④ 같은 입력 100회 컴파일·렌더 시 HTML SHA-256 동일 ⑤ 시각 회귀 기준선 24장(프리셋 8 × 대표 페이지 3) 커밋, 재실행 `maxDiffPixelRatio ≤ 0.01` ⑥ PageSchema에 `style`, `className`, `html`, `on*`, `script` 키가 존재할 수 있는 경로 0(JSON Schema 정적 검사) ⑦ deps 검사: renderer에 금지 의존성 0 ⑧ 미리보기 iframe에 `allow-scripts` 없음, 응답 CSP 헤더가 06·08장 정의와 문자열 일치 |
 
 ### 9.4.5 M3 — 품질 모듈
 
@@ -402,7 +417,7 @@ M0 스캐폴드·가드레일
 | 산출물 | 위 패키지, `data/linter/examples/**`(temp일 때) |
 | 의존성 | M2 |
 | 검증 | `pnpm verify:m3` |
-| 통과 조건 | ① 모든 린터 규칙에 violation 예시 ≥1, clean 예시 ≥1이 있고 기대대로 판정(규칙 수 = 04장 규칙 수) ② 폴백 시안 24개: 린터 error 0, 조화 점수 ≥ `thresholds.harmonyMin`(80), 취향 일치도 ≥ `thresholds.tasteMin`(75)(D-23) ③ 추출기 왕복: 프리셋 8개 앵커 렌더에서 추출한 L1과 프리셋 `l1`의 축별 절대 오차 ≤ 0.15, 전 축 평균 ≤ 0.10 ④ 서로 다른 프리셋 앵커 렌더 간 추출 L1 거리 최소값 ≥ 0.25 ⑤ 후보 1개의 렌더+추출+린트+게이트(뷰포트 5) 처리 p95 ≤ 04장 예산(미정 시 8초), 측정 20회 ⑥ 모든 임계값이 `config/thresholds.json`에서만 읽힘(수용 테스트가 값 일치 확인) |
+| 통과 조건 | ① 모든 린터 규칙에 violation 예시 ≥1, clean 예시 ≥1이 있고 기대대로 판정(규칙 수 = 04장 규칙 수) ② 폴백 시안 72개(04장 AC-04-25): G-01~G-13 전부 통과 + 조화 점수 ≥ `generation.harmonyFloor`. TM·S_free는 면제(S-06 b) ③ 추출기 왕복: 프리셋 8개 앵커 렌더에서 추출한 L1과 프리셋 `l1`의 절대 오차가 모든 프리셋·축에서 ≤ `release.extractor.roundtripAbsMax`(07장 7.3.2, S-06 a) ④ 서로 다른 프리셋 앵커 렌더 간 추출 L1 거리 최소값 ≥ 0.25 ⑤ 후보 1개의 렌더+추출+린트+게이트(뷰포트 5) 처리 p95 ≤ `perf.versionGateP95Sec`(04장 4.15.2, S-06 g), 측정 20회 ⑥ 모든 임계값이 `config/thresholds.json`에서만 읽힘(수용 테스트가 값 일치 확인) |
 
 ### 9.4.6 M4 — 설문 자산·진단·결과
 
@@ -412,7 +427,7 @@ M0 스캐폴드·가드레일
 | 산출물 | 설문 자산(Storage) + `data/survey/manifest.lock.json`(assetId → sha256, 실측 L1), 진단·결과 화면 |
 | 의존성 | M3 |
 | 검증 | `pnpm verify:m4` |
-| 통과 조건 | ① `survey:build` 산출: 활성 카드 ≥ 48 중 approved 전부, A/B 120쌍 중 approved 쌍이 축별 ≥ 19(80%), 이미지 규격·용량은 02·06장 기준 ② `survey:build` 2회차 실행 시 업로드 0건, DB 변경 0행 ③ 설문 갱신 입력은 x_card(실측 L1)이며 계획 L1이 아님(단위 테스트) ④ 시뮬레이션: `pnpm sim:survey` 결과가 `config/thresholds.json`의 `diagnosis`·`release.surveySim` 합격선(R-05, 02장 2.16)을 모두 통과하고 종료 문항 수 ≤ 16, 1단계 정확히 8(D-13). 09장은 별도 수치를 두지 않는다. 미달 시 임계값을 바꾸지 말고 02장 2.16.2 조정 절차(판별 항 가중치부터)를 따른다 ⑤ 무작위 응답 사용자 100명 전원 16문항 이내 종료, 오류 0 ⑥ 진단 중 LLM 호출·렌더 호출 0(스파이) ⑦ 응답 제출 API p95 ≤ 200ms(06장 D-0608), 로컬 200요청 ⑧ E2E(375×812, 1280×800): 익명 진단 완료 → 결과에 유형명·5축 차트·닮은 사이트 3개 링크·비제휴 고지 표시 ⑨ E2E: 진행 중 새로고침 후 같은 문항에서 재개, 뒤로가기 1회 후 응답 수정 시 벡터가 재계산됨 ⑩ 화면 텍스트에 "MBTI" 0건(D-01, 빌드 산출물 grep) |
+| 통과 조건 | ① `survey:build` 산출: 활성 카드 ≥ 48 중 approved 전부, A/B 120쌍 중 approved 쌍이 축별 ≥19쌍(S-06 g), 이미지 규격·용량은 02·06장 기준 ② `survey:build` 2회차 실행 시 업로드 0건, DB 변경 0행 ③ 설문 갱신 입력은 x_card(실측 L1)이며 계획 L1이 아님(단위 테스트) ④ 시뮬레이션: `pnpm sim:survey` 결과가 `config/thresholds.json`의 `diagnosis`·`release.surveySim` 합격선(R-05, 02장 2.16)을 모두 통과하고 종료 문항 수 ≤ 16, 1단계 정확히 8(D-13). 09장은 별도 수치를 두지 않는다. 미달 시 임계값을 바꾸지 말고 02장 2.16.2 조정 절차(판별 항 가중치부터)를 따른다 ⑤ 무작위 응답 사용자 100명 전원 16문항 이내 종료, 오류 0 ⑥ 진단 중 LLM 호출·렌더 호출 0(스파이) ⑦ 응답 제출 API p95 ≤ 200ms(06장 D-0608), 로컬 200요청 ⑧ E2E(375×812, 1280×800): 익명 진단 완료 → 결과에 유형명·5축 차트·닮은 사이트 3개 링크·비제휴 고지 표시 ⑨ E2E: 진행 중 새로고침 후 같은 문항에서 재개, 뒤로가기 1회 후 응답 수정 시 벡터가 재계산됨 ⑩ 화면 텍스트에 "MBTI" 0건(D-01, 빌드 산출물 grep) |
 
 ### 9.4.7 M5 — 인증·브랜드 입력·생성 파이프라인(Mock)
 
@@ -439,10 +454,10 @@ M0 스캐폴드·가드레일
 | 항목 | 내용 |
 |---|---|
 | 범위 | 레이트리밋(→ 06장 수치), 구조화 로그·지표(→ 06장), 알림 웹훅(설정 시), `/admin`(레퍼런스 승인·반려, opt-out 접수·7일 처리 큐, 잡 조회, 킬 스위치 토글, D-50), 개인정보: 계정 삭제(연쇄 삭제 + Storage 객체 삭제), 보관 기간 잡(스크린샷 90일 등, D-31, → 08장 보관 기간표), 약관·개인정보처리방침·AI 고지 화면(B17), 국외 이전 고지(D-51), live provider 어댑터(키가 있을 때만 사용), `pnpm eval:golden`(mock/live), 배포 산출물(→ 06장: Dockerfile, 배포 설정 파일) |
-| 산출물 | 위 기능, `reports/golden/<date>-<promptVersion>-<model>.json` |
+| 산출물 | 위 기능, 골든 리포트 `eval/reports/<reportId>.json`(07장 7.2.7, 경로 하나, S-06 f) |
 | 의존성 | M5(M6과 병렬 가능 항목 9.3) |
 | 검증 | `pnpm verify:m7` |
-| 통과 조건 | ① 06장 한도 + 1번째 요청 → 429 + `Retry-After` ② 비관리자로 `/admin`·`/api/admin/*` → 403(미들웨어·RLS 모두) ③ 계정 삭제 E2E 후 해당 user_id 행이 06장 개인 데이터 테이블 전부에서 0, 해당 Storage 경로 객체 0 ④ 가짜 시계로 91일 경과 시 보관 기간 잡이 대상 스크린샷 삭제, 89일은 유지 ⑤ opt-out 접수 → 레퍼런스가 즉시 결과 노출에서 제외(다음 요청부터) ⑥ `eval:golden --mode mock`이 30케이스 실행 후 07장 지표 필드를 모두 가진 리포트 JSON 생성(스키마 검증), mock 기준 스키마 유효율 100%·노출 ≥1 100% ⑦ `LLM_MODE=live`이고 키가 없으면 기동 시 종료 코드 1 + 변수명 출력 ⑧ worker Docker 이미지 빌드 성공 ⑨ gitleaks 탐지 0 ⑩ `NODE_ENV=production`에서 `LLM_MODE=mock`이면 기동 거부 ⑪ 06장 API 명세의 엔드포인트 전부가 `@tastefit/api-contract`에 zod 계약으로 있고 계약 테스트 통과(`pnpm verify:api-parity`: 06장 엔드포인트 목록과 라우트 파일 대조, 누락 0), 06장 오류 코드 카탈로그 전 항목이 enum과 `copy/ko.ts`에 존재 |
+| 통과 조건 | ① 06장 한도 + 1번째 요청 → 429 + `Retry-After` ② 비관리자로 `/admin`·`/api/admin/*` → 403(미들웨어·RLS 모두) ③ 계정 삭제 E2E 후 해당 user_id 행이 06장 개인 데이터 테이블 전부에서 0, 해당 Storage 경로 객체 0 ④ 가짜 시계로 91일 경과 시 보관 기간 잡이 대상 스크린샷 삭제, 89일은 유지 ⑤ opt-out 접수 → 레퍼런스가 즉시 결과 노출에서 제외(다음 요청부터) ⑥ `eval:golden --mode mock`이 32케이스 실행 후 07장 지표 필드를 모두 가진 리포트 JSON 생성(스키마 검증), mock 기준 스키마 유효율 100%·노출 ≥1 100% ⑦ `LLM_MODE=live`이고 키가 없으면 기동 시 종료 코드 1 + 변수명 출력 ⑧ worker Docker 이미지 빌드 성공(native에서는 `worker-image-build` needs_ci, S-01) ⑨ gitleaks 탐지 0 ⑩ `NODE_ENV=production`에서 `LLM_MODE=mock`이면 기동 거부 ⑪ 06장 API 명세의 엔드포인트 전부가 `@tastefit/api-contract`에 zod 계약으로 있고 계약 테스트 통과(`pnpm verify:api-parity`: 06장 엔드포인트 목록과 라우트 파일 대조, 누락 0), 06장 오류 코드 카탈로그 전 항목이 enum과 `copy/ko.ts`에 존재 |
 
 ### 9.4.10 M8 — 하드닝·출시 판정
 
@@ -550,6 +565,8 @@ BLOCKED.md 항목 형식:
 | F15 | Phase 2/3 기능 구현(다크 모드 쌍, 다페이지, Figma, 자연어 편집, 결제, 자동 크롤러, AI 생성 이미지) | 라우트·테이블·패키지명 금칙어 grep(`figma`, `crawler`, `payment`, `darkPair` 등, 목록은 guard 설정) |
 | F16 | "MBTI" 문자열을 UI·카피·메타데이터에 사용 | `apps/web`, `packages/ui`, `data/taxonomy` grep(docs 제외) |
 | F17 | 원격 배포·원격 DB 마이그레이션 실행 | `supabase db push`, `vercel`, `fly deploy` 명령이 스크립트·CI의 수동 트리거 잡 외에 존재하면 실패 |
+| F18 | temp 확인 필드 위조: `verified_by`·`approved`·`tos_checked_at`·`robots_checked_at`·`provenance`를 temp 값에서 다른 값으로 바꾸는 에이전트 커밋(S-10) | 직전 커밋 대비 JSON·YAML 필드 diff, 작성자가 사람 계정이 아니면 실패 |
+| F19 | 정규화기 b0·b1을 홀드아웃(앵커·카드·A/B) 왕복 결과에 맞춰 재적합, 정규화기 파일을 `seed:temp` 산출 외 커밋으로 변경(S-09) | `data/normalizers/**` 변경 커밋의 메시지·작성 스크립트 확인, `seed:temp` 재실행 결과와 바이트 비교 |
 
 ### 9.5.6 해시 잠금
 
@@ -870,7 +887,7 @@ pnpm seed:temp | pnpm db:seed | pnpm survey:build | pnpm eval:golden --mode mock
 | D-0901 | 레포 구조·패키지명·의존 금지 규칙을 9.1로 확정한다(`@tastefit/*` 스코프). | 06 |
 | D-0902 | ~~1단계 카드 풀 48장의 구성 = 앵커 프리셋 8 × 콘텐츠 템플릿 3 × 변형 2(앵커 / 허용 L2 대안 1개). 02장이 다른 구성을 정하면 02장을 따른다.~~ → R-06으로 대체(기준 벡터 16 × 템플릿 3) | 02, 03 |
 | D-0903 | 2단계 A/B = 축 5 × 기준 프리셋 8 × 수준쌍 3[(0.2,0.5),(0.5,0.8),(0.2,0.8)] = 120쌍(이미지 슬롯 240, 중복 제거 후 고유 렌더 ≥120). L2 결과가 같은 쌍은 비활성. 축별 활성 쌍 ≥ 19를 빌드 통과 조건으로 한다. | 02 |
-| D-0904 | 설문 갱신과 자산 검증에는 계획 L1이 아니라 **렌더 후 추출한 실측 L1(x_card)**을 쓴다. 채택 조건 = 축별 오차 ≤0.15 + 하드 게이트 + 린터 error 0 + 승인. | 02, 04 |
+| D-0904 | 설문 갱신과 자산 검증에는 계획 L1이 아니라 **렌더 후 추출한 실측 L1(x_card)**을 쓴다. 채택 조건 = 축별 오차 ≤ `diagnosis.surveyAssetL1AbsMax`(0.15, 설문 자산 채택 전용. 추출기 왕복 0.10과 별개, S-06 a) + 하드 게이트 + 린터 error 0 + 승인. | 02, 04 |
 | D-0905 | ~~골든 세트 30~~ → R-11로 대체(32 = 유형 8 × 용도 3 + 엣지 8). 지표·합격선은 07장. | 07 |
 | D-0906 | 모든 데이터 묶음에 `provenance`(human/temp) 봉투를 두고, temp가 하나라도 있으면 출시 판정 불가(`release:check` 종료 코드 2). | 05, 07, 08 |
 | D-0907 | → R-09로 채택(잠금 파일 `config/lock/locked-hashes.json` + `QA_LOCK_DIGEST`). 품질·SLO·진단 임계값의 단일 원천을 `config/thresholds.json`으로 하고 해시 잠금한다. 07장 출시 임계값도 같은 파일의 `release` 객체에 둔다. | 04, 06, 07 |
@@ -936,3 +953,5 @@ pnpm seed:temp | pnpm db:seed | pnpm survey:build | pnpm eval:golden --mode mock
 | 미완 | M1·M5·M7 통과 조건을 06장 최종 DDL·API·오류 코드 목록과 1:1 대조(P1 다음 작업) |
 | S-01·S-02(09) | 9.1.1 로컬 인프라·브라우저, 9.4.1 보류 상태·시각 회귀 지문, 9.5.3 환경 실패·HALT, 9.6.3, 9.9.1·9.9.2, M5 ①, M6 ④, B6, D-0909·D-0910 |
 | S-23 | 9.5.7 무인 세션 운용 매핑, 9.4.1 단절 내성, 9.5.3 90분, 9.9.2 3회 연속, AC-09-15·16 |
+| S-06 a·b·c·f·g | 9.2.3 B16 스키마 삭제, 9.2.4 B16 32행, M2 ②·M3 ② 72조합, M3 ③ roundtripAbsMax, M3 ⑤ versionGateP95Sec, M4 ① ≥19쌍, M7 산출물 경로·⑥ 32, D-0904 키 |
+| S-09·S-10·S-41(09) | 9.2.2 B17 경로·B18~B25, 9.2.4 temp 규칙·자산 temp 공통 규칙, F18·F19, M1 ① 25묶음 |

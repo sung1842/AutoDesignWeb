@@ -8,3 +8,4 @@
 | AD-004 | 2026-11-19 | 월 150·일 10 USD 예산 유지, WAM 목표를 예산이 감당하는 ≥30으로 조정, WORKER_GEN_CONCURRENCY=2 추가(S-13~15) | 예산-목표 불일치(PM2-01) 해소. 유료 증설은 금지 사항 |
 | AD-005 | 2026-11-19 | Docker 부재 환경: STACK_PROFILE=native(시스템 PostgreSQL 16 + Supabase 호환 shim, 로컬 드라이버), 시각 기준은 렌더 환경 지문별 저장·Chromium 로컬 필수, WebKit·Firefox는 needs_ci(S-01~03) | 실행 환경 제약에서 09장 의도 유지(TL2 Blocker 2건) |
 | AD-006 | 2026-11-19 | thresholds.json에는 게이트 판정값만 두고(`generation.lint`={errorMax, warnPerMockupMax}), AIL 규칙 탐지 상수는 04장 4.13.2가 원천인 `packages/linter/data/rule-params.json`(자체 잠금)에 둔다. 07 7.12.1에 test-policy 블록(deferrable 포함)도 같이 둠 | 규칙 정의값 수십 개를 임계값 스키마에 넣으면 strict 검사가 비대해지고 의미가 섞임. 규칙 정의는 04장 표 그대로 고정 |
+| AD-007 | 2026-11-19 | `normalizers.version` CHECK를 `S[0-4]`로 넓혀 temp 합성 부트스트랩 정규화기 `2026-S0`(S-09)를 저장할 수 있게 함. S0는 `provenance:temp` 전용이며 시즌 릴리스(`taxonomy_version`)는 계속 S1~S4 | S-09가 정한 버전명이 06 DDL CHECK와 충돌. 완화가 아니라 temp 전용 값 하나를 허용 |
