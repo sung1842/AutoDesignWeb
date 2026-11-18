@@ -16,7 +16,7 @@
 | 순위 | 목적 | 성공 판정(측정 가능) |
 |---|---|---|
 | O1 | **검증**: "고르기만 하는 취향 진단 + 통제된 생성"이 일반 프롬프트 생성보다 사용자 선호를 얻는지 수치로 증명한다 | 가정 A2 통과(§5): 07장 P-2 베이스라인 대비 선호율 ≥ 70%, Wilson 95% 하한 ≥ 0.60 |
-| O2 | **포트폴리오**: AI 결과물 품질을 시스템(프리셋·린터·게이트)으로 통제한 사례를 실사용 데이터와 함께 공개한다 | 공개 출시 후 8주 누적 채택 시안 ≥ 300, 공개 케이스 스터디 1건 |
+| O2 | **포트폴리오**: AI 결과물 품질을 시스템(프리셋·린터·게이트)으로 통제한 사례를 실사용 데이터와 함께 공개한다 | 공개 출시 후 8주 누적 채택 시안 ≥ 150(예산 검산 §9.4, S-15. 예산 상향 결정 후 ≥ 300), 공개 케이스 스터디 1건 |
 | O3 | **수익화 탐색**: 결제 없이 지불 의향만 측정한다(결제 [P3], D-05) | 페이크 도어 관심 등록률 ≥ 5%(§6.3) |
 
 ### 1.2 문제 정의(가설 — §5에서 검증)
@@ -132,10 +132,12 @@ MVP 비목표: 호스팅·도메인 연결, CMS·자유 배치형 노코드 편�
 | A0 | (선행) 진단 엔진이 시뮬레이션에서 축·유형을 복원한다 | `pnpm sim:survey`(→ 02장 2.16, 07장 7.3.1) | 가상 사용자 1,000명 | R-05 합격선: 유형 중심 근처 모집단 유형 정확도 β=8 ≥85%·β=4 ≥70%, 균일 모집단 top-1 ≥62%·top-2 ≥85%, RMSE β=8 ≤0.12·β=4 ≤0.18, 90% 구간 포함률 85~95%, 적응형 이득 RMSE −5% 이상 + top-1 +3%p 이상, 문항 최대 16·1단계 정확히 8. 일관성 지수 기준은 07장 7.3.1 값 유지 | 미달 → 사람 대상 검증(A1·A1b) 진행 금지, 02장 상수 조정 | 비공개 베타 전(07장 G2) |
 | A1 | 시각 선택 16문항 이하로 사용자가 공감하는 유형을 판정할 수 있다 | ① 결과 화면 5점 공감 평가 ② 6~14일 후 재진단 유형 일치율(경계 결과는 2순위 포함, 02장 2.16.3) | ① 결과 도달 n≥60 ② 재진단 n≥15 | ① 4~5점 비율 ≥ 70% 그리고 평균 ≥ 3.8 ② 일치 ≥ 60% | ① < 55% 또는 ② < 40% → 02장 문항·유형 재설계를 최우선, 생성 고도화 작업 중단 | 비공개 베타 |
 | A1b | 진단 결과가 시안 선호를 실제로 좌우한다(진단의 효용) | 07장 7.8.5 **P-4 개인화 선호율**: 참가자 프로필 V-TRUE vs 앵커 거리가 먼 유형 3개 중 무작위 1개의 V-TRUE, 라벨 없이 좌우 무작위 | 참가자 ≥15명 × 2쌍 = ≥30응답 | ≥ 70% 그리고 Wilson 95% 하한 ≥ 0.50 | 미달 → 공개 출시 보류(07장 G7b), 진단 단계 축소 또는 "유형 직접 선택" 대안 실험 | 공개 출시 전 |
+| A1c | 5축 연속 개인화(개인 오프셋)가 유형 앵커만 쓴 시안보다 낫다 | 07장 7.8.5 **P-4b**: 본인 프로필 `v_true` vs 본인 유형 앵커만 쓴 `v_true`(`g_k = 0`) | P-4 참가자 ≥15명 × 1쌍 | 선호율 > 0.55(기록 전용) | ≤ 0.55 → "개인 오프셋 효용 미확인"으로 기록, Phase 2 개인화 투자 우선순위 하향(S-36) | 비공개 베타 |
 | A2 | 진단 기반 시안이 일반 프롬프트 시안보다 선호된다 | 07장 7.8.3 **P-2 베이스라인 대비 선호율**: 골든 핵심 20케이스 V-TRUE vs 베이스라인(`eval/blind/baseline_prompt.md`), "실제로 쓰고 싶은 쪽" 강제 선택 | 평가자 ≥5명(비디자이너 ≥3) × 20쌍 = 100응답 | ≥ 70% 그리고 Wilson 95% 하한 ≥ 0.60 | Wilson 하한 < 0.60 → 공개 출시 보류(G7b), Phase 2 트렌드·자동 수집 투자 보류, 04장 생성 품질 개선만 진행 | 공개 출시 전 |
-| A3 | 프리셋·린터가 "AI 티"를 줄인다 | 07장 7.8.2 **P-1 AI 느낌 판별률**: 생성 20 + 사람 제작 대조군 20, "사람/AI" 강제 선택 | 5명 × 40항목 = 200응답 | 판별 정확도 ≤ 0.65 (Phase 2 ≤ 0.55) | > 0.65 → 공개 출시 보류(G7b), 평가자 ≥80%가 "AI"로 고른 항목을 03·04장 린터 규칙 후보로 등록 | 공개 출시 전 |
+| A2s | 파이프라인(프리셋·스냅·린터·게이트)이 "가이드 카드를 붙인 프롬프트"보다 낫다(DF-2) | 07장 7.8.3 **P-2s 강한 베이스라인**(`eval/blind/baseline_strong_prompt.md`, P-2 세션에 섞어 응답) | P-2와 같은 평가자 × 20쌍 | 선호율 ≥ 0.60 그리고 Wilson 하한 ≥ 0.45(기록 전용, 출시 비차단) | 미달 → §4.2 DF-2 붕괴 신호로 등록, 포지셔닝 재검토 안건(S-36) | 비공개 베타 |
+| A3 | 프리셋·린터가 "AI 티"를 줄인다 | 07장 7.8.2 **P-1 AI 느낌 판별률**: 생성 20 + 사람 제작 대조군 20, "사람/AI" 강제 선택 | 5명 × 40항목 = 200응답 | P-1a 판별 정확도 ≤ 0.65 (Phase 2 ≤ 0.55) 그리고 P-1b "AI 같다" 판정률 ≤ 25%·베이스라인의 ½ 이하(07장 7.8.2, S-19) | > 0.65 → 공개 출시 보류(G7b), 평가자 ≥80%가 "AI"로 고른 항목을 03·04장 린터 규칙 후보로 등록 | 공개 출시 전 |
 | A4 | 결과 도달자 일부가 결과를 공유한다(획득 채널 성립) | 결과 공유율 F5 | 결과 도달 n≥60 | ≥ 15% | < 5% → 공유 기능 고도화 [P2] 취소, 획득은 커뮤니티 게시로 대체 | 비공개 베타 |
-| A5 | 사용자가 시안을 실제로 쓴다 | 채택률 + 채택 7일 후 이메일 설문 "실제로 사용했나요?(배포/외주 전달/참고만/안 씀)" | 채택 n≥20 | 채택률 ≥ 40%, "배포 또는 외주 전달" ≥ 30% | 채택률 < 25% → 편집 범위·내보내기 포맷 재검토(인터뷰 5명) | 비공개 베타 → 공개 출시 |
+| A5 | 사용자가 시안을 실제로 쓴다 | 채택률 + 채택 7일 이후 첫 로그인 방문 때 인앱 1문항 시트 "실제로 사용했나요?(배포/외주 전달/참고만/안 씀)"(`adoption_followup_answer`, §5.4) | 채택 n≥20 | 채택률 ≥ 40%, "배포 또는 외주 전달" ≥ 30% | 채택률 < 25% → 편집 범위·내보내기 포맷 재검토(인터뷰 5명) | 비공개 베타 → 공개 출시 |
 | A6 | 로그인 벽이 생성 전환을 치명적으로 막지 않는다 | `login_prompt_view` → `login_success` 전환율 | n≥40 | ≥ 60% | < 40% → 1회 체험 생성(로그인 전) 실험 제안(D-41 재검토 안건) | 비공개 베타 |
 | A7 | 지불 의향이 있다 | 한도 도달 화면·`/pricing`(S14)의 페이크 도어 "유료 플랜 출시 알림 받기" | `paywall_view` 사용자 n≥50 | 클릭률 ≥ 5% | < 2% → 수익화 실험 [P3] 우선순위 하향 | 공개 출시 후 |
 
@@ -165,6 +167,20 @@ MVP 비목표: 호스팅·도메인 연결, CMS·자유 배치형 노코드 편�
 
 ---
 
+### 5.4 검증 실행 운영 (S-18, PM2-04)
+
+| 표본 | 목표 | MVP 확보 경로 | 비용·보상 |
+|---|---|---|---|
+| 초대 생성 사용자 | ≤ 50 | 운영자 지인·개발/창업 커뮤니티 1~2곳에 **모집 글 1회 허용**(공개 SNS·광고 없음) | 없음 |
+| 진단 시작 | ≥ 100 | 위 모집 글 + 결과 공유 유입 | 없음 |
+| 블라인드 평가자(P-1·P-2) | ≥ 5(비디자이너 ≥ 3) | 지인. 평가 페이지 링크 배포(`eval:blind:pack`) | 소액 기프티콘(선택) |
+| P-4·사용성 참가자 | ≥ 15 / 라운드당 5 | 초대 사용자 중 자원자, 사용성 참가자와 겸임 허용(07장 7.8.5) | 동일 |
+
+- **재검사 유도**: 결과 화면(S03 소유자 뷰)에 "1주 뒤 다시 해 보면 결과가 얼마나 일관된지 알려드려요" 안내를 둔다. 로그인 사용자는 6일 이후 첫 방문 시 S12에 "다시 진단해 보기" 배너를 띄운다. 이메일은 쓰지 않는다. 재검사 일치(A1 ②)는 공개 출시 조건이지만 자동 게이트는 아니다(07장 7.3.1).
+- **A5 후속 설문**: 이메일 대신, 채택 7일 이후 첫 로그인 방문 때 인앱 1문항 시트를 띄운다(1회, 닫기 가능). 이벤트 `adoption_followup_answer`(§8.3).
+- **표본 미달 규칙**: 비공개 베타 4주 종료 시 표본이 미달이면 2주씩 최대 2회 연장한다. 그래도 미달이면 공개 출시를 보류하고 모집 경로를 바꿔 "베타 2차"를 시작한다(결정 로그 기록). 표본이 모자란 상태를 합격으로 간주하지 않는다(waiver 금지 유지).
+- 베타 모집 글 게시, 평가자·참가자 섭외, 보상 지급은 사람이 한다(HUMAN_TODO).
+
 ## 6. 성공 지표
 
 ### 6.1 North Star (D-04)
@@ -180,7 +196,8 @@ MVP 비목표: 호스팅·도메인 연결, CMS·자유 배치형 노코드 편�
 | 단계(§7.2, R-32) | WAM 목표 |
 |---|---|
 | 비공개 베타(4주, 초대 생성 사용자 ≤ 50명) | 4주 누적 ≥ 30, 4주차 WAM ≥ 10 |
-| 공개 출시(8주) | 8주차 WAM ≥ 100 |
+| 공개 출시(8주) | 8주차 WAM ≥ 30(현 예산 월 US$150이 감당하는 상한 ≈ 33, §9.4 검산, S-15) |
+| 예산 상향 결정 후 | 8주차 WAM ≥ 100(사람이 예산 증액을 결정한 경우의 목표, HUMAN_TODO) |
 | Phase 2 진입 후 | 직전 4주 평균 대비 월 +20% (Phase 2 시작 시 재설정) |
 
 ### 6.2 퍼널 KPI
@@ -207,7 +224,7 @@ MVP 비목표: 호스팅·도메인 연결, CMS·자유 배치형 노코드 편�
 | # | 지표 | 정의 | 목표 |
 |---|---|---|---|
 | Q1 | 베이스라인 대비 선호율 | A2 = 07장 P-2 | ≥ 70%, Wilson 하한 ≥ 0.60 |
-| Q2 | AI 느낌 판별률 | A3 = 07장 P-1 | ≤ 0.65 |
+| Q2 | AI 느낌 | A3 = 07장 P-1a·P-1b | P-1a ≤ 0.65 그리고 P-1b ≤ 25%·베이스라인의 ½ 이하(S-19) |
 | Q3 | 개인화 선호율(진단 효용) | A1b = 07장 P-4 | ≥ 70%, Wilson 하한 ≥ 0.50 |
 | Q4 | 재검사 일치율 | A1 ② | ≥ 60% |
 | Q5 | 생성 성공률 | 생성 잡 중 비폴백 시안 ≥ 1개 노출 비율(status ∈ succeeded, partial, R-15) | ≥ 95% |
@@ -241,7 +258,7 @@ MVP 비목표: 호스팅·도메인 연결, CMS·자유 배치형 노코드 편�
 | F6~F8 | `login_prompt_view`, `login_success`, `generate_request`, `generate_rejected`, `generate_complete`, `mockup_select` |
 | F10, F11 | `mockup_edit`, `generate_request`, `survey_start` |
 | Q1~Q3 | `eval/blind/reports/*.json`, `eval_judgments`(07장 7.8) |
-| Q4 | `survey_complete`(재진단 쌍), `survey_results.type_id`·`type_id_second` |
+| Q4 | `survey_complete`(재진단 쌍), `diagnosis_results.type_id`·`type_id_second` |
 | Q5, Q6, GR-1~GR-5 | `generate_complete`, `generation_jobs`, `llm_calls` (→ 06장 6.12.3 뷰) |
 | GR-6 | `candidates.quality_report`, 07장 골든 리포트 |
 | Q7, GR-8 | `mockup_feedback` (+ `mockups.feedback`) |
@@ -263,14 +280,14 @@ MVP 비목표: 호스팅·도메인 연결, CMS·자유 배치형 노코드 편�
 | 영역 | [P0] MVP 포함 | MVP 제외 → 단계 | 상세 장 |
 |---|---|---|---|
 | 서비스 이름·표현 | 취향핏, "디자인 성향 유형" | "MBTI" 표현 사용 금지(전 단계) | 01 |
-| 언어·기기 | 한국어 UI·카피, 진단·결과 모바일 우선(375px), 생성·편집 데스크톱 권장(모바일은 미리보기·공유만). 지원 브라우저: Chrome/Edge ≥111, Safari·iOS Safari ≥16.4, Firefox ≥128, Samsung Internet ≥22 (R-33) | 영문 [P2 검토] | 01, 07 |
+| 언어·기기 | 한국어 UI·카피, 진단·결과 모바일 우선(375px), 생성·편집 데스크톱 권장. 터치 전용 소형 기기(휴대폰)는 미리보기·공유만(편집 허용 = `(pointer: fine) || screen.width ≥ 768`, 좁은 뷰포트는 1열 편집 레이아웃, 01장 1.3.1, S-31). 지원 브라우저: Chrome/Edge ≥111, Safari·iOS Safari ≥16.4, Firefox ≥128, Samsung Internet ≥22 (R-33) | 영문 [P2 검토] | 01, 07 |
 | 진단 | 1단계 4지선다 정확히 8문항 + 2단계 A/B 최대 8문항(총 ≤16), 조기 종료(σ≤0.08), "다 별로예요"/"차이를 모르겠어요", 뒤로가기 1단계, 이어하기, 결과 화면 "다른 유형 보기"(`anchor_override_type_id`만 저장, 벡터 불변, R-36) | 3단계 요소 미세조정(폐기, D-16), 문항 수 A/B 테스트 [P2] | 02 |
 | 자극물 | 사전 렌더 오리지널 이미지(R-06·R-07): 1단계 카드 48장 = 기준 벡터 16개(앵커 8 + 브리지 8) × 콘텐츠 템플릿 3, 2단계 A/B 120쌍(축 수준 {0.2, 0.5, 0.8}). 기기별 2벌(desktop 1280×800 ≤140KB, mobile 780×1560 ≤160KB WebP). 가상 브랜드 "한결"(R-08) | 실시간 렌더(전 단계 제외) | 02, 05, 09 |
 | 결과 | 유형 8종(`T1`~`T8`, R-04), 5축 점수, 경계 표기, "닮은 사이트" 텍스트 링크 3곳(L1 벡터 거리 매칭, R-38), 공감 평가(1~2점이면 인접 유형 2개 제안, R-36), 공유 링크·결과 카드 이미지, "내 유형 디자인 가이드" 카드(D-001), 재진단·이전 결과 비교 | 유형 16종 [P3], 유형 궁합 [P2], 카카오 SDK 공유 [P2](MVP는 링크 복사·이미지 저장·Web Share API, D-003) | 01, 02 |
 | 계정 | 익명 진단(쿠키), 생성·저장·내보내기 로그인(이메일 매직링크 + Turnstile·Resend 발송, Google, R-29), 익명 결과 귀속, 셀프 탈퇴·삭제 | 카카오·네이버 로그인 [P2], 팀·공유 편집 [P3] | 01, 06, 08 |
 | 생성 입력 | 용도 3종(`saas`, `portfolio`, `local_business`, R-02), BrandInput(단일 원천 01장, R-21) | 로고·사진 업로드(MVP 제외, R-21), 쇼핑몰·다페이지·블로그 [P2+] | 01, 04 |
 | 생성 | `POST /api/projects/:id/generations` 202 + 폴링(R-14), 후보 6 → 하드 게이트(원본 유사도·axe 포함, R-20·R-28) → 점수 → `v_true`/`v_fit`/`v_bal` 3안(R-03), 재생성 최대 1회, 변형별 결정론적 폴백, 점진 노출, 비전 채점은 기록 전용(`JUDGE_VISION_MODE=log`, R-12·R-37) | SSE [P2](R-14), 비전 채점 순위 반영(가중 ≤0.20) [P2](R-12), 다크모드 쌍 [P2], AI 생성 이미지(제외), 이미지 임베딩·구조 유사도 가드 [P2](R-20) | 04 |
-| 편집 | 스텝 컨트롤(검증된 단계 이동)·후보 카드 교체, 섹션 순서 변경·숨김, 텍스트 슬롯 직접 수정(LLM 호출 없음), undo/redo. 미리보기는 클라이언트 컴파일 HTML을 `sandbox=""` iframe `srcdoc`으로 교체, 저장 시 서버 재컴파일·재검사(R-17) | 자연어 편집 [P3], LLM 카피 다시 쓰기 [P2](D-004, 04장 D-0408), 원시값(hex·px) 입력(전 단계 제외) | 01, 04 |
+| 편집 | 스텝 컨트롤(검증된 단계 이동)·후보 카드 교체, 섹션 순서 변경·숨김, 텍스트 슬롯 직접 수정(LLM 호출 없음), undo/redo. 미리보기는 클라이언트 컴파일 HTML을 `sandbox=""` iframe `srcdoc`으로 교체, 저장 시 서버 재컴파일·재검사(R-17) | 자연어 편집 [P3], LLM 카피 다시 쓰기 [P2](D-004, 04장 D-0408), 원시값(hex·px) 입력(전 단계 제외), 시안 카드 "원래대로 보기" 토글 [P2](S-32) | 01, 04 |
 | 내보내기 | 정적 HTML+CSS zip, React+Tailwind zip, DTCG 토큰 JSON, LICENSES.md·CREDITS.md 자동 포함 | Figma [P3], 전체 페이지 PNG [P2], 방향 설명서 PDF [P2] | 04 |
 | 공유 | 결과 공유 S03 `/r/[shareId]`(기본 공개), 시안 공유 S13 `/p/[shareId]`(기본 비공개, S11 토글) — route는 01장(R-19) | 공유 페이지 댓글 [제외] | 01, 08 |
 | 품질 | 하드 게이트, AI 티 린터(서비스 UI 포함, D-28), 조화 ≥80·취향 일치 ≥75, 골든 세트 32케이스(유형 8 × 용도 3 + 엣지 8, 전체 실행 케이스당 3회, 스모크 8×1, R-11), 임계값 `config/thresholds.json`(R-09) | 카나리 배포(오프라인 승격 규칙으로 대체, D-44·R-24) | 04, 07 |
@@ -287,9 +304,9 @@ MVP 비목표: 호스팅·도메인 연결, CMS·자유 배치형 노코드 편�
 
 | 단계 | 기간 | 대상 | 07장 게이트 | 추가 제품 조건(모두 충족) | 다음 단계 진입 조건 |
 |---|---|---|---|---|---|
-| **RC** | 구현 완료 후 | 내부 | G1 | ① E2E "익명 진단 → 로그인(Mailpit 매직링크, R-10) → 결과 귀속 → 생성 → 선택 → 편집 → 내보내기 3종 → 공유" 통과 ② 08장 법무 문서 3종 게시 | 비공개 베타 게이트(G1~G6 + G7a, A0 시뮬레이션 R-05는 G2에 포함) 통과, 사용성 R1 완료 |
-| **비공개 베타** | 4주 | 초대 코드 보유 생성 사용자 ≤ 50명, 진단은 공개(단 홍보 게시 없음) | G1~G6 + G7a | `BETA_INVITE_ONLY=true` | ① §6.2 F1~F9 중 7개 이상 목표 달성(표본 충족 시), 경보선 미만 0개 ② A1 성공 ③ GR-1~GR-6 위반 미해결 0건 ④ 07장 G7(G7b: P-1·P-2·P-4, G7c: 사용성 R2) 통과 |
-| **공개 출시** | 8주 | 전체 | G1~G7 전부 | `BETA_INVITE_ONLY=false`, 페이크 도어 측정 | Phase 2 진입: ① 8주차 WAM ≥ 100 ② F11 ≥ 15% ③ A5 성공 ④ 월 지출 ≤ `GEN_MONTHLY_BUDGET_USD` |
+| **RC** | 구현 완료 후 | 내부 | G1 | ① E2E "익명 진단 → 로그인(매직링크: supabase = Mailpit, native = `dev_mail_outbox` 픽스처, R-10) → 결과 귀속 → 생성 → 선택 → 편집 → 내보내기 3종 → 공유" 통과 ② 08장 법무 문서 3종 게시 | 비공개 베타 게이트(G1~G6 + G7a, A0 시뮬레이션 R-05는 G2에 포함) 통과, 사용성 R1 완료 |
+| **비공개 베타** | 4주 | 초대 코드 보유 생성 사용자 ≤ 50명, 진단은 공개(공개 SNS·광고 없음. 모집 글 1회 허용, §5.4) | G1~G6 + G7a | `BETA_INVITE_ONLY=true` | ① §6.2 F1~F9 중 7개 이상 목표 달성(표본 충족 시), 경보선 미만 0개 ② A1 성공 ③ GR-1~GR-6 위반 미해결 0건 ④ 07장 G7(G7b: P-1·P-2·P-4, G7c: 사용성 R2) 통과 |
+| **공개 출시** | 8주 | 전체 | G1~G7 전부 | `BETA_INVITE_ONLY=false`, 페이크 도어 측정 | Phase 2 진입: ① 8주차 WAM ≥ 30(S-15) ② F11 ≥ 15% ③ A5 성공 ④ KS-1 월 상한 발동으로 생성이 막힌 날 ≤ 3일/월, 그리고 GR-10(채택당 원가) 4주 평균 충족(S-15) |
 | **Phase 2** | 가설 12주 | — | 07장 Phase 2 기준 | 자동 수집·트렌드 감지, 다페이지, 다크모드 쌍, SSE, 비전 채점 순위 반영, 영문 검토, 카카오 공유·로그인 | A2 성공이 전제(실패 시 트렌드 항목 보류, §5.1). Phase 3 진입: A7 ≥ 5% 그리고 Phase 2 종료 시 WAM ≥ 300 |
 | **Phase 3** | 미정 | — | — | Figma 내보내기, 유형 16종, 자연어 편집, 결제 | — |
 
@@ -377,6 +394,7 @@ create index on events (anon_id, ts);
 | `export_failed` | server | `{ mockup_id, format, error_code }` | 운영 |
 | `share_link_enable` / `share_link_disable` | server | `{ target_type, target_id, share_id }` | WAM, GR-7 |
 | `mockup_adopted` | server | `{ mockup_id, via: 'export'\|'share', format?, is_fallback, variant }` | **WAM**, F9, GR-9 |
+| `adoption_followup_answer` | server | `{ mockup_id, answer: 'deployed'\|'handed_off'\|'reference_only'\|'unused' }` | A5(S-18) |
 | `mockup_feedback` | server | `{ mockup_id, rating: 'up'\|'down', reason?: 'ai_feel'\|'not_my_taste'\|'broken_layout'\|'bad_copy'\|'other' }` | Q7, GR-8 |
 | `paywall_view` | client | `{ placement: 'quota_day'\|'quota_month'\|'pricing' }` | A7 |
 | `paywall_interest` | server | `{ placement }` | A7, Q8 |
@@ -423,18 +441,20 @@ with s as (
     bool_or(name='landing_view')      as landing,
     bool_or(name='survey_start')      as started,
     bool_or(name='survey_complete')   as completed,
-    bool_or(name='result_view')       as result,
+    bool_or(name='result_view' and not coalesce((props->>'is_shared_view')::bool, false)) as result,  -- 공유 열람 제외(S-17)
     bool_or(name='result_share')      as shared,
     bool_or(name='login_prompt_view') as prompted,
     bool_or(name='login_success')     as logged_in,
     bool_or(name='generate_request')  as generated
-  from ev where ts >= :from and ts < :to group by actor)
+  from ev where ts >= :from and ts < :to group by actor),
+-- 비공개 베타(BETA_INVITE_ONLY=true) 기간의 F6·F7은 초대 코드 사용 이력이 있는 주체만 분모로 한다(S-17)
+invited as (select distinct user_id::text as actor from invite_redemptions)
 select
   avg(started::int)   filter (where landing)   as f1_start_rate,
   avg(completed::int) filter (where started)   as f2_complete_rate,
   avg(shared::int)    filter (where result)    as f5_share_rate,
-  avg(logged_in::int) filter (where prompted)  as f6_login_rate,
-  avg(generated::int) filter (where result)    as f7_generate_rate
+  avg(logged_in::int) filter (where prompted and (not :beta or actor in (select actor from invited)))  as f6_login_rate,
+  avg(generated::int) filter (where result   and (not :beta or actor in (select actor from invited)))  as f7_generate_rate
 from s;
 
 -- F3 진단 소요 중앙값
@@ -442,14 +462,21 @@ select percentile_cont(0.5) within group (order by (props->>'duration_s')::int)
 from ev where name='survey_complete' and ts >= :from and ts < :to;
 
 -- F4 결과 공감
-select avg(((props->>'score')::int >= 4)::int) as f4_top2, avg((props->>'score')::int) as f4_mean
-from ev where name='result_rating' and ts >= :from and ts < :to;
+-- 결과(result_id)마다 마지막 평가만 센다(S-17)
+with last_rating as (
+  select distinct on (props->>'result_id') (props->>'score')::int as score
+  from ev where name='result_rating' and ts >= :from and ts < :to
+  order by props->>'result_id', ts desc)
+select avg((score >= 4)::int) as f4_top2, avg(score) as f4_mean from last_rating;
 
 -- F8 시안 선택률 (잡 단위), F9 채택률 (시안 단위)
+-- F8은 7일 코호트: 기간 안에 완료된 잡 중 완료 후 7일 안에 mockup_select가 1건 이상인 잡의 비율(S-17)
+with done as (select props->>'job_id' as job_id, ts as t_done from ev
+              where name='generate_complete' and props->>'status' in ('succeeded','partial','fallback')
+                and ts>=:from and ts<:to)
 select
-  (select count(distinct props->>'job_id') from ev where name='mockup_select' and ts>=:from and ts<:to)::float
-  / nullif((select count(*) from ev where name='generate_complete'
-            and props->>'status' in ('succeeded','partial','fallback') and ts>=:from and ts<:to),0) as f8,
+  (select avg(exists(select 1 from ev m where m.name='mockup_select' and m.props->>'job_id'=d.job_id
+                      and m.ts >= d.t_done and m.ts < d.t_done + interval '7 day')::int) from done d) as f8,
   (select count(distinct props->>'mockup_id') from ev where name='mockup_adopted' and ts>=:from and ts<:to)::float
   / nullif((select count(distinct props->>'mockup_id') from ev where name='mockup_select' and ts>=:from and ts<:to),0) as f9;
 
@@ -471,7 +498,7 @@ select avg(exists(select 1 from ev e2 where e2.actor=f.actor
 from first_gen f where f.t0 < now() - interval '15 day';
 ```
 
-- Q4 재검사 일치율: 같은 actor의 `survey_complete` 2건 중 간격 6~14일 쌍에서 `survey_results.type_id` 일치(경계 결과는 `type_id_second` 포함, 06장 DDL·02장 2.16.3, IF-05).
+- Q4 재검사 일치율: 같은 actor의 `survey_complete` 2건 중 간격 6~14일 쌍에서 `diagnosis_results.type_id` 일치(경계 결과는 `type_id_second` 포함, 06장 DDL·02장 2.16.3, IF-05).
 
 ### 8.6 수용 기준
 
@@ -479,7 +506,7 @@ from first_gen f where f.t0 < now() - interval '15 day';
 - **AC-00-10**: 같은 시안을 두 번 내보내고 공유 링크를 켜도 `mockup_adopted`는 1건이다(통합 테스트).
 - **AC-00-11**: `events.props` 전체에서 브랜드 입력 필드 값(픽스처의 브랜드명·소개 문자열)이 0건 검색된다(통합 테스트).
 - **AC-00-12**: 레지스트리에 없는 이벤트명 또는 props 스키마 위반 요청은 400을 반환하고 저장되지 않는다.
-- **AC-00-13**: §8.5의 모든 쿼리가 픽스처(사용자 10명 시나리오)에서 사전 계산한 기대값과 일치한다.
+- **AC-00-13**: §8.5의 모든 쿼리가 픽스처(사용자 10명 시나리오 + S-17 추가 4종: ① 공유 열람자 3명 ② 비초대 진단 완료자 2명 ③ 평가를 바꾼 사용자 1명 ④ 기간 경계를 넘는 선택 1건)에서 사전 계산한 기대값과 일치하고, 모든 비율이 [0, 1] 안이다.
 
 ---
 
@@ -543,8 +570,8 @@ recordLlmCall(...);                            // llm_calls.cost_usd (→ 06장)
 |---|---|
 | `succeeded`, `partial` (비폴백 시안 ≥ 1개 노출) | 차감 |
 | `fallback` (폴백 시안만 노출) | **복구**(차감 취소) |
-| `failed`, `queued`에서 취소 | **복구** |
-| `running`에서 취소 | 차감(이미 원가 발생, 06장 6.2.3) |
+| `failed` | **복구** |
+| `canceled` | 취소 시점의 비폴백 노출 수가 ≥ 1이면 차감(노출된 시안은 계속 볼 수 있음), 0이면 **복구**. `queued`·`running`은 구분하지 않는다(S-16, 06장 6.2.3·04장 4.12·01장 1.6.5와 같은 문장). 노출 전 취소로 생긴 원가 남용은 레이트리밋(계정 2회/분)과 A4 경보로 감시한다 |
 | 킬 스위치·예산 초과로 접수 거부 | 차감 안 함(잡 미생성) |
 
 - 판정 기준은 R-15(비폴백 노출 수). 차감 시점: 잡 생성 시 예약 차감(`quota_ledger`, `unique(job_id, kind)`, DDL → 06장), 완료 시 위 표에 따라 `refund` 기록. 잔여 한도 = 한도 − (reserve − refund) 건수.
@@ -567,7 +594,20 @@ recordLlmCall(...);                            // llm_calls.cost_usd (→ 06장)
 | `GEN_MAX_CONCURRENT_JOBS` | 5 | **전역** 동시 실행 잡 수(R-16, 06장 D-0604). 사용자당 1은 고정 규칙 |
 | `JUDGE_VISION_MODE` | `log` | `off`\|`log`\|`rank`. MVP는 `log`(기록 전용), `rank`는 Phase 2(R-12, 06장 D-0616) |
 
-- 근거(가설): 비공개 베타 예상 생성 = 초대 사용자 ≤ 50명 × 평균 2.5회 ≈ 125회/4주, 일 피크 30회 × US$0.30 = US$9 → 일 상한 US$10. 월 상한 = 공개 출시 예상 월 생성 500회 × US$0.30 = US$150. staging 환경 live 일 예산은 US$2(06장 D-0607).
+- 근거(가설): 비공개 베타 예상 생성 = 초대 사용자 ≤ 50명 × 평균 2.5회 ≈ 125회/4주, 일 피크 30회 × US$0.30 = US$9 → 일 상한 US$10. 월 상한 US$150 = 공개 출시 예상 월 생성 600회 × 평균 잡 원가 US$0.25(S-15).
+
+**목표-예산 정합 검산(S-15, PM2-01)**: 예산(월 150, 일 10 USD)은 유지한다. 유료 지출 증액은 사람이 결정한다(HUMAN_TODO).
+
+| 항목 | 값 | 출처 |
+|---|---|---|
+| 산식 | `WAM_max = (월 예산 / 평균 잡 원가) / 4.35 × F8 × F9` | — |
+| 월 예산 | US$150 | `GEN_MONTHLY_BUDGET_USD` |
+| 평균 잡 원가 | US$0.25 | 07장 골든 M14 평균 상한 |
+| 월 생성 가능 잡 | 600 | 150 / 0.25 |
+| F8 시안 선택률 · F9 채택률 | 0.6 · 0.4 | §6.2 목표 |
+| **WAM_max** | (600 / 4.35) × 0.6 × 0.4 ≈ **33** | — |
+| 목표 | 공개 출시 8주차 WAM ≥ 30 ≤ 33, O2 8주 누적 ≥ 150 ≤ 33 × 8 | §6.1, §1 O2 |
+- WAM 100은 "예산 상향 결정 후" 목표다. 예산을 바꾸지 않은 채 100을 목표로 두지 않는다. staging 환경 live 일 예산은 US$2(06장 D-0607).
 
 **킬 스위치 동작**
 
@@ -728,7 +768,7 @@ ID는 `RK-nn`(decisions_v2의 `R-xx`와 구분). 점수 = 영향(1~5) × 가능�
 |---|---|---|---|
 | 취향핏 | — | 서비스 가칭 (D-01) | 00 |
 | 디자인 성향 유형(유형) | `type_id` = `T1`~`T8` (+ `slug`, 예 `calm-editorial`) | 진단 결과로 판정되는 8개 고정 유형. 이름·설명 텍스트 원천은 02장, 중심 벡터 원천은 03장 3.4.7 (D-15, R-04) | 02, 03 |
-| 진단 | `survey_sessions` / `survey_answers` / `survey_results` | 1단계 4지선다 정확히 8 + 2단계 A/B 최대 8로 취향 벡터를 추정하는 과정 (D-13, R-05). 응답 테이블명은 `survey_answers`(R-18) | 02, 06 |
+| 진단 | `diagnosis_sessions` / `survey_answers` / `diagnosis_results` | 1단계 4지선다 정확히 8 + 2단계 A/B 최대 8로 취향 벡터를 추정하는 과정 (D-13, R-05). 응답 테이블명은 `survey_answers`(R-18) | 02, 06 |
 | 취향 벡터 | `taste_vector` | L1 축 5개의 사후분포(축별 μ, σ) (D-10, D-12) | 02 |
 | L1 축 | 코드 키 `expression`, `temperature`, `shape`, `density`, `depth` | 문서 표기 A1 표현성, A2 온도, A3 형태, A4 밀도, A5 깊이. 각 [0,1] (D-10). JSON·DB·코드는 반드시 영문 키 사용(R-01) | 02 |
 | L2 파라미터 | `DesignSpec.l2` (18키) | 타이포 페어링·팔레트 구조·radius 계열·depth 종류·레이아웃 패턴·이미지 스타일·모션 수준 등. 매핑표로 결정 (D-11, R-27) | 03, 04 |
@@ -803,7 +843,7 @@ decisions_v2.md로 대체된 항목은 "→ R-xx로 대체"로 표시한다. 대
 | D-011 | 한도 차감은 비폴백 시안 ≥1개 노출 시에만 확정, `fallback`·`failed`는 복구 | 사용자 공정성, 품질 책임 | 04, 06 | → R-15로 대체 |
 | D-012 | 신고 자동 비공개: 사칭·피싱 1건 즉시, 그 외 서로 다른 신고자 3건. 운영자 판단 SLA 24시간 | LG-13, 1인 운영 | 01, 08 | 유효, 사유 enum·신고자 기준은 08장 8.9.5·06장 D-0612로 정정(`impersonation`·`phishing` 즉시, `ip_hmac` 3건). 비공개 응답 코드 `SHARE_HIDDEN` → R-13 |
 | D-013 | 비공개 베타는 초대 코드 기반(`BETA_INVITE_ONLY`)으로 생성만 제한하고 진단은 공개 | 비용 통제 + 퍼널 상단 측정 | 01, 06 | 단계 정의 → R-32로 대체(≤50명, G1~G6 + G7a). 생성만 제한·진단 공개 규칙은 유효(06장 `INVITE_REQUIRED`) |
-| D-014 | 결과 레코드에 2순위 유형 `type_id_second` 저장(경계 표기·재검사 일치 계산용) | Q4 계산 | 02, 06 | 유효(06장 `survey_results` 반영) |
+| D-014 | 결과 레코드에 2순위 유형 `type_id_second` 저장(경계 표기·재검사 일치 계산용) | Q4 계산 | 02, 06 | 유효(06장 `diagnosis_results` 반영) |
 | D-015 | 가드레일 ID를 `GR-n`, 리스크 ID를 `RK-nn`으로 바꾼다(07장 출시 게이트 `G1~G7`, 04장 하드 게이트 `G-01~G-12`, decisions_v2 `R-xx`와 충돌 방지) | ID 충돌 | 06, 07, 09 | 신규 |
 | D-016 | `generate_complete` props에 `n_real`, `first_shown_ms`, `generate_request`에 `queue_position`을 추가하고, `generate_rejected`를 `{stage, code, reason?}`로 바꿔 프로젝트 생성 거부(`BLOCKED_BRAND` 등)까지 기록한다 | R-25 첫 카드 SLO 측정, R-13 코드 통일 | 01, 06 | 신규 |
 | D-017 | 비공개 베타 KPI 목표를 생성 사용자 ≤ 50명 규모로 재설정: WAM 4주 누적 ≥ 30·4주차 ≥ 10, 판정 최소 표본 진단 시작 ≥ 100·생성 사용자 ≥ 30 | R-32 인원 상한 | 07, 09 | 신규 |
@@ -812,23 +852,23 @@ decisions_v2.md로 대체된 항목은 "→ R-xx로 대체"로 표시한다. 대
 
 ## 14. 다른 장과 맞춰야 할 인터페이스
 
-| IF | 이름 | 내용 | 상대 장 | 현재 상태(2026-11-17) |
+| IF | 이름 | 내용 | 상대 장 | 현재 상태(2026-11-19, decisions_v3 반영 후) |
 |---|---|---|---|---|
-| IF-01 | 원가 계산표 | 선택 모델 단가 기준 잡당 최악 원가 ≤ US$0.30 증명, 단계별 토큰 상한, `judge_vision` 기록 비용 포함 | 04, 06 | 04장 확인 필요 |
+| IF-01 | 원가 계산표 | 선택 모델 단가 기준 잡당 최악 원가 ≤ US$0.30 증명, 단계별 토큰 상한, `judge_vision` 기록 비용 포함 | 04, 06 | 04장 4.17.2 비용표 + 06장 6.9.4 예약-정산(S-13) 반영 |
 | IF-02 | `llm_calls.cost_usd`, `generation_jobs.cost_usd` | 예산 집계·KS-1의 원천 | 06 | 06장 6.10.3 반영 |
 | IF-03 | 잡 상태 enum·판정 | R-15와 `generate_complete.status` 일치 | 04, 06 | 06장 6.2.3 반영 |
 | IF-04 | `mockups.adopted_at`, `adopted_via`, `is_fallback`, `variant` | 채택 판정·WAM, `mark_adopted` | 04, 06 | 06장 DDL 반영 |
-| IF-05 | `survey_results.type_id`, `type_id_second`, `is_boundary` | Q4, `result_view` | 02, 06 | 06장 DDL 반영 |
+| IF-05 | `diagnosis_results.type_id`, `type_id_second`, `is_boundary` | Q4, `result_view` | 02, 06 | 06장 DDL 반영 |
 | IF-06 | 오류 코드 | 단일 원천 06장 6.4.2 + `@tastefit/api-contract`(R-13). 이 장 사용: `QUOTA_DAY`, `QUOTA_MONTH`, `RATE_LIMITED`, `JOB_IN_PROGRESS`, `PROJECT_LIMIT`, `INVITE_REQUIRED`, `CONSENT_REQUIRED`, `BLOCKED_BRAND`(`high_risk`·`phishing_term`), `BRAND_ATTESTATION_REQUIRED`, `SHARE_HIDDEN`, `SHARE_DISABLED`, `SIGNUP_DISABLED`, `GEN_BUDGET_EXCEEDED`, `GEN_DISABLED` | 01, 06 | 06장 반영, 화면 문구 → 01장 |
 | IF-07 | 테이블 | `events`, `identity_links`, `quota_ledger`, `feature_flags`, `invites`·`invite_redemptions`, `support_tickets`, `reports`, `rights_requests`, `reference_sites`, `admin_audit_logs`, `eval_sets`·`eval_judgments`, `blocked_brands`, `survey_answers`, `users.role`·`is_internal`·`status`·`quota_*_override` (R-18) | 06 | 06장 DDL은 응답 테이블을 `survey_responses`로 표기 → R-18 `survey_answers`로 정정 필요(06장 소관) |
-| IF-08 | 이벤트 레지스트리 zod 스키마 | §8.3 이름·props(+01장 D-0106, D-016), `@tastefit/api-contract` | 01, 06, 07 | 07장 7.3.4·7.9.2의 이벤트명(`result_viewed`, `generation_completed`, `diagnosis_started` 등)을 §8.3 이름으로 정정 필요(R-23, 07장 소관) |
+| IF-08 | 이벤트 레지스트리 zod 스키마 | §8.3 이름·props(+01장 D-0106, D-016), `@tastefit/api-contract` | 01, 06, 07 | 07장 7.3.4 이벤트명 00장 §8.3 기준으로 정리. `adoption_followup_answer` 추가(S-18) |
 | IF-09 | `feature_flags` 키 | §9.4 표: `JOB_COST_CAP_USD`, `GEN_DAILY_BUDGET_USD`, `GEN_MONTHLY_BUDGET_USD`, `GEN_ENABLED`, `SIGNUP_ENABLED`, `SHARE_PUBLIC_ENABLED`, `BETA_INVITE_ONLY`, `GEN_MAX_CONCURRENT_JOBS`(=5), `JUDGE_VISION_MODE`(=`log`) | 06, 07 | 06장 6.10.4 반영. 07장 `limits.*` 명칭 교체 필요(R-22, 07장 소관) |
-| IF-10 | 보관 기간 | 이벤트·문의·신고·감사 로그·`brief_drafts`(24h, R-26)의 보관 기간 단일 출처 | 08 | 08장 확인 필요 |
+| IF-10 | 보관 기간 | 이벤트·문의·신고·감사 로그·`brief_drafts`(24h, R-26)의 보관 기간 단일 출처 | 08 | 08장 8.7.7 반영(S-20·S-21, consents_archive·sanctions 포함) |
 | IF-11 | 랜딩·결과·한도 도달·킬 스위치·신고 비공개 화면 카피 | §3.1, §9.4, §10.3 | 01 | 01장 S01·S14·S15 반영 |
-| IF-12 | 출시 단계·게이트 | §7.2(RC → 비공개 베타 → 공개 출시)의 추가 제품 조건을 07장 7.11 게이트와 09장 마일스톤에 연결(R-32) | 07, 09 | 09장 단계명 정합 확인 필요 |
+| IF-12 | 출시 단계·게이트 | §7.2(RC → 비공개 베타 → 공개 출시)의 추가 제품 조건을 07장 7.11 게이트와 09장 마일스톤에 연결(R-32) | 07, 09 | 07장 7.11.1·09장 단계명 RC/비공개 베타/공개 출시로 정리(S-19) |
 | IF-13 | 사람 평가 합격선 | A1b·A2·A3 = 07장 P-4·P-2·P-1, 기계 판정 `config/thresholds.json`(R-09) | 07 | 07장 반영 |
-| IF-14 | 진단 시뮬레이션 합격선 | A0 = R-05 값. 07장 7.3.1의 구값(유형 정확도 β=8 ≥80%, 적응형 이득 ≥20%, 중앙값 ≤14 등)은 R-05로 정정 필요 | 02, 07 | 07장 소관 |
-| IF-15 | 사용성 테스트 | §5.3 = 07장 7.9(T1~T5, S1~S3). 01장 1.17의 "Blocker 0" 표기는 "S1 미해결 0"으로 읽는다 | 01, 07 | 01장 표기 정정 권장 |
+| IF-14 | 진단 시뮬레이션 합격선 | A0 = R-05 값. 07장 7.3.1의 구값(유형 정확도 β=8 ≥80%, 적응형 이득 ≥20%, 중앙값 ≤14 등)은 R-05로 정정 필요 | 02, 07 | 07장 7.12.1 `release.surveySim` = R-05 + S-08 키(정정 완료) |
+| IF-15 | 사용성 테스트 | §5.3 = 07장 7.9(T1~T5, S1~S3). 01장 1.17의 "Blocker 0" 표기는 "S1 미해결 0"으로 읽는다 | 01, 07 | 07장 7.9.1은 §5.3 참조 1줄(S-19) |
 
 ---
 
@@ -902,3 +942,16 @@ decisions_v2.md로 대체된 항목은 "→ R-xx로 대체"로 표시한다. 대
 | R-36 | §7.1 진단·결과 행, §12 |
 | R-38 | §7.1 결과·레퍼런스 행, §12 |
 | R-26, R-27, R-34 | 이 장 직접 해당 없음(IF-10, §12 L2 표기만) |
+
+### 15.3 decisions_v3.md 반영 (2026-11-19)
+
+| 결정 | 반영 절 |
+|---|---|
+| S-15 | §1 O2, §6.1, §7.2, §9.4 검산 표 |
+| S-16 | §9.3 한도 표 |
+| S-17 | §8.5 퍼널·F4·F8 쿼리, AC-00-13 |
+| S-18 | §5.4 신설, §5.1 A5, §8.3 `adoption_followup_answer`, §7.2 비공개 베타 문구 |
+| S-19 | §5.1 A3, §6.3 Q2, §14 IF-12·15 |
+| S-31 | §7.1 언어·기기 |
+| S-32 | §7.1 편집 제외 목록 |
+| S-36 | §5.1 A2s·A1c |

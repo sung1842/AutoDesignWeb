@@ -470,8 +470,8 @@ UsedAssets = {
 
 | ID | 데이터 | 항목 | 수집 시점 | 목적 | 필수 | 저장 위치(→ 06장) |
 |---|---|---|---|---|---|---|
-| P1 | 익명 식별자 | `anon_id`(UUID v4, httpOnly·Secure·SameSite=Lax 쿠키) | 첫 진단 시작 | 진단 세션 유지, 결과 귀속 | 필수 | `survey_sessions.anon_id`, `identity_links` |
-| P2 | 진단 응답 | 노출·선택 옵션 ID, 응답 시간(ms), 취향 벡터·불확실도, 유형, 결과 피드백 점수 | 진단 중 | 취향 계산, 결과 제공 | 필수 | `survey_sessions`, `survey_answers`(R-18), `survey_results` |
+| P1 | 익명 식별자 | `anon_id`(UUID v4, httpOnly·Secure·SameSite=Lax 쿠키) | 첫 진단 시작 | 진단 세션 유지, 결과 귀속 | 필수 | `diagnosis_sessions.anon_id`, `identity_links` |
+| P2 | 진단 응답 | 노출·선택 옵션 ID, 응답 시간(ms), 취향 벡터·불확실도, 유형, 결과 피드백 점수 | 진단 중 | 취향 계산, 결과 제공 | 필수 | `diagnosis_sessions`, `survey_answers`(R-18), `diagnosis_results` |
 | P3 | 계정 | 이메일, 인증 제공자(`email`/`google`), 제공자 사용자 ID, 가입·최근 로그인 일시 | 로그인 | 회원 식별, 매직링크 발송, 시안 저장 | 필수 | Supabase Auth, `users`(R-18) |
 | P4 | 사이트 브리프 | 용도, 브랜드명, 한 줄 소개, 목표 행동, 주요 고객(선택), 강점 3개(선택), 브랜드 컬러(선택) — 필드 정의 → 01장 | 브리프 제출(익명 제출 시 임시본) | 시안·카피 생성 | 생성 시 필수 | `brief_drafts.brand`(익명 임시본, 01장 D-0103), `projects.brand`(마스킹 후) |
 | P5 | 생성 결과 | 레이아웃 트리, token, 시안 버전, 썸네일, 공유 토큰·공개 여부 | 생성·편집 | 결과 제공·편집·공유 | 필수 | `candidates`, `mockups`, `mockup_versions`, `share_links` |
@@ -1008,7 +1008,7 @@ HighRiskBrand = {
 | `config/originality.json`, `OriginalityReport` | 08(R-20) | 04장 4.10.6이 실행, 06장 `config_snapshot.originalityVersion` |
 | `sources`, `reference_sites`, `reference_captures`, `reference_features.originality_sig`, `excluded_domains`, `rights_requests`(+뷰 `optout_requests`), `similar_site_candidates` | 05(컬럼)·06(DDL) | 8.1, 8.3, 8.10 |
 | `asset_registry`(`packages/assets/registry.json`), `used_assets`, 이미지 manifest 192건 | 08(라이선스 필드)·03(목록)·04(매니페스트) | 8.4 |
-| `consents`, `users`, `survey_sessions`/`survey_answers`/`survey_results`, `brief_drafts`, `projects.brand`, `events`, `admin_audit_logs`, `reports`, `share_links`, `blocked_brands`, `fewshot_examples` | 06(DDL, R-18) | 8.5, 8.7, 8.9 |
+| `consents`, `users`, `diagnosis_sessions`/`survey_answers`/`diagnosis_results`, `brief_drafts`, `projects.brand`, `events`, `admin_audit_logs`, `reports`, `share_links`, `blocked_brands`, `fewshot_examples` | 06(DDL, R-18) | 8.5, 8.7, 8.9 |
 | `legal/processors.yaml`, `models.yaml` `processor_id` | 08 / 06 | 8.7.6, 8.8 |
 | 오류 코드 `CONSENT_REQUIRED`, `BLOCKED_BRAND{reason}`, `BRAND_ATTESTATION_REQUIRED`, `SHARE_HIDDEN`, `ACCOUNT_SUSPENDED`, `INVITE_REQUIRED`, `GEN_BUDGET_EXCEEDED`, `EXPORT_LICENSE_MISSING` | 06 + `@tastefit/api-contract`(R-13) | 8.7.4, 8.9, 8.4.4 |
 | 화면 S01·S03·S05·S06·S10·S12·S13·S14·S15 | 01(R-19) | 고지·동의·삭제·문서 |
