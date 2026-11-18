@@ -23,10 +23,11 @@
 | `data/fonts/registry.json` (B6), `data/fonts/pairings.json` (B7) | 서체 26종, 페어링 20쌍 | 3.7 | 컴파일러, 07 TC-F-01 |
 | `data/icons/map.json` | 의미 아이콘 40개 × 세트 3종 | 3.9 | 컴파일러 |
 | `data/images/manifest.json` (B8) | 이미지 팩 192건 메타데이터 | 3.10 | 04 §4.9.4, 08 |
+| `data/taxonomy/text-roles.json` (B25) | 텍스트 역할 → 타입 단계·웨이트·행간·자간·요소(S-38) | 3.1.5a | 컴파일러, 블록 템플릿, 04 H7 |
 
 모든 파일은 봉투 `{bundle, taxonomyVersion, items}`(→ 09장 9.2.3)를 따르고 zod 스키마로 로드 시 검증한다. `taxonomyVersion` 형식은 `tx-YYYY.N`(예: `tx-2027.1`, 04장 `taxonomy_version`과 같음), 프리셋 버전(`preset_version`)과 `normalizer_version`은 시즌 ID `YYYY-S{1..4}`(05장 D-053, R-30)이다.
 
-**AC-03-01** 위 파일 13종이 모두 존재하고, 로더가 각 파일을 zod로 검증해 오류 0건으로 통과한다. 어느 파일에서든 다른 파일의 ID를 참조할 때(예: 프리셋의 `pairing_id`) 참조 무결성 검사 오류가 0건이다.
+**AC-03-01** 위 파일 14종이 모두 존재하고, 로더가 각 파일을 zod로 검증해 오류 0건으로 통과한다. 어느 파일에서든 다른 파일의 ID를 참조할 때(예: 프리셋의 `pairing_id`) 참조 무결성 검사 오류가 0건이다.
 
 ---
 
@@ -139,7 +140,7 @@ TokenSet 최상위 그룹(필수): `color`, `font`, `type`, `space`, `radius`, `
 | `type.base` | `type.body_size` px (16 / 17 / 18) | `type.body_size` |
 | `type.ratio` | 1.2 / 1.25 / 1.333 | `type.scale_ratio` |
 | `type.display-boost` | 1.0 / 1.25 / 1.5 / 2.0. h1·display 단계에만 곱한다 | `type.display_boost` |
-| 단계 n | caption −2, small −1, body 0, lead 1, h4 2, h3 3, h2 4, h1 5, display 6 | — |
+| 단계 n | `t-caption` −2, `t-small` −1, `t-body` 0, `t-lead` 1, `t-4` 2, `t-3` 3, `t-2` 4, `t-1` 5, `t-display` 6. **단계 이름은 시맨틱 수준(h1~h6 요소)과 무관하다**(S-38). 어떤 요소에 어느 단계를 쓰는지는 3.1.5a 역할 표가 정한다. 아래 식의 h1·display는 각각 `t-1`·`t-display` 단계를 뜻한다 | — |
 | 데스크톱 크기 | `size(n) = base × ratio^n × (n ≥ 5 ? boost : 1)`. 상한: h1 ≤ 6×base, display ≤ 8×base. 하한: 음수 단계 ≥ 12px. 정수 px 반올림 | — |
 | 모바일 크기(375) | `base_m = max(16, base − 1)`, `ratio_m` = 한 단계 낮춤(1.333→1.25, 1.25→1.2, 1.2→1.15), `boost_m = 1 + (boost − 1)/2`. 상한: h1 ≤ 44px, display ≤ 52px(= 375×0.14). 음수 단계는 데스크톱 값 그대로 | — |
 | 보간 | `font-size: clamp(m, calc(A + B·vw), d)`, B = (d − m)/9.05 (단위 vw), A = m − B×3.75 (px). 375에서 m, 1280에서 d | — |
@@ -151,7 +152,30 @@ TokenSet 최상위 그룹(필수): `color`, `font`, `type`, `space`, `radius`, `
 | `type.measure` | 본문 최대 폭 `36em`(body 18이면 `34em`). 한글 34~38자 | 파생 |
 | `typography.<단계>` | DTCG `typography` 합성: fontFamily, fontSize(데스크톱), fontWeight, lineHeight, letterSpacing. 모바일 크기는 `$extensions["app.tastefit"].mobileSize` | 파생 |
 
-페이지당 font-weight 고유값 ≤ 3(heading weight, 400, emphasisWeight; 같으면 합쳐짐). display/body 비 = display(1280)/base, 2.5~8.0(04장 H7).
+페이지당 font-weight 고유값 ≤ 3(heading weight, 400, emphasisWeight; 같으면 합쳐짐). display/body 비 = `t-display` 토큰 계산값(1280) / base, 2.5~8.0(04장 H7의 원천 정의, S-38). 페이지에 display 단계가 없어도 토큰 계산값으로 판정한다(결정론).
+
+### 3.1.5a 텍스트 역할 표 (`data/taxonomy/text-roles.json`, B25, S-38)
+
+블록 템플릿은 font-size를 직접 쓰지 않고 `data-role`만 지정한다. 컴파일러가 이 표로 단계·웨이트를 정한다. 키 형식: `role → {step_desktop, step_mobile, weight: heading|body|emphasis, leading, tracking_class, element}`.
+
+| role | 단계(데스크톱/모바일) | weight | element(기본) | 비고 |
+|---|---|---|---|---|
+| `hero.headline` | `t-display`(hero.type-only·full-bleed-image) / 그 외 hero variant `t-1` | heading | h1 | 줄 예산은 3.8.1 `headlineBudget` |
+| `section.title` | `t-2` | heading | h2 | |
+| `card.title`, `item.title` | `t-4` | heading | h3 | |
+| `lead` | `t-lead` | body | p | |
+| `body` | `t-body` | body | p | |
+| `caption` | `t-caption` | body | p·figcaption | ≥ 12px 하한 |
+| `eyebrow` | `t-small` | emphasis | p | 라벨 자간(3.8.2) |
+| `stat.value` | `t-2` | heading | p | `font-variant-numeric: tabular-nums` |
+| `price` | `t-3` | heading | p | |
+| `quote` | `t-3` | body | blockquote | |
+| `cta.headline` | band = `t-2`, big-type = `t-display` | heading | h2 | |
+| `footer.wordmark` | big-type = `t-display`, 그 외 `t-3` | heading | p | |
+| `nav.wordmark` | 20~24px 고정(단계 밖) | heading | a | 3.13.4 |
+
+- 모바일 단계는 3.1.5 모바일 식을 그대로 쓴다(`step_mobile` = `step_desktop`, 크기만 모바일 값).
+- **AC-03-38** 블록 템플릿 전체에서 font-size 리터럴·`text-*` 크기 클래스 0건(정적 grep), 모든 텍스트 노드에 `data-role`이 있고 이 표의 키다. `text-roles.json`이 zod 검증을 통과한다.
 
 ### 3.1.6 spacing (4pt) [P0]
 
@@ -197,6 +221,7 @@ TokenSet 최상위 그룹(필수): `color`, `font`, `type`, `space`, `radius`, `
 - neumorph, clay는 MVP 제외(비텍스트 대비 3:1 미충족 구조).
 - glass는 아래에 이미지·색면이 있는 요소(hero.full-bleed-image 위 패널, image bg 섹션의 카드)에만 적용하고, 1 뷰포트당 glass 요소 ≤ 2개(성능, UI-22).
 - 한 시안의 depth.style은 1종이다(CF-02).
+- 카드 그림자 단계 = `depth.shadow_level`이고, 강조 카드·hover = +1(최대 2)이다. level 3은 떠 있는 레이어(스티키 nav, 모바일 drawer) 전용이다(S-33).
 
 ### 3.1.9 border [P0]
 
@@ -235,7 +260,7 @@ TokenSet 최상위 그룹(필수): `color`, `font`, `type`, `space`, `radius`, `
 
 ### 3.1.12 내보내기용 토큰 파일 3종 [P0]
 
-내보내기 패키지 구조·README·LICENSES는 → 04장·08장. 본 장은 토큰 파일 형식만 정한다.
+내보내기 패키지 구조·README·LICENSES는 → 04장·08장. 본 장은 토큰 파일 형식만 정한다. 공통 파일 `styleguide.html`(S-35, 04장 4.16.1, E-14)은 아래 토큰 파일과 3.5 컴포넌트 템플릿만으로 컴파일하며, 파일 목록은 04장 4.16.1과 같다.
 
 | 파일 | 형식 |
 |---|---|
@@ -428,17 +453,19 @@ icon.set:   앵커 값(유형 고정)
 
 유형 ID·slug·이름·설명 텍스트의 단일 원천은 02장 2.11이다(R-04). 이 장은 앵커 프리셋 값과 유형 중심 벡터(3.4.7, R-04 단일 원천)를 소유한다. 각 앵커 프리셋은 02장 유형 설명의 성격을 토큰으로 구현한다.
 
-| 유형 ID | slug(02장) | 프리셋 ID | 테마 | 아이콘 | 시그니처 후보(우선순) | 원본(08장 G1) |
-|---|---|---|---|---|---|---|
-| T1 | calm-editorial | PS-T1 | light | phosphor | SIG-01, SIG-02, SIG-09 | operator |
-| T2 | precise-system | PS-T2 | light | tabler | SIG-02, SIG-03, SIG-04, SIG-08 | operator |
-| T3 | fresh-minimal | PS-T3 | light | phosphor | SIG-12, SIG-01 | operator |
-| T4 | cozy-lifestyle | PS-T4 | light(tinted) | iconoir | SIG-12, SIG-07, SIG-10 | operator |
-| T5 | bold-brutal | PS-T5 | light(tinted) | tabler | SIG-06, SIG-03, SIG-11, SIG-02 | operator |
-| T6 | vivid-playful | PS-T6 | light(tinted) | phosphor | SIG-06, SIG-03, SIG-12 | operator |
-| T7 | crisp-tech | PS-T7 | dark | tabler | SIG-08, SIG-04, SIG-11 | operator |
-| T8 | elegant-magazine | PS-T8 | light | phosphor | SIG-11, SIG-09, SIG-12 | operator |
+| 유형 ID | slug(02장) | 프리셋 ID | 테마 | 아이콘 | 시그니처 후보(우선순) | 원본(08장 G1) | `allowSoftRoundShadow`(S-33) |
+|---|---|---|---|---|---|---|---|
+| T1 | calm-editorial | PS-T1 | light | phosphor | SIG-01, SIG-02, SIG-09 | operator | false |
+| T2 | precise-system | PS-T2 | light | tabler | SIG-02, SIG-03, SIG-04, SIG-08 | operator | false |
+| T3 | fresh-minimal | PS-T3 | light | phosphor | SIG-12, SIG-01 | operator | true |
+| T4 | cozy-lifestyle | PS-T4 | light(tinted) | iconoir | SIG-12, SIG-07, SIG-10 | operator | true |
+| T5 | bold-brutal | PS-T5 | light(tinted) | tabler | SIG-06, SIG-03, SIG-11, SIG-02 | operator | false |
+| T6 | vivid-playful | PS-T6 | light(tinted) | phosphor | SIG-06, SIG-03, SIG-12 | operator | true |
+| T7 | crisp-tech | PS-T7 | dark | tabler | SIG-08, SIG-04, SIG-11 | operator | false |
+| T8 | elegant-magazine | PS-T8 | light | phosphor | SIG-11, SIG-09, SIG-12 | operator | false |
 
+- `allowSoftRoundShadow = true`인 프리셋(T3·T4·T6)은 유형 정체성상 soft radius + 흐린 그림자가 의도된 조합이므로 04장 AIL-06을 warn으로 낮춘다(S-33, PD2-02).
+- CI `presets:lint-matrix`(S-33): 8개 프리셋 각각에서 3.4.5 허용 집합 중 값 1개만 바꾼 조합 전부를 `standardTree`로 렌더해 AIL error 0을 요구한다. 실패 조합은 `harmony.json.conflicts`에 CF-13부터 등록해 F 집합(04장 4.3)과 편집 선택지에서 자동으로 제외한다.
 - 초기 프리셋은 운영자 설계(`provenance.method = 'operator'`, 08장 G1)이며 특정 사이트 값을 복사하지 않는다. 시즌 릴리스에서 05장 근거 리포트(도메인 ≥ 3 집계)로 조정하면 `cluster_median`으로 바뀐다.
 - 각 유형의 시그니처 후보에는 장식 효과가 아닌 시그니처가 1개 이상 있거나 장식 효과가 1개 이하로 끝나는 조합이 있다(04장 v_fit `decor.max = 1` 대응: T5는 SIG-02, T7은 SIG-08).
 - 프리셋 JSON 형식(→ 09장 B3 확장):
@@ -941,7 +968,7 @@ interface SlotDef {
 | FP12 | 친근한 고딕 | Gothic A1 500, **700** | DM Sans(100%) | Gothic A1 400 | — | 700 | .50 .40 .60 | N | T3, T6 |
 | FP13 | 포스터 | Black Han Sans **400** | — | Pretendard 400 | — | 700 | .45 .95 .15 | N | T5 |
 | FP14 | 볼드 그로테스크 | Wanted Sans 800, **900** | Bricolage Grotesque(96%) | Wanted Sans 400 | — | 700 | .35 .85 .30 | N | T5, T7 |
-| FP15 | 실험 디스플레이 | Pretendard 700, **800** | Syne(96%) | Pretendard 400 | — | 700 | .40 .80 .35 | N | T5, T6 |
+| FP15 | 실험 디스플레이 | Wanted Sans 700, **800** | Syne(96%) | Pretendard 400 | — | 700 | .40 .80 .35 | N | T5, T6 |
 | FP16 | 테크 그로테스크 | Wanted Sans 500, **700**, 800 | Space Grotesk(100%) | Wanted Sans 400 | JetBrains Mono 400 | 700 | .15 .55 .35 | N | T7 |
 | FP17 | 콘솔 | SUIT 500, **700**, 800 | — | SUIT 400 | JetBrains Mono 400 | 700 | .20 .40 .40 | N | T2, T3, T7 |
 | FP18 | 단정한 휴머니스트 | IBM Plex Sans KR 500, **600**, 700 | Manrope(100%) | IBM Plex Sans KR 400 | — | 600 | .40 .35 .45 | N | T2, T3 |
@@ -970,7 +997,10 @@ generic: sans-serif | serif
 | 항목 | 규칙 |
 |---|---|
 | 원본 보관 | `registry.json.files[].subset = 'full'`(빌드 원천, 서빙 금지), `'latin'`(라틴 서체 Basic Latin + Latin-1 + 일반 문장부호) |
-| 페이지 서브셋 | 컴파일러가 시안마다 사용 글자 집합(확정 트리 텍스트 + ASCII 95자 + 한글 문장부호 「·…–“”‘’」)으로 woff2 서브셋을 생성한다(`subset = 'page'`, D-0308). 미리보기·내보내기 동일 |
+| 페이지 서브셋 | 컴파일러가 시안마다 사용 글자 집합(확정 트리 텍스트 + ASCII 95자 + 한글 문장부호 「·…–“”‘’」)으로 woff2 서브셋을 생성한다(`subset = 'page'`, D-0308) |
+| `subset` enum | `'full' \| 'ks-x-1001' \| 'latin' \| 'page'`(03·09장 같은 값, S-40) |
+| 맥락별 서브셋(S-40, 이 표가 원천) | ① 생성 렌더·공유·결과 미리보기: `page`. ② 편집 미리보기(S09)·후보 카드: 패밀리·웨이트별 `ks-x-1001` 정적 서브셋(완성형 2,350자 + ASCII + 문장부호, 빌드 시 1회 생성, 해시 파일명 immutable) + `unicode-range`로 나눈 `page` 보충 파일 1개(서브셋 밖 글자만, 디바운스 1초 뒤 갱신). ③ 내보내기: `page` 기본 + `fonts/extended/`에 `ks-x-1001`, 두 번째 `@font-face`를 `unicode-range: U+AC00-D7A3`로 선언(04장 4.16.1, E-15) |
+| 측정 | 편집 측정용 iframe은 `document.fonts.ready` 이후 `slotRects`를 계산한다. 편집 반영 p95(R-17)에서 폰트 첫 로드는 제외하고, 같은 서체 재사용 시에는 포함한다(01장 1.8.5) |
 | 웨이트 수 | 시안당 로드 파일: heading 1 + body 2(400, emphasis) + mono 1(선택) + heading 라틴 1(선택) ≤ 5파일 |
 | preload | heading 웨이트 1 + body 400 = 2파일(04장 CM-09) |
 | `font-display` | `swap` |
@@ -997,7 +1027,7 @@ generic: sans-serif | serif
 | 언어 | `<html lang="ko">`, 라틴 문장은 쓰지 않음(04장 CP-08) | 컴파일러 |
 | 본문 정렬 | 왼쪽 정렬만. 양쪽 정렬(justify) 금지. 가운데 정렬 본문은 3줄 이하일 때만 | 블록 템플릿 |
 | 본문 폭 | `type.measure` 36em(한글 34~38자), body 18px이면 34em | 토큰 |
-| 헤드라인 줄 수 | 데스크톱 1280에서 ≤ 2줄, 375에서 ≤ 3줄(초과 시 04장 덱 옵션 교체, 실패 시 warn) | 렌더 측정 |
+| 헤드라인 줄 수 | 데스크톱 1280에서 ≤ 2줄, 375에서 ≤ 3줄. 초과 시 결정론 순서: ① 짧은 덱 옵션 교체 → ② 해당 role 단계 1단 하향(`t-display` → `t-1` → `t-2`, 최대 1회, `spec.render_adjustments[]` 기록, H6 위반 아님) → ③ warn(S-39) | 렌더 측정 |
 | 고아 글자 | 헤드라인 마지막 줄이 1~2글자면 위반(덱 옵션 교체) | 렌더 측정 |
 | 하이픈 | `hyphens: manual` | — |
 
@@ -1033,7 +1063,9 @@ generic: sans-serif | serif
 | 전화번호 | `02-000-0000` 형식, `tel:` 링크 |
 | 이모지 | 제목·버튼·태그·카드 제목 안 0개(AIL-10) |
 
-**AC-03-26** 골든 세트 렌더에서 고아 글자 헤드라인 0건, 375px 4줄 이상 헤드라인 0건, justify 0건(렌더 측정).
+**줄 예산 함수(S-39, UI2-03)**: `headlineBudget(presetTokens, variant, viewport) → maxChars = floor(textWidth / (size × 0.95)) × maxLines × 0.85`. 0.95 = 한글 평균 글자 폭 계수, 0.85 = keep-all 손실 계수(골든 세트로 보정, 변경 시 결정 기록). `textWidth`는 variant 메타 `text_cols`(`blocks.json`, 예: split 6/12, type-only 10/12, centered 8/12)로 계산하고 1280과 375 중 작은 `maxChars`를 쓴다. 04장 카피 덱의 `hero.headline` 3옵션 중 ≥ 1개는 `maxChars` 이하여야 한다(G-01).
+
+**AC-03-26** 골든 세트 렌더에서 고아 글자 헤드라인 0건, 375px 4줄 이상 헤드라인 0건, justify 0건(렌더 측정). 줄 넘침은 위 ① 또는 ②로 100% 해소되어 ③ 발생 0건이고, ② 비율(≤ 25%)을 기록한다(S-39).
 **AC-03-27** 3.8.2 자간 표를 크기 경계값(23/24/31/32/47/48/71/72px) × 서체 분류 3종으로 검사하는 단위 테스트가 통과한다.
 
 ---
@@ -1147,7 +1179,7 @@ generic: sans-serif | serif
 | 파생 | WebP q80, 폭 640 / 960 / 1280 / 1920 / 2560(원본 이하만). 첫 화면 이미지 1280 폭 ≤ 250KB. duotone 파생은 팔레트별 빌드 시 생성 |
 | `srcset` | 슬롯 표시 폭 기준 1x·2x 2단계(04장 CM-10) |
 | 메타(09장 `ImageEntry` + 확장) | `id`(`img:<tag>-<nnn>`), `tags[]`(ImageTag 1개 + tone + orient), `focalPoint`, `dominantColor`(hex) + `dominantOKLCH`, `altKo`(10~60자, 장면 묘사, "사진" 단어 제외), `source`, `sourceUrl`, `author`, `license`, `licenseUrl`, `downloadedAt`, `hasPeople`(뒷모습·원경만 true 허용), `hasRecognizableFace: false`, `hasLogoOrTrademark: false` |
-| 톤 일치 | 한 시안의 사진은 같은 `tone` 태그 우선 선택(04장 §4.9.4 후보집합에 `tone` 필터 추가 제안, D-0309). 혼합 시 warm↔cool 혼용 금지 |
+| 톤 일치 | 한 시안의 사진은 같은 `tone` 태그 우선 선택, 반대 톤 제외(04장 §4.9.4 `tonePref`, D-0309 → S-34로 반영). warm↔cool 혼용 금지 |
 
 ### 3.10.4 이미지 처리
 
@@ -1263,7 +1295,18 @@ else:
     then while 미충족: C_b − 0.01 (≥ 0)
     색역 밖이면 C를 0.005씩 낮춤
     primary-hover/active는 3.1.3 공식으로 다시 파생
-    ΔE_OK(원본, 결과) > 0.05 → 편집 화면 고지(→ 01장)
+    ΔE_OK(원본, 결과) > 0.05 → brand_color_notice = "adjusted", 편집 화면 고지(→ 01장)
+
+# 사전 가능성 판정과 종료 순서(S-37, UI2-01). 위 루프 전에 먼저 실행한다. 예외 없이 반드시 끝난다.
+feasible_primary = 시작 L에서 ±0.25 경계 2점 중 하나라도 두 대비 조건을 만족(대비는 L에 단조)
+if not feasible_primary:
+    (a) accent 경로: accent는 괘선·라벨·아이콘에만 쓰므로 accent 대 bg 비텍스트 ≥ 3:1만 요구,
+        on-accent 쓰임(배지 채움) 금지 → 성공하면 brand_color_notice = "demoted_to_accent"
+    (b) 실패하면 tint 경로: surface 틴트(hue = h_b, C ≤ 0.035, 3.1.3 bg 조건 안) 또는
+        shape-graphic 색면 1개에만 적용 → brand_color_notice = "used_as_tint"
+    (c) 그것도 불가하면 반영하지 않음 → brand_color_notice = "ignored"
+# 반복 상한: L 이동 ≤ 25 + C 감소 ≤ 15 + 색역 보정 ≤ 34 → 합계 ≤ 74. 상한 도달은 예외가 아니라 다음 분기로 넘어간다.
+# brand_color_notice = null | adjusted | demoted_to_accent | used_as_tint | ignored  (01 카피·06 MockupCard·04 DesignSpec 같은 값)
 VIVID_FORBIDDEN = {T1, T2, T3, T4, T7, T8}   # 허용 팔레트 중 vivid가 없는 유형(vivid = T5, T6)
 다크 테마(T7): 시작 L을 clip(L_b, 0.70, 0.88)로 옮긴 뒤 같은 절차
 ```
@@ -1279,7 +1322,7 @@ VIVID_FORBIDDEN = {T1, T2, T3, T4, T7, T8}   # 허용 팔레트 중 vivid가 없
 - 로고 업로드는 **MVP 제외**(D-0803). 로고 자리는 Wordmark(C18): 브랜드명을 `font.heading`, heading 웨이트, nav 20~24px로 조판한다. 가짜 심볼·이니셜 마크 생성 금지.
 - [P2] 로고 업로드 도입 시 규칙(기록만): SVG(새니타이즈)·PNG, ≤ 2MB, nav 표시 높이 24~40px, 최대 폭 160px, 로고 평균 휘도 대 nav 배경 대비 ≥ 3:1 미달 시 nav 배경을 surface/inverse 중 통과하는 쪽으로 전환, 로고 색 변경은 사용자 동의 시에만.
 
-**AC-03-36** 브랜드 hex 20개(순흑·순백·형광 핑크 #FF00FF·형광 연두 #39FF14·저채도 회청·노랑 #FFFF00 등 극단값 포함) × 8유형 = 160건에서 결과 TokenSet 100%가 3.1.3 하드 대비를 통과하고, 강등되지 않은 경우 primary hue 오차 ≤ 5°다(04장 AC-04-03과 같은 픽스처 사용).
+**AC-03-36** 브랜드 hex 24개(순흑·순백·형광 핑크 #FF00FF·형광 연두 #39FF14·저채도 회청·노랑 #FFFF00 등 극단값 + 밝은 색 픽스처 `#FFFF00`·`#FDFD96`·`#AAF0D1`·`#FFF5CC`, S-37 — 모든 결과가 primary 적용·accent 강등·`used_as_tint`·`ignored` 중 하나로 종료, 예외·타임아웃 0, 1회 호출 ≤ 5ms) × 8유형 = 160건에서 결과 TokenSet 100%가 3.1.3 하드 대비를 통과하고, 강등되지 않은 경우 primary hue 오차 ≤ 5°다(04장 AC-04-03과 같은 픽스처 사용).
 **AC-03-37** 무채 브랜드 색 입력 시 primary가 바뀌지 않고 사유 코드 `brand_neutral_ignored` 또는 `brand_neutral_inverse`가 기록된다.
 
 ---
@@ -1413,7 +1456,7 @@ AC-03-01~39는 L1 결정론 테스트 또는 렌더 테스트로 매 PR에서 �
 | D-0306 | `purposes.json`에 `requiredAny`(필수 중 택1, saas: value 또는 feature) 필드 추가, 04장 LT-01이 함께 검사 | 04장 패턴 PS-2·PS-3과 필수 블록 정합 | 04, 09 |
 | D-0307 | 리듬 규칙 RH-01(같은 skeleton 3연속 금지)·RH-02(이미지 유무 4연속 금지)를 04장 H12 집계에 포함 | "같은 섹션 리듬" AI 티 | 04 |
 | D-0308 | `registry.json.files[].subset`에 `'page'`(시안별 사용 글자 서브셋, 런타임 생성) 추가. 서빙은 page 서브셋만 | 첫 화면 300KB 예산 | 06, 09 |
-| D-0309 | 이미지 선택 후보집합에 `tone` 필터(시안 첫 사진의 tone과 같은 태그 우선) 추가 | 사진 톤 일관성 | 04 |
+| D-0309 | 이미지 선택 후보집합에 `tone` 필터(시안 첫 사진의 tone과 같은 태그 우선) 추가. **반영**(S-34, 04장 4.9.4 `tonePref`) | 사진 톤 일관성 | 04 |
 | D-0310 | 조화 규칙 상수 원천 = `data/taxonomy/harmony.json`. 상충 조합 CF-10~12 추가 | 04장 표와 단일 원천화 | 04 |
 | D-0311 | Rating(별점)·사진 Avatar·지도 임베드·실제 로고 클라우드는 MVP 컴포넌트에서 제외 | 가상 평점·얼굴·상표 위험 | 01, 08 |
 | D-0312 | 가격 표기는 `12,000원` 형식(₩ 기호 미사용) | 국내 랜딩 관행, 한글 조판 일관 | 04 |
@@ -1478,3 +1521,10 @@ AC-03-01~39는 L1 결정론 테스트 또는 렌더 테스트로 매 PR에서 �
 | decisions_v2 R-06 | — | 3.4.8 | 카드 풀 48 = 16 × 3 |
 | decisions_v2 R-27, R-30, R-34 | — | 3.2.1, 3.4.1, 3.10.2 | |
 | QA-10 한글 폰트 대응 | Major | 3.7.3(한글 필수), 3.7.4(스택), AC-03-23 | |
+| S-33(03) | — | 3.1.8 카드 그림자 단계, 3.4.1 `allowSoftRoundShadow`·`presets:lint-matrix`, FP15 Wanted Sans 800 | |
+| S-34(03) | — | 3.10 톤 일치, D-0309 반영 | |
+| S-35(03) | — | 3.1.12 styleguide.html | |
+| S-37 | — | 3.13.2 사전 가능성 판정·종료 순서·notice 5값, AC-03-36 픽스처 | |
+| S-38 | — | 3.1.5 단계 이름 t-*, 3.1.5a 텍스트 역할 표(B25), H7 정의, AC-03-38 | |
+| S-39 | — | 3.8.1 넘침 처리 순서, headlineBudget, AC-03-26 | |
+| S-40 | — | 3.7.5 subset enum·맥락별 서브셋·측정 규칙 | |
