@@ -940,7 +940,7 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
       "populationPerSeed": 1000, "populationPA": 800,
       "maxTuningTrials": 15, "maxGateRuns": 3
     },
-    "extractor": { "roundtripAbsMax": 0.10, "spearmanMin": 0.70, "maeMax": 0.15, "stabilityMax": 0.01 },
+    "extractor": { "roundtripAbsMax": 0.10, "spearmanMin": 0.70, "maeMax": 0.15, "stabilityMax": 0.01, "reliableAxesMin": 3 },
     "export": { "pixelDiffMax": 0.01, "lighthousePerfMin": 90, "lighthouseA11yMin": 95, "lcpMaxMs": 2500, "clsMax": 0.05 },
     "blind": {
       "aiDetectMax": 0.65, "aiLikeRateMax": 0.25, "aiLikeVsBaselineMaxRatio": 0.5,

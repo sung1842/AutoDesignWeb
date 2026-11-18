@@ -222,7 +222,7 @@ R ← 남은 후보 중 같은 점수식으로 15개
 | raw | jsonb | 원시 특징 F01~F30 (5.5.3) |
 | l2_auto | jsonb | 원시 특징에서 규칙으로 판정한 L2 후보(테마, 폰트 계열, radius 계열) |
 | originality_sig | jsonb | 08장 8.3 G2 7속성(D-0802): `{palette_oklab:{primary, accent}, font_substitute_ids:{display, body}, radius_family_id, depth_id, layout_pattern_id}` + P2용 `section_sequence text[]`. ID 값은 03장 택소노미 열거값. 폰트 대체 매핑은 08장 8.4.2 |
-| embedding, embedding_model | vector null, text null | **Phase 2 전용**(R-38). MVP에서는 항상 null이며 계산 코드 경로가 없다 |
+| ~~embedding, embedding_model~~ | — | **MVP DDL에 없음**(S-22). Phase 2에서 pgvector 확장과 함께 additive 마이그레이션으로 추가한다(R-38, D-055) |
 
 L1 값은 시즌별로 여러 개가 생기므로 별도 테이블 `reference_l1(capture_id, normalizer_version, vector)`(PK = 두 열)에 저장한다. `vector` = `{expression, temperature, shape, density, depth}`(R-01).
 
@@ -536,7 +536,7 @@ x_k = w_auto,k · auto_k + w_vlm,k · vlm_k
 
 리포트 자동 생성: `pnpm eval:extractor`(07장 G2 실행 명령) → `reports/extractor_eval.md`(위 표의 모든 수치, 축별 산점도 데이터 CSV, 실패 축 목록, 정규화기·추출기·프롬프트 버전).
 
-임계값 등록: 5.5.6·5.7.3·5.7.4·5.9의 모든 수치 기준은 `config/thresholds.json`(R-09 단일 원천)의 `extractor` 객체에 키로 등록하고, 코드·리포트는 이 파일에서만 읽는다(예: `extractor.auto_spearman_min = 0.70`, `extractor.roundtrip_max_err = 0.10`, `extractor.unreliable_axes_block = 3`).
+임계값 등록: 출시 판정에 쓰는 추출기 기준은 `config/thresholds.json`(R-09 단일 원천)의 `release.extractor` 객체에 있고, 키 구조의 원천은 07장 7.12.1이다(S-05): `release.extractor.spearmanMin` 0.70, `maeMax` 0.15, `roundtripAbsMax` 0.10, `stabilityMax` 0.01, `reliableAxesMin` 3. 설문 자산 채택 상한은 `diagnosis.surveyAssetL1AbsMax` 0.15다. 코드·리포트는 이 파일에서만 읽는다. snake_case 키(`extractor.auto_spearman_min` 등)는 폐지했다.
 
 ## 5.8 축 정규화와 시즌별 버전 고정
 
@@ -580,8 +580,8 @@ x_k = w_auto,k · auto_k + w_vlm,k · vlm_k
 
 | 대상 | 의도값 출처 | 통과 기준 | 실패 처리 |
 |---|---|---|---|
-| 앵커 프리셋 `PS-T1`~`PS-T8` 기본 렌더 | 03장 3.4.7 표(`anchor_l1` = `predictL1`(기본 L2), R-04 단일 원천) | 모든 프리셋·모든 축 |x̂_k − x_k| ≤ 0.10 | CI 실패. 아래 실패 절차 |
-| 설문 1단계 카드 48장(기준 벡터 16 × 템플릿 3, R-06) | 02장 카드 `target_l1` | 카드×축 95% 이상 ≤ 0.10, 그리고 모든 카드×축 ≤ 0.15(09장 D-0904 채택 상한) | 기준 밖 카드는 `status=draft` 유지(설문 미사용) |
+| 앵커 프리셋 `PS-T1`~`PS-T8` 기본 렌더 | 03장 3.4.7 표(`anchor_l1` = `predictL1`(기본 L2), R-04 단일 원천) | 모든 프리셋·모든 축 |x̂_k − x_k| ≤ `release.extractor.roundtripAbsMax`(0.10, 09장 M3 ③과 같은 기준, S-06 a) | CI 실패. 아래 실패 절차 |
+| 설문 1단계 카드 48장(기준 벡터 16 × 템플릿 3, R-06) | 02장 카드 `target_l1` | 카드×축 95% 이상 ≤ 0.10, 그리고 모든 카드×축 ≤ `diagnosis.surveyAssetL1AbsMax`(0.15, 09장 D-0904 채택 상한) | 기준 밖 카드는 `status=draft` 유지(설문 미사용) |
 | 2단계 A/B 120쌍(고유 이미지 120장, R-06·09장 D-0903) | 대상 축 수준 {0.2, 0.5, 0.8}, 수준쌍 (0.2,0.5)·(0.5,0.8)·(0.2,0.8) | 대상 축: 측정 차이 부호 일치 & |Δ̂| ≥ 0.5×|Δ의도|(의도 Δ ≥ 0.30), 비대상 축: |Δ̂| ≤ 0.08 | 해당 쌍 비활성. 축별 활성 쌍 ≥ 19/24가 빌드 통과 조건(09장 D-0903, 02장 2.4.4) |
 | 앵커 이미지 25장(축 5 × 수준 0/0.25/0.5/0.75/1) | 02장 2.1.2 | 대상 축 측정값이 수준 순서대로 단조 증가, 인접 수준 차 ≥ 0.10 | 라벨 도구 앵커 교체(02장 소관) |
 | 토큰 수준 | 프리셋 토큰 | radius ±1px, 주 배경·accent 색 ΔE2000 < 5, 본문 font-family 일치 | CI 실패 |
@@ -592,6 +592,12 @@ x_k = w_auto,k · auto_k + w_vlm,k · vlm_k
 2. 사람 라벨이 측정값 x̂_k와 0.125 이내이고 의도값과는 0.125 초과이면 → 의도값(3.4.7 표)이 틀린 것. 03장에 3.4.7 표 수정을 요청한다. 3.4.7 값이 바뀌면 02장 `types_version`을 올리고(02장 2.11) 03장 `predictL1` 계수 또는 기본 L2를 함께 고친다. 05장은 3.4.7 값을 직접 고치지 않는다(R-04).
 3. 사람 라벨이 의도값과 0.125 이내이고 측정값과 0.125 초과이면 → 추출기·매핑이 틀린 것. 해당 축의 원시 특징을 점검하고 매핑 허용 목록 또는 특징 정의를 고친 뒤 5.7.4 평가를 다시 통과해야 한다.
 4. 둘 다 아니면 → 프리셋 토큰이 의도를 표현하지 못한 것. 03장에 토큰 수정 요청.
+
+**사람 라벨이 불가할 때(temp 분기, S-09)**: 정규화기가 09장 B18 합성 부트스트랩(`2026-S0`, `provenance:"temp"`, `inter_rater:"unverified"`)이거나 운영자 라벨이 없으면 위 1~4단계(블라인드 라벨)를 실행할 수 없다. 이때는 막지 않고 다음처럼 처리한다.
+- 앵커 왕복에 실패한 축은 정규화기 `reliable[k]=false`로 기록한다. 해당 축의 TM 가중은 0이다(D-056).
+- 기준 밖 카드·쌍은 `draft`로 두고 설문에서 쓰지 않는다(위 표 실패 처리와 같음).
+- 홀드아웃(앵커 8·카드 48·A/B 120) 왕복 실패를 이유로 b0·b1을 재적합하지 않는다(09장 F19). 정규화기 파일은 `seed:temp` 산출 커밋에서만 바뀐다.
+- 결과는 `normalizer-human=temp`, `extractor-human-label=temp`로 보고되고(07장 deferrable), 사람 라벨 확인은 G2·G7a에서 사람에게 넘어간다(HUMAN_TODO).
 
 설문 자극물의 x_card는 자기검증 통과 후 `survey:build`(→02장·09장)가 released 정규화기로 측정해 저장한다. 설문 진행 중 런타임 추출·렌더 호출은 0건이다(TL-22).
 
@@ -902,7 +908,7 @@ source_id·kind·초기값은 08장 8.1.2 매트릭스와 같다(그 표가 법�
 | D-052 | 취향 추출 뷰포트 = 1280×800, DPR 1, 측정 영역 상단 최대 2400px. 레퍼런스·프리셋·설문 자극물(desktop 렌더)·생성 후보 공통(04장 4.x "1280에서 extractL2"와 일치) | 02, 04, 06 |
 | D-053 | 시즌 ID 규칙 → R-30으로 채택(내용 5.11 그대로) | — |
 | D-054 | 시드 쿼터 = 5.2.2 표(티어 20/20/20, 용도 `saas`·`portfolio`·`local_business` 각 20, 유형 T1~T8 각 6~10, ko ≥ 24, dark ≥ 9, classic ≥ 12) | 00, 09 |
-| D-055 | ~~MVP 이미지 임베딩·가드 규칙 3~~ → R-38(임베딩은 Phase 2, 닮은 사이트는 L1 거리)·R-20(MVP 시각 유사도는 pHash)으로 대체 | — |
+| D-055 | ~~MVP 이미지 임베딩·가드 규칙 3~~ → R-38(임베딩은 Phase 2, 닮은 사이트는 L1 거리)·R-20(MVP 시각 유사도는 pHash)으로 대체. 임베딩 컬럼·pgvector는 MVP DDL에서 제거하고 Phase 2 additive 마이그레이션으로 넣는다(S-22) | — |
 | D-056 | 축 신뢰 플래그: 자동 추출 ρ < 0.70 축은 `reliable=false` → 04장 TM에서 λ_k = 0. 평가자 간 ICC < 0.60 축은 `subjective=true` → λ_k × 0.5. 5축 중 3축 이상 unreliable이면 출시 차단(07장 G2 채택) | 04, 07 |
 | D-057 | 2차 평가자(실무 ≥ 2년) 30개 라벨은 출시 전 확보 원칙, 미확보 시 `unverified`로 출시하고 출시 +30일 내 측정 | 07, 09 |
 | D-058 | ~~05장이 `anchor_l1`을 사람 라벨로 수정~~ → R-04로 대체(3.4.7 표가 단일 원천, 수정은 03장 소관, 5.9 절차 2는 수정 요청만) | — |
@@ -960,3 +966,6 @@ source_id·kind·초기값은 08장 8.1.2 매트릭스와 같다(그 표가 법�
 | QA-23 | 비전 일관성·ρ 기준(레퍼런스 태깅 범위) | 5.6.3, 5.7.4 |
 | QA-27 | P2 테스트 기준(성공률, 차단 목록, 감쇠, 합성 데이터) | 5.12.6 |
 | PD-01(축 상관 기준) | 축 간 |r| ≤ 0.40 목표 | 5.7.4 |
+| S-06 a(05) | 결정 v3 | 5.9 앵커 왕복 roundtripAbsMax, 카드 surveyAssetL1AbsMax, 5.7 키 경로 |
+| S-09(05) | 결정 v3 | 5.9 temp 분기(reliable=false, draft, 재적합 금지) |
+| S-22(05) | 결정 v3 | 5.3 embedding 컬럼 제거, D-055 |
