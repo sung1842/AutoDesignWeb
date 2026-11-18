@@ -3,9 +3,15 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P2
-- lock: {owner: interactive-2026-11-18T13:12Z, since: 2026-11-18T13:12Z}
+- lock: {owner: interactive-2026-11-18T13:12Z, since: 2026-11-18T13:39Z}
 - limit.next_reset_kst: 2026-11-19 02:40
 - 마지막 갱신: 2026-11-18 22:12 KST (대화 세션에서 P1 진행 중)
+
+## 실행 환경 사실(2026-11-18 점검)
+- Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
+- 브라우저: `/opt/pw-browsers`의 chromium-1243만 있음(webkit·firefox 없음).
+- PostgreSQL 16 설치됨, pgvector 없음. 06장 DDL은 auth 스키마 stub 위에서 vector 외 46개 테이블 생성 성공.
+- npm 레지스트리 접근 가능.
 
 ## 배경
 - v1 기획서 → 1라운드 역할별 리뷰 8개(전원 FAIL, Blocker 약 52·Major 약 105) → 결정 레지스터 → v2 10개 장 작성 → 장 간 충돌 통합 결정 R-01~R-38 반영.
@@ -19,11 +25,12 @@
 - [x] `docs/spec/INDEX.md` 작성(장 목록, 결정 문서, 용어집 위치)
 
 ## P2. 리뷰 루프
-- 라운드 2: [x] PM [ ] 프로덕트 디자이너 [x] UX [ ] UI [ ] 테크 리드 [ ] AI/ML [x] QA [ ] 법무 → [ ] 반영
+- 라운드 2: [x] PM [ ] 프로덕트 디자이너 [x] UX [ ] UI [x] 테크 리드 [ ] AI/ML [x] QA [ ] 법무 → [ ] 반영
 - 판정 기록(라운드별 C1/C2/C3):
   - R2 PM: FAIL/FAIL/FAIL (Blocker 0, Major 5: 예산-목표 불일치, 취소 시 한도 규칙 충돌, KPI 쿼리 분모, 검증 표본 확보, 00↔07·09 불일치)
   - R2 UX: FAIL/FAIL/FAIL (1라운드 19/19 해결, Blocker 0, Major 3: 결과 신뢰 문구 01↔02 불일치, 진단 카드 크기 규칙이 실제 화면에서 불성립, 편집 가능 판정을 화면 폭으로 해 200% 확대 시 편집 소실)
   - R2 QA: FAIL/FAIL/PASS (1라운드 21/27 해결·5 부분·1 P2, Blocker 0, Major 4: thresholds 키 구조 3종, 보류 허용 검증 목록 부재·k6 staging 의존, 에이전트 자기 채점 방지(spec:extract·spec-lock), 07·09·04 수치 불일치)
+  - R2 TECH: FAIL/FAIL/FAIL (1라운드 24/28 해결, Blocker 2: Docker 없는 환경 대안 부재, 시각 회귀·브라우저 매트릭스가 Docker 전제 / Major 5: 병렬 호출 예산 초과, 동시 잡 5 vs Chromium 3, 후보 파기 DDL 불일치, CLAUDE.md↔09장 운영 규칙 차이, MVP DDL의 pgvector)
 
 ## P3. 최종 기획서와 구현 준비
 - [ ] FINAL 정리 [ ] 구현 규칙 추가 [ ] 임시 시드 데이터 [ ] HUMAN_TODO 정리
@@ -35,6 +42,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-18 23:35 | R2 테크 리드 리뷰 완료(Blocker 2: Docker 부재 환경 대안)
 - 2026-11-18 23:20 | R2 QA 리뷰 완료(새 Major 4, C3 PASS)
 - 2026-11-18 23:10 | R2 UX 리뷰 완료(새 Major 3)
 - 2026-11-18 23:00 | R2 PM 리뷰 완료(1라운드 19/20 해결, 새 Major 5)
