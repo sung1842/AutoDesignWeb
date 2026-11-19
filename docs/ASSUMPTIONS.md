@@ -143,3 +143,10 @@
 - 선택: M1에는 5.8.2 스키마의 부트스트랩 `2026-S0`을 만든다. mapping = 5.5.4 `mapping.initial` 그대로(b0=0·b1=1, (1−F)는 sign −1), 분위표 = 특징 단위 범위 등간격 자리표시(`placeholder: true`), `corpus.n=0`, 전 축 reliable=false, inter_rater unverified. M3 추출기 단위에서 seed:temp가 9.2.4 절차(200 렌더, b0·b1만 최소제곱)로 다시 만든다(PROGRESS M3에 할 일로 기록). 홀드아웃 재적합 금지(F19)는 그때 그대로 지킨다
 - 영향 범위: data/normalizers/2026-S0.json, M3 extractor-roundtrip·M4 survey:build
 - 되돌리기 비용: 낮음(M3에서 재생성)
+
+## ASM-021 · M1 · gap · 2026-11-19T17:15Z
+- 질문: M1 ① data:validate는 B15 존재를 요구하지만, 9.2.4는 B15를 M3에서 04장 규칙 정의로 작성·자체 잠금하라고 한다(PageSchema·렌더러는 M2)
+- 근거 탐색: 09장 9.2.2·9.2.4 B15·9.4.4 ①, 04장 4.13
+- 선택: M1에는 4.13 AIL-01~24 규칙별 pos-1(violation)·neg-1(clean) 골격만 둔다(`skeleton: true`, page·tokens null). M3 시작 단위에서 실제 예시로 교체한 뒤 자체 잠금한다(PROGRESS M3 이월)
+- 영향 범위: data/linter/examples/**, M3 ①
+- 되돌리기 비용: 낮음

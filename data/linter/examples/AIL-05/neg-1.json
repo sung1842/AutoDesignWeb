@@ -1,0 +1,12 @@
+{
+  "ruleId": "AIL-05",
+  "expect": "clean",
+  "stages": [
+    "T",
+    "D"
+  ],
+  "page": null,
+  "tokens": null,
+  "skeleton": true,
+  "provenance": "temp"
+}

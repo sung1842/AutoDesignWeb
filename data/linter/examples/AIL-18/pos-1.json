@@ -1,0 +1,12 @@
+{
+  "ruleId": "AIL-18",
+  "expect": "violation",
+  "stages": [
+    "T",
+    "D"
+  ],
+  "page": null,
+  "tokens": null,
+  "skeleton": true,
+  "provenance": "temp"
+}

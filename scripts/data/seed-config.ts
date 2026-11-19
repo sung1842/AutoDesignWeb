@@ -457,6 +457,7 @@ export const CONFIG_GENERATORS = [
   genProhibited,
   genImageTagKeywords,
   genNormalizer,
+  genLinterExamples,
 ];
 
 // ---------- B18 data/normalizers/2026-S0.json (05장 5.8.2 스키마, 09장 9.2.4 B18 합성 부트스트랩) ----------
@@ -531,4 +532,34 @@ export function genNormalizer(ctx: Ctx): Out[] {
     inter_rater: "unverified",
   };
   return [{ path: "data/normalizers/2026-S0.json", content: `${JSON.stringify(body, null, 2)}\n` }];
+}
+
+// ---------- B15 data/linter/examples/<ruleId>/{pos,neg}-1.json 골격(09장 9.2.4 B15) ----------
+// 실제 page·tokens는 PageSchema·렌더러가 생기는 M3 시작 단위에서 04장 4.13 규칙 정의로 작성하고 자체 잠금한다(9.5.6).
+// M1에는 규칙 목록만 옮긴 골격(skeleton: true, page·tokens null)을 둔다(ASM-021).
+export function genLinterExamples(ctx: Ctx): Out[] {
+  const sec = section(chapter(ctx.root, "04_generation.md"), "## 4.13");
+  const rows = sec
+    .split("\n")
+    .filter((l) => /^\| AIL-\d{2} \|/.test(l))
+    .map((l) => l.split("|").map((c) => c.trim()));
+  if (rows.length !== 24) throw new Error(`4.13 AIL 규칙 수 ${rows.length} ≠ 24`);
+  const out: Out[] = [];
+  for (const r of rows) {
+    const ruleId = r[1] ?? "";
+    const stages = (r[3] ?? "").split(",").map((s) => s.trim());
+    for (const [file, expect] of [
+      ["pos-1", "violation"],
+      ["neg-1", "clean"],
+    ] as const)
+      out.push({
+        path: `data/linter/examples/${ruleId}/${file}.json`,
+        content: `${JSON.stringify(
+          { ruleId, expect, stages, page: null, tokens: null, skeleton: true, provenance: "temp" },
+          null,
+          2,
+        )}\n`,
+      });
+  }
+  return out;
 }
