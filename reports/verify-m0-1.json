@@ -1,0 +1,55 @@
+{
+  "milestone": "M0",
+  "gitSha": "7e8b5213b067037d111c60e9c8cf84afff316b64",
+  "startedAt": "2026-11-19T14:31:53.655Z",
+  "finishedAt": "2026-11-19T14:34:46.344Z",
+  "steps": [
+    {
+      "name": "guard",
+      "status": "blocked",
+      "details": "ok   guard:data\nok   guard:deps\nok   guard:count\nok   guard:tuned\nok   guard:qa-audit\n  [F01] NEEDS_CI lock-digest: QA_LOCK_DIGEST 없음(로컬) → CI에서 대조\n  [F12] BLOCKED BLK-001 guard:deps: @img/sharp-libvips-linux-x64: LGPL-3.0-or-later\n  [F12] BLOCKED BLK-001 guard:deps: @img/sharp-libvips-linuxmusl-x64: LGPL-3.0-or-later\n  [F12] BLOCKED BLK-001 guard:deps: @isaacs/nonrecursive-glob-match: BlueOak-1.0.0\n  [F12] BLOCKED BLK-001 guard:deps: minimatch: BlueOak-1.0.0\n  [F12] BLOCKED BLK-001 guard:deps: argparse: Python-2.0\n  [F12] BLOCKED BLK-001 guard:deps: caniuse-lite: CC-BY-4.0\n  [F12] BLOCKED BLK-001 guard:deps: tslib: 0BSD\n  [F12] BLOCKED BLK-001 guard:deps: type-fest: (MIT OR CC0-1.0)\n  [F04] BLOCKED BLK-003 guard:qa-audit: key-coverage 06_architecture.md:1988: \"≤ 0.00001\" thresholds 키·사양 상수 표 밖\n  [F04] BLOCKED BLK-003 guard:qa-audit: key-coverage 06_architecture.md:2091: \"< 96\" thresholds 키·사양 상수 표 밖\n  [F04] BLOCKED BLK-003 guard:qa-audit: key-coverage 07_quality.md:1311: \"< 96\" thresholds 키·사양 상수 표 밖\n  [F04] BLOCKED BLK-003 guard:qa-audit: key-coverage 09_implementation.md:439: \"≥19\" thresholds 키·사양 상수 표 밖\nguard: exit 3\n",
+      "blockedBy": [
+        "BLK-001",
+        "BLK-003"
+      ],
+      "durationMs": 2545
+    },
+    {
+      "name": "lint",
+      "status": "pass",
+      "details": "",
+      "durationMs": 1649
+    },
+    {
+      "name": "typecheck",
+      "status": "pass",
+      "details": "",
+      "durationMs": 504
+    },
+    {
+      "name": "unit",
+      "status": "pass",
+      "details": "20건 통과",
+      "durationMs": 40274
+    },
+    {
+      "name": "trace",
+      "status": "pass",
+      "details": "WARN AC-06-99: 배정표에 없음 → M8로 간주(다음 spec-lock 전에 표에 넣어야 함)\nqa:trace: AC 24/24 pass (≤M0), TC 판정 제외\n",
+      "durationMs": 1469
+    },
+    {
+      "name": "acceptance:m0",
+      "status": "fail",
+      "details": "실패 7건:\n[BLK-002] tests/acceptance/m0/guard.test.ts > M0 guard AC-07-25: DECISIONS_LOG append-only 예외 1개 AC-07-25: CLAUDE.md·07·09장의 DECISIONS_LOG 경로가 하나뿐이다\n[BLK-004] tests/acceptance/m0/qa-trace.test.ts > M0 qa:trace AC-00-01 / AC-00-07: 문서 검사(qa:trace --docs) 통과\ntests/acceptance/m0/repo.test.ts > M0 저장소 정적 검사 AC-09-11: spec-lock 이후 모든 커밋이 Conventional Commits + Milestone 꼬리말\ntests/acceptance/m0/repo.test.ts > M0 네트워크·LLM 모드 AC-07-01: LLM_MODE=replay에서 녹화 없는 요청은 E_REPLAY_MISS\ntests/acceptance/m0/repo.test.ts > M0 네트워크·LLM 모드 AC-07-01: CI 워크플로의 모든 잡이 NO_EXTERNAL_NETWORK=1·LLM_MODE=mock 환경으로 실행된다\ntests/acceptance/m0/spec-extract.test.ts > M0 spec:extract AC-07-24: FINAL 값 1개를 바꾸면 두 출력이 달라지고 guard 6단계가 FAIL\ntests/acceptance/m0/stack.test.ts > M0 env 검증 AC-06-32: 기본 env(.env.example + local)로는 web·worker env 검사 통과",
+      "durationMs": 126243
+    },
+    {
+      "name": "e2e:m0",
+      "status": "pass",
+      "details": "e2e/m0 없음(이 마일스톤 E2E 없음, AC 매핑은 trace 단계가 검사)",
+      "durationMs": 0
+    }
+  ],
+  "result": "fail"
+}

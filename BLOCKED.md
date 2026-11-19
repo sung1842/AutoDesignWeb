@@ -42,3 +42,12 @@
 - 처리: --docs는 01~09장 항목을 `blockedBy: BLK-004`(종료 3)로 보고. m0 qa-trace.test.ts "AC-00-01 / AC-00-07: 문서 검사 통과"(종료 0 기대) 1건은 문서 개정 전까지 미충족
 - 상태: open
 - 재현(테스트): pnpm vitest run tests/acceptance/m0/qa-trace.test.ts -t "문서 검사"
+
+## BLK-005 · M0 · locked-conflict · 2026-11-19T14:50Z
+- 대상: tests/acceptance/m0/repo.test.ts "AC-09-11: spec-lock 이후 모든 커밋이 Conventional Commits + Milestone 꼬리말"(자체 잠금) ↔ 이미 푸시된 커밋 5fefdda `feat(web,worker): ...`
+- 증상: 테스트 정규식의 scope 문자 집합 `[\w./-]`에 쉼표가 없어 다중 scope 커밋 1건이 위반으로 잡힘
+- 재현: pnpm vitest run tests/acceptance/m0/repo.test.ts -t "AC-09-11"
+- 시도: (1) 커밋 메시지 수정 → 히스토리 재작성·force push 금지(9.5.5) (2) 테스트 수정 → 자체 잠금 entry 변경 금지
+- 가설: 다중 scope 표기(쉼표)를 허용할지 규칙이 정해지지 않음. 이후 커밋은 단일 scope만 쓴다
+- 제안 수정안(사람): scope 정규식에 `,` 허용(`[\w.,/-]`) 또는 5fefdda를 예외 목록으로 두고 `pnpm guard:relock --human`
+- 상태: open

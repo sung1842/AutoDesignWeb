@@ -143,6 +143,12 @@ export function specStage(): Finding[] {
               "F04",
               `spec:extract review-pass ≠ ${base.name} (${name}): ${diffPaths(JSON.parse(rp[name]), JSON.parse(sl[name])).join(", ")}`,
             );
+          // AC-07-24: FINAL 작업 트리 출력과도 대조(review-pass 고정점에서 벗어난 키 경로 출력)
+          if (fin && rp[name] !== fin[name])
+            f(
+              "F04",
+              `spec:extract review-pass ≠ FINAL (${name}): ${diffPaths(JSON.parse(rp[name]), JSON.parse(fin[name])).join(", ")}`,
+            );
           if (want && want[name] !== blockHash(rawBlock(rpMd, name)))
             f("F04", `review-pass ${name} 블록 SHA-256 ≠ PROGRESS.md review_pass_hashes`);
         }
