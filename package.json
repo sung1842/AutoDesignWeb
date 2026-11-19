@@ -2,13 +2,16 @@
   "name": "tastefit",
   "private": true,
   "packageManager": "pnpm@9.15.9",
-  "engines": { "node": ">=22 <23" },
+  "engines": {
+    "node": ">=22 <23"
+  },
   "type": "module",
   "scripts": {
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc -b --pretty false",
     "test": "vitest run",
-    "format": "prettier --check ."
+    "format": "prettier --check .",
+    "guard:self-lock": "tsx scripts/guard/self-lock.ts"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

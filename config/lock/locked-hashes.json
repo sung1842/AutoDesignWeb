@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "baseRef": "spec-lock",
+  "entries": {
+    "tests/acceptance/m0/guard.test.ts": {
+      "sha256": "adb7c3d5463c0916ad87f55a342287b2696ccf605dde95032244eee745af031f",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T13:17:13Z",
+      "commit": "c54ffda"
+    },
+    "tests/acceptance/m0/qa-trace.test.ts": {
+      "sha256": "cc4a049062a371183a69cc180b670fef1c8cb7f9aeb551540cc2692e9b08600e",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T13:17:13Z",
+      "commit": "c54ffda"
+    },
+    "tests/acceptance/m0/repo.test.ts": {
+      "sha256": "bacf99a760fad84dc044ee560279d2f3b330b0898130ca7cf7a141016d5db7dc",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T13:17:13Z",
+      "commit": "c54ffda"
+    },
+    "tests/acceptance/m0/spec-extract.test.ts": {
+      "sha256": "79bc7ea73c429da82dd3c905077eb30e67908d055523a41864b017a627a1877a",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T13:17:13Z",
+      "commit": "c54ffda"
+    },
+    "tests/acceptance/m0/stack.test.ts": {
+      "sha256": "c314fb2dab5132cc2cc58b7b0c7b81b6781b8ee58215843bbe40e47a57286c28",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T13:17:13Z",
+      "commit": "c54ffda"
+    },
+    "tests/acceptance/_support/sh.ts": {
+      "sha256": "a12d17ba72e2ab6ffdabed9ec111d566b32810e086a07ffc60ded0b609b70abd",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T13:17:13Z",
+      "commit": "c54ffda"
+    }
+  }
+}
