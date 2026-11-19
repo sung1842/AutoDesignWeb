@@ -69,3 +69,35 @@ export function parseOklch(s: string): Oklch {
     throw new Error(`OKLCH 형식 오류: ${s}`);
   return { l: l ?? 0, c: c ?? 0, h: h ?? 0 };
 }
+
+/** sRGB hex → OKLab [L, a, b]. */
+export function hexToOklab(hex: string): [number, number, number] {
+  const n = Number.parseInt(hex.slice(1), 16);
+  const [r, g, b] = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => ungamma(v / 255)) as [
+    number,
+    number,
+    number,
+  ];
+  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+  return [
+    0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
+    1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
+    0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
+  ];
+}
+
+/** sRGB hex → OKLCH(h 0~360, 무채색이면 h = 0). */
+export function hexToOklch(hex: string): Oklch {
+  const [l, a, b] = hexToOklab(hex);
+  const c = Math.hypot(a, b);
+  const h = c < 1e-6 ? 0 : (((Math.atan2(b, a) * 180) / Math.PI) % 360 + 360) % 360;
+  return { l, c, h };
+}
+
+/** ΔE_OK: OKLab 유클리드 거리. */
+export function deltaEOk(a: string, b: string): number {
+  const [x, y] = [hexToOklab(a), hexToOklab(b)];
+  return Math.hypot(x[0] - y[0], x[1] - y[1], x[2] - y[2]);
+}

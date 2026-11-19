@@ -221,3 +221,10 @@
 - 선택: ① type 그룹 토큰 이름 = caption·small·body·lead·h4·h3·h2·h1·display(단계 이름 t-…는 `$extensions.app.tastefit.step`, 모바일 크기는 `mobileSize`). h4~display = heading 서체·웨이트·3.8.2 자간, 나머지 = body·400 ② 단계 크기는 3.4.6 표가 아니라 3.1.5 공식으로 계산(기본 L2에서 표와 일치). 모바일 값은 데스크톱 이하로 자름 ③ media = grayscale·contrast·sepia·saturate number + duotone일 때 duotone-shadow·highlight 색, motion.enter = subtle이면 base(200ms) 아니면 0, glass는 shadow.glass.alpha-n·blur-n ④ 모바일 pad ±1 = 한 단계 조밀한 밀도의 데스크톱 값(3.1.6 예시 regular +1 → 80과 일치), compact는 스케일 한 단계 아래 ⑤ primary-active가 팔레트에 없으면 hover에서 같은 방향 0.04(방향 = hover−primary 부호), focus-inverse = fg-inverse ⑥ 다크(T7)는 그림자 층 비움(3.12) ⑦ 팔레트에 없는 역할(accent·on-accent)은 palettes.json에서 null 대신 키 생략(seed:temp 수정, AC-03-44 테스트가 roles 값을 모두 hex로 읽음) ⑧ 브랜드 색은 M2-03c applyBrandColor에서 반영
 - 영향 범위: packages/design-spec(tokens.ts·data.ts), scripts/data/seed-temp.ts, data/taxonomy/palettes.json(temp)
 - 되돌리기 비용: 중간
+
+## ASM-032 · M2 · gap · 2026-11-19T22:15Z
+- 질문: 03장 3.13 applyBrandColor의 탐색 순서·on-primary 반대 극·무채/강등/틴트 결과 표기
+- 근거 탐색: 03장 3.13.1~3.13.3·3.1.3·3.14.1, 04장 4.2.2 표(S-37), assets.test AC-03-36·37(ASM-026 ⑥⑦)
+- 선택: ① 입력은 1색(01장 R-21), 두 번째 색 규칙(3.13.3 첫 줄)은 강등된 색에만 적용 ② L 탐색은 "대비가 커지는 방향" 대신 가까운 순(0, ±0.01 … ±0.25)으로 양방향, 이어서 C −0.01×≤15마다 다시 L 탐색. 상한이 있어 반드시 끝난다(반복 수는 사양 74보다 많지만 결과는 가장 가까운 해) ③ on-primary 후보 = 팔레트 값과 반대 극(L ≥ 0.5면 L 0.145 무채, 아니면 흰색), 두 후보 중 시작점에서 덜 움직인 해 ④ 판정 대상은 on 대 primary·hover·active ≥ 본문, primary 대 bg ≥ 대형(3.1.3 하드) ⑤ hover/active는 브랜드 primary에서 3.1.3 공식으로 다시 파생(팔레트 방향 무시) ⑥ accent는 hue 차가 3.14.1 범위일 때만, C ≤ 팔레트 primary C × 1.3, 대 bg·surface ≥ 대형, on-accent는 후보 중 대비 최대(쓰임 금지는 컴파일러 몫) ⑦ 틴트 = surface의 C·h만 교체(C ≤ 0.035), fg·fg-muted 대 surface ≥ 본문·focus ≥ 대형일 때만 ⑧ 무채 반전 적용은 notice `used_as_tint`·role `tint`·reason `brand_neutral_inverse`, 무시는 `ignored`·`brand_neutral_ignored` ⑨ 형식 오류는 예외 대신 `ignored`·`brand_invalid_format` ⑩ 반환에 `overrides`(색 역할 → 값)·`record`(04장 brand_color) 추가, deriveTokens가 overrides를 팔레트 위에 얹는다(source `brand`)
+- 영향 범위: packages/design-spec/src/brand.ts·tokens.ts·stubs.ts, packages/taxonomy/src/color.ts(hexToOklch·deltaEOk)
+- 되돌리기 비용: 낮음

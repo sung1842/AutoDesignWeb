@@ -104,11 +104,17 @@ function paletteById(id: string | undefined, data: DesignData): Palette {
   return p;
 }
 
-function colorGroup(pal: Palette, theme: "light" | "dark"): Group {
+function colorGroup(
+  pal: Palette,
+  theme: "light" | "dark",
+  overrides: Record<string, ReturnType<typeof colorValue>> = {},
+): Group {
   const g: Group = {};
   // accent·on-accent는 없을 수 있다(null, 3.1.3 "0~1색")
   for (const [role, r] of Object.entries(pal.roles))
     if (r) g[role] = colorTok(paletteColor(r as { oklch: Lch; hex: string }), "palette");
+  // 3.13 브랜드 색(applyBrandColor 결과)은 팔레트 값 위에 얹는다
+  for (const [role, v] of Object.entries(overrides)) g[role] = colorTok(v, "brand");
   const prim = pal.roles.primary;
   if (!prim) throw new Error(`팔레트 primary 없음 ${pal.id}`);
   const hover = pal.roles["primary-hover"];
@@ -505,6 +511,8 @@ function mediaGroup(l2: L2, color: Group): Group {
 export interface DeriveInputLite {
   presetId: string;
   l2: L2;
+  /** 3.13 applyBrandColor가 만든 색 역할 덮어쓰기. */
+  overrides?: Record<string, ReturnType<typeof colorValue>>;
 }
 
 export function deriveTokensImpl(input: DeriveInputLite, data: DesignData): DerivedTokens {
@@ -515,7 +523,7 @@ export function deriveTokensImpl(input: DeriveInputLite, data: DesignData): Deri
   const pairing = data.pairingsFull.find((p) => p.code === l2["type.pairing_id"]);
   if (!pairing) throw new Error(`deriveTokens: 페어링 없음 ${String(l2["type.pairing_id"])}`);
   const hw = Number(l2["type.headline_weight"] ?? pairing.defaultHeadlineWeight);
-  const color = colorGroup(pal, theme);
+  const color = colorGroup(pal, theme, input.overrides);
   const font = fontGroup(pairing, hw, data);
   const tokenSet: TokenSet = {
     $schemaVersion: "tokens-1",

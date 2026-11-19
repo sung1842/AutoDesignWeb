@@ -5,6 +5,7 @@ import { todo } from "./todo.js";
 import { predictL1Vec } from "./predict.js";
 import { exportTokensImpl } from "./export.js";
 import { deriveTokensImpl, expectedSizeImpl } from "./tokens.js";
+import { applyBrandColorImpl, type BrandResult } from "./brand.js";
 import { letterSpacingEmImpl, signatureEligibleImpl } from "./signature.js";
 import type {
   DerivedTokens,
@@ -22,9 +23,15 @@ export interface DeriveInput {
   l2: L2;
   brand?: { hex: string } | null;
 }
-/** 03장 3.1(ASM-031). 브랜드 색 반영은 M2-03c(applyBrandColor). */
+/** 03장 3.1(ASM-031). 브랜드 색이 있으면 3.13 applyBrandColor 결과를 얹는다(ASM-032). */
 export function deriveTokens(input: DeriveInput, data: DesignData): DerivedTokens {
-  return deriveTokensImpl(input, data);
+  const paletteId = input.l2["color.palette_id"];
+  const overrides =
+    input.brand && paletteId
+      ? applyBrandColorImpl({ presetId: input.presetId, paletteId, hex: input.brand.hex }, data)
+          .overrides
+      : undefined;
+  return deriveTokensImpl({ presetId: input.presetId, l2: input.l2, overrides }, data);
 }
 export function exportTokens(
   d: DerivedTokens,
@@ -32,7 +39,7 @@ export function exportTokens(
 ): Record<string, string> {
   return exportTokensImpl(d, meta);
 }
-/** 03장 3.2.2(ASM-032). */
+/** 03장 3.2.2(ASM-028). */
 export function predictL1(l2: L2, data: DesignData): Vec5 {
   return predictL1Vec(l2, data);
 }
@@ -49,16 +56,12 @@ export function compileSpecs(_input: CompileInput, _data: DesignData): Record<Va
   void [_input, _data];
   return todo("M2-03", "compileSpecs");
 }
+/** 03장 3.13(ASM-032). 반드시 4종 결과(+null) 중 하나로 끝나고 예외를 던지지 않는다. */
 export function applyBrandColor(
-  _input: { presetId: string; paletteId: string; hex: string },
-  _data: DesignData,
-): {
-  notice: DesignSpec["brand_color_notice"];
-  reason: string | null;
-  role: "primary" | "accent" | "tint" | null;
-} {
-  void [_input, _data];
-  return todo("M2-03", "applyBrandColor");
+  input: { presetId: string; paletteId: string; hex: string },
+  data: DesignData,
+): BrandResult {
+  return applyBrandColorImpl(input, data);
 }
 export function expectedSize(tokens: Record<string, unknown>, step: string, vw: number): number {
   return expectedSizeImpl(tokens, step, vw);
