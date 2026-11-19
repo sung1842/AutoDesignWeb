@@ -3,9 +3,9 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P2
-- lock: {owner: 2026-11-19T07:08Z, since: 2026-11-19T07:08Z}
+- lock: {owner: 2026-11-19T07:08Z, since: 2026-11-19T07:10Z}
 - limit.next_reset_kst: 2026-11-19 19:57
-- 마지막 갱신: 2026-11-19 15:50 KST (예약 세션: 라운드 3 반영 완료, 라운드 4 리뷰 3개)
+- 마지막 갱신: 2026-11-19 16:10 KST (예약 세션: decisions_v5 작성)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -29,7 +29,8 @@
 - 라운드 2 반영 단위(decisions_v3.md "반영 순서" 참고): [x] 07-a [x] 07-b [x] 07-c [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 09-a [x] 09-b [x] 09-c [x] 04-a [x] 04-b [x] 04-c [x] 03 [x] 02 [x] 05 [x] 01 [x] 08 [x] 00 [x] 잔여 표기 grep
 - 라운드 3: [x] PM [x] 프로덕트 디자이너 [x] UX [x] UI [x] 테크 리드 [x] AI/ML [x] QA [x] 법무 → [x] decisions_v4(T-01~T-36) [x] 반영(아래 22단위)
 - 라운드 3 반영 단위(decisions_v4.md "반영 순서" 참고): [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 07-a [x] 07-b [x] 07-c [x] 07-d [x] 09-a [x] 09-b [x] 09-c [x] 01-a [x] 01-b [x] 04-a [x] 04-b [x] 03-a [x] 03-b [x] 08-a [x] 02-a [x] 05-a [x] 00-a [x] 잔여 표기 grep
-- 라운드 4(1.1 규칙: 리뷰어 3명·패킷 `docs/reviews/round4/packet.md`): [x] R-A 제품·경험 [x] R-B 기술·품질 [x] R-C 법무 → [ ] decisions_v5 [ ] 반영
+- 라운드 4(1.1 규칙: 리뷰어 3명·패킷 `docs/reviews/round4/packet.md`): [x] R-A 제품·경험 [x] R-B 기술·품질 [x] R-C 법무 → [x] decisions_v5(U-01~U-13) [ ] 반영(아래 9단위)
+- 라운드 4 반영 단위(decisions_v5.md "반영 순서"): [ ] 06-a [ ] 06-b [ ] 07-a [ ] 09-a [ ] 02-a [ ] 04-a+03-a [ ] 01-a [ ] 08-a [ ] 잔여 grep
 - 판정 기록(라운드별 C1/C2/C3):
   - R2 PM: FAIL/FAIL/FAIL (Blocker 0, Major 5: 예산-목표 불일치, 취소 시 한도 규칙 충돌, KPI 쿼리 분모, 검증 표본 확보, 00↔07·09 불일치)
   - R2 UX: FAIL/FAIL/FAIL (1라운드 19/19 해결, Blocker 0, Major 3: 결과 신뢰 문구 01↔02 불일치, 진단 카드 크기 규칙이 실제 화면에서 불성립, 편집 가능 판정을 화면 폭으로 해 200% 확대 시 편집 소실)
@@ -61,6 +62,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 16:10 | decisions_v5 작성(U-01~U-13, Major 13 전부 대응, Minor 2건만 수용 기준용) → 다음: 06-a
 - 2026-11-19 17:21 | R4 R-C 리뷰: B0·M5·m6. 법무 FAIL×3(RC4-01~05). 라운드 4 합계 Major 13 → 다음: decisions_v5
 - 2026-11-19 17:16 | R4 R-B 리뷰: B0·M5·m7. TL·AI·QA 모두 C1·C2 FAIL, C3 PASS(RB4-01~05)
 - 2026-11-19 17:08 | R4 R-A 리뷰: B0·M3·m9. PM PASS×3, PD·UX·UI C1·C2 FAIL(RA4-01~03)
@@ -75,16 +77,3 @@
 - 2026-11-19 16:25 | 04-a: TM reliable 마스크·S_free null, 후보 인덱스·DIVERSITY, 이미지 단계 선택, 원가 참조, AC-04-44·45·47
 - 2026-11-19 16:15 | 01-b 반영: S03 notice 서버 선택·retestHint(T-25·22), S12 재검사 배너·채택 후속 시트·shareStatus(T-22·16), 1.6.5 취…
 - 2026-11-19 16:05 | 01-a 반영: 1.4.3 자극물 크기 규칙·회전 안내·layoutMode, 1.4.11 mobile 와이어프레임, 1.14.3 썸네일 탭, AC-01-55(T-23); 1…
-- 2026-11-19 16:00 | 09-c 반영: 9.6.2 시드(callKind·attempt)·인덱스 매핑·장애 initial 한정·수리 규칙·효과표·low-score-trees·judge ID 기반·j…
-- 2026-11-19 15:55 | 09-b 반영: 9.1.2 트리·9.1.3 의존(DbPort·api-contract·compliance·auth/storage/mail), M0 native, M1 db:t…
-- 2026-11-19 15:45 | 09-a 반영: F01 baseRef·DECISIONS_LOG append-only 예외, 9.5.6 spec 잠금·lockedBy spec, M0 산출물 spec:extr…
-- 2026-11-19 15:40 | 07-d 반영: 7.2.2 muRef 생성 시점·재생성 조건(T-04), TC-R-09 정의·TC-R-19/20 신설(T-17), TC-R-15 인덱스·개수(T-18), M…
-- 2026-11-19 15:30 | 07-c 반영: AC → 마일스톤 배정표(00~09장 425 ID, 중복·누락 0 스크립트 확인)·acMilestones·qa:trace 배정 위치 강제·접미사 정규식, 0…
-- 2026-11-19 15:20 | 07-b 반영: 7.11.2 단계 카탈로그 57단계·허용표 확장·종료 코드 3·temp 묶음 대응, spec:test-policy steps·blockable·exitCod…
-- 2026-11-19 15:06 | 06-d 반영: 오류 코드 6종, 익명 창구 turnstileToken·privacy_request 본인 확인(verify 엔드포인트)·메일 템플릿 표·shareStatus…
-- 2026-11-19 15:03 | 06-c 반영: 6.9.4 전면 개정(캐시 예열 순서·기본 경로 공식 $0.23363·attempt별 예약·실효 cap 비례 생략·usage_overrun·Mock usag…
-- 2026-11-19 10:35 | 06-a 반영: T-11 DbPort(Kysely+pg·withUser/withAnon/withService)·R-3 가드·6.3.5 쓰기 화이트리스트·심층 방어 트리거·d…
-- 2026-11-19 10:35 | 07-a 반영: diagnosis.tunable(값 불변)·T-08 신규 키 8개·auditAllowLiterals, FINAL 원천 경로·tuned/tuning-log 스…
-- 2026-11-19 10:22 | decisions_v4 작성(T-01~T-36, Blocker 3·Major 37 전부 대응, Minor는 선택 반영표). AD-008·009 기록, T-17·T-11 사람…
-- 2026-11-19 10:10 | 라운드 3 PD·법무 리뷰 작성 → 8개 수집 완료. 합계 Blocker 3(QA3-01·TL3-01·LG3-01), Major 37. 다음은 decisions_v4
-- 2026-11-19 09:58 | 라운드 3 UI·AI/ML 리뷰 작성(UI FAIL/FAIL/PASS M4, AI FAIL×3 M5)
