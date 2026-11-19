@@ -2,10 +2,10 @@
 
 ## 현재 상태
 - status: IN_PROGRESS
-- phase: P3
+- phase: P4
 - lock: {owner: 2026-11-19T12:09Z, since: 2026-11-19T12:12Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
-- tags: {review-pass: 4519c49}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
+- tags: {review-pass: 4519c49, spec-lock: ca6b1de}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-20 01:08
 - 마지막 갱신: 2026-11-19 21:30 KST (예약 세션: r4 반영 완료, r5·r6 리뷰, P2 멈춤)
@@ -65,13 +65,14 @@
 - [x] FINAL 정리 [x] 구현 규칙 추가 [x] 임시 시드 데이터(→ M1 seed:temp, AD-023) [x] HUMAN_TODO 정리
 
 ## P4. 구현
-- 다음: P3 마무리 = `spec-lock` 태그(9.5.6, spec:extract 바이트 대조는 M0 구현 뒤라 M0 종료 때 생성) → M0 하위 단위 계획
+- P3 완료(spec-lock=ca6b1de, AD-024). 다음: M0 하위 단위 계획(09장 9.4.2) 작성 후 착수
 - [ ] M0 [ ] M1 [ ] M2 [ ] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
 
 ## P5. 완료
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 21:40 | spec-lock 태그(ca6b1de, 원문 블록 해시 일치, AD-024), P3 완료 → 다음: M0 단위 계획
 - 2026-11-19 21:35 | docs 배치(allowlist 초안·ASSUMPTIONS·BLOCKED), seed:temp는 M1(AD-023), HUMAN_TODO 4건 → 다음: spec-lock 판단·M0 계획
 - 2026-11-19 21:25 | CLAUDE.md 구현 규칙 I-0~I-8(9.8.2 골격), tags 맵·로컬 태그 복원 AD-022 → 다음: docs 배치·임시 시드
 - 2026-11-19 21:20 | P3 FINAL: 장 10개 바이트 동일 사본, INDEX.md, DECISIONS.md 통합본, AD-021 → 다음: 구현 규칙
