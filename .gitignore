@@ -1,7 +1,8 @@
 node_modules/
-.env
-.env.*
-!.env.example
-.next/
 dist/
+.next/
+.turbo/
+.env
+.env.local
+reports/*.partial.json
 coverage/

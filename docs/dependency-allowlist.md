@@ -10,10 +10,10 @@
 | typescript | ^5.9.0 (09장 9.1.1: 5.x) | 전체(dev) | Apache-2.0 |
 | tsx | ^4.23.0 | 스크립트 실행(dev) | MIT |
 | turbo | ^2.11.0 | 모노레포(dev) | MIT |
-| eslint | ^10.0.0 | 린트(dev) | MIT |
-| typescript-eslint | 최신 major | 린트(dev) | MIT |
+| eslint | ^9.0.0 (typescript-eslint 8 호환) | 린트(dev) | MIT |
+| typescript-eslint | ^8.0.0 | 린트(dev) | MIT |
 | prettier | ^3.10.0 | 서식(dev) | MIT |
-| vitest | ^4.0.0 | 단위·수용 테스트(dev) | MIT |
+| vitest | ^3.2.0 | 단위·수용 테스트(dev) | MIT |
 | @playwright/test, playwright, playwright-core | =1.63.0 | e2e, apps/worker, extractor(타입). **apps/web 금지** | Apache-2.0 |
 | dependency-cruiser | ^18.0.0 | guard deps(dev) | MIT |
 | license-checker | ^25.0.0 | guard 라이선스(dev) | BSD-3-Clause |
