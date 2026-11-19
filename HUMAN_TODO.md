@@ -14,3 +14,4 @@
 - [ ] (2026-11-19 P3) 이 환경에서 못 하는 검증(needs_ci): `STACK_PROFILE=supabase`(Docker) 기동, webkit·firefox 브라우저 매트릭스, CI 3회 green(`ci-green-3x`), GoTrue auth 테이블(`gotrue-auth-tables`), Supavisor `SET LOCAL ROLE`(AD-008). GitHub Actions에서 돌려 결과를 확인해 주세요.
 
 - [ ] (ASM-003) 07장 7.12.1 사양 상수 표에 "CLAUDE.md 구현 규칙 300줄"(AC-09-14)·"dev:stack 기동 120초"(AC-06-50) 행 추가 여부 확인 후 relock. 현재는 비교 매처 없이 판정 중
+- [ ] (BLK-001) 의존성 라이선스 규칙 충돌: next·sharp·eslint의 간접 의존성에 LGPL-3.0(libvips)·CC-BY-4.0·BlueOak·0BSD·Python-2.0이 있음. 09장 F12 허용 라이선스 확장 여부를 결정하고 relock해 주세요(BLOCKED.md BLK-001)
