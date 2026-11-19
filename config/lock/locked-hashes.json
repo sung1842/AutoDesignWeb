@@ -205,6 +205,36 @@
       "lockedBy": "agent",
       "lockedAt": "2026-11-19T15:15:25Z",
       "commit": "7ac566c"
+    },
+    "tests/acceptance/m2/assets.test.ts": {
+      "sha256": "39e8b74cd70cc6aa9ad54432d02698a019851fc42af2423ff81fbd0e4761d348",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T18:28:11Z",
+      "commit": "eded1cd"
+    },
+    "tests/acceptance/m2/blocks.test.ts": {
+      "sha256": "9baafc0692fef6a207cddb728ee571a06be7a7273347f1348c2f01959e158e57",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T18:28:11Z",
+      "commit": "eded1cd"
+    },
+    "tests/acceptance/m2/render.test.ts": {
+      "sha256": "b83cf66afadd48d72af47069232fdacd2285f7736e8829c93efb9dc201836a45",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T18:28:11Z",
+      "commit": "eded1cd"
+    },
+    "tests/acceptance/m2/spec.test.ts": {
+      "sha256": "7900e74e44fbf4a9fba274e951444f9853588f38fbb944720870f933ebd5beff",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T18:28:11Z",
+      "commit": "eded1cd"
+    },
+    "tests/acceptance/m2/tokens.test.ts": {
+      "sha256": "b24285e514bb35470349e5a92e969f378613c9fdf1c53f22175bbb63ea28340c",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T18:28:11Z",
+      "commit": "eded1cd"
     }
   }
 }
