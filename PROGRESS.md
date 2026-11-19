@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: 
+- lock: {owner: 2026-11-19T14:10Z, since: 2026-11-19T14:10Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
@@ -117,19 +117,3 @@
 - 2026-11-19 21:40 | spec-lock 태그(ca6b1de, 원문 블록 해시 일치, AD-024), P3 완료 → 다음: M0 단위 계획
 - 2026-11-19 21:35 | docs 배치(allowlist 초안·ASSUMPTIONS·BLOCKED), seed:temp는 M1(AD-023), HUMAN_TODO 4건 → 다음: spec-lock 판단·M0 계획
 - 2026-11-19 21:25 | CLAUDE.md 구현 규칙 I-0~I-8(9.8.2 골격), tags 맵·로컬 태그 복원 AD-022 → 다음: docs 배치·임시 시드
-- 2026-11-19 21:20 | P3 FINAL: 장 10개 바이트 동일 사본, INDEX.md, DECISIONS.md 통합본, AD-021 → 다음: 구현 규칙
-- 2026-11-19 21:30 | review-pass 태그 푸시 403 → review_pass_commit 기록·HUMAN_TODO(AD-020), unlock
-- 2026-11-19 21:22 | R6 R-B: B0·M0·m3, TL·AI·QA PASS. 8역할 PASS → P2 멈춤, review-pass 태그·해시(AD-019) → 다음: P3 FINAL
-- 2026-11-19 21:15 | r6 패킷 작성(R-B만, 4파일) → 다음: R-B 리뷰
-- 2026-11-19 21:12 | r5 잔여 grep 깨끗, 라운드 5 반영 완료. AD-018(r6은 R-B만) → 다음: r6 패킷
-- 2026-11-19 21:08 | r5 07+02+09-a: TC-R-20 succeeded, tuning-log cached·8c, AC-02-36 ③⑥, AC-09-19/19b(M8), Mock 지연 4000
-- 2026-11-19 21:00 | r5 06-a: V-01 cacheState 실패 판정·cost:model 경로·6.2.4 비고·AC-06-61 ④, V-02 succeeded·0.23676
-- 2026-11-19 20:52 | decisions_v6 작성(V-01~V-04, RB5 Major 4 대응, Minor 2건만 수용 기준용) → 다음: 06-a
-- 2026-11-19 20:47 | R5 R-C 리뷰: B0·M0·m5. RC4-01~05 해결, 법무 PASS×3. 라운드 5 Major 4(RB만) → 다음: decisions_v6
-- 2026-11-19 20:42 | R5 R-B 리뷰: B0·M4·m5. TL·AI·QA C1·C2 FAIL, C3 PASS(RB5-01~04) → 다음: R-C
-- 2026-11-19 20:35 | R5 R-A 리뷰: B0·M0·m3. RA4-01~03 해결, PM·PD·UX·UI PASS×3 → 다음: R-B
-- 2026-11-19 20:30 | r5 패킷 작성(기준 dc8ffe2, 9파일 +113/−70), tools/changed_sections.py 추가 → 다음: R-A
-- 2026-11-19 20:25 | 잔여 grep: 옛 표기 6종 대체 문맥뿐, 신규 AC 정의 각 1건. 라운드 4 반영 완료 → 다음: r5 패킷
-- 2026-11-19 20:20 | r4 08-a: 8.7.7 hold·증거·감사 호출·미확인 요청 행, 8.7.9·8.9.5 ③b→③, AC-08-33·56·57, 신규 58·59, 00 ADM-04
-- 2026-11-19 16:15 | r4 01-a: 1.12.2 기본 규칙·신규 3코드 행, verify 착지 S14 support.verified, AC-01-60
-- 2026-11-19 16:15 | r4 04-a+03-a: maxChars_job 정수·t-1 계산(전 조합 ≥10 확인), defaultImageTag 폴백, AC-04-44·46

@@ -80,3 +80,19 @@
 - 2026-11-19 16:58 | 00-a: 9.2 참조·9.3 취소·9.4 평가 예산 표·A5/A7 쿼리·IP·감사·권한·G-13, v2.3
 - 2026-11-19 16:52 | 05-a: 5.9 앵커 temp 분기, D-056 → 04 m_k 참조
 - 2026-11-19 16:50 | 02-a: tunable 분리·튜닝 목적함수, x_card 원천·비차단 4행, pickNotice, AC-02-34~37
+- 2026-11-19 21:20 | P3 FINAL: 장 10개 바이트 동일 사본, INDEX.md, DECISIONS.md 통합본, AD-021 → 다음: 구현 규칙
+- 2026-11-19 21:30 | review-pass 태그 푸시 403 → review_pass_commit 기록·HUMAN_TODO(AD-020), unlock
+- 2026-11-19 21:22 | R6 R-B: B0·M0·m3, TL·AI·QA PASS. 8역할 PASS → P2 멈춤, review-pass 태그·해시(AD-019) → 다음: P3 FINAL
+- 2026-11-19 21:15 | r6 패킷 작성(R-B만, 4파일) → 다음: R-B 리뷰
+- 2026-11-19 21:12 | r5 잔여 grep 깨끗, 라운드 5 반영 완료. AD-018(r6은 R-B만) → 다음: r6 패킷
+- 2026-11-19 21:08 | r5 07+02+09-a: TC-R-20 succeeded, tuning-log cached·8c, AC-02-36 ③⑥, AC-09-19/19b(M8), Mock 지연 4000
+- 2026-11-19 21:00 | r5 06-a: V-01 cacheState 실패 판정·cost:model 경로·6.2.4 비고·AC-06-61 ④, V-02 succeeded·0.23676
+- 2026-11-19 20:52 | decisions_v6 작성(V-01~V-04, RB5 Major 4 대응, Minor 2건만 수용 기준용) → 다음: 06-a
+- 2026-11-19 20:47 | R5 R-C 리뷰: B0·M0·m5. RC4-01~05 해결, 법무 PASS×3. 라운드 5 Major 4(RB만) → 다음: decisions_v6
+- 2026-11-19 20:42 | R5 R-B 리뷰: B0·M4·m5. TL·AI·QA C1·C2 FAIL, C3 PASS(RB5-01~04) → 다음: R-C
+- 2026-11-19 20:35 | R5 R-A 리뷰: B0·M0·m3. RA4-01~03 해결, PM·PD·UX·UI PASS×3 → 다음: R-B
+- 2026-11-19 20:30 | r5 패킷 작성(기준 dc8ffe2, 9파일 +113/−70), tools/changed_sections.py 추가 → 다음: R-A
+- 2026-11-19 20:25 | 잔여 grep: 옛 표기 6종 대체 문맥뿐, 신규 AC 정의 각 1건. 라운드 4 반영 완료 → 다음: r5 패킷
+- 2026-11-19 20:20 | r4 08-a: 8.7.7 hold·증거·감사 호출·미확인 요청 행, 8.7.9·8.9.5 ③b→③, AC-08-33·56·57, 신규 58·59, 00 ADM-04
+- 2026-11-19 16:15 | r4 01-a: 1.12.2 기본 규칙·신규 3코드 행, verify 착지 S14 support.verified, AC-01-60
+- 2026-11-19 16:15 | r4 04-a+03-a: maxChars_job 정수·t-1 계산(전 조합 ≥10 확인), defaultImageTag 폴백, AC-04-44·46
