@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T12:09Z, since: 2026-11-19T12:15Z}
+- lock: 
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-20 01:08
-- 마지막 갱신: 2026-11-19 21:30 KST (예약 세션: r4 반영 완료, r5·r6 리뷰, P2 멈춤)
+- 마지막 갱신: 2026-11-19 22:15 KST (예약 세션: P3 완료, M0-01·02)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -102,6 +102,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 22:15 | 세션 종료 unlock → 다음: M0-03 수용 테스트(acMilestones M0 15항목, F-ID는 9.5.5)
 - 2026-11-19 22:10 | 9.5.7 누락 보완(CLAUDE 두 절·절 이름, 로그 머리줄, 9.7 표), AD-025 spec-lock 재생성 → 다음: M0-03
 - 2026-11-19 22:00 | M0-02 패키지 21·앱 2 골격(tsc -b 참조), lint·typecheck 녹색 → 다음: M0-03 수용 테스트
 - 2026-11-19 21:55 | M0-01 루트 스캐폴드(pnpm 9.15.9 corepack, TS 5.9, eslint 9, vitest 3), lint 녹색 → 다음: M0-02 골격
