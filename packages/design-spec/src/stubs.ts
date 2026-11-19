@@ -2,8 +2,8 @@
 import type { L1, L2 } from "@tastefit/taxonomy";
 import type { DesignData } from "./data.js";
 import { todo } from "./todo.js";
+import { predictL1Vec } from "./predict.js";
 import type {
-  CalibrationTrace,
   DerivedTokens,
   DesignSpec,
   LayoutTreeLike,
@@ -31,20 +31,13 @@ export function exportTokens(
   void [_d, _meta];
   return todo("M2-03", "exportTokens");
 }
-export function predictL1(_l2: L2, _data: DesignData): Vec5 {
-  void [_data];
-  return todo("M2-02", "predictL1");
+/** 03장 3.2.2(ASM-032). */
+export function predictL1(l2: L2, data: DesignData): Vec5 {
+  return predictL1Vec(l2, data);
 }
 export function signatureEligible(_id: string, _ctx: SigCtx): boolean {
   void [_id, _ctx];
   return todo("M2-03", "signatureEligible");
-}
-export function calibrate(
-  _input: { taste: TasteResult; purpose: Purpose; alpha: number },
-  _data: DesignData,
-): CalibrationTrace {
-  void [_input, _data];
-  return todo("M2-02", "calibrate");
 }
 export interface CompileInput {
   taste: TasteResult;

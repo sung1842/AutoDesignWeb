@@ -145,3 +145,4 @@
 - 2026-11-20 02:13 | M1-04c2a B20 copy_templates 44·axis_hints 10·B21 87·B22 6·B24 62, validate 교차 참조 → 다음: c2b B18
 - 2026-11-20 02:14 | M1-04c2b B18 2026-S0 부트스트랩(5.5.4 initial, 분위 자리표시, M3 재생성 ASM-020) → 다음: c3 B15
 - 2026-11-20 02:15 | M1-04c3 B15 골격, M1-04 완료: data:validate 33묶음 녹색, data.test 9/11 → 다음: M1-05 taxonomy 로더
+- 2026-11-20 02:22 | M1-05 loadTaxonomy·nearestType·checkBridgeRules(+단위 5), data.test 11/11, verify:fast pass_blocked → 다음: M1-06 마이그레이션
