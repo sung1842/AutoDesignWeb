@@ -67,3 +67,16 @@
 - 2026-11-19 16:25 | 04-a: TM reliable 마스크·S_free null, 후보 인덱스·DIVERSITY, 이미지 단계 선택, 원가 참조, AC-04-44·45·47
 - 2026-11-19 16:15 | 01-b 반영: S03 notice 서버 선택·retestHint(T-25·22), S12 재검사 배너·채택 후속 시트·shareStatus(T-22·16), 1.6.5 취…
 - 2026-11-19 16:05 | 01-a 반영: 1.4.3 자극물 크기 규칙·회전 안내·layoutMode, 1.4.11 mobile 와이어프레임, 1.14.3 썸네일 탭, AC-01-55(T-23); 1…
+- 2026-11-19 16:14 | r4 02-a: 2.16.2 dev 캐시·상한 도달 gate·maxGateRuns 의미, AC-02-36 ⑥⑦
+- 2026-11-19 16:13 | r4 09-a: pass_blocked·survey-items BLK·AC-09-19, M4 ④ 튜닝 상한 규칙, Mock t1·카피 지연, SPEC_SOURCE 맵
+- 2026-11-19 16:12 | r4 07-a: 배정표(07/07b/07c·신규 AC)·AC-07-23 ③ 범위 규칙, maxGateRuns 의미, 종료 3↔pass_blocked, SPEC_SOURCE 맵, TC-B-20
+- 2026-11-19 16:12 | r4 06-b: 탈퇴 ③b→③·deleteOwnedRenders·suspend_source·hold 해제/A12·rights_unverified_7d·purge least()·verify 302
+- 2026-11-19 16:11 | r4 06-a: 6.9.4 사건 t1·cacheState·est 0.23676·overrun 거부 집합, llm_calls 시각 2컬럼, AC-06-07 분할
+- 2026-11-19 16:10 | decisions_v5 작성(U-01~U-13, Major 13 전부 대응, Minor 2건만 수용 기준용) → 다음: 06-a
+- 2026-11-19 17:21 | R4 R-C 리뷰: B0·M5·m6. 법무 FAIL×3(RC4-01~05). 라운드 4 합계 Major 13 → 다음: decisions_v5
+- 2026-11-19 17:16 | R4 R-B 리뷰: B0·M5·m7. TL·AI·QA 모두 C1·C2 FAIL, C3 PASS(RB4-01~05)
+- 2026-11-19 17:08 | R4 R-A 리뷰: B0·M3·m9. PM PASS×3, PD·UX·UI C1·C2 FAIL(RA4-01~03)
+- 2026-11-19 17:00 | 잔여 grep: G-13·시나리오 수·SC-05·6.19 행 정리. 라운드 3 반영 22단위 완료
+- 2026-11-19 16:58 | 00-a: 9.2 참조·9.3 취소·9.4 평가 예산 표·A5/A7 쿼리·IP·감사·권한·G-13, v2.3
+- 2026-11-19 16:52 | 05-a: 5.9 앵커 temp 분기, D-056 → 04 m_k 참조
+- 2026-11-19 16:50 | 02-a: tunable 분리·튜닝 목적함수, x_card 원천·비차단 4행, pickNotice, AC-02-34~37
