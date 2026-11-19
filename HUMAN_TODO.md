@@ -12,3 +12,5 @@
   1. B2·B3·B5 유형·프리셋·매핑(2~3일) 2. B6·B7 폰트 파일·페어링(1일) 3. B8 이미지 192장(2일) 4. B13 레퍼런스 60(수동 큐레이션, 크롤링 금지) 5. B12 설문 자산 승인(0.5일) 6. B16 골든 세트 검수(0.5일) 7. B14·B15·B17 금지어·린터 규칙·법무 문안(변호사 검토 권장) 8. B21·B22 고위험 기관명·금지 업종 키워드 적정성(08장 8.14 Q13) 9. B23 처리위탁사 승인(`approved:true`는 사람만)
   투입 후 `pnpm data:validate && pnpm verify:m8`, 시각 회귀 기준선은 `chore(visual): rebaseline for human data` 1커밋.
 - [ ] (2026-11-19 P3) 이 환경에서 못 하는 검증(needs_ci): `STACK_PROFILE=supabase`(Docker) 기동, webkit·firefox 브라우저 매트릭스, CI 3회 green(`ci-green-3x`), GoTrue auth 테이블(`gotrue-auth-tables`), Supavisor `SET LOCAL ROLE`(AD-008). GitHub Actions에서 돌려 결과를 확인해 주세요.
+
+- [ ] (ASM-003) 07장 7.12.1 사양 상수 표에 "CLAUDE.md 구현 규칙 300줄"(AC-09-14)·"dev:stack 기동 120초"(AC-06-50) 행 추가 여부 확인 후 relock. 현재는 비교 매처 없이 판정 중

@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T13:10Z, since: 2026-11-19T13:10Z}
+- lock: {owner: 2026-11-19T13:10Z, since: 2026-11-19T13:17Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-20 01:08
-- 마지막 갱신: 2026-11-19 22:15 KST (예약 세션: P3 완료, M0-01·02)
+- 마지막 갱신: 2026-11-19 22:25 KST (예약 세션: M0-03)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -85,7 +85,7 @@
 - M0 계획(9.4.2, 9.5.1. 코드는 저장소 루트에 9.1.2 트리로):
   - [x] 01 루트 스캐폴드: pnpm@9(corepack)·turbo·tsconfig strict·eslint·prettier·vitest·.nvmrc, lockfile
   - [x] 02 9.1.2 패키지·앱 빈 골격(index.ts), lint·typecheck 녹색
-  - [ ] 03 M0 수용 테스트(acMilestones M0) `test(acc)` 커밋 + 자체 잠금
+  - [x] 03 M0 수용 테스트(acMilestones M0) `test(acc)` 커밋(c54ffda) + 자체 잠금(79dc13d, guard:self-lock 선구현)
   - [ ] 04 packages/config: env zod(06장 env 목록)·thresholds 로더·네트워크 가드, .env.example
   - [ ] 05 spec:extract(--from FINAL/review-pass/--init-tuned) → config/thresholds.json·test-policy.json
   - [ ] 06 native 스택: PG16 + packages/db/shim + local 드라이버, `pnpm dev:stack`
@@ -102,6 +102,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 22:25 | M0-03 수용 테스트 5파일·자체 잠금, ASM-001~004, vitest 러너 타임아웃 → 다음: M0-04 config env
 - 2026-11-19 22:15 | 세션 종료 unlock → 다음: M0-03 수용 테스트(acMilestones M0 15항목, F-ID는 9.5.5)
 - 2026-11-19 22:10 | 9.5.7 누락 보완(CLAUDE 두 절·절 이름, 로그 머리줄, 9.7 표), AD-025 spec-lock 재생성 → 다음: M0-03
 - 2026-11-19 22:00 | M0-02 패키지 21·앱 2 골격(tsc -b 참조), lint·typecheck 녹색 → 다음: M0-03 수용 테스트
