@@ -2,8 +2,9 @@
 
 ## 현재 상태
 - status: IN_PROGRESS
-- phase: P2
-- lock: {owner: 2026-11-19T11:08Z, since: 2026-11-19T12:15Z}
+- phase: P3
+- lock: {owner: 2026-11-19T11:08Z, since: 2026-11-19T12:22Z}
+- review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 태그 review-pass, 계산법 AD-019
 - limit.next_reset_kst: 2026-11-20 01:08
 - 마지막 갱신: 2026-11-19 16:10 KST (예약 세션: decisions_v5 작성)
 
@@ -32,8 +33,9 @@
 - 라운드 4(1.1 규칙: 리뷰어 3명·패킷 `docs/reviews/round4/packet.md`): [x] R-A 제품·경험 [x] R-B 기술·품질 [x] R-C 법무 → [x] decisions_v5(U-01~U-13) [x] 반영(아래 9단위)
 - 라운드 4 반영 단위(decisions_v5.md "반영 순서"): [x] 06-a [x] 06-b [x] 07-a [x] 09-a [x] 02-a [x] 04-a+03-a [x] 01-a [x] 08-a [x] 잔여 grep
 - 라운드 5(패킷 `docs/reviews/round5/packet.md`): [x] 패킷 [x] R-A [x] R-B [x] R-C → [x] decisions_v6(V-01~V-04) [ ] 반영: [x] 06-a [x] 07+02+09-a [x] 잔여 grep
-- 라운드 6(마지막, AD-018: R-B만, 기준 커밋 be5605d): [x] 패킷 [ ] R-B → [ ] 판정(PASS면 P3, 아니면 HUMAN_TODO·BLOCKED_NEEDS_HUMAN)
+- 라운드 6(마지막, AD-018: R-B만, 기준 커밋 be5605d): [x] 패킷 [x] R-B → [x] 판정: 8개 역할 모두 PASS, P2 멈춤 → P3
 - 판정 기록(라운드별 C1/C2/C3):
+  - R6 R-B: TL·AI·QA 모두 PASS/PASS/PASS (B0·M0·m3). R5 R-A·R-C PASS와 합쳐 8역할 PASS(AD-018)
   - R5 R-C: 법무 PASS/PASS/PASS (B0·M0·m5)
   - R5 R-B: TL·AI·QA 모두 FAIL/FAIL/PASS (B0·M4·m5: t1 비스트리밍 추정, usage_overrun 기대 상태, tuning-log 캐시 필드, AC-09-19 배정)
   - R5 R-A: PM·PD·UX·UI 모두 PASS/PASS/PASS (B0·M0·m3)
@@ -67,6 +69,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 21:22 | R6 R-B: B0·M0·m3, TL·AI·QA PASS. 8역할 PASS → P2 멈춤, review-pass 태그·해시(AD-019) → 다음: P3 FINAL
 - 2026-11-19 21:15 | r6 패킷 작성(R-B만, 4파일) → 다음: R-B 리뷰
 - 2026-11-19 21:12 | r5 잔여 grep 깨끗, 라운드 5 반영 완료. AD-018(r6은 R-B만) → 다음: r6 패킷
 - 2026-11-19 21:08 | r5 07+02+09-a: TC-R-20 succeeded, tuning-log cached·8c, AC-02-36 ③⑥, AC-09-19/19b(M8), Mock 지연 4000
