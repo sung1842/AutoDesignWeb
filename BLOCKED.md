@@ -51,3 +51,13 @@
 - 가설: 다중 scope 표기(쉼표)를 허용할지 규칙이 정해지지 않음. 이후 커밋은 단일 scope만 쓴다
 - 제안 수정안(사람): scope 정규식에 `,` 허용(`[\w.,/-]`) 또는 5fefdda를 예외 목록으로 두고 `pnpm guard:relock --human`
 - 상태: open
+
+## BLK-006 · M1 · locked-conflict · 2026-11-19T17:31Z
+- 대상: tests/acceptance/m1/db.test.ts "9.4.3 ⑨: verify:schema-parity"(자체 잠금)가 `pnpm -s verify:schema-parity`를 호출 ↔ `.guard/verify-scripts.json`(잠금, F08)은 package.json의 verify:* 집합이 verify:fast·m0~m8과 정확히 같아야 함
+- 증상: package.json에 `verify:schema-parity`를 넣으면 guard:verify-scripts FAIL, 넣지 않으면 수용 테스트 ⑨가 "스크립트 없음"으로 실패
+- 재현: pnpm vitest run tests/acceptance/m1/db.test.ts -t "schema-parity"
+- 시도: (1) 구현은 `pnpm db:schema-parity`(scripts/data/schema-parity.ts)로 완료 — native에서 차이 0, 컬럼 삭제·NOT NULL 변경 시 차이 검출 확인 (2) .guard 사본 수정 → 잠금 위반 (3) node_modules/.bin 우회 → 금지(우회 시도)
+- 가설: 09장 9.4.3 ⑨의 명령 이름과 F08 verify 스크립트 사본이 서로 반영되지 않음
+- 제안 수정안(사람): package.json과 `.guard/verify-scripts.json` 양쪽에 `"verify:schema-parity": "tsx scripts/data/schema-parity.ts"`를 추가하고 `pnpm guard:relock --human`(또는 테스트 쪽 명령을 db:schema-parity로)
+- 처리: 수용 테스트 ⑨ 1건만 미충족, verify:m1 결과에 blockedBy BLK-006
+- 상태: open

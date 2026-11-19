@@ -29,3 +29,4 @@
 - [ ] (ASM-016) 설문 카드 alt 축 서술 사전(5축×5구간)과 tpl-text 본문 2단락 문안 확정(02장 2.4.3·2.4.6)
 - [ ] (B17, seed:temp 자동) 법무 문안 확정(변호사 검토 권장): legal/terms.md·privacy.md·sources.md
 - [ ] (ASM-017) processors.yaml(08장 8.7.6)과 흐름표(06장 6.1.3)의 processor_id·items 불일치 정리(llm-judge·llm-secondary 항목 추가, turnstile/cloudflare-turnstile 통일, vercel items)
+- [ ] (BLK-006) package.json·`.guard/verify-scripts.json`에 `verify:schema-parity` 추가 후 relock해 주세요(구현은 `pnpm db:schema-parity`로 완료, BLOCKED.md BLK-006)
