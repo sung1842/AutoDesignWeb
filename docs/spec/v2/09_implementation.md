@@ -381,7 +381,8 @@ M0 스캐폴드·가드레일
 
 - `pnpm verify:mN`은 **누적**이다: `guard` → `lint` → `typecheck` → 전체 단위 테스트 → `tests/acceptance/m0..mN` → 해당 마일스톤까지의 E2E. 앞 마일스톤 회귀도 함께 잡는다.
 - 모든 verify는 `LLM_MODE=mock`, `NO_EXTERNAL_NETWORK=1`로 실행한다. 외부 API 키가 없어도 통과해야 한다.
-- 각 verify는 끝에 `reports/verify-mN.json`을 쓴다: `{milestone, gitSha, startedAt, finishedAt, steps:[{name, status:'pass'|'fail'|'temp'|'manual'|'needs_live'|'needs_ci', durationMs, details}], result:'pass'|'fail'}`. `temp`·`needs_ci`·`needs_live`·`manual` 보류 상태는 07장 7.12.1 `deferrable` 허용표에 그 단계가 그 상태로 등록된 경우에만 verify 통과로 본다. 표에 없으면 fail이다. 보류는 release:check 종료 코드 0을 막는다(S-03).
+- 각 verify는 끝에 `reports/verify-mN.json`을 쓴다: `{milestone, gitSha, startedAt, finishedAt, steps:[{name, status:'pass'|'fail'|'blocked'|'temp'|'manual'|'needs_live'|'needs_ci', durationMs, details, blockedBy?}], result:'pass'|'pass_blocked'|'fail'}`. `temp`·`needs_ci`·`needs_live`·`manual` 보류 상태는 07장 7.12.1 `deferrable` 허용표에 그 단계가 그 상태로 등록된 경우에만 verify 통과로 본다. 표에 없으면 fail이다. 보류는 release:check 종료 코드 0을 막는다(S-03).
+- **blocked 단계(U-09)**: 단계가 07장 `spec:test-policy.blockable`에 있고(또는 open `locked-conflict` BLK 대상) 결과의 `blockedBy`가 재현 명령 있는 open BLK(BLOCKED.md)를 가리키면 그 단계는 `fail`이 아니라 `blocked`다. fail 0이고 blocked ≥ 1이면 verify `result = pass_blocked`다. `pass_blocked`는 직렬 원칙(9.3)·`mN-done` 태그·9.9.2 "녹색"에서 pass와 같이 센다. 같은 상태는 `release:check`에서 종료 코드 3이다(07장 7.11.2). BLK가 닫혔는데 단계가 여전히 실패하면 `fail`이다.
 - verify 단일 실행 시간 상한: M0~M3 10분, M4~M8 20분(로컬 기준). 초과는 실패가 아니라 경고로 기록한다.
 - 시각 회귀(S-02): 렌더 환경 지문 `RENDER_ENV_ID` = sha256(Chromium 리비전 + 폰트 파일 목록·해시 + OS id)의 앞 12자. 기준선은 `e2e/__screenshots__/<RENDER_ENV_ID>/`에 둔다. 현재 지문의 기준선이 없으면 `chore(visual): baseline <RENDER_ENV_ID>` 단독 커밋으로 1회 만들고 자체 잠근다. 이후 변경은 D-0910 규칙을 따른다. `maxDiffPixelRatio ≤ 0.01`은 그대로다. worker Docker 이미지 기준선은 CI에서 별도 지문으로 관리한다(`visual-docker-baseline` needs_ci).
 - 세션 단절 내성(S-23): verify는 단계마다 `reports/verify-mN.partial.json`을 갱신하고, 중간에 끊겼다가 다시 시작하면 처음부터 돈다(부분 재사용 없음). 최종 결과만 `reports/verify-mN-<n>.json`으로 남긴다.
@@ -435,7 +436,7 @@ M0 스캐폴드·가드레일
 | 산출물 | 설문 자산(Storage) + `data/survey/manifest.lock.json`(assetId → sha256, 실측 L1), 진단·결과 화면 |
 | 의존성 | M3 |
 | 검증 | `pnpm verify:m4` |
-| 통과 조건 | ① `survey:build` 산출: 활성 카드 ≥ 48 중 approved 전부, A/B 120쌍 중 approved 쌍이 축별 ≥19쌍(S-06 g), 이미지 규격·용량은 02·06장 기준. 미달이면 기준을 낮추지 않고 fail로 두며 BLOCKED.md에 BLK를 등록하고(`survey-items-count` 단계, blockable, T-06) M5 이후를 계속한다. 다음 문항 후보 0은 503 `SURVEY_ITEMS_INSUFFICIENT`이고 `survey:build --check`가 빌드 시 사전 검출한다 ② `survey:build` 2회차 실행 시 업로드 0건, DB 변경 0행 ③ 설문 갱신 입력은 x_card(실측 L1)이며 계획 L1이 아님(단위 테스트) ④ 시뮬레이션(S-08): `pnpm sim:survey --gate`가 `release.surveySim.seeds.gate` 5개 × 1,000명(P-A는 800명) 풀링 점추정으로 `diagnosis`·`release.surveySim` 합격선(R-05, 02장 2.16, `anchorAccPABeta8Min`·`priorTypeChangeMax`·`robustNoneRmseMax` 포함)을 모두 통과하고 종료 문항 수 ≤ `diagnosis.maxQuestions`, 1단계 정확히 `diagnosis.stage1Questions`(D-13). 적응형 이득은 공통 난수 쌍체로 계산하고 부트스트랩 95% 구간을 리포트에 넣는다. 구간이 합격선에 걸치면 `margin_warning`(비차단). 09장은 별도 수치를 두지 않는다. 미달 시 임계값을 바꾸지 말고 02장 2.16.2 조정 절차를 따른다(T-03): 튜닝은 `seeds.dev`로만 하고(gate와 교집합 0), 조정 공간은 07장 7.12.1 `diagnosis.tunable`의 6좌표 닫힌 값 집합이다(값은 그 블록이 원천, 09장은 다시 적지 않는다). 런타임 값은 `config/diagnosis-tuned.json`(자체 잠금)이고 변경은 `chore(sim-tune):` 단독 커밋(이 파일과 `sim/reports/tuning-log.json`만)으로 한다. 좌표 순차 탐색 ①~⑥ 한 바퀴(시작점 포함 11회)마다 gate를 1회 돌리고(gate 결과는 PASS/FAIL만 기록, 선택 함수는 dev 리포트만 받음), dev 시도 ≤ `maxTuningTrials`, gate 실행 = 바퀴 수 ≤ `maxGateRuns`다. 목적함수(사전식)는 02장 2.16.2(AC-02-36). 상한에 닿으면 BLOCKED.md·HUMAN_TODO에 BLK를 등록하고 G2-진단은 fail로 둔 채 M5 이후를 계속한다(HALT 계산 제외). 시드·합격선·조정 공간 변경은 금지(F20). `qa:trace`는 02장 2.16.2의 모든 행이 `release.surveySim` 키에 연결되는지 검사한다 ⑤ 무작위 응답 사용자 100명 전원 16문항 이내 종료, 오류 0 ⑥ 진단 중 LLM 호출·렌더 호출 0(스파이) ⑦ 응답 제출 서버 처리 p95 ≤ `perf.surveyServerP95Ms`, API 관측 p95 ≤ `perf.surveyApiP95Ms`(06장 D-0608, T-08), 로컬 200요청 ⑧ E2E(375×812, 1280×800): 익명 진단 완료 → 결과에 유형명·5축 차트·닮은 사이트 3개 링크·비제휴 고지 표시 ⑨ E2E: 진행 중 새로고침 후 같은 문항에서 재개, 뒤로가기 1회 후 응답 수정 시 벡터가 재계산됨 ⑩ 화면 텍스트에 "MBTI" 0건(D-01, 빌드 산출물 grep) ⑪ `build-answers`(T-03 tuned 확정 뒤)가 골든 32행의 `answers`·`expected.muRef`를 채우고 2회 실행 바이트 동일, `m4-done` 커밋에서 `data/golden/**` 자체 잠금(09장 AC-09-17) ⑫ 00장 AC-00-11·12(이벤트 props 브랜드 값 0, 미등록 이벤트 400) |
+| 통과 조건 | ① `survey:build` 산출: 활성 카드 ≥ 48 중 approved 전부, A/B 120쌍 중 approved 쌍이 축별 ≥19쌍(S-06 g), 이미지 규격·용량은 02·06장 기준. 미달이면 기준을 낮추지 않고 fail로 두며 BLOCKED.md에 BLK를 등록하고(`survey-items-count` 단계, blockable, T-06) M5 이후를 계속한다. 다음 문항 후보 0은 503 `SURVEY_ITEMS_INSUFFICIENT`이고 `survey:build --check`가 빌드 시 사전 검출한다 ② `survey:build` 2회차 실행 시 업로드 0건, DB 변경 0행 ③ 설문 갱신 입력은 x_card(실측 L1)이며 계획 L1이 아님(단위 테스트) ④ 시뮬레이션(S-08): `pnpm sim:survey --gate`가 `release.surveySim.seeds.gate` 5개 × 1,000명(P-A는 800명) 풀링 점추정으로 `diagnosis`·`release.surveySim` 합격선(R-05, 02장 2.16, `anchorAccPABeta8Min`·`priorTypeChangeMax`·`robustNoneRmseMax` 포함)을 모두 통과하고 종료 문항 수 ≤ `diagnosis.maxQuestions`, 1단계 정확히 `diagnosis.stage1Questions`(D-13). 적응형 이득은 공통 난수 쌍체로 계산하고 부트스트랩 95% 구간을 리포트에 넣는다. 구간이 합격선에 걸치면 `margin_warning`(비차단). 09장은 별도 수치를 두지 않는다. 미달 시 임계값을 바꾸지 말고 02장 2.16.2 조정 절차를 따른다(T-03): 튜닝은 `seeds.dev`로만 하고(gate와 교집합 0), 조정 공간은 07장 7.12.1 `diagnosis.tunable`의 6좌표 닫힌 값 집합이다(값은 그 블록이 원천, 09장은 다시 적지 않는다). 런타임 값은 `config/diagnosis-tuned.json`(자체 잠금)이고 변경은 `chore(sim-tune):` 단독 커밋(이 파일과 `sim/reports/tuning-log.json`만)으로 한다. 좌표 순차 탐색 ①~⑥ 한 바퀴(시작점 포함 11회, 같은 구성의 dev 결과는 캐시하고 다시 세지 않아 2바퀴 시작점은 0회)가 끝날 때마다, 또는 dev 시도가 `maxTuningTrials`에 닿으면(남은 좌표는 현재 값으로 고정) gate를 1회 돌린다(gate 결과는 PASS/FAIL만 기록, 선택 함수는 dev 리포트만 받음). gate 실행 수 ≤ `maxGateRuns`이고, 커밋하는 tuned는 항상 마지막 gate 대상 구성이다(U-08, 옛 "gate 실행 = 바퀴 수" → 대체). 목적함수(사전식)는 02장 2.16.2(AC-02-36). 상한에 닿으면 BLOCKED.md·HUMAN_TODO에 BLK를 등록하고 G2-진단은 fail로 둔 채 M5 이후를 계속한다(HALT 계산 제외). 시드·합격선·조정 공간 변경은 금지(F20). `qa:trace`는 02장 2.16.2의 모든 행이 `release.surveySim` 키에 연결되는지 검사한다 ⑤ 무작위 응답 사용자 100명 전원 16문항 이내 종료, 오류 0 ⑥ 진단 중 LLM 호출·렌더 호출 0(스파이) ⑦ 응답 제출 서버 처리 p95 ≤ `perf.surveyServerP95Ms`, API 관측 p95 ≤ `perf.surveyApiP95Ms`(06장 D-0608, T-08), 로컬 200요청 ⑧ E2E(375×812, 1280×800): 익명 진단 완료 → 결과에 유형명·5축 차트·닮은 사이트 3개 링크·비제휴 고지 표시 ⑨ E2E: 진행 중 새로고침 후 같은 문항에서 재개, 뒤로가기 1회 후 응답 수정 시 벡터가 재계산됨 ⑩ 화면 텍스트에 "MBTI" 0건(D-01, 빌드 산출물 grep) ⑪ `build-answers`(T-03 tuned 확정 뒤)가 골든 32행의 `answers`·`expected.muRef`를 채우고 2회 실행 바이트 동일, `m4-done` 커밋에서 `data/golden/**` 자체 잠금(09장 AC-09-17) ⑫ 00장 AC-00-11·12(이벤트 props 브랜드 값 0, 미등록 이벤트 400) |
 
 ### 9.4.7 M5 — 인증·브랜드 입력·생성 파이프라인(Mock)
 
@@ -522,7 +523,8 @@ for 각 마일스톤 N (9.3 순서):
 | 사람 데이터 없음 | 묶음 파일 없음 | `pnpm seed:temp` 실행 후 진행. BLOCKED 아님 |
 | 환경 실패 | 스택 기동·패키지 설치 실패 | 먼저 06장 6.13.1 스택 프로파일 규칙으로 대체한다(Docker 없음 → native, 없는 브라우저 → needs_ci). 이 대체는 새 결정이 아니며 BLOCKED가 아니다. 대체 후에도 실패하면 30초·120초 백오프로 2회 재시도 → BLOCKED.md(`env` 유형) 후 환경 무관 작업으로 이동 |
 | 잠금 파일이 틀렸다고 판단 | 수용 테스트·임계값·스펙이 구현 불가로 보임 | 잠금 파일 수정 금지. BLOCKED.md(`locked-conflict` 유형)에 근거·재현 명령·제안 수정안을 쓰고 해당 AC만 미충족으로 남긴 채 진행. 그 AC의 `release:check` 단계 결과에 `blockedBy: BLK-<n>`을 남긴다(종료 코드 3, 07장 7.11.2) |
-| 진단 튜닝 상한 도달 | M4 ④ dev 시도 또는 gate 바퀴가 상한 | BLOCKED.md(`sim-limit` 유형)에 tuning-log 경로·재현 명령을 쓰고 `sim-diagnosis-gate` 결과에 `blockedBy`를 남긴 채 M5 이후 진행(HALT 계산 제외) |
+| 설문 문항 부족 | M4 ① 활성 카드·A/B 쌍 미달(`survey-items-count` fail) | BLOCKED.md(`survey-items` 유형, U-09)에 부족 수·재현 명령(`pnpm survey:build --check`)을 쓰고 단계 결과에 `blockedBy`를 남긴 채 M5 이후 진행(HALT 계산 제외, verify는 `pass_blocked`) |
+| 진단 튜닝 상한 도달 | M4 ④ dev 시도 또는 gate 실행 수가 상한(U-08) | BLOCKED.md(`sim-limit` 유형)에 tuning-log 경로·재현 명령을 쓰고 `sim-diagnosis-gate` 결과에 `blockedBy`를 남긴 채 M5 이후 진행(HALT 계산 제외) |
 | 즉시 중단(작업 종료) | 다음 중 하나: 비밀키가 커밋됨, 로컬이 아닌 DB·Storage에 쓰기가 필요, guard가 에이전트 자신의 잠금 위반을 탐지, BLOCKED 미해결 항목(프로파일 대체가 적용된 `env` 사유는 제외, S-01)이 서로 다른 마일스톤 3개에 걸침 | PROGRESS.md에 `HALT` 기록 후 작업 종료 |
 
 BLOCKED.md 항목 형식:
@@ -664,7 +666,7 @@ BLOCKED.md 항목 형식:
 | `ref_tagger` | 05장 5.6.2 스키마(score 1~5, 입력 해시 기반) |
 
 - 이미지 선택은 mock이 하지 않는다(컴파일러 몫, 04장 4.9.4).
-- usage(T-17, 원천 06장 6.9.4 ⑦): 실제 프롬프트·출력 길이가 아니라 `fixtures/llm/mock-prompt-sizes.json`의 블록별 고정 문자 수로 `tokens = ceil(문자 수 / 3)`을 보고한다. 정적 프리픽스는 잡의 첫 성공 `gen_layout`에서 `cacheWriteTokens`, 나머지 `gen_layout`·수정 호출에서 `cachedTokens`로 보고한다. 단가는 06장 6.9.2 `pricing["mock/mock-page"]`·`["mock/mock-vision"]` 고정값(S-13)이다. 기본 경로 기대 원가는 이 픽스처로 계산한 공식값(06장 AC-06-56, ± 1%)이다.
+- usage(T-17, 원천 06장 6.9.4 ⑦): 실제 프롬프트·출력 길이가 아니라 `fixtures/llm/mock-prompt-sizes.json`의 블록별 고정 문자 수로 `tokens = ceil(문자 수 / 3)`을 보고한다. 정적 프리픽스는 06장 6.9.4 ③ `cacheState`가 `cache_write`인 `gen_layout`에서 `cacheWriteTokens`, `cached`인 `gen_layout`·수정 호출에서 `cachedTokens`로 보고한다. Mock은 응답 완료 시 사건 t1을 내고, `gen_copy` 지연은 후보 0 `gen_layout` 지연 + 1ms로 고정한다(U-01: 카피 정산이 후보 0 정산 뒤). 단가는 06장 6.9.2 `pricing["mock/mock-page"]`·`["mock/mock-vision"]` 고정값(S-13)이다. 기본 경로 기대 원가는 이 픽스처로 계산한 공식값(06장 AC-06-56, ± 1%)이다.
 - 수리 규칙(T-18, 결정론): `repair_schema`는 zod 오류 경로의 필드를 스키마 유효값(열거형 첫 값, 길이 하한 문자열은 덱 참조)으로 채운다. `repair_quality`·`diversity`는 `violations[].where` 섹션의 variant를 허용 목록의 다음 값으로 바꾸고, `axis_gaps`가 있으면 효과표에서 부호가 맞는 variant를 고른다. 재호출 결과도 위반이면 그 후보는 `eligible=false`(사유 `DIVERSITY`)이고 같은 변형의 다른 후보가 없으면 폴백(04장 4.8).
 - 효과표 `fixtures/llm/mock-variant-effects.json`: `seed:temp`(또는 `pnpm mock:effects`)가 각 (block, variant)를 `standardTree` 문맥에서 1회 렌더하고 B18 정규화기로 Δ(A1, A4)를 측정해 만든다(결정론, 2회 생성 바이트 동일, 제품 결정 아님). `low_score@*`는 효과표와 무관하게 `fixtures/llm/low-score-trees/`의 고정 트리를 쓰고, CI가 72개 명세 조합 모두 H < 80인지 확인한다.
 - 지연: `MOCK_LLM_LATENCY_MS`(기본 200).
@@ -765,8 +767,8 @@ BLOCKED.md 항목 형식:
 | 파일 | 내용 | 에이전트 권한 |
 |---|---|---|
 | `CLAUDE.md` | 아래 9.8.2 골격 | 읽기 전용(잠금) |
-| `docs/spec/FINAL/*.md`(장 파일·`INDEX.md`·결정 레지스터 통합본) | 확정 기획서. `spec:extract` 추출 원천은 코드 상수 1개 `docs/spec/FINAL/07_quality.md`(T-02) | 읽기 전용(spec 잠금) |
-| `docs/spec/v2/*.md`, `docs/spec/decisions*.md`, `docs/reviews/**` | 작성·리뷰 기록용. 구현 판정에 쓰지 않는다 | 읽기 전용(spec 잠금) |
+| `docs/spec/FINAL/*.md`(장 파일·`INDEX.md`·결정 레지스터 통합본) | 확정 기획서. `spec:extract` 추출 원천은 코드 상수 1개(ref별 경로 맵 `SPEC_SOURCE`: `review-pass` → `docs/spec/v2/07_quality.md`, 그 밖 → `docs/spec/FINAL/07_quality.md`, 07장 7.12.1·U-10) | 읽기 전용(spec 잠금) |
+| `docs/spec/v2/*.md`, `docs/spec/decisions*.md`, `docs/reviews/**` | 작성·리뷰 기록용. 구현 판정에 쓰지 않는다(예외: `spec:extract --from review-pass`가 그 태그 시점의 `docs/spec/v2/07_quality.md`만 읽는다, U-10) | 읽기 전용(spec 잠금) |
 | `docs/spec/DECISIONS_LOG.md` | 운영·환경 결정 | append-only(T-01) |
 | `docs/dependency-allowlist.md` | 허용 패키지·버전 범위·라이선스 | 읽기 전용(잠금) |
 | `docs/ASSUMPTIONS.md`, `BLOCKED.md`, `PROGRESS.md` | 운영 기록 | append |
@@ -854,10 +856,10 @@ pnpm seed:temp | pnpm db:seed | pnpm survey:build | pnpm eval:golden --mode mock
 에이전트는 아래 전부를 만족할 때만 작업 완료를 선언한다.
 
 - [ ] `m0-done`~`m8-done` 태그 9개 존재
-- [ ] `pnpm verify:m8` 3회 연속 녹색(`reports/verify-m8-<n>.json` 3개의 `gitSha`가 같으면 세션이 달라도 인정, flaky 0, S-23)
+- [ ] `pnpm verify:m8` 3회 연속 녹색(`pass` 또는 `pass_blocked`, U-09; `reports/verify-m8-<n>.json` 3개의 `gitSha`가 같으면 세션이 달라도 인정, flaky 0, S-23)
 - [ ] `pnpm release:check` 종료 코드 0, 2 또는 3(3은 출시 불가이며 막힘 BLK가 HUMAN_TODO에 있음, T-05)
 - [ ] `pnpm guard` 녹색, `.guard/test-count.json` 값이 M0 이후 단조 증가
-- [ ] BLOCKED.md의 open 항목 0, 또는 open 항목이 전부 `locked-conflict`·`env`·`sim-limit`(M4 ④ 튜닝 상한 도달, `sim-diagnosis-gate` fail의 `blockedBy`) 유형이고 각 항목에 재현 명령·제안 수정안 있음. 프로파일 대체(06장 6.13.1)로 해결된 환경 차이는 BLOCKED에 올리지 않고 `needs_ci`로만 남는다(9.5.3과 같은 규칙, S-01)
+- [ ] BLOCKED.md의 open 항목 0, 또는 open 항목이 전부 `locked-conflict`·`env`·`sim-limit`(M4 ④ 튜닝 상한 도달, `sim-diagnosis-gate` fail의 `blockedBy`)·`survey-items`(M4 ① 문항 부족, `survey-items-count`의 `blockedBy`, U-09) 유형이고 각 항목에 재현 명령·제안 수정안 있음. 프로파일 대체(06장 6.13.1)로 해결된 환경 차이는 BLOCKED에 올리지 않고 `needs_ci`로만 남는다(9.5.3과 같은 규칙, S-01)
 - [ ] PROGRESS.md 상태 표 M0~M8 전부 `done`, 마일스톤마다 시작·종료 기록 존재
 - [ ] ASSUMPTIONS.md 전 항목에 "되돌리기 비용" 기재
 - [ ] `docs/runbook.md`만으로 클린 클론 → `pnpm dev:stack` → 익명 진단 → 생성(mock) → 내보내기가 재현됨(M8 E2E가 runbook 명령을 그대로 실행)
@@ -893,6 +895,7 @@ pnpm seed:temp | pnpm db:seed | pnpm survey:build | pnpm eval:golden --mode mock
 | AC-09-14 | CLAUDE.md가 300줄 이하이고 9.8.2의 8개 절을 모두 포함한다. |
 | AC-09-17 | (T-04, QA3-03) Given M1 종료 커밋 / When `pnpm data:validate` / Then 골든 32행이 `answers`·`expected.muRef` = null로 유효하다. Given M4 종료 직전 / When `pnpm eval:golden:build-answers`를 2회 실행 / Then 출력 바이트가 같고 32행 모두 채워지며, `m4-done` 커밋 이후 `data/golden/**` 1바이트 변경은 guard FAIL이다. tuned 파일 변경 커밋에 새 muRef가 없으면(또는 그 반대면) guard FAIL이다. |
 | AC-09-18 | (T-18, AI3-04) 계약 테스트 ① 같은 후보의 `initial`과 `repair_quality` mock 출력 SHA-256이 다르고, `!`가 없는 시나리오에서 재호출 출력은 스키마 유효다 ② `mixed` 단일 잡(골든 GS-01)에서 `llm_calls` 개수가 07장 TC-R-15에 적힌 값(initial 7, repair_schema 1, repair_quality 1, diversity 1)과 같고 노출 시안 전부 04장 AC-04-20 충족, `budget_skipped` 0 ③ `mock-variant-effects.json` 2회 생성 바이트 동일, `low-score-trees` 72조합 전부 H < 80 ④ `judge_position_bias@judge_vision`에서 A/B를 바꿔 2회 심사한 결과가 불일치하면 `tie`로 기록되고, 일반 `judge_vision`은 A/B를 바꿔도 승자 ID가 같다. |
+| AC-09-19 | (U-09, RB4-04) 메타 테스트: 활성 카드 47장 픽스처와 open `survey-items` BLK(재현 명령 있음)에서 `verify:m4`의 `result = pass_blocked`이고 `survey-items-count` 단계 status `blocked`·`blockedBy` 기록, `m4-done` 태그 절차가 통과하며 `release:check`는 3이다. 같은 픽스처에서 BLK를 닫으면 `verify:m4`는 `fail`이다. BLK가 재현 명령 없이 열려 있어도 `fail`이다. |
 
 ---
 
@@ -990,4 +993,5 @@ pnpm seed:temp | pnpm db:seed | pnpm survey:build | pnpm eval:golden --mode mock
 | 6.19 잔여 | M3 `v_true` 코드값, M5 `prompts/<role>@v<N>.md` | V-TRUE·`{role}.v{N}` 0건 |
 | T-17(TL3-03·04) | 9.6.2 Mock usage 픽스처·캐시 토큰 규칙, `cost_spike` 정의 고정(단가 10배), `cost_ramp`·`usage_overrun` 행 | 원천 06장 6.9.4 ⑦ |
 | T-18(AI3-04·TL3-05·AI3-09) | 9.6.2 시드에 `callKind`·`attempt`, 인덱스 매핑, 장애 `initial` 한정·`!`, 수리 규칙, 효과표·low-score-trees, `judge_vision` ID 기반·`judge_position_bias`, `mixed` 인덱스 표기, AC-09-18 | |
+| U-01·U-08·U-09·U-10(r4 RB4-01·03·04·05) | 9.4.1 `blocked`·`pass_blocked`·AC-09-19, 9.5.3 `survey-items` 행·튜닝 상한 문구, 9.9.2 BLK 유형·녹색, M4 ④ dev 캐시·상한 도달 gate·커밋 구성, 9.6.2 Mock t1·카피 지연, 9.8.1 `SPEC_SOURCE` 맵 | |
 | T-29·T-34 | B25 확장 역할·`pricing.price`, B24 `industryTags` 연결·교차 참조 | |
