@@ -1,0 +1,686 @@
+{
+  "bundle": "token-schema",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "tokens-1",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://tastefit.local/schema/tokens-1.json",
+        "type": "object",
+        "required": [
+          "$schemaVersion",
+          "color",
+          "font",
+          "type",
+          "space",
+          "radius",
+          "border",
+          "shadow",
+          "motion",
+          "layout",
+          "media",
+          "z",
+          "opacity"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "$schemaVersion": {
+            "const": "tokens-1"
+          },
+          "color": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/group"
+              },
+              {
+                "required": [
+                  "bg",
+                  "surface",
+                  "surface-inverse",
+                  "fg",
+                  "fg-muted",
+                  "fg-inverse",
+                  "border",
+                  "border-strong",
+                  "primary",
+                  "on-primary",
+                  "primary-hover",
+                  "primary-active",
+                  "focus",
+                  "focus-inverse",
+                  "success",
+                  "warning",
+                  "danger",
+                  "neutral",
+                  "overlay"
+                ]
+              }
+            ]
+          },
+          "font": {
+            "$ref": "#/$defs/group"
+          },
+          "type": {
+            "$ref": "#/$defs/group"
+          },
+          "space": {
+            "$ref": "#/$defs/group"
+          },
+          "radius": {
+            "$ref": "#/$defs/group"
+          },
+          "border": {
+            "$ref": "#/$defs/group"
+          },
+          "shadow": {
+            "$ref": "#/$defs/group"
+          },
+          "motion": {
+            "$ref": "#/$defs/group"
+          },
+          "layout": {
+            "$ref": "#/$defs/group"
+          },
+          "media": {
+            "$ref": "#/$defs/group"
+          },
+          "z": {
+            "$ref": "#/$defs/group"
+          },
+          "opacity": {
+            "$ref": "#/$defs/group"
+          }
+        },
+        "$defs": {
+          "alias": {
+            "type": "string",
+            "pattern": "^\\{[a-z0-9.-]+\\}$"
+          },
+          "extensions": {
+            "type": "object",
+            "properties": {
+              "app.tastefit": {
+                "type": "object",
+                "properties": {
+                  "source": {
+                    "enum": [
+                      "preset",
+                      "palette",
+                      "formula",
+                      "brand"
+                    ]
+                  },
+                  "l2Key": {
+                    "type": "string"
+                  },
+                  "contrast": {
+                    "type": "object",
+                    "properties": {
+                      "against": {
+                        "type": "string"
+                      },
+                      "ratio": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "colorValue": {
+            "type": "object",
+            "required": [
+              "colorSpace",
+              "components",
+              "hex"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "colorSpace": {
+                "const": "oklch"
+              },
+              "components": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 0.37
+                  },
+                  {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 360
+                  }
+                ],
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "alpha": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "hex": {
+                "type": "string",
+                "pattern": "^#[0-9A-F]{6}$"
+              }
+            }
+          },
+          "shadowLayer": {
+            "type": "object",
+            "required": [
+              "color",
+              "offsetX",
+              "offsetY",
+              "blur",
+              "spread"
+            ],
+            "properties": {
+              "color": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/colorValue"
+                  },
+                  {
+                    "$ref": "#/$defs/alias"
+                  }
+                ]
+              },
+              "offsetX": {
+                "type": "object",
+                "required": [
+                  "value",
+                  "unit"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "value": {
+                    "type": "number"
+                  },
+                  "unit": {
+                    "enum": [
+                      "px"
+                    ]
+                  }
+                }
+              },
+              "offsetY": {
+                "type": "object",
+                "required": [
+                  "value",
+                  "unit"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "value": {
+                    "type": "number"
+                  },
+                  "unit": {
+                    "enum": [
+                      "px"
+                    ]
+                  }
+                }
+              },
+              "blur": {
+                "type": "object",
+                "required": [
+                  "value",
+                  "unit"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "value": {
+                    "type": "number"
+                  },
+                  "unit": {
+                    "enum": [
+                      "px"
+                    ]
+                  }
+                }
+              },
+              "spread": {
+                "type": "object",
+                "required": [
+                  "value",
+                  "unit"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "value": {
+                    "type": "number"
+                  },
+                  "unit": {
+                    "enum": [
+                      "px"
+                    ]
+                  }
+                }
+              },
+              "inset": {
+                "type": "boolean"
+              }
+            }
+          },
+          "token": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/colorToken"
+              },
+              {
+                "$ref": "#/$defs/dimensionToken"
+              },
+              {
+                "$ref": "#/$defs/fontFamilyToken"
+              },
+              {
+                "$ref": "#/$defs/fontWeightToken"
+              },
+              {
+                "$ref": "#/$defs/numberToken"
+              },
+              {
+                "$ref": "#/$defs/durationToken"
+              },
+              {
+                "$ref": "#/$defs/cubicBezierToken"
+              },
+              {
+                "$ref": "#/$defs/shadowToken"
+              },
+              {
+                "$ref": "#/$defs/typographyToken"
+              },
+              {
+                "$ref": "#/$defs/borderToken"
+              }
+            ]
+          },
+          "group": {
+            "type": "object",
+            "propertyNames": {
+              "pattern": "^(\\$description|[a-z0-9-]+)$"
+            },
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/token"
+                },
+                {
+                  "$ref": "#/$defs/group"
+                }
+              ]
+            },
+            "not": {
+              "required": [
+                "$value"
+              ]
+            }
+          },
+          "colorToken": {
+            "type": "object",
+            "required": [
+              "$type",
+              "$value"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "$type": {
+                "const": "color"
+              },
+              "$value": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/colorValue"
+                  },
+                  {
+                    "$ref": "#/$defs/alias"
+                  }
+                ]
+              },
+              "$description": {
+                "type": "string"
+              },
+              "$extensions": {
+                "$ref": "#/$defs/extensions"
+              }
+            }
+          },
+          "dimensionToken": {
+            "type": "object",
+            "required": [
+              "$type",
+              "$value"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "$type": {
+                "const": "dimension"
+              },
+              "$value": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "value",
+                      "unit"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "value": {
+                        "type": "number"
+                      },
+                      "unit": {
+                        "enum": [
+                          "px",
+                          "rem",
+                          "em"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "$ref": "#/$defs/alias"
+                  }
+                ]
+              },
+              "$description": {
+                "type": "string"
+              },
+              "$extensions": {
+                "$ref": "#/$defs/extensions"
+              }
+            }
+          },
+          "fontFamilyToken": {
+            "type": "object",
+            "required": [
+              "$type",
+              "$value"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "$type": {
+                "const": "fontFamily"
+              },
+              "$value": {
+                "anyOf": [
+                  {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "$ref": "#/$defs/alias"
+                  }
+                ]
+              },
+              "$description": {
+                "type": "string"
+              },
+              "$extensions": {
+                "$ref": "#/$defs/extensions"
+              }
+            }
+          },
+          "fontWeightToken": {
+            "type": "object",
+            "required": [
+              "$type",
+              "$value"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "$type": {
+                "const": "fontWeight"
+              },
+              "$value": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 100,
+                    "maximum": 900
+                  },
+                  {
+                    "$ref": "#/$defs/alias"
+                  }
+                ]
+              },
+              "$description": {
+                "type": "string"
+              },
+              "$extensions": {
+                "$ref": "#/$defs/extensions"
+              }
+            }
+          },
+          "numberToken": {
+            "type": "object",
+            "required": [
+              "$type",
+              "$value"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "$type": {
+                "const": "number"
+              },
+              "$value": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "$ref": "#/$defs/alias"
+                  }
+                ]
+              },
+              "$description": {
+                "type": "string"
+              },
+              "$extensions": {
+                "$ref": "#/$defs/extensions"
+              }
+            }
+          },
+          "durationToken": {
+            "type": "object",
+            "required": [
+              "$type",
+              "$value"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "$type": {
+                "const": "duration"
+              },
+              "$value": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "value",
+                      "unit"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "value": {
+                        "type": "number"
+                      },
+                      "unit": {
+                        "enum": [
+                          "ms"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "$ref": "#/$defs/alias"
+                  }
+                ]
+              },
+              "$description": {
+                "type": "string"
+              },
+              "$extensions": {
+                "$ref": "#/$defs/extensions"
+              }
+            }
+          },
+          "cubicBezierToken": {
+            "type": "object",
+            "required": [
+              "$type",
+              "$value"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "$type": {
+                "const": "cubicBezier"
+              },
+              "$value": {
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "minItems": 4,
+                    "maxItems": 4
+                  },
+                  {
+                    "$ref": "#/$defs/alias"
+                  }
+                ]
+              },
+              "$description": {
+                "type": "string"
+              },
+              "$extensions": {
+                "$ref": "#/$defs/extensions"
+              }
+            }
+          },
+          "shadowToken": {
+            "type": "object",
+            "required": [
+              "$type",
+              "$value"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "$type": {
+                "const": "shadow"
+              },
+              "$value": {
+                "anyOf": [
+                  {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/shadowLayer"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/$defs/shadowLayer"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "$ref": "#/$defs/alias"
+                  }
+                ]
+              },
+              "$description": {
+                "type": "string"
+              },
+              "$extensions": {
+                "$ref": "#/$defs/extensions"
+              }
+            }
+          },
+          "typographyToken": {
+            "type": "object",
+            "required": [
+              "$type",
+              "$value"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "$type": {
+                "const": "typography"
+              },
+              "$value": {
+                "anyOf": [
+                  {
+                    "type": "object"
+                  },
+                  {
+                    "$ref": "#/$defs/alias"
+                  }
+                ]
+              },
+              "$description": {
+                "type": "string"
+              },
+              "$extensions": {
+                "$ref": "#/$defs/extensions"
+              }
+            }
+          },
+          "borderToken": {
+            "type": "object",
+            "required": [
+              "$type",
+              "$value"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "$type": {
+                "const": "border"
+              },
+              "$value": {
+                "anyOf": [
+                  {
+                    "type": "object"
+                  },
+                  {
+                    "$ref": "#/$defs/alias"
+                  }
+                ]
+              },
+              "$description": {
+                "type": "string"
+              },
+              "$extensions": {
+                "$ref": "#/$defs/extensions"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

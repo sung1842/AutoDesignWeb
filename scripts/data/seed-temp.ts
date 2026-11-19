@@ -1175,6 +1175,178 @@ function genBlocks(ctx: Ctx): Out[] {
   return [{ path: "data/taxonomy/blocks.json", content: bundle(ctx, "blocks", blocks) }];
 }
 
+// ---------- C03 tokens/schema.json (03장 3.1.2 DTCG TokenSet JSON Schema 2020-12) ----------
+/** 3.1.2 최상위 그룹(필수, 그 밖은 위반). */
+const TOKEN_GROUPS = [
+  "color",
+  "font",
+  "type",
+  "space",
+  "radius",
+  "border",
+  "shadow",
+  "motion",
+  "layout",
+  "media",
+  "z",
+  "opacity",
+];
+/** 3.1.2 사용 $type. */
+const TOKEN_TYPES = [
+  "color",
+  "dimension",
+  "fontFamily",
+  "fontWeight",
+  "number",
+  "duration",
+  "cubicBezier",
+  "shadow",
+  "typography",
+  "border",
+];
+/** 3.1.3 색 역할 중 팔레트·파생으로 항상 생기는 것(accent·on-accent는 선택). */
+const REQUIRED_COLOR_ROLES = [
+  "bg",
+  "surface",
+  "surface-inverse",
+  "fg",
+  "fg-muted",
+  "fg-inverse",
+  "border",
+  "border-strong",
+  "primary",
+  "on-primary",
+  "primary-hover",
+  "primary-active",
+  "focus",
+  "focus-inverse",
+  "success",
+  "warning",
+  "danger",
+  "neutral",
+  "overlay",
+];
+
+function genTokenSchema(ctx: Ctx): Out[] {
+  const alias = { type: "string", pattern: "^\\{[a-z0-9.-]+\\}$" };
+  const value = (v: Obj): Obj => ({ anyOf: [v, { $ref: "#/$defs/alias" }] });
+  const dim = (units: string[]): Obj => ({
+    type: "object",
+    required: ["value", "unit"],
+    additionalProperties: false,
+    properties: { value: { type: "number" }, unit: { enum: units } },
+  });
+  const valueSchemas: Record<string, Obj> = {
+    color: { $ref: "#/$defs/colorValue" },
+    dimension: dim(["px", "rem", "em"]),
+    fontFamily: { anyOf: [{ type: "string" }, { type: "array", items: { type: "string" } }] },
+    fontWeight: { type: "integer", minimum: 100, maximum: 900 },
+    number: { type: "number" },
+    duration: dim(["ms"]),
+    cubicBezier: { type: "array", items: { type: "number" }, minItems: 4, maxItems: 4 },
+    shadow: {
+      anyOf: [
+        { $ref: "#/$defs/shadowLayer" },
+        { type: "array", items: { $ref: "#/$defs/shadowLayer" } },
+      ],
+    },
+    typography: { type: "object" },
+    border: { type: "object" },
+  };
+  const defs: Obj = {
+    alias,
+    extensions: {
+      type: "object",
+      properties: {
+        "app.tastefit": {
+          type: "object",
+          properties: {
+            source: { enum: ["preset", "palette", "formula", "brand"] },
+            l2Key: { type: "string" },
+            contrast: {
+              type: "object",
+              properties: { against: { type: "string" }, ratio: { type: "number" } },
+            },
+          },
+        },
+      },
+    },
+    colorValue: {
+      type: "object",
+      required: ["colorSpace", "components", "hex"],
+      additionalProperties: false,
+      properties: {
+        colorSpace: { const: "oklch" },
+        components: {
+          type: "array",
+          prefixItems: [
+            { type: "number", minimum: 0, maximum: 1 },
+            { type: "number", minimum: 0, maximum: 0.37 },
+            { type: "number", minimum: 0, maximum: 360 },
+          ],
+          minItems: 3,
+          maxItems: 3,
+        },
+        alpha: { type: "number", minimum: 0, maximum: 1 },
+        hex: { type: "string", pattern: "^#[0-9A-F]{6}$" },
+      },
+    },
+    shadowLayer: {
+      type: "object",
+      required: ["color", "offsetX", "offsetY", "blur", "spread"],
+      properties: {
+        color: value({ $ref: "#/$defs/colorValue" }),
+        offsetX: dim(["px"]),
+        offsetY: dim(["px"]),
+        blur: dim(["px"]),
+        spread: dim(["px"]),
+        inset: { type: "boolean" },
+      },
+    },
+    token: { oneOf: TOKEN_TYPES.map((t) => ({ $ref: `#/$defs/${t}Token` })) },
+    group: {
+      type: "object",
+      propertyNames: { pattern: "^(\\$description|[a-z0-9-]+)$" },
+      additionalProperties: {
+        anyOf: [{ $ref: "#/$defs/token" }, { $ref: "#/$defs/group" }],
+      },
+      not: { required: ["$value"] },
+    },
+  };
+  for (const t of TOKEN_TYPES)
+    defs[`${t}Token`] = {
+      type: "object",
+      required: ["$type", "$value"],
+      additionalProperties: false,
+      properties: {
+        $type: { const: t },
+        $value: value(valueSchemas[t] ?? {}),
+        $description: { type: "string" },
+        $extensions: { $ref: "#/$defs/extensions" },
+      },
+    };
+  const props: Obj = { $schemaVersion: { const: "tokens-1" } };
+  for (const g of TOKEN_GROUPS) props[g] = { $ref: "#/$defs/group" };
+  props.color = {
+    allOf: [{ $ref: "#/$defs/group" }, { required: REQUIRED_COLOR_ROLES }],
+  };
+  const schema: Obj = {
+    $schema: "https://json-schema.org/draft/2020-12/schema",
+    $id: "https://tastefit.local/schema/tokens-1.json",
+    type: "object",
+    required: ["$schemaVersion", ...TOKEN_GROUPS],
+    additionalProperties: false,
+    properties: props,
+    $defs: defs,
+  };
+  return [
+    {
+      path: "data/tokens/schema.json",
+      content: bundle(ctx, "token-schema", [{ id: "tokens-1", schema }]),
+    },
+  ];
+}
+
 /** 생성기 목록(의존 순서). 나머지 묶음은 M1-04b 이후 단위에서 추가한다. */
 export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genAxes,
@@ -1190,6 +1362,7 @@ export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genHarmony,
   genComponents,
   genBlocks,
+  genTokenSchema,
 ];
 
 function isHuman(abs: string): boolean {
