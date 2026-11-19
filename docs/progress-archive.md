@@ -111,3 +111,19 @@
 - 2026-11-19 23:10 | M0-07 web·worker health, env 종료 1, m0 stack.test 8/8 녹색 → 다음: M0-08 guard 1~4
 - 2026-11-19 23:15 | BLK-001 라이선스 규칙 locked-conflict 기록(HUMAN_TODO) → 다음: M0-08 guard 1~4
 - 2026-11-19 23:25 | M0-08 guard 1~4단계(exit 3=BLK-001), BLK-002(자체잠금 테스트 정규식 오류) → 다음: M0-09 guard 5~7
+- 2026-11-20 01:11 | M1-04a2a taxonomy.json(18키·값별 L1 기여)·mapping.json(서수14+범주4) → 다음: a2b presets·palettes
+- 2026-11-20 00:40 | M1-04a1 seed:temp 골격(mulberry32·human 건너뜀·고정 봉투)+B1·B2·B4, ASM-010 → 다음: 04a2 03장 파일
+- 2026-11-20 00:30 | M1-03 data:validate(스키마·id·교차 참조·수량·sha·CSV 열) — 데이터 없음 44건 → 다음: M1-04a seed:temp
+- 2026-11-20 00:21 | M1-02 data-contracts: 봉투·B1~B25 키 스키마·레지스트리(+03장 8파일), 단위 3 → 다음: M1-03 data:validate
+- 2026-11-20 00:19 | guard 복구: DbPort·fixtures 계약 스텁(수집 0건 해소), env 비밀값 검사 audit 오탐 해소(ASM-009) → 다음: M1-02
+- 2026-11-20 00:15 | M1-01 수용 테스트 2파일(7ac566c) 자체 잠금, trace M1 17행, ASM-008 → 다음: M1-02 data-contracts
+- 2026-11-19 23:47 | M1 계획 11단위 작성, 세션 종료 unlock → 다음: M1-01 수용 테스트
+- 2026-11-19 23:46 | M0 완료: 종료 잠금 23파일, verify:m0 pass_blocked(BLK-001~005), m0-done → 다음: M1 하위 단위 계획(09장 9.4.3)
+- 2026-11-19 23:35 | M0-11 verify 실행기, verify:m0 fail 남음(AC-07-01 llm·ci.yml), BLK-005(커밋 scope) → 다음: 11b llm gateway
+- 2026-11-19 23:27 | M0-10 tests/guard 메타 10/10, guard:qa-audit 단계, ASM-006(sim-tune 커밋에 locked-hashes 허용) → 다음: M0-11 verify
+- 2026-11-19 23:24 | M0-09f guard:tuned(8단계 a~e), M0-09 완료(guard 23/24·qa-trace 8/9, 나머지 BLK) → 다음: M0-10 guard 메타
+- 2026-11-19 23:22 | M0-09e qa:trace --docs(ASM-005), 01~09장 태그 규칙 미반영 BLK-004 → 다음: guard 8단계 tuned
+- 2026-11-19 23:20 | M0-09d key-coverage, 표 밖 수치 4건 BLK-003(exit 3) → 다음: qa:trace --docs
+- 2026-11-19 23:19 | M0-09c qa:trace --audit(import 그래프·const 추적·SC 예외), 실제 테스트 리터럴 0 → 다음: --key-coverage
+- 2026-11-19 23:50 | M0-09b qa:trace(추적·배정 위치·--json·--upto), traceability.yaml M0 24건 → 다음: --audit
+- 2026-11-19 23:35 | M0-09a guard:spec(5·6단계, thresholds-schema zod, AD-027) guard.test 23/24 → 다음: qa:trace --audit
