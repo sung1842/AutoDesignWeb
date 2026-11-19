@@ -121,7 +121,7 @@ DesignSpec = {
     rhythm: { max_centered_ratio: 0.4, inverse_sections: [1, 2],
               max_same_bg_run: 2, forbid_strict_alternation: true,
               pad_variation_min: 1 },
-    image_tags_allowed: ImageTag[]                // T-34: purposeTags(purpose) ∩ industryTags(BrandInput). industryTags 매칭 0이면 {storefront} ∪ common.texture-*. LT-10이 강제
+    image_tags_allowed: ImageTag[]                // T-34: purposeTags(purpose) ∩ industryTags(BrandInput). 교집합 = ∅(업종 매칭 0 포함)이면 {defaultImageTag(purpose)} ∪ common.texture-*(03장 3.6.5, U-12. 옛 {storefront} → 대체). 결과 ⊆ purposeTags ∪ common.*, 공집합 없음. LT-10이 강제
   },
   copy: {
     tone_id: "T-PRECISE" | "T-WARM" | "T-EDITORIAL" | "T-PLAYFUL",
@@ -388,7 +388,7 @@ SlotValueRaw =
 
 | 키 | 개수 | 길이 | 용도 | 비고 |
 |---|---|---|---|---|
-| `hero.headline` | 3 | 8–24 | 공통 | 각 항목에 `kind: factual|benefit|emotive` 필수, 3개 kind 모두 달라야 함. 3개 중 ≥1개는 **`maxChars_job`** 이하여야 하고 G-01이 검사한다(S-39·T-30). `maxChars_job = min over (변형 3 × 각 변형 `spec.hero_variants` 허용 목록 × {1280, 375}) headlineBudget(presetTokens, heroVariant, viewport).maxChars`(03장 3.8.1, `VariantDef.text_cols` 사용). S1(명세 3개) 확정 후 S2(덱 호출) 전에 계산하므로 결정론적으로 1개 값이다. 프롬프트에 `maxChars_job`을 변수로 넣는다. 후보별 옵션 선택(넘침 처리 ①)은 그 후보의 `maxChars`로 한다 |
+| `hero.headline` | 3 | 8–24 | 공통 | 각 항목에 `kind: factual|benefit|emotive` 필수, 3개 kind 모두 달라야 함. 3개 중 ≥1개는 **`maxChars_job`** 이하여야 하고 G-01이 검사한다(S-39·T-30). `maxChars_job = min over (변형 3 × 각 변형 `spec.hero_variants` 허용 목록 × {1280, 375}) headlineBudget(presetTokens, heroVariant, viewport).maxChars`(03장 3.8.1, `VariantDef.text_cols` 사용, 정수). `t-display` hero는 넘침 처리 ②를 적용한 `t-1` 크기로 계산한다(U-11, 3.8.1에 계산 결과: 전 조합 ≥ 10). S1(명세 3개) 확정 후 S2(덱 호출) 전에 계산하므로 결정론적으로 1개 값이다. 프롬프트에 `maxChars_job`을 변수로 넣는다. 후보별 옵션 선택(넘침 처리 ①)은 그 후보의 `maxChars`로 한다 |
 | `hero.sub` | 2 | 30–80 | 공통 | |
 | `hero.eyebrow` | 2 | 2–14 | 공통 | "New/신규/출시/✨" 금지(AIL-04) |
 | `cta.primary` | 3 | 2–10 | 공통 | 동사 종결, 용도별 권장 동사 목록에서 시작 |
@@ -437,7 +437,7 @@ SlotValueRaw =
 
 **AC-04-12** 금지 사전의 모든 항목에 양성 픽스처 1개(활용형 포함)와, 오탐 방지 음성 픽스처 20개(예: "혁신학교", "놀이터")가 있고 테스트가 전부 통과한다.
 **AC-04-13** 골든 세트 노출 시안에서 CP-01~CP-12 위반 0건(CP-06은 비율 기준).
-**AC-04-46**(T-30, UI3-04) ① 덱 G-01 단위 테스트: 같은 잡의 변형 3 × hero variant 허용 목록에 대해 `maxChars_job`이 결정론적으로 1개 값이고 덱 3옵션 중 ≥ 1개가 그 이하다 ② 브랜드명 1·14·30자 × 프리셋 8 × {375, 1280} 렌더에서 nav·footer 워드마크 G-04·G-06 위반 0건 ③ 골든 세트 cta big-type 헤드라인 1280 ≤ 2줄, 375 ≤ 3줄 100% ④ S09에서 hero 제목을 24자로 바꾼 뒤 클라이언트 미리보기와 서버 재컴파일의 `role_overrides`가 같다(E2E 1케이스) ⑤ `spec.render_adjustments` 필드가 스키마·코드에 0건.
+**AC-04-46**(T-30, UI3-04) ① 덱 G-01 단위 테스트: 같은 잡의 변형 3 × hero variant 허용 목록에 대해 `maxChars_job`이 결정론적으로 1개 값이고 덱 3옵션 중 ≥ 1개가 그 이하다. 또한 8 프리셋 × 3.6.6 허용 hero 전부에서 `maxChars_job ≥ 10`(정수)이고, 골든 T5·T8 케이스에서 G-01 덱 실패로 생긴 템플릿 덱 0건(U-11) ② 브랜드명 1·14·30자 × 프리셋 8 × {375, 1280} 렌더에서 nav·footer 워드마크 G-04·G-06 위반 0건 ③ 골든 세트 cta big-type 헤드라인 1280 ≤ 2줄, 375 ≤ 3줄 100% ④ S09에서 hero 제목을 24자로 바꾼 뒤 클라이언트 미리보기와 서버 재컴파일의 `role_overrides`가 같다(E2E 1케이스) ⑤ `spec.render_adjustments` 필드가 스키마·코드에 0건.
 
 ---
 
@@ -621,7 +621,7 @@ asset_id = C[ sha256(job_seed ‖ section.id ‖ slot_id) mod |C| ]   # C는 ass
 업종 태그 = industryTags(BrandInput): config/image_tag_keywords.json(B24, 결정론 사전)으로
             BrandInput.description·key_points의 명사 → 태그 집합. image_tags_allowed는 명세 단계(4.2.1)에서 정해지고
             LLM은 그 안에서만 slot.tag를 고른다(LT-10).
-업종 매칭 0건 → image_tags_allowed = {storefront} ∪ common.texture-*. 이때 hero 외 사진 슬롯은
+purposeTags ∩ industryTags = ∅(업종 매칭 0 포함) → image_tags_allowed = {defaultImageTag(p)} ∪ common.texture-*(U-12). 이때 hero 외 사진 슬롯은
                 fallback_variant 또는 shape-graphic으로 대체(이 절의 업종 처리는 이것 하나).
 photoSubstituted(T-26) = 이 페이지에서 사진 슬롯 1개 이상이 위 대체 또는 C = ∅로 치환됨(06장 MockupCard, 01장 drafts.photoSubstituted).
 portfolio work.items·showcase 이미지 슬롯 → placeholder: true
@@ -631,7 +631,7 @@ portfolio work.items·showcase 이미지 슬롯 → placeholder: true
 
 **AC-04-17** 같은 입력으로 컴파일 100회 반복 시 SHA-256 1종. 블록 CSS 전체에 대한 리터럴 검사 위반 0건.
 **AC-04-18** 컴파일 산출물의 외부 도메인 참조(`http(s)://`) 0건, `<script>`·`on*` 속성 0건.
-**AC-04-44**(T-34·T-35, PD3-04·PD3-05) ① 키워드 사전 픽스처 30건(매칭 20 + 비매칭 10)에서 `image_tags_allowed`가 기대 집합과 같다(단위) ② MockProvider가 허용 밖 태그를 내는 픽스처에서 LT-10 스키마 오류가 난다 ③ 골든 노출 시안의 한 페이지 안 warm↔cool 혼용 0건, `pageTone`과 반대 톤 사진 0건(manifest 대조) ④ portfolio 골든 시안의 `work`·`showcase` 이미지 100%가 README "교체 필요 이미지" 목록에 있다 ⑤ 매칭 0 픽스처에서 `photoSubstituted = true`, 매칭 있는 픽스처에서 false(07장 TC-B-20).
+**AC-04-44**(T-34·T-35, PD3-04·PD3-05) ① 키워드 사전 픽스처 30건(매칭 20 + 비매칭 10)에서 `image_tags_allowed`가 기대 집합과 같다(단위). 세 용도별 매칭 0 사례와 교집합 0 사례(업종 태그는 있으나 용도 밖)를 하나씩 포함하고, 모든 사례에서 `image_tags_allowed ⊆ purposeTags(p) ∪ common.*`이며 공집합 0건, saas·portfolio 골든 시안의 `local_business.*` 이미지 0건(U-12) ② MockProvider가 허용 밖 태그를 내는 픽스처에서 LT-10 스키마 오류가 난다 ③ 골든 노출 시안의 한 페이지 안 warm↔cool 혼용 0건, `pageTone`과 반대 톤 사진 0건(manifest 대조) ④ portfolio 골든 시안의 `work`·`showcase` 이미지 100%가 README "교체 필요 이미지" 목록에 있다 ⑤ 매칭 0 픽스처에서 `photoSubstituted = true`, 매칭 있는 픽스처에서 false(07장 TC-B-20).
 **AC-04-18a** 같은 입력에 대해 브라우저(Playwright 내 번들 실행)와 Node에서 `compile()` 결과 SHA-256이 같다(isomorphic 검증, R-17).
 
 ---
@@ -1286,3 +1286,4 @@ H < 80과 TM은 저장·내보내기 차단 사유가 아니다(사용자 선택
 | S-35 | 4.16.1 styleguide.html, E-14 | |
 | S-37(04) | DesignSpec brand_color_notice 5값, 종료 순서 행 | 원천 03 3.13.2 |
 | S-40(04) | 4.16.1 fonts/extended, E-15 | 원천 03 3.7.5 |
+| U-11·U-12(r4 RA4-01·02) | 4.6.2 `maxChars_job` 정수·`t-display` hero는 `t-1`로 계산, 4.2.1·4.9.4 폴백 `defaultImageTag`·교집합 0, AC-04-44 ①·AC-04-46 ① | 03 3.8.1·3.6.5 |

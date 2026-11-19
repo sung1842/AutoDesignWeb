@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P2
-- lock: {owner: 2026-11-19T07:08Z, since: 2026-11-19T07:14Z}
+- lock: {owner: 2026-11-19T07:08Z, since: 2026-11-19T07:15Z}
 - limit.next_reset_kst: 2026-11-19 19:57
 - 마지막 갱신: 2026-11-19 16:10 KST (예약 세션: decisions_v5 작성)
 
@@ -30,7 +30,7 @@
 - 라운드 3: [x] PM [x] 프로덕트 디자이너 [x] UX [x] UI [x] 테크 리드 [x] AI/ML [x] QA [x] 법무 → [x] decisions_v4(T-01~T-36) [x] 반영(아래 22단위)
 - 라운드 3 반영 단위(decisions_v4.md "반영 순서" 참고): [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 07-a [x] 07-b [x] 07-c [x] 07-d [x] 09-a [x] 09-b [x] 09-c [x] 01-a [x] 01-b [x] 04-a [x] 04-b [x] 03-a [x] 03-b [x] 08-a [x] 02-a [x] 05-a [x] 00-a [x] 잔여 표기 grep
 - 라운드 4(1.1 규칙: 리뷰어 3명·패킷 `docs/reviews/round4/packet.md`): [x] R-A 제품·경험 [x] R-B 기술·품질 [x] R-C 법무 → [x] decisions_v5(U-01~U-13) [ ] 반영(아래 9단위)
-- 라운드 4 반영 단위(decisions_v5.md "반영 순서"): [x] 06-a [x] 06-b [x] 07-a [x] 09-a [x] 02-a [ ] 04-a+03-a [ ] 01-a [ ] 08-a [ ] 잔여 grep
+- 라운드 4 반영 단위(decisions_v5.md "반영 순서"): [x] 06-a [x] 06-b [x] 07-a [x] 09-a [x] 02-a [x] 04-a+03-a [ ] 01-a [ ] 08-a [ ] 잔여 grep
 - 판정 기록(라운드별 C1/C2/C3):
   - R2 PM: FAIL/FAIL/FAIL (Blocker 0, Major 5: 예산-목표 불일치, 취소 시 한도 규칙 충돌, KPI 쿼리 분모, 검증 표본 확보, 00↔07·09 불일치)
   - R2 UX: FAIL/FAIL/FAIL (1라운드 19/19 해결, Blocker 0, Major 3: 결과 신뢰 문구 01↔02 불일치, 진단 카드 크기 규칙이 실제 화면에서 불성립, 편집 가능 판정을 화면 폭으로 해 200% 확대 시 편집 소실)
@@ -62,6 +62,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 16:15 | r4 04-a+03-a: maxChars_job 정수·t-1 계산(전 조합 ≥10 확인), defaultImageTag 폴백, AC-04-44·46
 - 2026-11-19 16:14 | r4 02-a: 2.16.2 dev 캐시·상한 도달 gate·maxGateRuns 의미, AC-02-36 ⑥⑦
 - 2026-11-19 16:13 | r4 09-a: pass_blocked·survey-items BLK·AC-09-19, M4 ④ 튜닝 상한 규칙, Mock t1·카피 지연, SPEC_SOURCE 맵
 - 2026-11-19 16:12 | r4 07-a: 배정표(07/07b/07c·신규 AC)·AC-07-23 ③ 범위 규칙, maxGateRuns 의미, 종료 3↔pass_blocked, SPEC_SOURCE 맵, TC-B-20

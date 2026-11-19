@@ -900,6 +900,7 @@ interface SlotDef {
 - "필수 중 택1"은 `requiredAny` 필드로 둔다(04장 LT-01 확장, D-0306).
 - 정렬 순서 규칙: hero는 첫 섹션(04장 LT-04). cta는 마지막 2개 섹션 안. contact·location은 마지막 3개 섹션 안. 나머지 순서는 패턴(04장 §4.8)이 정한다.
 - 용도별 이미지 태그 허용(`imageTags`): saas = `saas.*`, `common.*` / local_business = `local_business.*`, `common.*` / portfolio = `portfolio.*`, `common.*`.
+- 용도 기본 이미지 태그(`defaultImageTag`, U-12): saas `saas.architecture`, portfolio `portfolio.studio`, local_business `local_business.storefront`. 업종 태그와 용도 태그의 교집합이 비면 04장 4.2.1 폴백이 이 값을 쓴다(`imageTags` 안의 키여야 한다, `data:validate`).
 
 ### 3.6.6 유형별 블록 선호 (`presets/*.json`)
 
@@ -1096,7 +1097,7 @@ generic: sans-serif | serif
 | 전화번호 | `02-000-0000` 형식, `tel:` 링크 |
 | 이모지 | 제목·버튼·태그·카드 제목 안 0개(AIL-10) |
 
-**줄 예산 함수(S-39, UI2-03)**: `headlineBudget(presetTokens, variant, viewport) → maxChars = floor(textWidth / (size × 0.95)) × maxLines × 0.85`. 0.95 = 한글 평균 글자 폭 계수, 0.85 = keep-all 손실 계수(골든 세트로 보정, 변경 시 결정 기록). `textWidth`는 variant 메타 `VariantDef.text_cols`로 계산한다: 1280은 `floor(1200 × lg / 12 − 24)`, 375는 `floor(343 × base / 4)`(px, `floor` 반올림, T-30). hero 6종 값(필수): `hero.full-bleed-image` {lg 7, base 4}, `hero.left-aligned` {8, 4}, `hero.offset` {6, 4}, `hero.split` {6, 4}, `hero.type-only` {10, 4}, `hero.centered` {8, 4}. 덱 제약 입력은 04장 4.6.2 `maxChars_job`(변형 3 × hero 허용 목록 × {1280, 375}의 최솟값)이고, 후보별 넘침 처리는 그 후보의 `maxChars`로 **토큰 계산**으로 판정한다(04장 4.10.2, 렌더 측정은 AC-03-26 검증 전용). 하향 결과는 확정 트리 `role_overrides`에 둔다(옛 `spec.render_adjustments[]` → T-30으로 폐지). 같은 함수를 `cta.headline`(big-type 1280 2줄·375 3줄)·`footer.wordmark`·`nav.wordmark`에도 쓴다.
+**줄 예산 함수(S-39, UI2-03)**: `headlineBudget(presetTokens, variant, viewport) → maxChars = floor(floor(textWidth / (size × 0.95)) × maxLines × 0.85)`(정수, U-11). 0.95 = 한글 평균 글자 폭 계수, 0.85 = keep-all 손실 계수(골든 세트로 보정, 변경 시 결정 기록). `textWidth`는 variant 메타 `VariantDef.text_cols`로 계산한다: 1280은 `floor(min(space.container, 1200) × lg / 12 − 24)`(U-11, 콘텐츠 폭 1200 상한), 375는 `floor(343 × base / 4)`(px, `floor` 반올림, T-30). hero 6종 값(필수): `hero.full-bleed-image` {lg 7, base 4}, `hero.left-aligned` {8, 4}, `hero.offset` {6, 4}, `hero.split` {6, 4}, `hero.type-only` {10, 4}, `hero.centered` {8, 4}. 덱 제약 입력은 04장 4.6.2 `maxChars_job`(변형 3 × hero 허용 목록 × {1280, 375}의 최솟값)이고, 이 값을 계산할 때 `t-display` hero(type-only·full-bleed-image)는 넘침 처리 ②를 적용한 단계 `t-1` 크기로 계산한다(U-11, RA4-01. 덱 제약이 하향 후 값과 맞아야 8자 하한과 겹치지 않는다). 계산 결과(3.6.6 허용 hero 기준): 프리셋별 1280 최솟값 T1 15·T2 20·T3 23·T4 15·T5 10·T6 13·T7 15·T8 10, 375는 전 프리셋 ≥ 20이므로 모든 조합에서 `maxChars_job ≥ 10`이다(10 미만이 생기면 그 조합만 `t-2`로 한 단계 더 내려 계산하고 헤드라인 최소 8자는 바꾸지 않는다), 후보별 넘침 처리는 그 후보의 `maxChars`로 **토큰 계산**으로 판정한다(04장 4.10.2, 렌더 측정은 AC-03-26 검증 전용). 하향 결과는 확정 트리 `role_overrides`에 둔다(옛 `spec.render_adjustments[]` → T-30으로 폐지). 같은 함수를 `cta.headline`(big-type 1280 2줄·375 3줄)·`footer.wordmark`·`nav.wordmark`에도 쓴다.
 
 **AC-03-26** 골든 세트 렌더에서 고아 글자 헤드라인 0건, 375px 4줄 이상 헤드라인 0건, justify 0건(렌더 측정). 줄 넘침은 위 ① 또는 ②로 100% 해소되어 ③ 발생 0건이고, ② 비율(≤ 25%)을 기록한다(S-39).
 **AC-03-27** 3.8.2 자간 표를 크기 경계값(23/24/31/32/47/48/71/72px) × 서체 분류 3종으로 검사하는 단위 테스트가 통과한다.
@@ -1511,7 +1512,7 @@ AC-03-01~39·41~46은 L1 결정론 테스트 또는 렌더 테스트로 매 PR�
 | 유형 ID·중심 벡터 | `T1~T8`(+02장 slug), 3.4.7(R-01 키) | 02, 04, 05, 07, 09 | R-04 |
 | 팔레트 | `PAL-T{n}-{0..3}`, `palettes.json` | 04(`color.palette_id`) | |
 | 블록 카탈로그 | `blocks.json`(`BlockDef`, `VariantDef`, `SlotDef`) | 04(layout-schema, 패턴, 컴파일러) | 블록 ID = 04장 패턴 이름 |
-| 용도 | `purposes.json`: `required`, `requiredAny`, `optional`, `forbidden`, `sectionCount`, `standardHero`, `imageTags`, `forbiddenL2` | 04, 09(B4) | 용도 enum `saas`·`portfolio`·`local_business`(R-02) |
+| 용도 | `purposes.json`: `required`, `requiredAny`, `optional`, `forbidden`, `sectionCount`, `standardHero`, `imageTags`, `defaultImageTag`(U-12), `forbiddenL2` | 04, 09(B4) | 용도 enum `saas`·`portfolio`·`local_business`(R-02) |
 | 시그니처·장식 | `SIG-01~12`, `DecorId` 8종 | 04(`pickSignature`, H11, CM-11 SIG-06) | |
 | 조화 상수 | `harmony.json`(H1~H12, CF-01~12, `defaultsBlacklist`) | 04 | D-0310 |
 | 리듬 메타 | variant `align`, `skeleton`, `img` | 04(LT-05~08, RH-01~02) | |
@@ -1571,3 +1572,4 @@ AC-03-01~39·41~46은 L1 결정론 테스트 또는 렌더 테스트로 매 PR�
 | T-33(PD3-03) | — | 3.7.3 FP15 body = Wanted Sans 400(패밀리 2종, AC-03-25·H4) | `pairings.json` 같게 |
 | T-35(PD3-05) | — | AC-03-43(lint-matrix) | 07 TC-D-09 |
 | T-32(PD3-02) | — | 3.1.12 styleguide 입력·`formatGuide` | |
+| U-11·U-12(r4 RA4-01·02) | — | 3.8.1 `maxChars` 정수·`min(space.container,1200)`·`t-display` hero 계산 단계·프리셋별 결과, 3.6.5 `defaultImageTag` | |
