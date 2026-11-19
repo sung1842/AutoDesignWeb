@@ -259,7 +259,7 @@ SLO(R-25, 07장 M15): 첫 시안 카드 노출(첫 mockups.created_at − queued
 | `render` | web, worker | `{target:'version', versionId}` | 2 | 2 / 지수(2s, 8s) | 60s | 버전 저장 후 렌더 게이트(G-04~G-08)·썸네일 |
 | `export` | web | `{exportId}` | 2 | 2 / 지수 | 120s | |
 | `account-delete` | web | `{userId}` | 1 | 5 / 지수(최대 1h) | 600s | 아래 단계 ①~⑦(S-21) |
-| `retention` | 크론 `0 18 * * *`(UTC = 03:00 KST) | `{}` | 1 | 3 | 1800s | 08장 8.7.7 보관 기간표 실행(`retention:sweep`) |
+| `retention` | 크론 `0 18 * * *`(UTC = 03:00 KST) | `{}` | 1 | 3 | 1800s | 08장 8.7.7 보관 기간표 실행(`retention:sweep`, 6.6 규칙 레코드. `auth_audit_90d`·`admin_audit_1y`·`abuse_evidence_90d` 포함) |
 | `survey-build` | `pnpm survey:build`(로컬·CI만) | `{taxonomyVersion}` | 1 | 0 | 3600s | 운영 워커에서는 컨슈머 미등록 |
 | `alerts` | 크론 `*/5 * * * *` | `{}` | 1 | 0 | 120s | 6.12 알림 규칙 |
 | `reconcile` | 크론 `* * * * *` | `{}` | 1 | 0 | 50s | 큐 누락·고아 잡 복구 |
@@ -273,17 +273,22 @@ SLO(R-25, 07장 M15): 첫 시안 카드 노출(첫 mockups.created_at − queued
 
 **`account-delete` 절차(S-21, LG2-04)**. 단계마다 멱등이다. 실패하면 큐 재시도(5회)로 처음부터 다시 돌며, 이미 끝난 단계는 건너뛴다. 5회 모두 실패하면 A8 알림과 `admin_audit_logs(action='account_delete_failed')`를 남긴다.
 
+실행 순서는 **⑤ → ⑤b → ① → ② → ③ → ③b → ④ → ⑥ → ⑥b → ⑦**이다(T-15. ⑤가 ①보다 먼저여야 `users.status`가 `deleting`으로 덮이기 전 정지 상태를 읽는다. 별도 `status_before_delete` 컬럼은 두지 않는다).
+
 | 단계 | 동작 | 멱등 근거 |
 |---|---|---|
+| ⑤ | `users.status ∈ {gen_suspended, suspended}`면 `sanctions(email_hash, level, until, reason_code)` upsert. `until`은 남은 정지 기간, 최대 1년. `email_hash`는 web이 계산해 잡 페이로드로 넘긴다(키는 DB에 없음, T-12) | upsert |
+| ⑤b | 이 사용자 소유 공유 링크를 가리키는 `reports`(reason ∈ {impersonation, phishing}, status ∈ {open, hidden, actioned})가 있으면 `abuse_holds(email_hash, report_ids, until)` upsert(`until` = 검토 종료 + 90일, 미종료면 `now()+90d` 후 검토 종료 시 갱신). `actioned`가 있으면 `sanctions`도 upsert(T-15) | upsert |
 | ① | `users.status='deleting'`, 세션 폐기(`AuthPort.adminSignOutAll(uid)`), 소유 공유 링크 비공개 | 같은 값 재설정 |
 | ② | `llm_calls where owner_id=:uid`의 `llm-payloads` 객체 삭제(이 단계는 ⑥보다 먼저다. 그 뒤에는 `owner_id`가 null이 되어 객체를 찾을 수 없다) | 없는 객체 삭제는 성공 처리 |
-| ③ | `renders/<uid>/`·`exports/<uid>/` 객체 삭제 | 같음 |
+| ③ | `renders/<uid>/`·`exports/<uid>/` 객체 삭제. 단 ⑤b 대상 신고가 가리키는 버전의 렌더 객체는 먼저 ③b로 옮긴다 | 같음 |
+| ③b | ⑤b 대상 신고의 `evidence.objectPaths`를 `abuse-evidence/<report_id>/`로 복사(복사 성공 확인 후 원본 삭제는 ③이 한다), `reports.evidence.objectPaths`를 새 경로로 갱신. 보관 `abuse_evidence_90d`(T-15) | 대상 경로에 같은 sha256 객체가 있으면 건너뜀 |
 | ④ | `consents where user_id=:uid` → `consents_archive(user_hash, doc_type, doc_version, agreed, agreed_at)`로 복사 후 원본 삭제(한 트랜잭션) | 원본이 없으면 건너뜀 |
-| ⑤ | `users.status ∈ {gen_suspended, suspended}`였으면 `sanctions(email_hash, level, until, reason_code)` upsert. `until`은 남은 정지 기간, 최대 1년 | upsert |
-| ⑥ | `AuthPort.adminDeleteUser(uid)`(→ `auth.users` 행 삭제) → `users`·소유 행 cascade | 없는 사용자면 성공 처리 |
+| ⑥ | `AuthPort.adminDeleteUser(uid)`(→ `auth.users` 행 삭제) → `users`·소유 행 cascade. `reports`는 FK가 없어 남는다(T-15) | 없는 사용자면 성공 처리 |
+| ⑥b | 인증 서버 기록 정리(T-13, P14): `auth.audit_log_entries`에서 `payload->>'actor_id' = uid` 행과 `auth.sessions where user_id = uid` 행 삭제. 남은 기록은 `auth_audit_90d`가 90일 후 파기. supabase 프로파일은 service role SQL, native는 shim 테이블 | 0행 삭제도 성공 |
 | ⑦ | `admin_audit_logs(action='account_deleted', target_type='user', target_id=user_hash)` | `target_id` 기준 중복 삽입 방지(존재 확인 후 삽입) |
 
-- 재가입: auth.users INSERT 트리거가 `sanctions`에 같은 `email_hash`가 있고 `until > now()`면 `users.status`를 그 `level`로 만든다. 이 사용자의 생성 API는 403 `ACCOUNT_SUSPENDED`다.
+- 재가입: 로그인 콜백의 `provision_user`(T-12, 6.3.3)가 `sanctions`(미만료)면 그 `level`, `abuse_holds`(미만료)면 `gen_suspended`로 `users.status`를 만든다. 이 사용자의 생성 API는 403 `ACCOUNT_SUSPENDED`다(옛 auth.users 트리거 승계 → T-12로 대체).
 - 관리자 계정 삭제도 같은 절차다. `admin_audit_logs`는 FK가 없어 행 수가 그대로 남는다.
 - 수용 기준 AC-06-53: 계정 삭제 E2E 후 해당 사용자의 `llm-payloads` 객체 0건, `consents` 0행, `consents_archive`에 같은 수의 행, `auth.users` 0행. 정지 계정 탈퇴 → 같은 이메일 재가입 → 생성 API 403 `ACCOUNT_SUSPENDED`. 관리자 계정 삭제 성공, 감사 로그 행 수 불변. 단계 ③ 직후 강제 실패를 주입해도 재시도 후 최종 상태가 같다.
 
@@ -365,8 +370,8 @@ create table users (                                  -- 00장 IF-07, 08장의 p
   created_at      timestamptz not null default now(),
   last_login_at   timestamptz not null default now()
 );
--- auth.users INSERT 트리거로 users 1행 생성(security definer). ADMIN_EMAILS 포함 이메일이면 role='admin'.
--- 같은 트리거가 sanctions에서 email_hash 일치 행(until > now())을 찾으면 users.status를 그 level로 이어받는다(S-21).
+-- users 행 생성·관리자 판정·제재 승계는 auth.users 트리거가 하지 않는다(T-12). 로그인 콜백마다 web이
+-- withService로 provision_user()(아래 '사용자 프로비저닝')를 호출한다. 옛 auth.users INSERT 트리거 규칙 → T-12로 대체.
 
 -- OAuth 메타데이터 최소화(S-25, 08장 8.7.1): 공급자가 보낸 이름·사진 등을 저장하지 않는다.
 create or replace function minimize_auth_metadata() returns trigger
@@ -429,7 +434,33 @@ create table sanctions (                              -- 정지 이력 재가입
   reason_code  text not null,
   created_at   timestamptz not null default now()
 );
--- consents_archive·sanctions는 RLS 켜고 정책 0개(service_role 전용).
+
+create table abuse_holds (                            -- 탈퇴 보류(T-15, LG3-04): 처리 중 사칭·피싱 신고가 있는 계정의 재가입 승계용
+  email_hash   text primary key,                      -- sanctions와 같은 HMAC
+  report_ids   uuid[] not null check (cardinality(report_ids) >= 1),
+  until        timestamptz not null,                  -- 마지막 신고 검토 종료 + 90일(abuse_evidence_90d와 같은 기준, 08 8.14 Q6)
+  created_at   timestamptz not null default now()
+);
+-- consents_archive·sanctions·abuse_holds는 RLS 켜고 정책 0개(service_role 전용).
+
+-- 사용자 프로비저닝(T-12, 6.5.4). HMAC은 web이 계산해 넘긴다. 키는 DB에 두지 않는다(AC-06-60 ①).
+create or replace function provision_user(p_user_id uuid, p_is_admin boolean, p_email_hash text)
+returns users language plpgsql security definer set search_path = public as $$
+declare r users; s record; h record;
+begin
+  insert into users (id) values (p_user_id) on conflict (id) do update set last_login_at = now();
+  update users set role = case when p_is_admin then 'admin' else 'user' end
+   where id = p_user_id and role is distinct from (case when p_is_admin then 'admin' else 'user' end);
+  select level, until into s from sanctions where email_hash = p_email_hash and until > now();
+  select until into h from abuse_holds where email_hash = p_email_hash and until > now();
+  if s.level is not null then
+    update users set status = s.level where id = p_user_id and status = 'active';
+  elsif h.until is not null then
+    update users set status = 'gen_suspended' where id = p_user_id and status = 'active';  -- 신고 검토 종료 전 재가입: 생성만 보류
+  end if;
+  select * into r from users where id = p_user_id;
+  return r;
+end $$;
 
 create table invites (                                -- 00장 7.2, BETA_INVITE_ONLY
   code        text primary key check (code ~ '^[A-Z0-9]{8,16}$'),
@@ -726,11 +757,15 @@ create table rights_requests (                        -- 08장 8.1.6 (opt-out �
   requester_email text not null check (char_length(requester_email) <= 254),
   requester_role  text not null check (requester_role in ('owner','agent','other')),
   details         text not null check (char_length(details) <= 2000),
-  status          text not null default 'received' check (status in ('received','in_progress','done','rejected')),
+  status          text not null default 'received' check (status in ('awaiting_verification','received','in_progress','done','rejected')),  -- awaiting_verification = privacy_request 본인 확인 대기(T-16)
+  verify_token_hash text null,                        -- SHA-256(1회용 토큰). 메일 privacy_verify 링크(T-16)
+  verify_expires_at timestamptz null,                 -- 발급 + 24시간. 만료·재사용 410
+  verified_at     timestamptz null,                   -- 미확인 건 처리 시도 409
   received_at     timestamptz not null default now(),
   due_at          timestamptz not null,               -- type별 +7d / +10d / +24h
   closed_at       timestamptz null,
-  resolution_note text null
+  resolution_note text null,
+  check ((verify_token_hash is null) = (verify_expires_at is null))
 );
 create view optout_requests as                        -- 05장 5.3.8 읽기 전용 뷰
   select id, domain, requester_email as contact, received_at, status, closed_at as completed_at, resolution_note as note
@@ -786,7 +821,7 @@ create table generation_jobs (
   repair_rounds    smallint not null default 0 check (repair_rounds between 0 and 1),
   tokens_in        int not null default 0,
   tokens_out       int not null default 0,
-  cost_usd         numeric(10,5) not null default 0 check (cost_usd >= 0 and cost_usd <= 0.36),  -- IF-02. 저장 제약 = cap × 1.2(S-13). 가드 상한 0.30 초과는 A11 경고
+  cost_usd         numeric(10,5) not null default 0 check (cost_usd >= 0),  -- IF-02. 상한 CHECK 없음(T-17: 실제 청구는 외부 사실). 0.30 초과 저장 시 A11 + 그 계정 이후 예약 거부(6.9.4). 옛 S-13 ≤0.36 → T-17로 대체
   error_code       text null,
   error_message    text null check (char_length(error_message) <= 500),
   worker_id        text null,
@@ -807,7 +842,7 @@ create table candidates (
   owner_id        uuid not null references users(id) on delete cascade,
   variant         text not null check (variant in ('v_true','v_fit','v_bal')),   -- D-008
   slot            smallint not null check (slot between 0 and 5),      -- 패턴 슬롯(04장 4.8)
-  origin          text not null check (origin in ('llm','repair','fallback')),
+  origin          text not null check (origin in ('llm','repair','diversity','fallback')),  -- diversity = 다양성 위반 재호출(T-18, 04 4.8)
   round           smallint not null default 0 check (round in (0,1)),
   tokens          jsonb not null,                     -- TokenSet(03장)
   layout_tree     jsonb null,                         -- 확정 트리(스키마 실패 시 null). LLM 원문은 llm-payloads에만(04장 D-0416)
@@ -838,8 +873,12 @@ create table mockups (                                -- 노출 시안(잡당 �
   adopted_via        text null check (adopted_via in ('export','share')),
   feedback           text null check (feedback in ('up','down')),
   feedback_reason    text null check (feedback_reason in ('ai_feel','not_my_taste','broken_layout','bad_copy','other')),
+  feedback_at        timestamptz null,
+  followup_answered_at  timestamptz null,             -- A5 채택 후속 응답(T-22). POST /api/mockups/:id/adoption-followup
+  followup_dismissed_at timestamptz null,             -- 같은 시트 닫기(answer='dismissed', 이벤트 없음)
   created_at         timestamptz not null default now(),
   unique (job_id, variant),
+  check (followup_answered_at is null or followup_dismissed_at is null),
   check ((adopted_at is null) = (adopted_via is null))
 );
 
@@ -885,7 +924,8 @@ create table llm_calls (                              -- 00장 IF-02, 08장 P7(P
   owner_id        uuid null references users(id) on delete set null,
   candidate_id    uuid null,
   role            text not null check (role in ('gen_copy','gen_layout','judge_vision','ref_tagger')),
-  call_kind       text not null check (call_kind in ('initial','repair_schema','repair_quality')),
+  call_kind       text not null check (call_kind in ('initial','repair_schema','repair_quality','diversity')),  -- diversity(T-18)
+  purpose         text not null default 'user_job' check (purpose in ('user_job','eval','ref_tag')),  -- T-21. eval·ref_tag는 GEN_* 예산과 따로 집계
   processor_id    text not null,                      -- legal/processors.yaml id
   model           text not null,
   prompt_id       text not null,
@@ -903,9 +943,11 @@ create table llm_calls (                              -- 00장 IF-02, 08장 P7(P
   error_code      text null,
   request_hash    text not null,
   payload_path    text null,                          -- llm-payloads 버킷(30일)
-  created_at      timestamptz not null default now()
+  created_at      timestamptz not null default now(),
+  check (purpose <> 'user_job' or job_id is not null or owner_id is null)   -- user_job은 job_id 필수. 탈퇴 후 set null(job·owner 동시)만 예외
 );
 create index on llm_calls (job_id);
+create index on llm_calls (purpose, kst_day(created_at));
 create index on llm_calls (created_at);
 create index on llm_calls (kst_day(created_at));
 
@@ -940,7 +982,8 @@ create unique index share_one_per_target on share_links (coalesce(result_id, moc
 
 create table reports (                                -- 00장 10.3 + 08장 8.9.5 통합
   id               uuid primary key default gen_random_uuid(),
-  share_id         text not null references share_links(id) on delete cascade,
+  share_id         text not null check (share_id ~ '^[A-Za-z0-9_-]{22}$'),  -- FK 없음(T-15): 공유 링크·계정이 삭제돼도 신고 행은 남는다
+  evidence         jsonb null,                        -- 신고 시점 스냅샷 {targetType, versionId, ownerHash, objectPaths[]}. 객체는 abuse-evidence 버킷(T-15)
   reason           text not null check (reason in ('impersonation','phishing','copyright','trademark','inappropriate','other')),
   details          text null check (char_length(details) <= 1000),
   reporter_anon_id uuid not null,
@@ -1003,7 +1046,7 @@ create table idempotency_keys (
   primary key (owner_key, route, key)
 );
 
-create table admin_audit_logs (                       -- 00장 10.1, append-only
+create table admin_audit_logs (                       -- 00장 10.1. UPDATE 금지, 1년 지난 행만 purge_audit_logs로 파기(T-14)
   id          uuid primary key default gen_random_uuid(),
   admin_hash  text null,                             -- HMAC-SHA256(관리자 user_id, CONSENT_HASH_KEY). FK 없음: append-only라 참조 동작 UPDATE 불가(S-21). null = 시스템 배치
   action      text not null,
@@ -1014,6 +1057,31 @@ create table admin_audit_logs (                       -- 00장 10.1, append-only
   ip_hmac     text null,
   created_at  timestamptz not null default now()
 );
+create index on admin_audit_logs (created_at);
+-- 보관 규칙 admin_audit_1y(T-14, 08 8.7.7). 근거(정의 변경): '1년 후 0건'(AC-08-33)과 'DELETE 전면 금지'는 동시에 성립하지 않는다.
+create or replace function admin_audit_guard() returns trigger language plpgsql as $$
+begin
+  if tg_op = 'UPDATE' then raise exception 'admin_audit_logs is append-only' using errcode = '42501'; end if;
+  if current_setting('tastefit.audit_purge', true) is distinct from 'on'
+     or old.created_at >= now() - interval '1 year' then
+    raise exception 'admin_audit_logs delete only via purge_audit_logs for rows older than 1 year' using errcode = '42501';
+  end if;
+  return old;
+end $$;
+create trigger admin_audit_no_update before update or delete on admin_audit_logs
+  for each row execute function admin_audit_guard();
+create or replace function purge_audit_logs(p_before timestamptz) returns int
+language plpgsql security definer set search_path = public as $$
+declare n int;
+begin
+  if p_before > now() - interval '1 year' then raise exception 'p_before must be <= now() - 1 year'; end if;
+  perform set_config('tastefit.audit_purge', 'on', true);   -- 이 트랜잭션 안에서만
+  delete from admin_audit_logs where created_at < p_before;
+  get diagnostics n = row_count;
+  perform set_config('tastefit.audit_purge', 'off', true);
+  return n;
+end $$;
+-- 트리거가 행마다 created_at을 다시 확인하므로 p_before 검사를 우회해도 1년 이내 행은 지워지지 않는다.
 
 create table events (                                 -- 00장 8.2 원문 그대로
   event_id         uuid primary key,
@@ -1110,7 +1178,9 @@ create table dev_mail_outbox (                        -- AuthPort·MailPort loca
 | `finish_generation_job(p_job_id)` | | `n_real`·`n_fallback`으로 종료 상태 판정(6.2.3) → `quota_ledger(refund)` 필요 시 INSERT → `finished_at` | — |
 | `attach_anon(p_user_id, p_anon_id)` | | 6.5.3 귀속 규칙(진단 세션·공유 링크·브리프 임시본) | — |
 | `mark_adopted(p_mockup_id, p_via)` | | `update mockups set adopted_at=now(), adopted_via=… where id=… and adopted_at is null` → 1행이면 `true`(00장 8.3 `mockup_adopted` 발화 조건) | `false` |
-| `spend_today()`, `spend_month()` | | `sum(llm_calls.cost_usd)` KST 기준 | — |
+| `spend_today()`, `spend_month()` | | `sum(llm_calls.cost_usd) where purpose='user_job'` KST 기준(eval·ref_tag는 `spend_eval_month()`로 따로, T-21) | — |
+| `provision_user(p_user_id, p_is_admin, p_email_hash)` | | `users` upsert → `role` 동기화 → `sanctions`·`abuse_holds` 승계(T-12, 6.5.4). DDL은 6.3.3 | — |
+| `purge_audit_logs(p_before)` | `p_before ≤ now() − 1 year` | 트랜잭션 GUC `tastefit.audit_purge=on` 후 `created_at < p_before` 행 DELETE, 행 수 반환. 호출자는 `retention` 잡의 `admin_audit_1y`만(T-14) | 예외(`p_before` 위반) |
 
 ### 6.3.5 RLS 정책
 
@@ -1134,7 +1204,8 @@ create table dev_mail_outbox (                        -- AuthPort·MailPort loca
 | sources, reference_sites, reference_*, vlm_tags, normalizers, excluded_domains, rights_requests | 없음 | service role | 없음 | 관리자 API도 service role. 05장 5.3 "공개 읽기 금지" |
 | similar_site_candidates(뷰) | `security_invoker=false` 뷰 + `grant select to authenticated, anon` | — | 동일 | 스크린샷·원시 특징 컬럼 없음 |
 | events, rate_limits, idempotency_keys, feature_flags, blocked_brands, reports, support_tickets, eval_*, worker_heartbeats, alert_state, identity_links, invites | 없음 | service role | 없음 | |
-| admin_audit_logs | 없음 | service role INSERT만. `UPDATE`·`DELETE` 권한을 service role에서도 `revoke`하고 트리거로 거부 | 없음 | append-only(00장 AC-00-20) |
+| admin_audit_logs | 없음 | service role INSERT만. `UPDATE`는 트리거로 항상 거부, `DELETE`는 1년 지난 행만 `purge_audit_logs()`로(T-14, 6.3.3 `admin_audit_guard`) | 없음 | 1년 보관 후 파기만 허용(00장 AC-00-20, T-14) |
+| sanctions, abuse_holds, consents_archive | 없음 | service role | 없음 | 정책 0개(T-15) |
 
 위 표에서 "service role"은 `authenticated`·`anon` 쓰기 0, 쓰기는 `withService`(또는 6.3.4 함수)만이라는 뜻이다.
 
@@ -1145,6 +1216,33 @@ create table dev_mail_outbox (                        -- AuthPort·MailPort loca
 | `mockup_versions_service_only` | `mockup_versions` BEFORE INSERT | `current_user`가 `service_role`이 아니면(즉 `anon`·`authenticated`이면) `raise exception 'mockup_versions insert requires service_role' using errcode = '42501'`. 6.3.4 security definer 함수는 버전을 만들지 않으므로 예외 목록이 없다 |
 | `share_links_hidden_service_only` | `share_links` BEFORE UPDATE | `hidden_at`·`hidden_reason`이 바뀌고(`IS DISTINCT FROM`) `current_user ≠ service_role`이면 같은 예외 |
 
+```sql
+-- ===== 0006_grants: 쓰기 화이트리스트(T-11). 이 블록과 위 표가 grants.snapshot.json의 원천 =====
+revoke insert, update, delete on all tables in schema public from anon, authenticated;
+alter default privileges in schema public revoke insert, update, delete on tables from anon, authenticated;
+grant update (display_name) on users to authenticated;
+create policy users_self_update on users for update to authenticated
+  using (id = auth.uid()) with check (id = auth.uid());
+grant update (feedback, feedback_at, selected_at) on mockups to authenticated;
+create policy mockups_owner_update on mockups for update to authenticated
+  using (owner_id = auth.uid()) with check (owner_id = auth.uid());
+
+create or replace function require_service_role() returns trigger language plpgsql as $$
+begin
+  if current_user <> 'service_role' then
+    raise exception '% % requires service_role', tg_table_name, tg_op using errcode = '42501';
+  end if;
+  return new;
+end $$;
+create trigger mockup_versions_service_only before insert on mockup_versions
+  for each row execute function require_service_role();
+create trigger share_links_hidden_service_only before update on share_links
+  for each row when (old.hidden_at is distinct from new.hidden_at or old.hidden_reason is distinct from new.hidden_reason)
+  execute function require_service_role();
+-- security definer 함수(소유자 = 마이그레이션 사용자) 안의 current_user는 소유자다. 6.3.4 함수는 버전·숨김을 바꾸지 않으므로 예외 목록이 없다.
+-- supabase 프로파일에서 service_role 판정이 다른 이름(postgres)으로 들어오는 경로는 needs_ci supabase-rest-rls에서 확인한다.
+```
+
 **권한 스냅샷(T-11, LG3-01 4번)**: `pnpm db:grants-snapshot`이 `pg_policies`(public 스키마), `information_schema.role_table_grants`, `information_schema.column_privileges`에서 `anon`·`authenticated`의 INSERT·UPDATE·DELETE 정책·권한을 덤프하고 `packages/db/grants.snapshot.json`(이 절 표가 원천)과 비교한다. 허용 목록 밖 항목이 1개라도 있으면 FAIL이고 `verify:m1`이 실패한다(09장 guard). 스냅샷 파일 갱신은 이 절을 고치는 결정과 같은 커밋에서만 한다.
 
 **Storage 정책**: 모든 private 버킷은 `storage.objects`에 `anon`·`authenticated` 정책을 두지 않는다(service role만). 사용자 접근은 서버가 `StoragePort.signedUrl`로 발급한 서명 URL로만 한다(6.6). public 버킷(`survey-assets`)은 `StoragePort.publicUrl(bucket, path)`(6.13.1)로 만든 URL로 읽는다. 브라우저는 Storage API를 직접 호출하지 않는다(P8).
@@ -1152,13 +1250,13 @@ create table dev_mail_outbox (                        -- AuthPort·MailPort loca
 ### 6.3.6 수용 기준(데이터 모델)
 
 - **AC-06-01**: `STACK_PROFILE=supabase`: 빈 DB에 마이그레이션 전체 적용 후 `supabase db reset` 2회 연속 성공, `supabase db lint` 오류 0. `STACK_PROFILE=native`(S-01): shim 위에 빈 DB(drop/create) 적용 2회가 `psql -v ON_ERROR_STOP=1`로 성공. `supabase db lint`는 `needs_ci`(`supabase-db-lint`).
-- **AC-06-02**: `pg_tables where schemaname='public'`의 모든 테이블이 `rowsecurity = true`이고 `forcerowsecurity = true`이다(테스트가 목록을 동적으로 조회).
+- **AC-06-02**: `pg_tables where schemaname='public'`의 모든 테이블이 `rowsecurity = true`이고 `pg_class.relforcerowsecurity = true`이다(테스트가 목록을 동적으로 조회. `pg_tables`에는 force 컬럼이 없으므로 `pg_class` 조인, TL3-09).
 - **AC-06-03**: RLS 테스트 — `DbPort.withUser(B)`로 사용자 A의 projects·generation_jobs·candidates·mockups·mockup_versions·exports·share_links를 조회하면 각 0행, `DbPort.withAnon`으로 diagnosis_sessions·survey_answers·brief_drafts·reference_sites를 조회하면 0행. 같은 테스트 코드가 native(shim, 접속 사용자 `tastefit_app`)와 supabase 프로파일(CI)에서 수정 없이 통과한다. supabase 프로파일 CI는 같은 조회를 사용자 B의 JWT·anon 키로 REST(`/rest/v1`)에 직접 보내서도 0행을 확인한다(needs_ci `supabase-rest-rls`, T-11 ⑥).
 - **AC-06-03b**(T-11, LG3-01): 쓰기 화이트리스트 테스트 — 사용자 A로 ① `projects` INSERT·UPDATE ② `mockup_versions` INSERT(`gate_status='passed'`) ③ `share_links` INSERT와 `hidden_at=null` UPDATE ④ `mockups.current_version_id` UPDATE를 시도하면 네 경우 모두 권한 오류(`42501`)이고 DB 변경은 0행이다. 같은 사용자의 `mockups.feedback` UPDATE와 `users.display_name` UPDATE는 성공한다. `anon`의 INSERT·UPDATE·DELETE는 모든 public 테이블에서 실패한다. native는 `DbPort.withUser(A)`·`withAnon`(즉 `SET LOCAL ROLE` 후 SQL)로, supabase 프로파일 CI는 추가로 A의 JWT·anon 키로 REST 직접 호출로 검사한다(needs_ci `supabase-rest-rls`). 심층 방어 트리거 확인: 권한을 임시로 `grant insert on mockup_versions to authenticated`한 테스트 트랜잭션에서도 ②는 트리거 예외로 실패한다(롤백). `pnpm db:grants-snapshot`이 6.3.5 허용 목록과 같고, 목록 밖 정책 1개를 추가한 픽스처 마이그레이션에서는 FAIL이다.
 - **AC-06-04**: `is_l1` CHECK — 키가 4개이거나 `A1` 키를 쓰거나 값이 1.01인 벡터를 `survey_items.x_card`에 넣으면 INSERT가 실패한다. 데스크톱 자산 `bytes=143361`인 자극물 INSERT도 실패한다(R-07).
 - **AC-06-05**: 같은 사용자가 `queued` 잡이 있는 상태에서 두 번째 잡을 INSERT하면 `gen_one_active_per_user` 위반으로 실패한다.
-- **AC-06-06**: `admin_audit_logs`에 대한 UPDATE·DELETE는 service role에서도 실패한다.
-- **AC-06-07**: `generation_jobs.cost_usd`에 0.36001을 쓰면 CHECK 위반이다. 0.30~0.36은 저장되고 A11 경고 알림이 뜬다(S-13. 실제 청구가 추정을 넘어도 잡이 죽지 않게 하는 저장 제약).
+- **AC-06-06**(T-14로 개정): `admin_audit_logs` UPDATE는 service role에서도 항상 실패한다. `created_at`이 1년 이내인 행의 DELETE는 service role에서도 실패하고(직접 DELETE·`purge_audit_logs(now())` 둘 다), `created_at = now() − 400 days`로 넣은 행은 `purge_audit_logs(now() − interval '1 year')`로만 삭제된다(직접 DELETE는 실패).
+- **AC-06-07**(T-17로 개정): `generation_jobs.cost_usd`에 0.30 초과 값(예: 0.9)을 저장해도 DB 예외는 0건이고 행이 그대로 남는다. 이때 A11 알림 1건이 뜨고 그 계정의 이후 `create_generation_job`은 거부된다(6.9.4 `usage_overrun`). 음수는 CHECK 위반이다. 옛 "0.36001 CHECK 위반"(S-13) → T-17로 대체.
 
 ## 6.4 API 명세
 
@@ -1462,6 +1560,7 @@ MockupCard = { mockupId, variant: 'v_true'|'v_fit'|'v_bal', isFallback, harmonyS
 | `ref-screenshots` | private | 레퍼런스 스크린샷 | `<reference_id>/<capture_id>/{first,full}.webp` | ingest CLI | 관리자 라우트만 | 5분 | 수집 후 90일(D-31) |
 | `llm-payloads` | private | LLM 요청·응답 원문(gzip JSON) | `<yyyy-mm-dd>/<llm_call_id>.json.gz` | worker | 관리자 | 5분 | 30일 |
 | `eval-artifacts` | private | 골든·블라인드 평가 스크린샷 | `<eval_set_id>/<item_id>.webp` | eval 스크립트 | 관리자·평가자 링크(서버 경유) | 5분 | 평가 종료 후 180일 |
+| `abuse-evidence` | private | 사칭·피싱 신고 대상 버전의 렌더 사본(T-15) | `<report_id>/<원래 파일명>` | worker(`account-delete` ③b, 신고 `actioned` 처리) | 관리자 라우트만 | 5분 | 검토 종료 후 90일(`abuse_evidence_90d`, 08 8.14 Q6) |
 
 - 이미지·아이콘은 Storage에 두지 않는다. `@tastefit/assets`가 해석한 로컬 파일(이미지 팩 192장, R-34)을 web 빌드가 `public/assets/<sha256>.<ext>`로 복사해 WEB_ORIGIN·PREVIEW_ORIGIN 양쪽에서 같은 경로로 서빙하고(편집 `srcdoc`은 WEB_ORIGIN, 공유·후보 미리보기는 PREVIEW_ORIGIN에서 읽는다), worker·exporter는 Docker 이미지 안의 같은 파일을 쓴다(외부 CDN 0, D-26·D-27).
 
@@ -1492,6 +1591,13 @@ RetentionRule = { id: string, table?: string, bucket?: string,
 //       where:"not exists (select 1 from candidates c where c.render_hash = $hash) and not exists (select 1 from mockup_versions v where v.render_hash = $hash)", batch:1000 }
 //     { id:'consents_archive_1y', table:'consents_archive', where:"archived_at < $now - interval '1 year'", batch:1000 }
 //     { id:'sanctions_expired', table:'sanctions', where:"until < $now", batch:1000 }
+//     { id:'abuse_holds_expired', table:'abuse_holds', where:"until < $now", batch:1000 }
+//     { id:'abuse_evidence_90d', bucket:'abuse-evidence',       // 검토 종료(status ∈ {dismissed, actioned} ∧ handled_at) + 90일
+//       where:"exists (select 1 from reports r where r.id = $report_id and r.status in ('dismissed','actioned') and r.handled_at < $now - interval '90 days')", batch:1000 }
+//     { id:'admin_audit_1y', table:'admin_audit_logs',          // 직접 DELETE 불가. 실행기는 purge_audit_logs($now - interval '1 year')를 호출(T-14)
+//       where:"created_at < $now - interval '1 year'", batch:1000 }
+//     { id:'auth_audit_90d', table:'auth.audit_log_entries',    // P14(T-13). auth.sessions는 not_after·updated_at 기준 같은 90일
+//       where:"created_at < $now - interval '90 days'", batch:1000 }
 //     { id:'ref_shot_90d', table:'reference_captures', bucket:'ref-screenshots',
 //       where:"screenshot_deleted_at is null and captured_at < $now - interval '90 days'",
 //       storageColumns:['screenshot_first_path','screenshot_full_path'] }  → 객체 삭제 후 screenshot_deleted_at 설정
@@ -1501,7 +1607,7 @@ RetentionRule = { id: string, table?: string, bucket?: string,
 
 시계는 `RETENTION_NOW` 주입(테스트 전용, production 기동 거부)으로 바꿀 수 있다(09장 M7 ④).
 
-- 수용 기준 AC-06-54: `RETENTION_NOW=+31d`에서 노출되지 않은 후보 행과 그 전용 렌더 객체는 0개, 노출 시안의 후보·버전·썸네일은 남고 종료 코드 0. 일부러 실패하는 규칙 1개를 주입해도 다른 규칙의 삭제 건수가 감사 로그에 남는다. `RETENTION_NOW=+366d`에서 `consents_archive` 만료 행 0건.
+- 수용 기준 AC-06-54: `RETENTION_NOW=+31d`에서 노출되지 않은 후보 행과 그 전용 렌더 객체는 0개, 노출 시안의 후보·버전·썸네일은 남고 종료 코드 0. 일부러 실패하는 규칙 1개를 주입해도 다른 규칙의 삭제 건수가 감사 로그에 남는다. `RETENTION_NOW=+366d`에서 `consents_archive` 만료 행 0건, `admin_audit_logs`의 366일 전 행 0건(1년 이내 행은 남음, T-14). `RETENTION_NOW=+91d`에서 `auth.audit_log_entries`·`auth.sessions`의 보관 기간 밖 행 0건(T-13), 검토 종료 91일 지난 `abuse-evidence/<report_id>/` 객체 0개(T-15).
 - `verify:schema-parity`(09장 M1 ⑨)는 08장 8.7.7 보관표의 "구현 기준" 열에 나온 테이블·컬럼이 이 장 DDL에 모두 있는지 함께 검사한다(S-20).
 
 ## 6.7 캐싱
@@ -1692,7 +1798,7 @@ async function callLlm(req) {
   - `JobBudget`은 잡 단위 뮤텍스로 보호한다. `reserve(est)` → 호출 → `settle(id, actual)`. 호출 실패·abort·재시도 사이에 남은 예약은 `release(id)`. 판정은 `spent + reserved + est ≤ generation.costGuard.capUsd` 하나다.
   - 추정식(단일): `est = (실측 입력 토큰 × 1.1) × 입력 단가(캐시 적중분은 cached, 잡 첫 호출은 cache_write) + maxOutputTokens × 출력 단가 + 이미지 수 × per_image`. 입력 토큰은 프롬프트 조립 후 토크나이저(없으면 문자 수/3)로 센다. `max_input_tokens`를 넘으면 호출 전 실패한다. `worstCost`는 폐지한다. 기본 경로 7호출의 추정 합계는 약 $0.23이다(추정 정확도 교정, 상한 불변).
   - 단계 생략: `spent + reserved ≥ generation.costGuard.skipVisionUsd`면 `judge_vision` 생략, `≥ skipRepairUsd`면 수정 루프 생략(04장 4.17.2 규칙을 이 가드가 실행).
-  - 실제 청구가 추정을 넘어 합계가 cap을 넘으면 예외 없이 저장하고(CHECK ≤ 0.36) A11 경고를 낸다.
+  - 실제 청구가 추정을 넘어 합계가 cap을 넘으면 예외 없이 저장하고(CHECK는 `≥ 0`만, T-17) A11 경고를 낸다.
   - 수용 기준 AC-06-56: Mock `ok`에서 기본 경로 7호출 중 `budget_skipped` 0건, 잡 비용이 $0.23 ± 10%. Mock `cost_spike`에서 7개 병렬 호출 후에도 `sum(llm_calls.cost_usd) ≤ 0.30`, DB 예외·`WORKER_LOST` 0건, 상태 ∈ {partial, fallback}. 동시 `reserve` 20회 단위 테스트에서 `spent + reserved`가 cap을 넘는 순간 0회.
 
 ### 6.9.5 폴백·장애 처리 요약(04장 4.7.1과 동일 규칙)
@@ -2019,7 +2125,7 @@ local 환경은 두 프로파일 중 하나로 돈다. `STACK_PROFILE=supabase|n
 | 구성 | `supabase` 프로파일 | `native` 프로파일(Docker 없음) |
 |---|---|---|
 | DB | Supabase CLI 로컬 Postgres | 시스템 PostgreSQL 16. `pnpm dev:stack`이 `initdb` → `/tmp/tastefit-pg`(포트 54322) → 기동. 마이그레이션 전에 `packages/db/shim/0000_supabase_shim.sql` 적용 |
-| shim 내용 | 적용 안 함(파일 상단 가드가 `auth` 스키마 존재 시 건너뜀) | 역할 `anon`·`authenticated`(NOLOGIN)·`service_role`(NOLOGIN, BYPASSRLS), 앱 접속 역할 `tastefit_app`(LOGIN, NOBYPASSRLS, 세 역할의 멤버, 6.1.2 R-5), 스키마 `auth`, `auth.users(id uuid pk, email text, raw_user_meta_data jsonb, created_at)`, `auth.identities(id, user_id, provider, identity_data jsonb, created_at)`, `auth.uid()`·`auth.role()`·`auth.jwt()` = `current_setting('request.jwt.claims', true)::jsonb`의 `sub`·`role`·전체. RLS 테스트는 앱과 같은 `DbPort.withUser`·`withAnon`으로 돈다(`SET LOCAL ROLE` + `request.jwt.claims`) |
+| shim 내용 | 적용 안 함(파일 상단 가드가 `auth` 스키마 존재 시 건너뜀) | 역할 `anon`·`authenticated`(NOLOGIN)·`service_role`(NOLOGIN, BYPASSRLS), 앱 접속 역할 `tastefit_app`(LOGIN, NOBYPASSRLS, 세 역할의 멤버, 6.1.2 R-5), 스키마 `auth`, `auth.users(id uuid pk, email text, raw_user_meta_data jsonb, created_at)`, `auth.identities(id, user_id, provider, identity_data jsonb, created_at)`, `auth.audit_log_entries(id uuid, payload jsonb, ip_address varchar(64), created_at)`·`auth.sessions(id uuid, user_id uuid, user_agent text, ip inet, created_at, updated_at, not_after)`(T-13 최소 컬럼. GoTrue 실측 대조는 needs_ci `gotrue-auth-tables`, 결과 `docs/compliance/auth-metadata.md`), `auth.uid()`·`auth.role()`·`auth.jwt()` = `current_setting('request.jwt.claims', true)::jsonb`의 `sub`·`role`·전체. RLS 테스트는 앱과 같은 `DbPort.withUser`·`withAnon`으로 돈다(`SET LOCAL ROLE` + `request.jwt.claims`) |
 | DB 접근(T-11) | `DbPort`(6.1.2 R-5, Kysely + `pg`). 접속 = Supabase 기본 사용자, web은 `DATABASE_URL_POOLED`(Supavisor 트랜잭션 모드) | 같은 `DbPort` 코드. 접속 = `tastefit_app`, `DATABASE_URL_POOLED` 미설정 시 `DATABASE_URL_DIRECT` 사용(local 한정) |
 | 타입 생성(T-11) | `pnpm db:types` = kysely-codegen(`DATABASE_URL_DIRECT`) | 같음(Docker 불필요). `supabase gen types`는 두 프로파일 모두 쓰지 않는다 |
 | 마이그레이션 검사(AC-06-01) | `supabase db reset` 2회 + `supabase db lint` | 빈 DB(drop/create) 적용 2회, `psql -v ON_ERROR_STOP=1`. lint는 `needs_ci` |
@@ -2362,4 +2468,10 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 | S-28 | Major | 6.11.2 관리자 접근 통제(aal2, ADMIN_EMAILS 매 요청, pii_view, 리댁션, 1년 보관), AC-06-57 | |
 | T-11 (TL3-01·LG3-01·TL3-11) | Blocker | 6.0 P8, 6.1.1, 6.1.2 R-3·R-5, 6.3.4, 6.3.5 쓰기 화이트리스트·심층 방어 트리거·권한 스냅샷, 6.4.1 인증, 6.5.2, 6.2.5 ①⑥, 6.11.4 CSP, 6.13.1, 6.13.2, D-0611, AC-06-03·03b·59 | S-01 보완. DDL 본문(정책·grant·트리거 SQL)은 06-b 단위 |
 | T-12 (TL3-02) | Major | 6.5.4 권한 원천·`provision_user`, 6.11.2, 6.4.1, 6.5.2 첫 로그인, AC-06-60 | S-21·S-28 보완. `provision_user` DDL·6.3.3 `users` 주석·6.2.5 재가입 행은 06-b 단위 |
+| T-11·T-12 DDL(06-b) | Blocker·Major | 6.3.3 `provision_user`·`users` 주석, 6.3.5 `0006_grants` SQL(컬럼 권한·소유 정책·`require_service_role` 트리거), 6.2.5 재가입 | PG16 shim 위 적용 오류 0(50테이블) |
+| T-13 (LG3-02) | Major | 6.2.5 ⑥b, 6.6 `auth_audit_90d`, 6.13.1 shim `auth.audit_log_entries`·`auth.sessions`, AC-06-54 확장 | GoTrue 실측 needs_ci `gotrue-auth-tables`. 6.1.3 P14 행은 08-a와 함께 |
+| T-14 (LG3-03) | Major | 6.3.3 `admin_audit_guard`·`purge_audit_logs`, 6.3.4, 6.3.5 표, 6.6 `admin_audit_1y`, AC-06-06 개정 | |
+| T-15 (LG3-04) | Major | 6.2.5 순서 ⑤→⑤b→①…·③b, 6.3.3 `reports.share_id text`·`evidence`·`abuse_holds`, 6.6 `abuse-evidence`·`abuse_evidence_90d` | |
+| T-16·T-17·T-18·T-21·T-22 DDL(06-b) | Major | `rights_requests.verify_*`·`awaiting_verification`, `cost_usd ≥ 0`·AC-06-07 개정, `diversity`(candidates.origin·llm_calls.call_kind), `llm_calls.purpose`·`spend_*`, `mockups.followup_*`·`feedback_at` | API·식·AC 본문은 06-c·06-d |
+| TL3-09(06) | Minor | AC-06-02 `pg_class.relforcerowsecurity` | |
 | S-32·S-37(06) | Major | 6.4.3 MockupCard `movedAxes`·`diffFromTrue`·brandColorNotice 5값 | |

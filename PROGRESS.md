@@ -28,7 +28,7 @@
 - 라운드 2: [x] PM [x] 프로덕트 디자이너 [x] UX [x] UI [x] 테크 리드 [x] AI/ML [x] QA [x] 법무 → [x] decisions_v3(S-01~S-41) [x] 반영(아래 20단위)
 - 라운드 2 반영 단위(decisions_v3.md "반영 순서" 참고): [x] 07-a [x] 07-b [x] 07-c [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 09-a [x] 09-b [x] 09-c [x] 04-a [x] 04-b [x] 04-c [x] 03 [x] 02 [x] 05 [x] 01 [x] 08 [x] 00 [x] 잔여 표기 grep
 - 라운드 3: [x] PM [x] 프로덕트 디자이너 [x] UX [x] UI [x] 테크 리드 [x] AI/ML [x] QA [x] 법무 → [x] decisions_v4(T-01~T-36) [ ] 반영(아래 22단위)
-- 라운드 3 반영 단위(decisions_v4.md "반영 순서" 참고): [x] 06-a [ ] 06-b [ ] 06-c [ ] 06-d [x] 07-a [ ] 07-b [ ] 07-c [ ] 07-d [ ] 09-a [ ] 09-b [ ] 09-c [ ] 01-a [ ] 01-b [ ] 04-a [ ] 04-b [ ] 03-a [ ] 03-b [ ] 08-a [ ] 02-a [ ] 05-a [ ] 00-a [ ] 잔여 표기 grep
+- 라운드 3 반영 단위(decisions_v4.md "반영 순서" 참고): [x] 06-a [x] 06-b [ ] 06-c [ ] 06-d [x] 07-a [ ] 07-b [ ] 07-c [ ] 07-d [ ] 09-a [ ] 09-b [ ] 09-c [ ] 01-a [ ] 01-b [ ] 04-a [ ] 04-b [ ] 03-a [ ] 03-b [ ] 08-a [ ] 02-a [ ] 05-a [ ] 00-a [ ] 잔여 표기 grep
 - 판정 기록(라운드별 C1/C2/C3):
   - R2 PM: FAIL/FAIL/FAIL (Blocker 0, Major 5: 예산-목표 불일치, 취소 시 한도 규칙 충돌, KPI 쿼리 분모, 검증 표본 확보, 00↔07·09 불일치)
   - R2 UX: FAIL/FAIL/FAIL (1라운드 19/19 해결, Blocker 0, Major 3: 결과 신뢰 문구 01↔02 불일치, 진단 카드 크기 규칙이 실제 화면에서 불성립, 편집 가능 판정을 화면 폭으로 해 200% 확대 시 편집 소실)
@@ -95,3 +95,4 @@
 - 2026-11-18 22:40 | 대화 세션: 09장 M1·M4·M7 통과 조건 갱신(골든 32, 중심 벡터 03장, 시뮬 합격선 thresholds 참조, 스키마·API 대조), INDEX.md 작성
 - 2026-11-18 22:30 | 대화 세션: 09장 R-xx 반영(부분), 07장 alt_text, 06장 버전 4종 주석, 옛 표기 검사 완료
 - 2026-11-18 | 초기 이관: v1, v2(00~09), 1라운드 리뷰, 결정 문서를 저장소로 옮김
+- 2026-11-19 12:40 | 06-b 반영: provision_user·abuse_holds·purge_audit_logs(1년 파기)·0006_grants SQL·reports.share_id text+evidence·rights_requests verify_*·cost_usd ≥0·diversity·llm_calls.purpose·mockups.followup_*·account-delete ⑤→①·③b·⑥b·abuse-evidence 버킷·보관 규칙 3종·shim auth 테이블·AC-06-02/06/07. PG16 적용·동작 확인. (재개 예약은 예약 실행 중 생성 불가 → 3시간 정기 작업에 의존)
