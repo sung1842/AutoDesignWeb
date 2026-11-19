@@ -246,7 +246,7 @@ refundable_cancels_today(u) = count(quota_ledger q join generation_jobs j on q.j
 | 단계 | p50 목표 | 개별 상한 | 비고 |
 |---|---|---|---|
 | 명세 컴파일 | 0.2s | 1s | 결정론적 코드 |
-| LLM 카피 덱 1 + 레이아웃 6(카피·후보 0 먼저, 사건 t1 뒤 후보 1~5, U-01) | 25s(예열 TTFT ≈ 1~2s 포함) | 호출당 40s(04장 4.7.1), 예열 대기 ≤ 3s | 스키마 무효 시 같은 모델로 수선 호출 1회 포함. 순서 원천 6.9.4 ① |
+| LLM 카피 덱 1 + 레이아웃 6(카피·후보 0 먼저, 사건 t1 뒤 후보 1~5, U-01) | 25s(예열 대기 포함: 스트리밍은 TTFT ≈ 1~2s, 비스트리밍은 t0 + 3s에 출발, V-01) | 호출당 40s(04장 4.7.1), 예열 대기 ≤ 3s | 스키마 무효 시 같은 모델로 수선 호출 1회 포함. 순서 원천 6.9.4 ① |
 | 렌더 + 게이트(6개, 머신당 컨텍스트 3개) | 10s | 후보당 p95 5s, 하드 15s | 뷰포트 5종(D-25), 04장 4.10.1 |
 | 점수 + 비전 심사 | 6s | 30s | `judge_vision`은 플래그 `JUDGE_VISION_MODE`·예산 의존(→04장, 07장 D-0714) |
 | 재생성(필요 시) | 0s(미발생) / 35s | 호출 40s + 렌더 5s | **시작 조건: 경과 ≤ 70s** |
@@ -1900,7 +1900,7 @@ t1 = 후보 0의 사건 t1 또는 t0 + 3s 중 이른 시각:
 ```
 
 - 지연 영향: 후보 1~5가 TTFT(≈ 1~2s, 상한 3s)만큼 늦게 출발한다. 04장 4.17.1 지연 분해와 6.2.4 "LLM 카피 덱 1 + 레이아웃 6" 행은 이 증가분을 포함한다(p50 목표 25s 유지, 개별 상한 불변).
-- 후보 0이 첫 토큰 전에 실패하면 t0 + 3s에 후보 1~5를 그대로 출발시킨다(이때 후보 1이 cacheWrite를 낸다). 추정식의 `cacheState`는 "같은 잡에서 앞선 `gen_layout`이 사건 t1에 도달했으면 `cached`, 아니면 `cache_write`"로 판정한다(U-01, 옛 "첫 cacheWrite 성공" → 대체). 후보 0이 t1 전에 실패해 후보 1~5가 t0 + 3s에 출발하면 다섯 모두 `cache_write`로 추정한다.
+- 후보 0이 사건 t1 전에 실패하면 t0 + 3s에 후보 1~5를 그대로 출발시킨다(이때 후보 1이 cacheWrite를 낸다). 추정식의 `cacheState`는 "같은 잡 후보 0의 `gen_layout`이 t1(= min(사건 t1, t0 + 3s)) 시점에 실패하지 않았으면(진행 중이거나 완료) `cached`, t1 전에 실패했으면 `cache_write`"로 판정한다(V-01. 비스트리밍 실서비스는 사건 t1이 보통 3s보다 늦으므로 후보 1~5는 t0 + 3s에 `cached` 추정으로 출발한다. 실청구가 다르면 정산·`usage_overrun` 경로가 처리한다. 옛 U-01 "사건 t1에 도달했으면 `cached`"·"첫 cacheWrite 성공" → 대체). 후보 0이 t1 전에 실패해 후보 1~5가 t0 + 3s에 출발하면 다섯 모두 `cache_write`로 추정한다.
 - 수정 루프·다양성 재호출은 생성 단계 뒤라 정적 프리픽스가 cached다. 잡 사이에는 few-shot이 바뀌므로(04장 4.18) 잡마다 cacheWrite 1회를 전제한다.
 
 **② 기본 경로 원가(공식, 04장 4.17.2 단가 가정 = mock 고정 단가)**
@@ -1957,7 +1957,7 @@ stageSkip(role, callKind):
 
 - 실제 청구가 추정을 넘어 `spent > capEff`가 되면: 진행 중 호출은 끝까지 정산하고(실제 청구는 외부 사실이라 버리지 않는다) 저장은 예외 없이 한다(`generation_jobs.cost_usd` CHECK는 `≥ 0`만, T-17 ③). 그 즉시 A11 1건(잡당 1회, `alerts.dedupe_key = 'A11:'||job_id`)을 내고, 이후 그 잡의 `reserve`는 판정식에 따라 전부 실패한다(`budget_skipped`, `COST_CAP`). 잡은 확보된 후보로 계속 진행하고 누락 변형은 폴백이다.
 - 상한 보장: 모든 예약이 `capEff` 안에서 났으므로 잡 합계 ≤ `capEff × (실청구/추정 비율)`이다. 계정 단위 차단은 하지 않는다(계정은 `USER_DAILY_COST_CAP_USD`로만 막는다, 6.10.3).
-- `pnpm cost:model`: `models.yaml` 단가와 `fixtures/llm/mock-prompt-sizes.json`의 블록 크기로 ② 표를 다시 계산해 `C_base < skipVisionEff`, `C_base + C_repair1 < capEff`, 예약 합계 ≤ `capEff`를 검사한다(CI, 단가 변경 PR에서 필수).
+- `pnpm cost:model`: `models.yaml` 단가와 `fixtures/llm/mock-prompt-sizes.json`의 블록 크기로 ② 표를 다시 계산해 `C_base < skipVisionEff`, `C_base + C_repair1 < capEff`, 예약 합계 ≤ `capEff`를 검사한다(CI, 단가 변경 PR에서 필수). 예약 합계는 ③ V-01 규칙의 기본 경로(후보 0 `cache_write` + 후보 1~5 `cached`, mock 단가 0.23676)로 계산한다.
 
 **⑦ Mock usage 규칙(T-17 ②, 09장 9.6.2가 이 규칙을 참조)**
 
@@ -1978,15 +1978,15 @@ stageSkip(role, callKind):
 |---|---|---|
 | `cost_spike` | 단가 10배, **추정에도 반영**(Mock 공급자의 pricing 항목을 10배로 교체) | 첫 판정에서 넘는 호출은 `budget_skipped`(`COST_CAP`), `sum(llm_calls.cost_usd) ≤ capEff`, 상태 ∈ {partial, fallback}, DB 예외·`WORKER_LOST` 0 |
 | `cost_ramp` | 단가 1.20배(추정 반영), 후보 2~5(변형 B·C) 출력은 조화 < 80(`low_score`와 같은 합성)이라 B·C가 수정 루프 대상 | `judge_vision` 6건 모두 `budget_skipped`(`skip_vision`) → 변형 B 수정 1건 `ok` → 변형 C 수정 `budget_skipped`(`skip_repair`) 순서, C는 폴백, 상태 `partial`, 합계 ≤ `capEff` |
-| `usage_overrun` | usage 3배 보고, **추정에는 미반영** | 진행 중 호출 정산, DB 예외 0, `WORKER_LOST` 0, A11 정확히 1건, `spent > capEff` 시점 이후 출발한 `status='ok'` 호출 0, 합계 ≤ `capEff × 3`, 상태 ∈ {partial, fallback}. **거부 호출 집합(U-01 계산, 결정론)**: 후보 0 정산(0.11813) 뒤 예약 시 카피 예약 0.05325가 남아 후보 1~4만 출발(누적 0.28234)하고 후보 5는 `budget_skipped`. 카피 정산 0.25313, 후보 1 정산에서 0.32468 > 0.30 → A11. 이후 `judge_vision`·수정 예약 전부 `budget_skipped`. 출발한 호출 = 카피 1 + 레이아웃 5(후보 0~4), 합계 0.53933 |
+| `usage_overrun` | usage 3배 보고, **추정에는 미반영** | 진행 중 호출 정산, DB 예외 0, `WORKER_LOST` 0, A11 정확히 1건, `spent > capEff` 시점 이후 출발한 `status='ok'` 호출 0, 합계 ≤ `capEff × 3`, 상태 `succeeded`(후보 0·1 `v_true`, 2·3 `v_fit`, 4 `v_bal`이 모두 `ok`라 n_real = 3, 비전 생략은 AC-06-62 ③과 같이 `succeeded`. V-02, 옛 {partial, fallback} → 대체). **거부 호출 집합(U-01 계산, 결정론)**: 후보 0 정산(0.11813) 뒤 예약 시 카피 예약 0.05325가 남아 후보 1~4만 출발(누적 0.28234)하고 후보 5는 `budget_skipped`. 카피 정산 0.25313, 후보 1 정산에서 0.32468 > 0.30 → A11. 이후 `judge_vision`·수정 예약 전부 `budget_skipped`. 출발한 호출 = 카피 1 + 레이아웃 5(후보 0~4), 합계 0.53933 |
 
   `cost_ramp`의 1.20배 근거(AD 기록): 생성 단계 실청구 0.20363 × 1.20 = 0.24435 ≥ 0.24(비전 전부 생략), est 합계 0.23676 × 1.20 = 0.28411 ≤ 0.30(생성 호출 거부 없음), 수정 1회 후 0.24435 + 0.03042 = 0.27477 ≥ 0.27(두 번째 수정 생략). 1.15배는 비전 6건 중 일부만 생략돼 순서 관찰이 실행 타이밍에 따라 달라진다.
 
 **수용 기준**
 
 - **AC-06-56**(T-17로 개정): Mock `ok`에서 ① 기본 경로 `llm_calls` 13행(`gen_copy` 1, `gen_layout` 6, `judge_vision` 6) 중 `budget_skipped` 0건 ② `gen_layout` 행 중 `cache_write_tokens_in > 0`이 정확히 1개(후보 0), `cached_tokens_in > 0`이 정확히 5개 ③ 잡 비용이 `mock-prompt-sizes.json`과 `pricing["mock/*"]`로 ②의 식을 계산한 값 ± 1% 안(테스트는 값을 리터럴로 쓰지 않고 픽스처에서 계산한다. temp 픽스처의 공식값 $0.23363) ④ 후보 1~5의 `llm_calls.started_at`이 후보 0의 `first_token_at` 이후이고 t0 + 3s 이내(U-01: 시각 기준은 `started_at`·`first_token_at`) ⑤ 후보 1~5의 est가 cached 값(0.02774)으로 기록되고 est 합계가 0.23676 ± 0.00002. 옛 "$0.23 ± 10%" → T-17로 대체(공식값 ± 1%, 더 엄격).
-- **AC-06-61**(T-17): 위 표의 `cost_ramp`·`usage_overrun` 기대 결과를 통합 테스트가 그대로 확인한다. `cost_ramp`는 `llm_calls`의 `budget_skipped` 행 순서(`started_at`, U-01)가 `judge_vision` 6건 → `repair_quality` 1건이고 그 사이에 `repair_quality` `ok` 1건이 있다. `usage_overrun`은 `alerts`에서 `rule='A11'`이 그 잡에 1건이고, `generation_jobs.cost_usd = sum(llm_calls.cost_usd)`(차이 ≤ 0.00001)이며, 위 표의 거부 호출 집합과 같고 같은 시드 2회 실행에서 거부 호출 집합이 같다(U-01).
-- **AC-06-62**(T-17·TL3-10): 단위 테스트 ① 동시 `reserve` 20회에서 `spent + reserved`가 `capEff`를 넘는 순간 0회 ② 7개 병렬 호출 중 3개가 `server_error` 후 재시도할 때 모든 시점에서 `spent + reserved ≤ capEff`이고 재시도 attempt마다 새 예약 1개(`llm_calls.attempt=2` 행 3개) ③ `JOB_COST_CAP_USD=0.25`이면 `skipVisionEff = 0.20`, `skipRepairEff = 0.225`이고, Mock `ok`에서 생성 예약 합계 0.23674 ≤ 0.25라 `gen_*` 거부 0건, 비전 단계 시작 시 `spent = 0.20363 ≥ 0.20`이라 `judge_vision` 6건이 모두 `skip_vision`으로 생략되며 상태는 `succeeded`다(같은 설정에서 기본값 0.30이면 생략 0건) ④ `pnpm cost:model`이 temp 단가로 통과하고, `gen_layout` 출력 단가를 2배로 바꾼 픽스처에서는 실패한다.
+- **AC-06-61**(T-17): 위 표의 `cost_ramp`·`usage_overrun` 기대 결과를 통합 테스트가 그대로 확인한다. `cost_ramp`는 `llm_calls`의 `budget_skipped` 행 순서(`started_at`, U-01)가 `judge_vision` 6건 → `repair_quality` 1건이고 그 사이에 `repair_quality` `ok` 1건이 있다. `usage_overrun`은 `alerts`에서 `rule='A11'`이 그 잡에 1건이고, `generation_jobs.cost_usd = sum(llm_calls.cost_usd)`(차이 ≤ 0.00001)이며, 위 표의 거부 호출 집합과 같고 같은 시드 2회 실행에서 거부 호출 집합이 같으며 잡 상태가 `succeeded`(노출 시안 3개 모두 비폴백)다(U-01·V-02). ④ (V-01) `MOCK_LLM_LATENCY_MS=4000`으로 사건 t1이 3s를 넘는 `ok`에서 후보 1~5의 est = 0.02774, `budget_skipped` 0건, 후보 1~5 `started_at` = t0 + 3s ± 50ms. 같은 설정에서 후보 0 실패 주입 시 후보 1~5 다섯 모두 `cache_write`로 추정한다.
+- **AC-06-62**(T-17·TL3-10): 단위 테스트 ① 동시 `reserve` 20회에서 `spent + reserved`가 `capEff`를 넘는 순간 0회 ② 7개 병렬 호출 중 3개가 `server_error` 후 재시도할 때 모든 시점에서 `spent + reserved ≤ capEff`이고 재시도 attempt마다 새 예약 1개(`llm_calls.attempt=2` 행 3개) ③ `JOB_COST_CAP_USD=0.25`이면 `skipVisionEff = 0.20`, `skipRepairEff = 0.225`이고, Mock `ok`에서 생성 예약 합계 0.23676 ≤ 0.25라 `gen_*` 거부 0건, 비전 단계 시작 시 `spent = 0.20363 ≥ 0.20`이라 `judge_vision` 6건이 모두 `skip_vision`으로 생략되며 상태는 `succeeded`다(같은 설정에서 기본값 0.30이면 생략 0건) ④ `pnpm cost:model`이 temp 단가로 통과하고, `gen_layout` 출력 단가를 2배로 바꾼 픽스처에서는 실패한다.
 
 ### 6.9.5 폴백·장애 처리 요약(04장 4.7.1과 동일 규칙)
 
@@ -2684,4 +2684,5 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 | TL3-09(06) | Minor | AC-06-02 `pg_class.relforcerowsecurity` | |
 | S-32·S-37(06) | Major | 6.4.3 MockupCard `movedAxes`·`diffFromTrue`·brandColorNotice 5값 | |
 | U-01·U-02(06-a, r4 RB4-01·02) | Major | 6.9.4 ① 사건 t1·처리 순서, ③ `cacheState`·est 반올림·합계 0.23676, ⑦ Mock 지연·`usage_overrun` 거부 집합, `llm_calls.started_at`·`first_token_at`, AC-06-56 ④⑤·AC-06-61, AC-06-07/07b/07c·6.17 행 | 09 9.6.2·07 배정표는 각 단위 |
+| V-01·V-02(06-a, r5 RB5-01·02) | Major | 6.9.4 ③ `cacheState` 판정(실패 여부)·`cost:model` 계산 경로, 6.2.4 예열 비고, ⑦ `usage_overrun` 기대 상태 `succeeded`, AC-06-61 ④, AC-06-62 ③ 0.23676 | 07 TC-R-20·09 9.6.2는 다음 단위 |
 | U-03~U-07·U-13(06-b, r4 RC4-01~05·RA4-03) | Major | 6.2.5 순서 ③b→③·`deleteOwnedRenders`·재가입 복구, `users.suspend_source`, `provision_user` 복구 분기, 6.4.3 `DELETE /api/projects/:id`·verify 302·ADM-04 PATCH·ADM-11 필터, 6.6 `renders_orphan` 증거 제외·`abuse_holds_expired` 연장·`rights_unverified_7d`·`admin_audit_1y` least(), 스토리지 표, 6.12.4 A12, AC-06-54 | AC-08-57·58·59는 08-a |
