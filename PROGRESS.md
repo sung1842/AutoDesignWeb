@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T15:09Z, since: 2026-11-19T15:18Z}
+- lock: {owner: 2026-11-19T15:09Z, since: 2026-11-19T15:20Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
@@ -99,7 +99,7 @@
   - [x] 13 자체 잠금(--m0-end, ASM-007) → verify:m0 pass_blocked(BLK-001~005) → m0-done 태그
 - M1 계획(9.4.3, AC: 02-01·12, 03-01, 05-02~04, 06-01~07·51, 09-04·05. 읽을 장은 CLAUDE.md 구현 규칙 3절):
   - [x] 01 M1 수용 테스트(acMilestones M1 + 9.4.3 ①~⑨) `test(acc)` 커밋 → qa:trace --audit → 자체 잠금, traceability.yaml M1 행
-  - [ ] 02 packages/data-contracts B1~B17 zod(09장 9.2 묶음 정의)
+  - [x] 02 packages/data-contracts B1~B17 zod(09장 9.2 묶음 정의)
   - [ ] 03 `data:validate`(25묶음, B19 0개 허용, 교차 참조 고아 0) — todo 자리표시 교체
   - [ ] 04 `seed:temp` 결정적 PRNG(provenance temp, tmp_ 접두사, 2회 바이트 동일): a 택소노미·프리셋·폰트·페어링 b 카드·A/B·레퍼런스·골든 골격
   - [ ] 05 packages/taxonomy 로더 + centroid(03장 3.4.7) 일치·최소 거리 검사
@@ -115,6 +115,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-20 00:21 | M1-02 data-contracts: 봉투·B1~B25 키 스키마·레지스트리(+03장 8파일), 단위 3 → 다음: M1-03 data:validate
 - 2026-11-20 00:55 | guard 복구: DbPort·fixtures 계약 스텁(수집 0건 해소), env 비밀값 검사 audit 오탐 해소(ASM-009) → 다음: M1-02
 - 2026-11-20 00:45 | M1-01 수용 테스트 2파일(7ac566c) 자체 잠금, trace M1 17행, ASM-008 → 다음: M1-02 data-contracts
 - 2026-11-19 23:47 | M1 계획 11단위 작성, 세션 종료 unlock → 다음: M1-01 수용 테스트
@@ -129,4 +130,3 @@
 - 2026-11-19 23:35 | M0-09a guard:spec(5·6단계, thresholds-schema zod, AD-027) guard.test 23/24 → 다음: qa:trace --audit
 - 2026-11-19 23:25 | M0-08 guard 1~4단계(exit 3=BLK-001), BLK-002(자체잠금 테스트 정규식 오류) → 다음: M0-09 guard 5~7
 - 2026-11-19 23:15 | BLK-001 라이선스 규칙 locked-conflict 기록(HUMAN_TODO) → 다음: M0-08 guard 1~4
-- 2026-11-19 23:10 | M0-07 web·worker health, env 종료 1, m0 stack.test 8/8 녹색 → 다음: M0-08 guard 1~4
