@@ -3,9 +3,9 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P2
-- lock: {owner: 2026-11-19T05:57Z, since: 2026-11-19T06:46Z}
+- lock: {}
 - limit.next_reset_kst: 2026-11-19 19:57
-- 마지막 갱신: 2026-11-19 15:40 KST (예약 세션: 06-c~01-b 반영)
+- 마지막 갱신: 2026-11-19 15:40 KST (예약 세션: 라운드 3 반영 완료, 라운드 4 리뷰 3개)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -29,7 +29,7 @@
 - 라운드 2 반영 단위(decisions_v3.md "반영 순서" 참고): [x] 07-a [x] 07-b [x] 07-c [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 09-a [x] 09-b [x] 09-c [x] 04-a [x] 04-b [x] 04-c [x] 03 [x] 02 [x] 05 [x] 01 [x] 08 [x] 00 [x] 잔여 표기 grep
 - 라운드 3: [x] PM [x] 프로덕트 디자이너 [x] UX [x] UI [x] 테크 리드 [x] AI/ML [x] QA [x] 법무 → [x] decisions_v4(T-01~T-36) [x] 반영(아래 22단위)
 - 라운드 3 반영 단위(decisions_v4.md "반영 순서" 참고): [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 07-a [x] 07-b [x] 07-c [x] 07-d [x] 09-a [x] 09-b [x] 09-c [x] 01-a [x] 01-b [x] 04-a [x] 04-b [x] 03-a [x] 03-b [x] 08-a [x] 02-a [x] 05-a [x] 00-a [x] 잔여 표기 grep
-- 라운드 4(1.1 규칙: 리뷰어 3명·패킷 `docs/reviews/round4/packet.md`): [x] R-A 제품·경험 [x] R-B 기술·품질 [ ] R-C 법무 → [ ] decisions_v5 [ ] 반영
+- 라운드 4(1.1 규칙: 리뷰어 3명·패킷 `docs/reviews/round4/packet.md`): [x] R-A 제품·경험 [x] R-B 기술·품질 [x] R-C 법무 → [ ] decisions_v5 [ ] 반영
 - 판정 기록(라운드별 C1/C2/C3):
   - R2 PM: FAIL/FAIL/FAIL (Blocker 0, Major 5: 예산-목표 불일치, 취소 시 한도 규칙 충돌, KPI 쿼리 분모, 검증 표본 확보, 00↔07·09 불일치)
   - R2 UX: FAIL/FAIL/FAIL (1라운드 19/19 해결, Blocker 0, Major 3: 결과 신뢰 문구 01↔02 불일치, 진단 카드 크기 규칙이 실제 화면에서 불성립, 편집 가능 판정을 화면 폭으로 해 200% 확대 시 편집 소실)
@@ -38,6 +38,7 @@
   - R2 PD: FAIL/FAIL/FAIL (1라운드 23건 중 20 해결·3 부분, Blocker 0, Major 5: S08 근거 칩 부재·v_true 문구 모순, 03 허용 조합이 04 린터에서 항상 실패(AIL-06·AIL-03), 사진 톤·업종 필터 부재, styleguide.html 내보내기 누락, 검증 대조군 약함)
   - R2 UI: FAIL/FAIL/PASS (1라운드 24건 중 20 해결·4 부분, Blocker 0, Major 4: 밝은 브랜드색 대비 보정 실패 경로 없음, 텍스트 역할→타입 단계 표 부재(H7 T3 2.47), 히어로 8~24자와 타입 스케일 불일치, 폰트 서브셋 전략·enum 불일치)
   - R2 AI: FAIL/FAIL/FAIL (1라운드 24건 중 22 해결·1 부분, Blocker 1: 05장 정규화 분위수 표·few-shot 48개의 임시 시드 규칙 부재(B1~B17) / Major 4: 진단 시뮬 단일 시드 판정·튜닝 겹침·멈춤 규칙 없음, 골든 M1 95%±0.12가 RMSE 0.12와 모순(QA2-05와 충돌 → v3 결정), gen_copy 실패·거절 처리 미정, MockProvider가 04장 분할 호출과 다르고 ok 시나리오가 수리 경로를 안 탐)
+  - R4 R-C: 법무 FAIL/FAIL/FAIL(RC4-01~05: 증거 삭제 순서·프로젝트 삭제 경로·purge now()·abuse_holds 수명·미확인 요청 보관)
   - R4 R-B: TL FAIL/FAIL/PASS(RB4-01·02), AI FAIL/FAIL/PASS(RB4-03), QA FAIL/FAIL/PASS(RB4-02·04·05)
   - R4 R-A: PM PASS/PASS/PASS, PD FAIL/FAIL/PASS(RA4-02), UX FAIL/FAIL/PASS(RA4-03), UI FAIL/FAIL/PASS(RA4-01)
   - R3 PM: FAIL/FAIL/FAIL (2라운드 PM2-01·02·03·05 해결, 04·07 부분, 06 미해결(Minor). Blocker 0, Major 4: S-18 표본 운영 기능이 00장에만 있음(01 화면·06 API·A5/A7 쿼리 없음), 노출 전 취소 환불 반복으로 일 예산 소진(차단 없음), 평가·staging LLM 원가가 예산 모델에 없음, 09 M0~M8에 00장 제품 기능(이벤트·KPI·어드민 KPI·초대코드·한도·관심 페이지·지원) 배정 없음)
@@ -60,6 +61,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 17:21 | R4 R-C 리뷰: B0·M5·m6. 법무 FAIL×3(RC4-01~05). 라운드 4 합계 Major 13 → 다음: decisions_v5
 - 2026-11-19 17:16 | R4 R-B 리뷰: B0·M5·m7. TL·AI·QA 모두 C1·C2 FAIL, C3 PASS(RB4-01~05)
 - 2026-11-19 17:08 | R4 R-A 리뷰: B0·M3·m9. PM PASS×3, PD·UX·UI C1·C2 FAIL(RA4-01~03)
 - 2026-11-19 17:00 | 잔여 grep: G-13·시나리오 수·SC-05·6.19 행 정리. 라운드 3 반영 22단위 완료
