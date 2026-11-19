@@ -1,0 +1,173 @@
+{
+  "bundle": "survey-templates",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "survey-templates",
+      "demoBrand": {
+        "name": "한결",
+        "tagline": "한결은 오래 곁에 두고 쓰는 것을 만듭니다. 천천히, 그러나 꾸준히.",
+        "copy": {
+          "nav.logo": "한결",
+          "nav.menu": "소개 / 이야기 / 문의",
+          "nav.cta": "시작하기",
+          "hero.headline": "매일 쓰는 것을\n조금 더 오래",
+          "hero.sub": "한결은 오래 곁에 두고 쓰는 것을 만듭니다. 천천히, 그러나 꾸준히.",
+          "hero.primaryCta": "둘러보기",
+          "hero.secondaryCta": "더 알아보기",
+          "grid.title": "지금 소개하는 것들",
+          "grid.desc": "하나씩 직접 써 보고 골랐어요.",
+          "grid.item": "기본 01~기본 06",
+          "grid.itemSub": "한 줄 설명이 들어갑니다",
+          "grid.cta": "모두 보기",
+          "text.quote": "좋은 것은 소리 없이 오래 남는다",
+          "text.body": "[임시] 오래 쓰는 물건은 처음보다 나중에 더 좋아집니다. 손에 익을수록 편해지는 것을 만듭니다.",
+          "text.stats": "12년 / 3,400명 / 98%",
+          "text.statLabels": "함께한 시간 / 함께한 사람 / 다시 찾는 비율",
+          "text.signature": "한결 드림",
+          "hero.card1": "단단함 / 정직한 재료",
+          "hero.card2": "가벼움 / 덜어낸 구성",
+          "hero.card3": "꾸준함 / 오래 가는 약속"
+        }
+      },
+      "templates": [
+        {
+          "id": "tpl-hero",
+          "page": {
+            "viewport": [
+              1280,
+              800
+            ],
+            "sections": [
+              {
+                "id": "s1",
+                "block": "nav",
+                "variant": "split",
+                "slots": {
+                  "wordmark": "nav.logo",
+                  "links": "nav.menu",
+                  "cta": "nav.cta"
+                }
+              },
+              {
+                "id": "s2",
+                "block": "hero",
+                "variant": "split",
+                "slots": {
+                  "headline": "hero.headline",
+                  "sub": "hero.sub",
+                  "primaryCta": "hero.primaryCta",
+                  "secondaryCta": "hero.secondaryCta",
+                  "media": 0
+                }
+              },
+              {
+                "id": "s3",
+                "block": "value",
+                "variant": "numbered",
+                "slots": {
+                  "items": [
+                    "hero.card1",
+                    "hero.card2",
+                    "hero.card3"
+                  ]
+                }
+              }
+            ]
+          },
+          "imageIds": [
+            "tmp_img:portfolio.still-life-002"
+          ]
+        },
+        {
+          "id": "tpl-grid",
+          "page": {
+            "viewport": [
+              1280,
+              800
+            ],
+            "sections": [
+              {
+                "id": "s1",
+                "block": "gallery",
+                "variant": "grid",
+                "slots": {
+                  "title": "grid.title",
+                  "desc": "grid.desc",
+                  "items": "grid.item",
+                  "itemSub": "grid.itemSub",
+                  "media": [
+                    0,
+                    1,
+                    2,
+                    0,
+                    1,
+                    2
+                  ]
+                }
+              },
+              {
+                "id": "s2",
+                "block": "cta",
+                "variant": "band",
+                "slots": {
+                  "primaryCta": "grid.cta"
+                }
+              }
+            ]
+          },
+          "imageIds": [
+            "tmp_img:portfolio.still-life-005",
+            "tmp_img:portfolio.tools-002",
+            "tmp_img:saas.material-002"
+          ]
+        },
+        {
+          "id": "tpl-text",
+          "page": {
+            "viewport": [
+              1280,
+              800
+            ],
+            "sections": [
+              {
+                "id": "s1",
+                "block": "proof",
+                "variant": "quote-large",
+                "slots": {
+                  "quote": "text.quote"
+                }
+              },
+              {
+                "id": "s2",
+                "block": "story",
+                "variant": "text",
+                "slots": {
+                  "body": "text.body",
+                  "media": 0
+                }
+              },
+              {
+                "id": "s3",
+                "block": "stats",
+                "variant": "row",
+                "slots": {
+                  "items": "text.stats",
+                  "labels": "text.statLabels",
+                  "signature": "text.signature"
+                }
+              }
+            ]
+          },
+          "imageIds": [
+            "tmp_img:portfolio.interior-002"
+          ]
+        }
+      ]
+    }
+  ]
+}

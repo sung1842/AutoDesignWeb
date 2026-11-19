@@ -108,3 +108,10 @@
 - 선택: AC-03-11 판정 대상은 값 목록이 고정된 서수 키(k 숫자 또는 허용 집합 순서)로 보고 headline_weight는 제외한다. headline_weight는 "선택된 페어링 안에서" 단조(같은 페어링 구간에서 감소 0)로만 검사. M2/M3 수용 테스트도 이 해석을 따른다
 - 영향 범위: packages/taxonomy/src/map.ts·map.test.ts, AC-03-11 수용 테스트(M2·M3)
 - 되돌리기 비용: 낮음
+
+## ASM-016 · M1 · gap · 2026-11-19T16:40Z
+- 질문: B9·B10 temp에서 ① 2.4.6 "축 서술 고정 사전"이 예시 1개(A3 L4)만 있음 ② alt의 "선택지 {n}"은 노출 위치라 시드 시점에 없음 ③ alt의 축 서술 3개를 고르는 기준·x_card(렌더 실측) 부재 ④ tpl-text 본문 2단락 문장이 02장에 없음
+- 근거 탐색: 02장 2.1.2·2.2 표시 구간·2.4.2·2.4.3·2.4.6, 09장 9.2.4 B9·B10
+- 선택: ① 2.1.2 앵커 묘사로 5축 × L0~L4 서술 사전을 평가어 없이 작성(seed-temp `AXIS_PHRASES`) ② `{n}`을 그대로 둔 템플릿 문자열(클라이언트가 위치로 치환) ③ target_l1 기준, 0.5에서 먼 3축(동률은 축 순서), survey:build가 x_card로 다시 쓴다 ④ `[임시]` 문장. 카드 `status: draft`(채택은 survey:build·B12)
+- 영향 범위: data/survey/templates.json·card_plan.json, M4 survey:build
+- 되돌리기 비용: 낮음

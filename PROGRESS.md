@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T16:09Z, since: 2026-11-19T16:24Z}
+- lock: {owner: 2026-11-19T16:09Z, since: 2026-11-19T16:26Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
@@ -101,7 +101,7 @@
   - [x] 01 M1 수용 테스트(acMilestones M1 + 9.4.3 ①~⑨) `test(acc)` 커밋 → qa:trace --audit → 자체 잠금, traceability.yaml M1 행
   - [x] 02 packages/data-contracts B1~B17 zod(09장 9.2 묶음 정의)
   - [x] 03 `data:validate`(25묶음, B19 0개 허용, 교차 참조 고아 0) — todo 자리표시 교체
-  - [ ] 04 `seed:temp` 결정적 PRNG(provenance temp, tmp_ 접두사, 2회 바이트 동일): [x] a1 골격·B1 축·B2 유형·B4 용도(장 표 파싱) [x] a2a taxonomy·mapping [x] a2b presets 8종 [x] a2b2 palettes 32벌(OKLCH→hex·색역·대비 재검사, ASM-011) [x] a2c1 text-roles(B25)·icons [x] a2c2 signatures·harmony [x] a2c3a components [x] a2c3b blocks(20블록·53 variant, ASM-012) [x] a2c3c tokens/schema [x] a3a 폰트 26·페어링 20(code 참조, ASM-013) [x] a3b 이미지 192(무늬 SVG placeholder, ASM-014) [x] b0 taxonomy mapL1toL2(purpose=null, AC-03-09~11 단위, ASM-015) [ ] b1 템플릿(B9)·카드 48(B10) [ ] b2 A/B 120·승인(B11·B12) [ ] b3 레퍼런스 60·골든 32(B13·B16) [ ] c B14~B24 나머지
+  - [ ] 04 `seed:temp` 결정적 PRNG(provenance temp, tmp_ 접두사, 2회 바이트 동일): [x] a1 골격·B1 축·B2 유형·B4 용도(장 표 파싱) [x] a2a taxonomy·mapping [x] a2b presets 8종 [x] a2b2 palettes 32벌(OKLCH→hex·색역·대비 재검사, ASM-011) [x] a2c1 text-roles(B25)·icons [x] a2c2 signatures·harmony [x] a2c3a components [x] a2c3b blocks(20블록·53 variant, ASM-012) [x] a2c3c tokens/schema [x] a3a 폰트 26·페어링 20(code 참조, ASM-013) [x] a3b 이미지 192(무늬 SVG placeholder, ASM-014) [x] b0 taxonomy mapL1toL2(purpose=null, AC-03-09~11 단위, ASM-015) [x] b1 템플릿(B9)·카드 48(B10, mapL1toL2 오버라이드, ASM-016) [ ] b2 A/B 120·승인(B11·B12) [ ] b3 레퍼런스 60·골든 32(B13·B16) [ ] c B14~B24 나머지
   - [ ] 05 packages/taxonomy 로더 + centroid(03장 3.4.7) 일치·최소 거리 검사
   - [ ] 06 packages/db 마이그레이션 SQL(06장 DDL, MVP분) + native 빈 DB 2회 적용(ON_ERROR_STOP)
   - [ ] 07 RLS 정책·DbPort(withAnon) + RLS 테스트(⑦, AC-06-03b)
@@ -115,6 +115,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-20 01:26 | M1-04b1 templates.json(한결 고정 문안)·card_plan 48(브리지 L2 오버라이드·alt), ASM-016 → 다음: b2 A/B·승인
 - 2026-11-20 01:24 | M1-04b0 @tastefit/taxonomy mapL1toL2(앵커 재현 8/8·160 허용·단조), ASM-015 → 다음: b1 템플릿·카드
 - 2026-11-20 01:23 | 폰트·이미지 temp에 9.2.4 S-10 표기(verified_by temp-agent·LicenseRef-TasteFit-Generated) → 다음: 04b mapL1toL2+카드
 - 2026-11-20 01:22 | M1-04a3b images manifest 192+무늬 SVG(실제 sha256), 톤 기준 모순 ASM-014 → 다음: 04b 카드·A/B·승인·레퍼런스·골든

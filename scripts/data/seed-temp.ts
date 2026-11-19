@@ -13,6 +13,12 @@ import {
   oklchToHex,
   parseOklch,
 } from "../../packages/taxonomy/src/color.js";
+import {
+  type L1,
+  type MapData,
+  type PresetLite,
+  mapL1toL2,
+} from "../../packages/taxonomy/src/map.js";
 import { chapter, section, table, unquote } from "./spec-md.js";
 
 export const SEED = 20261116;
@@ -1521,6 +1527,228 @@ function genImages(ctx: Ctx): Out[] {
   return out;
 }
 
+// ---------- B9 survey/templates.json (02장 2.4.3) ----------
+/** 2.4.3 이미지 규칙(무채 C ≤ 0.04): temp는 neutral 톤 플레이스홀더에서 고정 선택(3.10.2 순환상 002·005·008이 neutral). */
+const TEMPLATE_IMAGES: Record<string, string[]> = {
+  "tpl-hero": ["tmp_img:portfolio.still-life-002"],
+  "tpl-grid": [
+    "tmp_img:portfolio.still-life-005",
+    "tmp_img:portfolio.tools-002",
+    "tmp_img:saas.material-002",
+  ],
+  "tpl-text": ["tmp_img:portfolio.interior-002"],
+};
+
+function genTemplates(ctx: Ctx): Out[] {
+  const sec = section(chapter(ctx.root, "02_diagnosis.md"), "### 2.4.3");
+  // 고정 텍스트 셀은 " · "로 나뉜 "라벨 \"문구\"…" 조각. 같은 라벨의 nth 조각의 따옴표 문구들.
+  const segs = table(sec)
+    .map((r) => r[2] ?? "")
+    .join(" · ")
+    .split(" · ");
+  const q = (label: string, nth = 0): string[] => {
+    const seg =
+      segs.filter((x) => x.startsWith(`${label} `) || x.includes(` ${label} "`))[nth] ?? "";
+    const sub = seg.slice(Math.max(0, seg.indexOf(`${label} `)));
+    return [...sub.matchAll(/"([^"]*)"/g)].map((x) => x[1] ?? "");
+  };
+  const [headline = ""] = q("헤드라인");
+  const [body = ""] = q("본문");
+  const cards = q("카드");
+  const copy: Record<string, string> = {
+    "nav.logo": q("로고")[0] ?? "한결",
+    "nav.menu": q("메뉴")[0] ?? "",
+    "nav.cta": q("버튼")[0] ?? "",
+    "hero.headline": headline.replace(" / ", "\n"),
+    "hero.sub": body,
+    "hero.primaryCta": q("버튼", 1)[0] ?? "",
+    "hero.secondaryCta": q("버튼", 1)[1] ?? "",
+    "grid.title": q("제목")[0] ?? "",
+    "grid.desc": q("설명")[0] ?? "",
+    "grid.item": "기본 01~기본 06",
+    "grid.itemSub": q("보조")[0] ?? "",
+    "grid.cta": "모두 보기",
+    "text.quote": q("인용")[0] ?? "",
+    "text.body":
+      "[임시] 오래 쓰는 물건은 처음보다 나중에 더 좋아집니다. 손에 익을수록 편해지는 것을 만듭니다.",
+    "text.stats": q("숫자")[0] ?? "",
+    "text.statLabels": q("라벨")[0] ?? "",
+    "text.signature": q("서명")[0] ?? "",
+  };
+  cards.forEach((c, i) => {
+    copy[`hero.card${i + 1}`] = c;
+  });
+  const sections = (id: string): Obj[] => {
+    if (id === "tpl-hero")
+      return [
+        {
+          id: "s1",
+          block: "nav",
+          variant: "split",
+          slots: { wordmark: "nav.logo", links: "nav.menu", cta: "nav.cta" },
+        },
+        {
+          id: "s2",
+          block: "hero",
+          variant: "split",
+          slots: {
+            headline: "hero.headline",
+            sub: "hero.sub",
+            primaryCta: "hero.primaryCta",
+            secondaryCta: "hero.secondaryCta",
+            media: 0,
+          },
+        },
+        {
+          id: "s3",
+          block: "value",
+          variant: "numbered",
+          slots: { items: ["hero.card1", "hero.card2", "hero.card3"] },
+        },
+      ];
+    if (id === "tpl-grid")
+      return [
+        {
+          id: "s1",
+          block: "gallery",
+          variant: "grid",
+          slots: {
+            title: "grid.title",
+            desc: "grid.desc",
+            items: "grid.item",
+            itemSub: "grid.itemSub",
+            media: [0, 1, 2, 0, 1, 2],
+          },
+        },
+        { id: "s2", block: "cta", variant: "band", slots: { primaryCta: "grid.cta" } },
+      ];
+    return [
+      { id: "s1", block: "proof", variant: "quote-large", slots: { quote: "text.quote" } },
+      { id: "s2", block: "story", variant: "text", slots: { body: "text.body", media: 0 } },
+      {
+        id: "s3",
+        block: "stats",
+        variant: "row",
+        slots: { items: "text.stats", labels: "text.statLabels", signature: "text.signature" },
+      },
+    ];
+  };
+  const item: Obj = {
+    id: "survey-templates",
+    demoBrand: { name: copy["nav.logo"] ?? "한결", tagline: body, copy },
+    templates: ["tpl-hero", "tpl-grid", "tpl-text"].map((id) => ({
+      id,
+      page: { viewport: [1280, 800], sections: sections(id) },
+      imageIds: TEMPLATE_IMAGES[id] ?? [],
+    })),
+  };
+  return [{ path: "data/survey/templates.json", content: bundle(ctx, "survey-templates", [item]) }];
+}
+
+// ---------- B10 survey/card_plan.json (02장 2.4.2·2.4.6) ----------
+/** 2.4.6 축 서술 고정 사전(5축 × 표시 구간 L0~L4). 02장은 예시 1개만 있어 2.1.2 앵커 문구로 temp 작성(ASM-016). */
+const AXIS_PHRASES: Record<string, string[]> = {
+  A1: [
+    "장식 없이 무채색 위주인",
+    "포인트 색 하나만 쓴",
+    "포인트 색이 1~2개인",
+    "색과 크기 대비가 큰",
+    "색과 장식이 많고 크기 대비가 아주 큰",
+  ],
+  A2: [
+    "푸른 계열이 주조인",
+    "회색 바탕에 푸른 포인트인",
+    "중성색 바탕인",
+    "아이보리 바탕에 주황 포인트인",
+    "크림 바탕에 붉은 계열이 주조인",
+  ],
+  A3: [
+    "모서리가 직각인",
+    "모서리가 살짝 둥근",
+    "모서리가 둥근",
+    "모서리가 많이 둥근",
+    "모서리가 아주 둥근",
+  ],
+  A4: ["여백이 아주 넓은", "여백이 넓은", "여백이 보통인", "정보가 촘촘한", "정보가 아주 촘촘한"],
+  A5: [
+    "그림자 없이 평평한",
+    "구분선 위주로 평평한",
+    "카드에 옅은 그림자가 있는",
+    "그림자가 겹겹이 있는",
+    "반투명·오프셋 효과로 입체적인",
+  ],
+};
+const TEMPLATE_DESC: Record<string, string> = {
+  "tpl-hero": "첫 화면 히어로 구성",
+  "tpl-grid": "6칸 그리드 구성",
+  "tpl-text": "인용문과 숫자 구성",
+};
+const level = (x: number): number => Math.min(4, Math.floor(x / 0.2));
+
+export function standardVectors(root: string): { id: string; baseTypeId: string; l1: number[] }[] {
+  const cents = specCentroids(root);
+  const anchors = [...cents.entries()].map(([t, v], i) => ({
+    id: `SV${String(i + 1).padStart(2, "0")}`,
+    baseTypeId: t,
+    l1: v,
+  }));
+  const bridges = table(section(chapter(root, "02_diagnosis.md"), "### 2.4.2"))
+    .filter((r) => /^SV(09|1[0-6])$/.test(r[0] ?? ""))
+    .map((r) => ({ id: r[0] ?? "", baseTypeId: r[2] ?? "", l1: r.slice(3, 8).map(Number) }));
+  return [...anchors, ...bridges];
+}
+
+export function mapData(ctx: Ctx): { data: MapData; presets: Map<string, PresetLite> } {
+  const items = (o: Out): Obj[] => (JSON.parse(o.content) as { items: Obj[] }).items;
+  const data = {
+    taxonomy: items(genTaxonomy(ctx)[0] as Out),
+    mapping: items(genMapping(ctx)[0] as Out),
+    pairings: items(genPairings(ctx)[0] as Out),
+    palettes: items(genPalettes(ctx)[0] as Out),
+  } as unknown as MapData;
+  const presets = new Map(
+    genPresets(ctx).map((o) => {
+      const p = items(o)[0] as unknown as PresetLite;
+      return [p.typeId, p];
+    }),
+  );
+  return { data, presets };
+}
+
+function genCardPlan(ctx: Ctx): Out[] {
+  const { data, presets } = mapData(ctx);
+  const items: Obj[] = [];
+  for (const sv of standardVectors(ctx.root)) {
+    const p = presets.get(sv.baseTypeId);
+    if (!p) throw new Error(`기준 유형 ${sv.baseTypeId} 프리셋 없음`);
+    const l2 = mapL1toL2(sv.l1 as unknown as L1, p, data);
+    const overrides: Record<string, string> = {};
+    for (const [k, v] of Object.entries(l2)) if (p.l2[k] !== v) overrides[k] = v;
+    // 축 서술 3개: 0.5에서 먼 축 순(동률은 축 순서)
+    const axes = sv.l1
+      .map((v, i) => ({ i, d: Math.abs(v - 0.5), v }))
+      .sort((a, b) => b.d - a.d || a.i - b.i)
+      .slice(0, 3)
+      .sort((a, b) => a.i - b.i);
+    const phrase = axes.map((a) => AXIS_PHRASES[`A${a.i + 1}`]?.[level(a.v)] ?? "").join(", ");
+    for (const tpl of ["hero", "grid", "text"]) {
+      const templateId = `tpl-${tpl}`;
+      items.push({
+        id: `C-${sv.id}-${tpl}`,
+        svId: sv.id,
+        kind: Number(sv.id.slice(2)) <= 8 ? "anchor" : "bridge",
+        presetId: p.id,
+        templateId,
+        targetL1: sv.l1,
+        l2Overrides: overrides,
+        altKo: `선택지 {n}: ${TEMPLATE_DESC[templateId] ?? ""}, ${phrase}`,
+        status: "draft",
+      });
+    }
+  }
+  return [{ path: "data/survey/card_plan.json", content: bundle(ctx, "card-plan", items) }];
+}
+
 /** 생성기 목록(의존 순서). 나머지 묶음은 M1-04b 이후 단위에서 추가한다. */
 export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genAxes,
@@ -1540,6 +1768,8 @@ export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genFonts,
   genPairings,
   genImages,
+  genTemplates,
+  genCardPlan,
 ];
 
 function isHuman(abs: string): boolean {

@@ -1,0 +1,985 @@
+{
+  "bundle": "card-plan",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "C-SV01-hero",
+      "svId": "SV01",
+      "kind": "anchor",
+      "presetId": "PS-T1",
+      "templateId": "tpl-hero",
+      "targetL1": [
+        0.26,
+        0.81,
+        0.12,
+        0,
+        0
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 첫 화면 히어로 구성, 모서리가 직각인, 여백이 아주 넓은, 그림자 없이 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV01-grid",
+      "svId": "SV01",
+      "kind": "anchor",
+      "presetId": "PS-T1",
+      "templateId": "tpl-grid",
+      "targetL1": [
+        0.26,
+        0.81,
+        0.12,
+        0,
+        0
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 6칸 그리드 구성, 모서리가 직각인, 여백이 아주 넓은, 그림자 없이 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV01-text",
+      "svId": "SV01",
+      "kind": "anchor",
+      "presetId": "PS-T1",
+      "templateId": "tpl-text",
+      "targetL1": [
+        0.26,
+        0.81,
+        0.12,
+        0,
+        0
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 인용문과 숫자 구성, 모서리가 직각인, 여백이 아주 넓은, 그림자 없이 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV02-hero",
+      "svId": "SV02",
+      "kind": "anchor",
+      "presetId": "PS-T2",
+      "templateId": "tpl-hero",
+      "targetL1": [
+        0.3,
+        0.23,
+        0.12,
+        0.62,
+        0
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 첫 화면 히어로 구성, 회색 바탕에 푸른 포인트인, 모서리가 직각인, 그림자 없이 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV02-grid",
+      "svId": "SV02",
+      "kind": "anchor",
+      "presetId": "PS-T2",
+      "templateId": "tpl-grid",
+      "targetL1": [
+        0.3,
+        0.23,
+        0.12,
+        0.62,
+        0
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 6칸 그리드 구성, 회색 바탕에 푸른 포인트인, 모서리가 직각인, 그림자 없이 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV02-text",
+      "svId": "SV02",
+      "kind": "anchor",
+      "presetId": "PS-T2",
+      "templateId": "tpl-text",
+      "targetL1": [
+        0.3,
+        0.23,
+        0.12,
+        0.62,
+        0
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 인용문과 숫자 구성, 회색 바탕에 푸른 포인트인, 모서리가 직각인, 그림자 없이 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV03-hero",
+      "svId": "SV03",
+      "kind": "anchor",
+      "presetId": "PS-T3",
+      "templateId": "tpl-hero",
+      "targetL1": [
+        0.16,
+        0.31,
+        0.72,
+        0.12,
+        0.34
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 첫 화면 히어로 구성, 장식 없이 무채색 위주인, 모서리가 많이 둥근, 여백이 아주 넓은",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV03-grid",
+      "svId": "SV03",
+      "kind": "anchor",
+      "presetId": "PS-T3",
+      "templateId": "tpl-grid",
+      "targetL1": [
+        0.16,
+        0.31,
+        0.72,
+        0.12,
+        0.34
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 6칸 그리드 구성, 장식 없이 무채색 위주인, 모서리가 많이 둥근, 여백이 아주 넓은",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV03-text",
+      "svId": "SV03",
+      "kind": "anchor",
+      "presetId": "PS-T3",
+      "templateId": "tpl-text",
+      "targetL1": [
+        0.16,
+        0.31,
+        0.72,
+        0.12,
+        0.34
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 인용문과 숫자 구성, 장식 없이 무채색 위주인, 모서리가 많이 둥근, 여백이 아주 넓은",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV04-hero",
+      "svId": "SV04",
+      "kind": "anchor",
+      "presetId": "PS-T4",
+      "templateId": "tpl-hero",
+      "targetL1": [
+        0.4,
+        0.96,
+        0.72,
+        0.5,
+        0.34
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 첫 화면 히어로 구성, 크림 바탕에 붉은 계열이 주조인, 모서리가 많이 둥근, 구분선 위주로 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV04-grid",
+      "svId": "SV04",
+      "kind": "anchor",
+      "presetId": "PS-T4",
+      "templateId": "tpl-grid",
+      "targetL1": [
+        0.4,
+        0.96,
+        0.72,
+        0.5,
+        0.34
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 6칸 그리드 구성, 크림 바탕에 붉은 계열이 주조인, 모서리가 많이 둥근, 구분선 위주로 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV04-text",
+      "svId": "SV04",
+      "kind": "anchor",
+      "presetId": "PS-T4",
+      "templateId": "tpl-text",
+      "targetL1": [
+        0.4,
+        0.96,
+        0.72,
+        0.5,
+        0.34
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 인용문과 숫자 구성, 크림 바탕에 붉은 계열이 주조인, 모서리가 많이 둥근, 구분선 위주로 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV05-hero",
+      "svId": "SV05",
+      "kind": "anchor",
+      "presetId": "PS-T5",
+      "templateId": "tpl-hero",
+      "targetL1": [
+        1,
+        0.57,
+        0,
+        1,
+        0.56
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 첫 화면 히어로 구성, 색과 장식이 많고 크기 대비가 아주 큰, 모서리가 직각인, 정보가 아주 촘촘한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV05-grid",
+      "svId": "SV05",
+      "kind": "anchor",
+      "presetId": "PS-T5",
+      "templateId": "tpl-grid",
+      "targetL1": [
+        1,
+        0.57,
+        0,
+        1,
+        0.56
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 6칸 그리드 구성, 색과 장식이 많고 크기 대비가 아주 큰, 모서리가 직각인, 정보가 아주 촘촘한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV05-text",
+      "svId": "SV05",
+      "kind": "anchor",
+      "presetId": "PS-T5",
+      "templateId": "tpl-text",
+      "targetL1": [
+        1,
+        0.57,
+        0,
+        1,
+        0.56
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 인용문과 숫자 구성, 색과 장식이 많고 크기 대비가 아주 큰, 모서리가 직각인, 정보가 아주 촘촘한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV06-hero",
+      "svId": "SV06",
+      "kind": "anchor",
+      "presetId": "PS-T6",
+      "templateId": "tpl-hero",
+      "targetL1": [
+        0.79,
+        0.7,
+        1,
+        0.62,
+        0.66
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 첫 화면 히어로 구성, 색과 크기 대비가 큰, 아이보리 바탕에 주황 포인트인, 모서리가 아주 둥근",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV06-grid",
+      "svId": "SV06",
+      "kind": "anchor",
+      "presetId": "PS-T6",
+      "templateId": "tpl-grid",
+      "targetL1": [
+        0.79,
+        0.7,
+        1,
+        0.62,
+        0.66
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 6칸 그리드 구성, 색과 크기 대비가 큰, 아이보리 바탕에 주황 포인트인, 모서리가 아주 둥근",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV06-text",
+      "svId": "SV06",
+      "kind": "anchor",
+      "presetId": "PS-T6",
+      "templateId": "tpl-text",
+      "targetL1": [
+        0.79,
+        0.7,
+        1,
+        0.62,
+        0.66
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 인용문과 숫자 구성, 색과 크기 대비가 큰, 아이보리 바탕에 주황 포인트인, 모서리가 아주 둥근",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV07-hero",
+      "svId": "SV07",
+      "kind": "anchor",
+      "presetId": "PS-T7",
+      "templateId": "tpl-hero",
+      "targetL1": [
+        0.54,
+        0.23,
+        0.32,
+        0.62,
+        0.7
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 첫 화면 히어로 구성, 회색 바탕에 푸른 포인트인, 모서리가 살짝 둥근, 그림자가 겹겹이 있는",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV07-grid",
+      "svId": "SV07",
+      "kind": "anchor",
+      "presetId": "PS-T7",
+      "templateId": "tpl-grid",
+      "targetL1": [
+        0.54,
+        0.23,
+        0.32,
+        0.62,
+        0.7
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 6칸 그리드 구성, 회색 바탕에 푸른 포인트인, 모서리가 살짝 둥근, 그림자가 겹겹이 있는",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV07-text",
+      "svId": "SV07",
+      "kind": "anchor",
+      "presetId": "PS-T7",
+      "templateId": "tpl-text",
+      "targetL1": [
+        0.54,
+        0.23,
+        0.32,
+        0.62,
+        0.7
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 인용문과 숫자 구성, 회색 바탕에 푸른 포인트인, 모서리가 살짝 둥근, 그림자가 겹겹이 있는",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV08-hero",
+      "svId": "SV08",
+      "kind": "anchor",
+      "presetId": "PS-T8",
+      "templateId": "tpl-hero",
+      "targetL1": [
+        0.7,
+        0.65,
+        0.25,
+        0.25,
+        0
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 첫 화면 히어로 구성, 모서리가 살짝 둥근, 여백이 넓은, 그림자 없이 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV08-grid",
+      "svId": "SV08",
+      "kind": "anchor",
+      "presetId": "PS-T8",
+      "templateId": "tpl-grid",
+      "targetL1": [
+        0.7,
+        0.65,
+        0.25,
+        0.25,
+        0
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 6칸 그리드 구성, 모서리가 살짝 둥근, 여백이 넓은, 그림자 없이 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV08-text",
+      "svId": "SV08",
+      "kind": "anchor",
+      "presetId": "PS-T8",
+      "templateId": "tpl-text",
+      "targetL1": [
+        0.7,
+        0.65,
+        0.25,
+        0.25,
+        0
+      ],
+      "l2Overrides": {},
+      "altKo": "선택지 {n}: 인용문과 숫자 구성, 모서리가 살짝 둥근, 여백이 넓은, 그림자 없이 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV09-hero",
+      "svId": "SV09",
+      "kind": "bridge",
+      "presetId": "PS-T7",
+      "templateId": "tpl-hero",
+      "targetL1": [
+        0.15,
+        0.4,
+        0.65,
+        0.85,
+        0.8
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP17",
+        "type.scale_ratio": "1.2",
+        "type.display_boost": "1.0",
+        "type.headline_weight": "500",
+        "shape.radius_family": "round",
+        "shape.border": "none"
+      },
+      "altKo": "선택지 {n}: 첫 화면 히어로 구성, 장식 없이 무채색 위주인, 정보가 아주 촘촘한, 반투명·오프셋 효과로 입체적인",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV09-grid",
+      "svId": "SV09",
+      "kind": "bridge",
+      "presetId": "PS-T7",
+      "templateId": "tpl-grid",
+      "targetL1": [
+        0.15,
+        0.4,
+        0.65,
+        0.85,
+        0.8
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP17",
+        "type.scale_ratio": "1.2",
+        "type.display_boost": "1.0",
+        "type.headline_weight": "500",
+        "shape.radius_family": "round",
+        "shape.border": "none"
+      },
+      "altKo": "선택지 {n}: 6칸 그리드 구성, 장식 없이 무채색 위주인, 정보가 아주 촘촘한, 반투명·오프셋 효과로 입체적인",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV09-text",
+      "svId": "SV09",
+      "kind": "bridge",
+      "presetId": "PS-T7",
+      "templateId": "tpl-text",
+      "targetL1": [
+        0.15,
+        0.4,
+        0.65,
+        0.85,
+        0.8
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP17",
+        "type.scale_ratio": "1.2",
+        "type.display_boost": "1.0",
+        "type.headline_weight": "500",
+        "shape.radius_family": "round",
+        "shape.border": "none"
+      },
+      "altKo": "선택지 {n}: 인용문과 숫자 구성, 장식 없이 무채색 위주인, 정보가 아주 촘촘한, 반투명·오프셋 효과로 입체적인",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV10-hero",
+      "svId": "SV10",
+      "kind": "bridge",
+      "presetId": "PS-T7",
+      "templateId": "tpl-hero",
+      "targetL1": [
+        0.85,
+        0.65,
+        0.15,
+        0.3,
+        0.85
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP14",
+        "type.scale_ratio": "1.333",
+        "type.display_boost": "1.5",
+        "type.headline_weight": "900",
+        "type.body_size": "17",
+        "type.body_leading": "1.7",
+        "color.palette_id": "PAL-T7-1",
+        "space.container": "1200"
+      },
+      "altKo": "선택지 {n}: 첫 화면 히어로 구성, 색과 장식이 많고 크기 대비가 아주 큰, 모서리가 직각인, 반투명·오프셋 효과로 입체적인",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV10-grid",
+      "svId": "SV10",
+      "kind": "bridge",
+      "presetId": "PS-T7",
+      "templateId": "tpl-grid",
+      "targetL1": [
+        0.85,
+        0.65,
+        0.15,
+        0.3,
+        0.85
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP14",
+        "type.scale_ratio": "1.333",
+        "type.display_boost": "1.5",
+        "type.headline_weight": "900",
+        "type.body_size": "17",
+        "type.body_leading": "1.7",
+        "color.palette_id": "PAL-T7-1",
+        "space.container": "1200"
+      },
+      "altKo": "선택지 {n}: 6칸 그리드 구성, 색과 장식이 많고 크기 대비가 아주 큰, 모서리가 직각인, 반투명·오프셋 효과로 입체적인",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV10-text",
+      "svId": "SV10",
+      "kind": "bridge",
+      "presetId": "PS-T7",
+      "templateId": "tpl-text",
+      "targetL1": [
+        0.85,
+        0.65,
+        0.15,
+        0.3,
+        0.85
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP14",
+        "type.scale_ratio": "1.333",
+        "type.display_boost": "1.5",
+        "type.headline_weight": "900",
+        "type.body_size": "17",
+        "type.body_leading": "1.7",
+        "color.palette_id": "PAL-T7-1",
+        "space.container": "1200"
+      },
+      "altKo": "선택지 {n}: 인용문과 숫자 구성, 색과 장식이 많고 크기 대비가 아주 큰, 모서리가 직각인, 반투명·오프셋 효과로 입체적인",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV11-hero",
+      "svId": "SV11",
+      "kind": "bridge",
+      "presetId": "PS-T4",
+      "templateId": "tpl-hero",
+      "targetL1": [
+        0.35,
+        0.55,
+        0.85,
+        0.8,
+        0.15
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP10",
+        "type.body_size": "16",
+        "type.body_leading": "1.6",
+        "color.palette_id": "PAL-T4-3"
+      },
+      "altKo": "선택지 {n}: 첫 화면 히어로 구성, 모서리가 아주 둥근, 정보가 아주 촘촘한, 그림자 없이 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV11-grid",
+      "svId": "SV11",
+      "kind": "bridge",
+      "presetId": "PS-T4",
+      "templateId": "tpl-grid",
+      "targetL1": [
+        0.35,
+        0.55,
+        0.85,
+        0.8,
+        0.15
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP10",
+        "type.body_size": "16",
+        "type.body_leading": "1.6",
+        "color.palette_id": "PAL-T4-3"
+      },
+      "altKo": "선택지 {n}: 6칸 그리드 구성, 모서리가 아주 둥근, 정보가 아주 촘촘한, 그림자 없이 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV11-text",
+      "svId": "SV11",
+      "kind": "bridge",
+      "presetId": "PS-T4",
+      "templateId": "tpl-text",
+      "targetL1": [
+        0.35,
+        0.55,
+        0.85,
+        0.8,
+        0.15
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP10",
+        "type.body_size": "16",
+        "type.body_leading": "1.6",
+        "color.palette_id": "PAL-T4-3"
+      },
+      "altKo": "선택지 {n}: 인용문과 숫자 구성, 모서리가 아주 둥근, 정보가 아주 촘촘한, 그림자 없이 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV12-hero",
+      "svId": "SV12",
+      "kind": "bridge",
+      "presetId": "PS-T5",
+      "templateId": "tpl-hero",
+      "targetL1": [
+        0.6,
+        0.75,
+        0.4,
+        0.85,
+        0.75
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP11",
+        "type.scale_ratio": "1.25",
+        "type.display_boost": "1.5",
+        "color.palette_id": "PAL-T5-2"
+      },
+      "altKo": "선택지 {n}: 첫 화면 히어로 구성, 아이보리 바탕에 주황 포인트인, 정보가 아주 촘촘한, 그림자가 겹겹이 있는",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV12-grid",
+      "svId": "SV12",
+      "kind": "bridge",
+      "presetId": "PS-T5",
+      "templateId": "tpl-grid",
+      "targetL1": [
+        0.6,
+        0.75,
+        0.4,
+        0.85,
+        0.75
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP11",
+        "type.scale_ratio": "1.25",
+        "type.display_boost": "1.5",
+        "color.palette_id": "PAL-T5-2"
+      },
+      "altKo": "선택지 {n}: 6칸 그리드 구성, 아이보리 바탕에 주황 포인트인, 정보가 아주 촘촘한, 그림자가 겹겹이 있는",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV12-text",
+      "svId": "SV12",
+      "kind": "bridge",
+      "presetId": "PS-T5",
+      "templateId": "tpl-text",
+      "targetL1": [
+        0.6,
+        0.75,
+        0.4,
+        0.85,
+        0.75
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP11",
+        "type.scale_ratio": "1.25",
+        "type.display_boost": "1.5",
+        "color.palette_id": "PAL-T5-2"
+      },
+      "altKo": "선택지 {n}: 인용문과 숫자 구성, 아이보리 바탕에 주황 포인트인, 정보가 아주 촘촘한, 그림자가 겹겹이 있는",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV13-hero",
+      "svId": "SV13",
+      "kind": "bridge",
+      "presetId": "PS-T5",
+      "templateId": "tpl-hero",
+      "targetL1": [
+        0.75,
+        0.15,
+        0.4,
+        0.85,
+        0.15
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP08",
+        "type.display_boost": "1.5",
+        "type.headline_weight": "800",
+        "color.palette_id": "PAL-T5-2"
+      },
+      "altKo": "선택지 {n}: 첫 화면 히어로 구성, 푸른 계열이 주조인, 정보가 아주 촘촘한, 그림자 없이 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV13-grid",
+      "svId": "SV13",
+      "kind": "bridge",
+      "presetId": "PS-T5",
+      "templateId": "tpl-grid",
+      "targetL1": [
+        0.75,
+        0.15,
+        0.4,
+        0.85,
+        0.15
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP08",
+        "type.display_boost": "1.5",
+        "type.headline_weight": "800",
+        "color.palette_id": "PAL-T5-2"
+      },
+      "altKo": "선택지 {n}: 6칸 그리드 구성, 푸른 계열이 주조인, 정보가 아주 촘촘한, 그림자 없이 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV13-text",
+      "svId": "SV13",
+      "kind": "bridge",
+      "presetId": "PS-T5",
+      "templateId": "tpl-text",
+      "targetL1": [
+        0.75,
+        0.15,
+        0.4,
+        0.85,
+        0.15
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP08",
+        "type.display_boost": "1.5",
+        "type.headline_weight": "800",
+        "color.palette_id": "PAL-T5-2"
+      },
+      "altKo": "선택지 {n}: 인용문과 숫자 구성, 푸른 계열이 주조인, 정보가 아주 촘촘한, 그림자 없이 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV14-hero",
+      "svId": "SV14",
+      "kind": "bridge",
+      "presetId": "PS-T3",
+      "templateId": "tpl-hero",
+      "targetL1": [
+        0.55,
+        0.15,
+        0.35,
+        0.15,
+        0.15
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP17",
+        "type.scale_ratio": "1.25",
+        "type.display_boost": "1.25",
+        "type.headline_weight": "800",
+        "color.palette_id": "PAL-T3-2",
+        "shape.border": "hairline"
+      },
+      "altKo": "선택지 {n}: 첫 화면 히어로 구성, 푸른 계열이 주조인, 여백이 아주 넓은, 그림자 없이 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV14-grid",
+      "svId": "SV14",
+      "kind": "bridge",
+      "presetId": "PS-T3",
+      "templateId": "tpl-grid",
+      "targetL1": [
+        0.55,
+        0.15,
+        0.35,
+        0.15,
+        0.15
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP17",
+        "type.scale_ratio": "1.25",
+        "type.display_boost": "1.25",
+        "type.headline_weight": "800",
+        "color.palette_id": "PAL-T3-2",
+        "shape.border": "hairline"
+      },
+      "altKo": "선택지 {n}: 6칸 그리드 구성, 푸른 계열이 주조인, 여백이 아주 넓은, 그림자 없이 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV14-text",
+      "svId": "SV14",
+      "kind": "bridge",
+      "presetId": "PS-T3",
+      "templateId": "tpl-text",
+      "targetL1": [
+        0.55,
+        0.15,
+        0.35,
+        0.15,
+        0.15
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP17",
+        "type.scale_ratio": "1.25",
+        "type.display_boost": "1.25",
+        "type.headline_weight": "800",
+        "color.palette_id": "PAL-T3-2",
+        "shape.border": "hairline"
+      },
+      "altKo": "선택지 {n}: 인용문과 숫자 구성, 푸른 계열이 주조인, 여백이 아주 넓은, 그림자 없이 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV15-hero",
+      "svId": "SV15",
+      "kind": "bridge",
+      "presetId": "PS-T4",
+      "templateId": "tpl-hero",
+      "targetL1": [
+        0.3,
+        0.85,
+        0.35,
+        0.85,
+        0.15
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP05",
+        "type.body_size": "16",
+        "type.body_leading": "1.6",
+        "color.palette_id": "PAL-T4-2",
+        "shape.radius_family": "soft",
+        "shape.border": "hairline"
+      },
+      "altKo": "선택지 {n}: 첫 화면 히어로 구성, 크림 바탕에 붉은 계열이 주조인, 정보가 아주 촘촘한, 그림자 없이 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV15-grid",
+      "svId": "SV15",
+      "kind": "bridge",
+      "presetId": "PS-T4",
+      "templateId": "tpl-grid",
+      "targetL1": [
+        0.3,
+        0.85,
+        0.35,
+        0.85,
+        0.15
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP05",
+        "type.body_size": "16",
+        "type.body_leading": "1.6",
+        "color.palette_id": "PAL-T4-2",
+        "shape.radius_family": "soft",
+        "shape.border": "hairline"
+      },
+      "altKo": "선택지 {n}: 6칸 그리드 구성, 크림 바탕에 붉은 계열이 주조인, 정보가 아주 촘촘한, 그림자 없이 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV15-text",
+      "svId": "SV15",
+      "kind": "bridge",
+      "presetId": "PS-T4",
+      "templateId": "tpl-text",
+      "targetL1": [
+        0.3,
+        0.85,
+        0.35,
+        0.85,
+        0.15
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP05",
+        "type.body_size": "16",
+        "type.body_leading": "1.6",
+        "color.palette_id": "PAL-T4-2",
+        "shape.radius_family": "soft",
+        "shape.border": "hairline"
+      },
+      "altKo": "선택지 {n}: 인용문과 숫자 구성, 크림 바탕에 붉은 계열이 주조인, 정보가 아주 촘촘한, 그림자 없이 평평한",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV16-hero",
+      "svId": "SV16",
+      "kind": "bridge",
+      "presetId": "PS-T7",
+      "templateId": "tpl-hero",
+      "targetL1": [
+        0.15,
+        0.3,
+        0.25,
+        0.2,
+        0.65
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP09",
+        "type.scale_ratio": "1.2",
+        "type.display_boost": "1.0",
+        "type.headline_weight": "600",
+        "type.body_size": "17",
+        "type.body_leading": "1.7",
+        "space.container": "1200"
+      },
+      "altKo": "선택지 {n}: 첫 화면 히어로 구성, 장식 없이 무채색 위주인, 모서리가 살짝 둥근, 여백이 넓은",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV16-grid",
+      "svId": "SV16",
+      "kind": "bridge",
+      "presetId": "PS-T7",
+      "templateId": "tpl-grid",
+      "targetL1": [
+        0.15,
+        0.3,
+        0.25,
+        0.2,
+        0.65
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP09",
+        "type.scale_ratio": "1.2",
+        "type.display_boost": "1.0",
+        "type.headline_weight": "600",
+        "type.body_size": "17",
+        "type.body_leading": "1.7",
+        "space.container": "1200"
+      },
+      "altKo": "선택지 {n}: 6칸 그리드 구성, 장식 없이 무채색 위주인, 모서리가 살짝 둥근, 여백이 넓은",
+      "status": "draft"
+    },
+    {
+      "id": "C-SV16-text",
+      "svId": "SV16",
+      "kind": "bridge",
+      "presetId": "PS-T7",
+      "templateId": "tpl-text",
+      "targetL1": [
+        0.15,
+        0.3,
+        0.25,
+        0.2,
+        0.65
+      ],
+      "l2Overrides": {
+        "type.pairing_id": "FP09",
+        "type.scale_ratio": "1.2",
+        "type.display_boost": "1.0",
+        "type.headline_weight": "600",
+        "type.body_size": "17",
+        "type.body_leading": "1.7",
+        "space.container": "1200"
+      },
+      "altKo": "선택지 {n}: 인용문과 숫자 구성, 장식 없이 무채색 위주인, 모서리가 살짝 둥근, 여백이 넓은",
+      "status": "draft"
+    }
+  ]
+}
