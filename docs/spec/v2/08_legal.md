@@ -635,14 +635,15 @@ Consent = {
 | 동의 기록(P9) | 계정 존속 기간 + 탈퇴 후 1년. 탈퇴 시 `consents_archive`로 옮기고 `user_hash = HMAC-SHA256(user_id, CONSENT_HASH_KEY)`로 대체(S-21) | 삭제 | `consents_archive.archived_at` [원문 확인] |
 | 이용 정지 이력(`sanctions`) | 정지 종료(`until`)까지, 최대 1년. 정지된 계정이 탈퇴 후 같은 이메일로 재가입해 제재를 피하는 것을 막기 위해 이메일 해시만 보관(S-21) | 삭제 | `sanctions.until`. 보관 근거(정당한 이익)는 사람 확인(Q6) |
 | 레이트 리밋 카운터 | 48시간 | 삭제 | `rate_limits.window_start` |
-| `admin_audit_logs`(관리자 작업, `admin_hash`, ip_hmac, `pii_view` 열람 기록) | 1년(접속기록 기본값, 월 1회 점검, S-28. 1년/2년 적정성은 Q16). 1년 동안 UPDATE·DELETE 불가(append-only), 1년 지난 행만 파기 | 삭제(`purge_audit_logs(p_before ≤ now − 1 year)`만, 규칙 `admin_audit_1y`, T-14) | `admin_audit_logs.created_at` |
+| `admin_audit_logs`(관리자 작업, `admin_hash`, ip_hmac, `pii_view` 열람 기록) | 1년(접속기록 기본값, 월 1회 점검, S-28. 1년/2년 적정성은 Q16). 1년 동안 UPDATE·DELETE 불가(append-only), 1년 지난 행만 파기 | 삭제(실행기 호출 `purge_audit_logs(least($now, now()) − interval '1 year')`만, 규칙 `admin_audit_1y`, T-14·U-05. DB 함수·트리거는 실시계) | `admin_audit_logs.created_at` |
 | 인증 서버 기록(P14, `auth.audit_log_entries`·`auth.sessions`) | 90일(기본값, 적정성은 Q16 사람 확인). 탈퇴 시 그 사용자 행은 즉시 삭제(06장 6.2.5 ⑥b) | 삭제(규칙 `auth_audit_90d`) | `auth.audit_log_entries.created_at`, `auth.sessions.updated_at`(T-13) |
-| 신고 증거(`impersonation`·`phishing` 신고가 `open`/`hidden`/`actioned`인 버전의 객체, `abuse-evidence/<report_id>/`) | 검토 종료(`reports.handled_at`) 후 90일(기본값, 적정성은 Q6 사람 확인) | 객체 삭제(규칙 `abuse_evidence_90d`) | `reports.handled_at`(T-15) |
-| 탈퇴 보류(`abuse_holds`: 이메일 해시·신고 ID) | `until` = 검토 종료 후 90일 | 삭제 | `abuse_holds.until`(T-15) |
+| 신고 증거(`impersonation`·`phishing` 신고가 `open`/`hidden`/`actioned`인 버전의 객체, `abuse-evidence/<report_id>/`) | 검토 종료(`reports.handled_at`) 후 90일(기본값, 적정성은 Q6 사람 확인) | 객체 삭제(규칙 `abuse_evidence_90d`, 검토 종료 신고만 대상. 미처리 신고의 증거는 검토 종료까지 보관, U-06) | `reports.handled_at`(T-15). 쓰기 주체는 06장 6.6(`deleteOwnedRenders`·`actioned`, U-04) |
+| 탈퇴 보류(`abuse_holds`: 이메일 해시·신고 ID) | `until` = 검토 종료 후 90일. 단 마지막 신고가 `dismissed`면 즉시 삭제, `actioned`면 `sanctions`로 옮긴 뒤 삭제. 미처리(open·hidden) 신고가 남아 있으면 `until` 연장, 접수 후 90일 초과 시 알림 A12 `report_overdue`(U-06) | 삭제(규칙 `abuse_holds_expired`) | `abuse_holds.until`(T-15, 원천 06장 6.4.3 ADM-04 PATCH·6.6) |
 | 멱등 키(`idempotency_keys`) | 24시간 | 삭제 | `created_at` |
 | 호스팅 접속 기록(P11) | 공급자 기본값(목표 ≤ 90일) | 공급자 자동 삭제 | [원문 확인] |
 | 오류 추적(P12) | 30일 | 공급자 자동 삭제 | Sentry 설정 |
 | 문의·신고·권리 요청(P13) | 처리 완료 후 1년 | 삭제 | `rights_requests.closed_at`, `reports.handled_at`, `support_tickets.closed_at` |
+| 미확인 `privacy_request`(`rights_requests.status='awaiting_verification'`) | 접수 후 7일 | 삭제(규칙 `rights_unverified_7d`). ADM-11 목록 기본 필터에서 숨김 | `rights_requests.received_at`(U-07, 원천 06장 6.6) |
 | 레퍼런스 스크린샷 | 수집 후 90일 | 삭제 | 8.2 |
 | 레퍼런스 수치·라벨·pHash·URL | 데이터셋 사용 기간. opt-out 시 7일 안에 | 삭제 | 8.1.6 |
 | `excluded_domains` | 영구(재수집 방지, 도메인 문자열만) | — | — |
@@ -667,7 +668,7 @@ Consent = {
 | 익명 결과 삭제 | 결과 화면 S03 `/r/[shareId]`(소유자 뷰)의 "이 결과 삭제" 버튼(`anon_id` 쿠키 소유자만, `DELETE /api/surveys/:id`) | 즉시 |
 | 처리정지·기타 | `privacy@<서비스도메인>` 이메일, `/support`(`category = 'privacy'`) 또는 `/sources` 양식 `privacy_request` | 10일 안에 회신 [원문 확인] |
 
-- 계정 삭제 시 함께 삭제: P3, P4, P5, 귀속 P2, P6(해당 사용자 job), P8의 식별자(집계로 전환), 공유 링크. 남는 것: `consents_archive`(해시, 1년), 정지 이력이 있으면 `sanctions`(이메일 해시, 최대 1년), 미검토·확정 사칭·피싱 신고가 걸려 있으면 `abuse_holds`(이메일 해시, 검토 종료 후 90일)와 `abuse-evidence` 객체(T-15), `admin_audit_logs`(FK 없음, 1년), P7(사용자 연결 없음). P14 중 그 사용자 행은 삭제한다(⑥b, T-13). 순서·멱등 규칙은 06장 6.2.5 `account-delete`(S-21·T-15: **⑤ 공유 비공개·신고 보류 → ①** 순서, ③b 증거 이동): P6 객체는 `users` 삭제 전에 지운다.
+- 계정 삭제 시 함께 삭제: P3, P4, P5, 귀속 P2, P6(해당 사용자 job), P8의 식별자(집계로 전환), 공유 링크. 남는 것: `consents_archive`(해시, 1년), 정지 이력이 있으면 `sanctions`(이메일 해시, 최대 1년), 미검토·확정 사칭·피싱 신고가 걸려 있으면 `abuse_holds`(이메일 해시, 검토 종료 후 90일)와 `abuse-evidence` 객체(T-15), `admin_audit_logs`(FK 없음, 1년), P7(사용자 연결 없음). P14 중 그 사용자 행은 삭제한다(⑥b, T-13). 순서·멱등 규칙은 06장 6.2.5 `account-delete`(원천. S-21·T-15·U-03: **⑤ → ⑤b → ① → ② → ③b → ③ → ④ → ⑥ → ⑥b → ⑦**, 즉 공유 비공개·신고 보류가 ①보다 먼저, 증거 이동 ③b가 렌더 삭제 ③보다 먼저): P6 객체는 `users` 삭제 전에 지운다. 프로젝트 삭제(`DELETE /api/projects/:id`)도 같은 함수 `deleteOwnedRenders`로 증거를 먼저 옮긴다(U-04).
 - **`privacy_request`(처리정지·기타) 본인 확인(S-27)**: 익명 양식으로 받은 요청은 바로 처리하지 않는다. "로그인한 상태에서 S12 셀프 서비스를 쓰거나, 계정 이메일에서 보낸 메일로 요청하세요"로 안내하고, 계정 이메일로 받은 요청만 그 주소로 확인 링크(1회용, 24시간)를 보내 클릭된 뒤 처리한다. 구현값(T-16, 원천 06장 6.4.3 "익명 창구·본인 확인"): 접수 행은 `status='awaiting_verification'`, 요청 이메일이 `auth.users.email`과 일치할 때만 메일 `privacy_verify`(토큰 SHA-256만 저장, 24시간·1회용)를 보내며 응답은 일치 여부와 무관하게 같다. 확인 전 관리자 처리는 409 `REQUEST_NOT_VERIFIED`, 재사용·만료 링크는 410 `VERIFY_LINK_INVALID`.
 
 ### 8.7.10 쿠키·자동 수집 장치 [MVP]
@@ -693,15 +694,17 @@ Consent = {
 - **AC-08-30**: `maskPII()` 단위 테스트: M1~M7 샘플 각 5종(총 35종, 구분자·전각 변형 포함)이 100% 치환되고, 일반 숫자 샘플 10종(가격 "12,000원", 연도 "2027년" 등)은 치환되지 않는다.
 - **AC-08-31**: MockProvider로 기록한 LLM 요청 페이로드 전체에서 M1·M3·M4 원문 패턴 0건, `projects.brand`·`brief_drafts.brand` 저장값에서도 0건.
 - **AC-08-32**: 동의 레코드 없이 `POST /api/projects` 또는 `POST /api/projects/:id/generations`를 호출하면 403 `CONSENT_REQUIRED`. S05에서 C1 또는 C2 미체크 시 "시작하기"가 비활성이다(01장 AC-01-23).
-- **AC-08-33**: 시계를 조작한 통합 테스트에서 `retention:sweep` 후 8.7.7 표의 만료 대상 레코드가 규칙별로 0건이다.
+- **AC-08-33**: 시계를 조작한 통합 테스트에서 `retention:sweep` 후 8.7.7 표의 만료 대상 레코드가 규칙별로 0건이다. 단 `admin_audit_logs`는 미래 시계로 지금 만든 행을 판정하지 않고 AC-08-56 ② 방식(과거 `created_at`으로 넣은 행)으로 판정한다(U-05).
 - **AC-08-34**: 계정 삭제 E2E(로그인은 같은 매직링크 흐름: supabase = Mailpit, native = `dev_mail_outbox` 픽스처, 테스트 전용 로그인 우회 라우트 없음 — R-10) 후 해당 `user_id`의 P2·P3·P4·P5·P6 레코드와 Storage 객체가 0건, 공유 링크 접근 시 404. `consents` 0행이면서 `consents_archive`에 같은 수의 행이 있다(S-21, 06장 AC-06-53).
 - **AC-08-34a**: 빌드 산출물·라우트 목록에 테스트 전용 로그인·세션 발급 라우트가 0건이다(R-10, 라우트 매니페스트 검사).
 - **AC-08-34b**: `brief_drafts` 생성 후 24시간이 지난 시계로 `retention`을 실행하면 해당 행 0건(R-26).
 - **AC-08-35**: "내 데이터 내려받기" zip에 8.7.9 표의 항목이 모두 있고 다른 사용자 데이터가 0건이다.
 - **AC-08-36**(T-13으로 범위 개정): 처리방침의 국외 이전 표 행 집합 = `processors.yaml`의 `approved: true` 집합(빌드 테스트). 앱 테이블(`public` 스키마) 어디에도 IP 원문(IPv4/IPv6 정규식) 저장 0건, 그리고 `auth` 스키마에서 보관 기간(`auth_audit_90d`) 밖의 행 0건(샘플 덤프 검사).
 - **AC-08-55**(T-13, LG3-02): ① 처리방침 수집 항목표에 P14 행이 있고 법적 근거 표에 P14가 있다 ② native shim의 `auth.audit_log_entries`·`auth.sessions`에 `created_at = now − 91d` 행을 넣고 `retention:sweep`을 돌리면 0건, `now − 89d`는 유지 ③ 계정 삭제 E2E 후 그 사용자의 `auth.audit_log_entries`(`payload->>'actor_id'`)·`auth.sessions` 행 0건(06장 6.2.5 ⑥b) ④ `docs/compliance/auth-metadata.md`가 있고 needs_ci `gotrue-auth-tables` 결과 칸이 있다.
-- **AC-08-56**(T-14, LG3-03): ① `admin_audit_logs` UPDATE는 service role에서도 실패 ② `created_at = now − 400d` 행은 `retention:sweep`(규칙 `admin_audit_1y` → `purge_audit_logs`) 후 0건, `now − 300d` 행은 남는다 ③ 직접 DELETE는 기간과 무관하게 실패한다(06장 AC-06-06) ④ 처리방침의 감사 기록 보관 기간 문구가 "1년"이고 8.7.7 표와 같다.
-- **AC-08-57**(T-15, LG3-04): ① 사칭 신고(`open`)가 걸린 공유 시안의 소유자가 탈퇴하면 `reports` 행이 남고 `evidence.objectPaths`가 `abuse-evidence/<report_id>/`를 가리키며 그 객체가 존재한다 ② `abuse_holds`에 그 이메일 해시 1행 ③ 같은 이메일로 재가입하면 `users.status = 'gen_suspended'`, 생성 API 403 `ACCOUNT_SUSPENDED` ④ 신고를 `dismissed`로 처리하고 90일 뒤 `retention:sweep`을 돌리면 증거 객체·`abuse_holds` 행 0건 ⑤ 탈퇴 잡 단계 순서가 ⑤ → ①(로그 순서)이다.
+- **AC-08-56**(T-14, LG3-03): ① `admin_audit_logs` UPDATE는 service role에서도 실패 ② `created_at = now() − 400d`·`now() − 300d`로 넣은 행으로 판정한다: `retention:sweep`(규칙 `admin_audit_1y` → `purge_audit_logs(least($now, now()) − 1 year)`) 후 400일 행 0건, 300일 행 남음, `RETENTION_NOW=+31d`·`+366d` 두 실행 모두 `admin_audit_1y` 오류 0·종료 코드 0(U-05, 06장 AC-06-54와 같은 문장) ③ 직접 DELETE는 기간과 무관하게 실패한다(06장 AC-06-06) ④ 처리방침의 감사 기록 보관 기간 문구가 "1년"이고 8.7.7 표와 같다.
+- **AC-08-57**(T-15, LG3-04): ① 사칭 신고(`open`)가 걸린 공유 시안의 소유자가 탈퇴하면 `reports` 행이 남고 `evidence.objectPaths`가 `abuse-evidence/<report_id>/`를 가리키며 그 객체가 존재한다 ② `abuse_holds`에 그 이메일 해시 1행 ③ 같은 이메일로 재가입하면 `users.status = 'gen_suspended'`, 생성 API 403 `ACCOUNT_SUSPENDED` ④ 신고를 `dismissed`로 처리하면 즉시 `abuse_holds` 0행, 재가입 계정 `users.status='active'`, 생성 API 202. 검토 종료 91일 뒤 `retention:sweep` 후 증거 객체 0개. 별도 미처리(open) 신고는 접수 91일째에도 hold 1행이 남고 A12 `report_overdue` 1건(U-06. 옛 "dismissed 90일 뒤 hold 0건" → 대체) ⑤ 탈퇴 잡 로그 순서가 ⑤ → ⑤b → ① → ② → ③b → ③ → ④ → ⑥ → ⑥b → ⑦이다 ⑥ 잡 로그에서 ③b 완료가 ③ 시작보다 먼저이고, ③b 직후 실패를 주입한 뒤 재시도해도 증거 객체 sha256이 원본과 같다(U-03).
+- **AC-08-58**(U-04, RC4-02): `phishing` 신고(`hidden`) 1건이 걸린 시안의 소유자가 탈퇴하지 않고 `DELETE /api/projects/:id` → 즉시 잡 완료 → `RETENTION_NOW=+31d` `retention:sweep` 후에도 `reports` 1행이 남고, `evidence.objectPaths`가 가리키는 객체가 `abuse-evidence/<report_id>/`에 1개 이상 있으며 sha256이 원본과 같다. `renders_orphan` 삭제 건수에 그 hash가 없다.
+- **AC-08-59**(U-07, RC4-05): `RETENTION_NOW=+8d`에서 `status='awaiting_verification'` 행 0건, 확인된(`status` ∈ {received, in_progress, done, rejected}) 행은 남는다. ADM-11 목록 기본 응답에 미확인 행이 없다. `verify:schema-parity`가 8.7.7 새 행(`rights_requests.received_at`·`status`)을 인식한다.
 - **AC-08-37**: 클라이언트 번들·응답 헤더에 제3자 분석·광고 스크립트 도메인 0건(→ 07장 E2E).
 
 ---
@@ -796,7 +799,7 @@ HighRiskBrand = {
 - **익명 창구 방어(S-27)**: 신고·문의·권리 요청 세 창구 모두 Turnstile 토큰(`turnstileToken`)이 필수이고 실패는 403 `TURNSTILE_FAILED`, DB·메일 변경 0(T-16, 06장 6.4.2). 레이트리밋은 `rep:hour:a:<anon>` 5회/시간 + `rep:day:ip:<hmac>` 10회/일(06장 6.10.1). 자동 확인 메일은 "접수 번호·기한" 고정 템플릿으로만 보내고 사용자 입력(`details`)을 넣지 않으며, 같은 수신 주소에는 하루 1통만 보낸다.
 - **자동 비공개 남용 방지(S-27)**: 자동 비공개된 공유 링크는 소유자에게 메일 `share_hidden_notice`(고정 문구, 신고 내용 미포함)로 통지하고(로그인 사용자만) S12에 "검토 중"(`shareStatus='under_review'`, 01장 `me.share.underReview`) 상태를 보여 준다(T-16). 같은 `ip_hmac`이 7일 안에 낸 신고가 3건 넘게 `dismissed`되면 그 `ip_hmac`의 신고는 자동 비공개를 일으키지 않고 검토 대기만 한다.
 - 위반 확정 시 해당 계정 생성 기능 정지(`users.status = 'gen_suspended'`), 동일 위반 2회면 계정 이용 정지(`suspended`). 이후 요청은 403 `ACCOUNT_SUSPENDED`. 정지 상태에서 탈퇴하면 `sanctions`에 이메일 해시가 남아 재가입 시 상태를 이어받는다(S-21, 06장 6.2.5).
-- **신고 증거 보존·탈퇴 회피 방지(T-15, LG3-04)**: `reports.share_id`는 FK 없는 text이고 `evidence jsonb`(신고 시점 대상 버전 ID·객체 경로)를 둔다. 그래서 공유 링크·시안이 지워져도 신고 행은 남는다. 대상 계정이 검토 전에 탈퇴하면 `account-delete`가 공유 비공개·`abuse_holds(email_hash, report_ids, until)` 기록을 **먼저** 하고(⑤ → ① 순서), 증거 객체를 `abuse-evidence/<report_id>/`로 옮긴다(③b). 신고가 `actioned`로 처리되면 `sanctions`를 upsert하고, 같은 이메일로 재가입하면 로그인 콜백 `provision_user`(06장 6.3.3, T-12)가 `abuse_holds`·`sanctions`를 승계해 `gen_suspended`로 시작한다.
+- **신고 증거 보존·탈퇴 회피 방지(T-15, LG3-04)**: `reports.share_id`는 FK 없는 text이고 `evidence jsonb`(신고 시점 대상 버전 ID·객체 경로)를 둔다. 그래서 공유 링크·시안이 지워져도 신고 행은 남는다. 대상 계정이 검토 전에 탈퇴하면 `account-delete`가 공유 비공개·`abuse_holds(email_hash, report_ids, until)` 기록을 **먼저** 하고(⑤ → ① 순서), 렌더 삭제(③) 전에 증거 객체를 `abuse-evidence/<report_id>/`로 옮긴다(③b → ③, U-03). 탈퇴 없이 프로젝트만 지워도 공통 함수 `deleteOwnedRenders`가 먼저 증거를 옮기고, `renders_orphan`은 `evidence.objectPaths`가 가리키는 hash를 지우지 않는다(U-04, 06장 6.4.3·6.6). 신고가 `actioned`로 처리되면 `sanctions`를 upsert하고, 같은 이메일로 재가입하면 로그인 콜백 `provision_user`(06장 6.3.3, T-12)가 `abuse_holds`·`sanctions`를 승계해 `gen_suspended`로 시작한다(`users.suspend_source ∈ {hold, sanction, admin}`). 신고가 `dismissed`되어 hold가 없어지면 `suspend_source='hold'`인 계정은 같은 트랜잭션에서 `active`로 돌아간다(U-06, 06장 6.4.3 ADM-04 PATCH).
 
 ### 8.9.6 수용 기준
 
@@ -984,7 +987,7 @@ HighRiskBrand = {
 | 수동 | 콘솔 MFA 활성화(Supabase·Vercel·Fly·LLM 공급자·GitHub·Resend·Cloudflare), service role 키는 로컬 비밀 관리자(OS 키체인)에만 보관(S-28) | — |
 | 수동 | 법무 원문 `legal/{terms,privacy,sources}.md` 확정(변호사 검토 권장). temp 문안이면 `legal-text=temp`(S-10) | AC-08-46~48 |
 | 자동 | 관리자 권한 원천(`users.role='admin'` ∧ 요청 시점 `ADMIN_EMAILS` ∧ `aal2`, 로그인 콜백 `provision_user`가 role 동기화, T-12)·aal2 전용·`pii_view` 기록·리댁션(S-28) | 06장 AC-06-57·60 |
-| 자동 | 인증 서버 기록 보관·감사 로그 1년 파기·신고 증거 보존(T-13~15) | AC-08-55~57 |
+| 자동 | 인증 서버 기록 보관·감사 로그 1년 파기·신고 증거 보존(T-13~15, U-03~07) | AC-08-55~59 |
 | 자동 | 데이터 흐름표 ↔ processors.yaml 대조(`compliance:flows`, S-26) | 06장 AC-06-58 |
 
 ---
@@ -1093,3 +1096,4 @@ HighRiskBrand = {
 | T-14(08) | 8.7.7 `admin_audit_1y`(1년 append-only 후 파기), AC-08-56 |
 | T-15(08) | 8.7.2 P13 증거, 8.7.7 신고 증거·`abuse_holds`, 8.7.9 남는 것·⑤→①, 8.9.5 증거 보존·재가입 승계, AC-08-57, Q6 |
 | T-16(08) | 8.7.9 본인 확인 구현값, 8.9.5 `TURNSTILE_FAILED`·`share_hidden_notice`·`under_review` |
+| U-03~U-07(08) | 8.7.7 증거·`abuse_holds`·감사 로그 호출·미확인 `privacy_request` 행, 8.7.9·8.9.5 순서 ③b→③·`deleteOwnedRenders`·hold 해제, AC-08-33·56 ②·57 ④⑤⑥, AC-08-58·59 |
