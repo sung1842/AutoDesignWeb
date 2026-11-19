@@ -1,0 +1,1354 @@
+{
+  "bundle": "approvals",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "apv:C-SV01-hero",
+      "assetId": "C-SV01-hero",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV01-grid",
+      "assetId": "C-SV01-grid",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV01-text",
+      "assetId": "C-SV01-text",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV02-hero",
+      "assetId": "C-SV02-hero",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV02-grid",
+      "assetId": "C-SV02-grid",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV02-text",
+      "assetId": "C-SV02-text",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV03-hero",
+      "assetId": "C-SV03-hero",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV03-grid",
+      "assetId": "C-SV03-grid",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV03-text",
+      "assetId": "C-SV03-text",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV04-hero",
+      "assetId": "C-SV04-hero",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV04-grid",
+      "assetId": "C-SV04-grid",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV04-text",
+      "assetId": "C-SV04-text",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV05-hero",
+      "assetId": "C-SV05-hero",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV05-grid",
+      "assetId": "C-SV05-grid",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV05-text",
+      "assetId": "C-SV05-text",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV06-hero",
+      "assetId": "C-SV06-hero",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV06-grid",
+      "assetId": "C-SV06-grid",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV06-text",
+      "assetId": "C-SV06-text",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV07-hero",
+      "assetId": "C-SV07-hero",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV07-grid",
+      "assetId": "C-SV07-grid",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV07-text",
+      "assetId": "C-SV07-text",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV08-hero",
+      "assetId": "C-SV08-hero",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV08-grid",
+      "assetId": "C-SV08-grid",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV08-text",
+      "assetId": "C-SV08-text",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV09-hero",
+      "assetId": "C-SV09-hero",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV09-grid",
+      "assetId": "C-SV09-grid",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV09-text",
+      "assetId": "C-SV09-text",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV10-hero",
+      "assetId": "C-SV10-hero",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV10-grid",
+      "assetId": "C-SV10-grid",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV10-text",
+      "assetId": "C-SV10-text",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV11-hero",
+      "assetId": "C-SV11-hero",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV11-grid",
+      "assetId": "C-SV11-grid",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV11-text",
+      "assetId": "C-SV11-text",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV12-hero",
+      "assetId": "C-SV12-hero",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV12-grid",
+      "assetId": "C-SV12-grid",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV12-text",
+      "assetId": "C-SV12-text",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV13-hero",
+      "assetId": "C-SV13-hero",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV13-grid",
+      "assetId": "C-SV13-grid",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV13-text",
+      "assetId": "C-SV13-text",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV14-hero",
+      "assetId": "C-SV14-hero",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV14-grid",
+      "assetId": "C-SV14-grid",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV14-text",
+      "assetId": "C-SV14-text",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV15-hero",
+      "assetId": "C-SV15-hero",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV15-grid",
+      "assetId": "C-SV15-grid",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV15-text",
+      "assetId": "C-SV15-text",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV16-hero",
+      "assetId": "C-SV16-hero",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV16-grid",
+      "assetId": "C-SV16-grid",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:C-SV16-text",
+      "assetId": "C-SV16-text",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T1-A1-2050",
+      "assetId": "ABP-T1-A1-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T1-A1-5080",
+      "assetId": "ABP-T1-A1-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T1-A1-2080",
+      "assetId": "ABP-T1-A1-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T1-A2-2050",
+      "assetId": "ABP-T1-A2-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T1-A2-5080",
+      "assetId": "ABP-T1-A2-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T1-A2-2080",
+      "assetId": "ABP-T1-A2-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T1-A3-2050",
+      "assetId": "ABP-T1-A3-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T1-A3-5080",
+      "assetId": "ABP-T1-A3-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T1-A3-2080",
+      "assetId": "ABP-T1-A3-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T1-A4-2050",
+      "assetId": "ABP-T1-A4-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T1-A4-5080",
+      "assetId": "ABP-T1-A4-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T1-A4-2080",
+      "assetId": "ABP-T1-A4-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T1-A5-2050",
+      "assetId": "ABP-T1-A5-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T1-A5-5080",
+      "assetId": "ABP-T1-A5-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T1-A5-2080",
+      "assetId": "ABP-T1-A5-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T2-A1-2050",
+      "assetId": "ABP-T2-A1-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T2-A1-5080",
+      "assetId": "ABP-T2-A1-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T2-A1-2080",
+      "assetId": "ABP-T2-A1-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T2-A2-2050",
+      "assetId": "ABP-T2-A2-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T2-A2-5080",
+      "assetId": "ABP-T2-A2-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T2-A2-2080",
+      "assetId": "ABP-T2-A2-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T2-A3-2050",
+      "assetId": "ABP-T2-A3-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T2-A3-5080",
+      "assetId": "ABP-T2-A3-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T2-A3-2080",
+      "assetId": "ABP-T2-A3-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T2-A4-2050",
+      "assetId": "ABP-T2-A4-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T2-A4-5080",
+      "assetId": "ABP-T2-A4-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T2-A4-2080",
+      "assetId": "ABP-T2-A4-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T2-A5-2050",
+      "assetId": "ABP-T2-A5-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T2-A5-5080",
+      "assetId": "ABP-T2-A5-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T2-A5-2080",
+      "assetId": "ABP-T2-A5-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T3-A1-2050",
+      "assetId": "ABP-T3-A1-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T3-A1-5080",
+      "assetId": "ABP-T3-A1-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T3-A1-2080",
+      "assetId": "ABP-T3-A1-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T3-A2-2050",
+      "assetId": "ABP-T3-A2-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T3-A2-5080",
+      "assetId": "ABP-T3-A2-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T3-A2-2080",
+      "assetId": "ABP-T3-A2-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T3-A3-2050",
+      "assetId": "ABP-T3-A3-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T3-A3-5080",
+      "assetId": "ABP-T3-A3-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T3-A3-2080",
+      "assetId": "ABP-T3-A3-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T3-A4-2050",
+      "assetId": "ABP-T3-A4-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T3-A4-5080",
+      "assetId": "ABP-T3-A4-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T3-A4-2080",
+      "assetId": "ABP-T3-A4-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T3-A5-2050",
+      "assetId": "ABP-T3-A5-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T3-A5-5080",
+      "assetId": "ABP-T3-A5-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T3-A5-2080",
+      "assetId": "ABP-T3-A5-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T4-A1-2050",
+      "assetId": "ABP-T4-A1-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T4-A1-5080",
+      "assetId": "ABP-T4-A1-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T4-A1-2080",
+      "assetId": "ABP-T4-A1-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T4-A2-2050",
+      "assetId": "ABP-T4-A2-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T4-A2-5080",
+      "assetId": "ABP-T4-A2-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T4-A2-2080",
+      "assetId": "ABP-T4-A2-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T4-A3-2050",
+      "assetId": "ABP-T4-A3-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T4-A3-5080",
+      "assetId": "ABP-T4-A3-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T4-A3-2080",
+      "assetId": "ABP-T4-A3-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T4-A4-2050",
+      "assetId": "ABP-T4-A4-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T4-A4-5080",
+      "assetId": "ABP-T4-A4-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T4-A4-2080",
+      "assetId": "ABP-T4-A4-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T4-A5-2050",
+      "assetId": "ABP-T4-A5-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T4-A5-5080",
+      "assetId": "ABP-T4-A5-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T4-A5-2080",
+      "assetId": "ABP-T4-A5-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T5-A1-2050",
+      "assetId": "ABP-T5-A1-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T5-A1-5080",
+      "assetId": "ABP-T5-A1-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T5-A1-2080",
+      "assetId": "ABP-T5-A1-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T5-A2-2050",
+      "assetId": "ABP-T5-A2-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T5-A2-5080",
+      "assetId": "ABP-T5-A2-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T5-A2-2080",
+      "assetId": "ABP-T5-A2-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T5-A3-2050",
+      "assetId": "ABP-T5-A3-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T5-A3-5080",
+      "assetId": "ABP-T5-A3-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T5-A3-2080",
+      "assetId": "ABP-T5-A3-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T5-A4-2050",
+      "assetId": "ABP-T5-A4-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T5-A4-5080",
+      "assetId": "ABP-T5-A4-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T5-A4-2080",
+      "assetId": "ABP-T5-A4-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T5-A5-2050",
+      "assetId": "ABP-T5-A5-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T5-A5-5080",
+      "assetId": "ABP-T5-A5-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T5-A5-2080",
+      "assetId": "ABP-T5-A5-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T6-A1-2050",
+      "assetId": "ABP-T6-A1-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T6-A1-5080",
+      "assetId": "ABP-T6-A1-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T6-A1-2080",
+      "assetId": "ABP-T6-A1-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T6-A2-2050",
+      "assetId": "ABP-T6-A2-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T6-A2-5080",
+      "assetId": "ABP-T6-A2-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T6-A2-2080",
+      "assetId": "ABP-T6-A2-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T6-A3-2050",
+      "assetId": "ABP-T6-A3-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T6-A3-5080",
+      "assetId": "ABP-T6-A3-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T6-A3-2080",
+      "assetId": "ABP-T6-A3-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T6-A4-2050",
+      "assetId": "ABP-T6-A4-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T6-A4-5080",
+      "assetId": "ABP-T6-A4-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T6-A4-2080",
+      "assetId": "ABP-T6-A4-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T6-A5-2050",
+      "assetId": "ABP-T6-A5-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T6-A5-5080",
+      "assetId": "ABP-T6-A5-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T6-A5-2080",
+      "assetId": "ABP-T6-A5-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T7-A1-2050",
+      "assetId": "ABP-T7-A1-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T7-A1-5080",
+      "assetId": "ABP-T7-A1-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T7-A1-2080",
+      "assetId": "ABP-T7-A1-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T7-A2-2050",
+      "assetId": "ABP-T7-A2-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T7-A2-5080",
+      "assetId": "ABP-T7-A2-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T7-A2-2080",
+      "assetId": "ABP-T7-A2-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T7-A3-2050",
+      "assetId": "ABP-T7-A3-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T7-A3-5080",
+      "assetId": "ABP-T7-A3-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T7-A3-2080",
+      "assetId": "ABP-T7-A3-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T7-A4-2050",
+      "assetId": "ABP-T7-A4-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T7-A4-5080",
+      "assetId": "ABP-T7-A4-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T7-A4-2080",
+      "assetId": "ABP-T7-A4-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T7-A5-2050",
+      "assetId": "ABP-T7-A5-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T7-A5-5080",
+      "assetId": "ABP-T7-A5-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T7-A5-2080",
+      "assetId": "ABP-T7-A5-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T8-A1-2050",
+      "assetId": "ABP-T8-A1-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T8-A1-5080",
+      "assetId": "ABP-T8-A1-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T8-A1-2080",
+      "assetId": "ABP-T8-A1-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T8-A2-2050",
+      "assetId": "ABP-T8-A2-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T8-A2-5080",
+      "assetId": "ABP-T8-A2-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T8-A2-2080",
+      "assetId": "ABP-T8-A2-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T8-A3-2050",
+      "assetId": "ABP-T8-A3-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T8-A3-5080",
+      "assetId": "ABP-T8-A3-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T8-A3-2080",
+      "assetId": "ABP-T8-A3-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T8-A4-2050",
+      "assetId": "ABP-T8-A4-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T8-A4-5080",
+      "assetId": "ABP-T8-A4-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T8-A4-2080",
+      "assetId": "ABP-T8-A4-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T8-A5-2050",
+      "assetId": "ABP-T8-A5-2050",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T8-A5-5080",
+      "assetId": "ABP-T8-A5-5080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    },
+    {
+      "id": "apv:ABP-T8-A5-2080",
+      "assetId": "ABP-T8-A5-2080",
+      "decision": "rejected",
+      "reason": "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+      "reviewedAt": "2026-11-16T00:00:00Z",
+      "reviewedBy": "temp-agent"
+    }
+  ]
+}

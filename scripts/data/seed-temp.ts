@@ -1749,6 +1749,81 @@ function genCardPlan(ctx: Ctx): Out[] {
   return [{ path: "data/survey/card_plan.json", content: bundle(ctx, "card-plan", items) }];
 }
 
+// ---------- B11 survey/ab_plan.json (02장 2.4.4, ID 2.3.6) ----------
+/** 2.4.4 focus_region(축별 고정). */
+const FOCUS_REGION: Record<string, number[]> = {
+  A1: [0, 0.08, 1, 0.62],
+  A2: [0, 0, 1, 1],
+  A3: [0, 0.45, 1, 0.55],
+  A4: [0, 0, 1, 1],
+  A5: [0, 0.55, 1, 0.45],
+};
+const AB_LEVELS = [0.2, 0.5, 0.8];
+const AB_PAIRS: [number, number][] = [
+  [0.2, 0.5],
+  [0.5, 0.8],
+  [0.2, 0.8],
+];
+
+function genAbPlan(ctx: Ctx): Out[] {
+  const { data, presets } = mapData(ctx);
+  const items: Obj[] = [];
+  for (let n = 1; n <= 8; n++) {
+    const p = presets.get(`T${n}`);
+    if (!p) throw new Error(`PS-T${n} 없음`);
+    for (let a = 0; a < 5; a++) {
+      const axis = `A${a + 1}`;
+      const image = (lv: number): Obj => {
+        const t = p.l1.map((v, i) => (i === a ? lv : v));
+        const l2 = mapL1toL2(t as unknown as L1, p, data);
+        const overrides: Record<string, string> = {};
+        for (const [k, v] of Object.entries(l2)) if (p.l2[k] !== v) overrides[k] = v;
+        return {
+          id: `AB-T${n}-${axis}-${Math.round(lv * 100)}`,
+          targetL1: t,
+          l2Overrides: overrides,
+        };
+      };
+      const imgs = new Map(AB_LEVELS.map((lv) => [lv, image(lv)]));
+      for (const [la, lb] of AB_PAIRS) {
+        const A = imgs.get(la) as Obj;
+        const B = imgs.get(lb) as Obj;
+        items.push({
+          id: `ABP-T${n}-${axis}-${Math.round(la * 100)}${Math.round(lb * 100)}`,
+          axis,
+          basePresetId: p.id,
+          levelA: la,
+          levelB: lb,
+          templateId: "tpl-hero",
+          pairImageIds: [A.id, B.id],
+          images: [A, B],
+          focusRegion: FOCUS_REGION[axis] ?? [0, 0, 1, 1],
+          promptKo: "어느 쪽이 더 마음에 드나요?",
+          status: "draft",
+        });
+      }
+    }
+  }
+  return [{ path: "data/survey/ab_plan.json", content: bundle(ctx, "ab-plan", items) }];
+}
+
+// ---------- B12 survey/approvals.json (09장 9.2.4 B12) ----------
+// 자동 게이트(렌더·린터·추출 L1 오차)는 M4 survey:build가 돌린다. temp 시점에는 게이트 미실행이므로 전부 rejected + 사유.
+function genApprovals(ctx: Ctx): Out[] {
+  const ids = [genCardPlan(ctx), genAbPlan(ctx)].flatMap((o) =>
+    ((JSON.parse(o[0]?.content ?? "{}") as { items: Obj[] }).items ?? []).map((x) => String(x.id)),
+  );
+  const items: Obj[] = ids.map((assetId) => ({
+    id: `apv:${assetId}`,
+    assetId,
+    decision: "rejected",
+    reason: "temp: 자동 게이트(하드 게이트·린터·추출 L1 오차) 미실행 — M4 survey:build에서 재판정",
+    reviewedAt: PREPARED_AT,
+    reviewedBy: "temp-agent",
+  }));
+  return [{ path: "data/survey/approvals.json", content: bundle(ctx, "approvals", items) }];
+}
+
 /** 생성기 목록(의존 순서). 나머지 묶음은 M1-04b 이후 단위에서 추가한다. */
 export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genAxes,
@@ -1770,6 +1845,8 @@ export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genImages,
   genTemplates,
   genCardPlan,
+  genAbPlan,
+  genApprovals,
 ];
 
 function isHuman(abs: string): boolean {

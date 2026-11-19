@@ -1,0 +1,5788 @@
+{
+  "bundle": "ab-plan",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "ABP-T1-A1-2050",
+      "axis": "A1",
+      "basePresetId": "PS-T1",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T1-A1-20",
+        "AB-T1-A1-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T1-A1-20",
+          "targetL1": [
+            0.2,
+            0.81,
+            0.12,
+            0,
+            0
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T1-A1-50",
+          "targetL1": [
+            0.5,
+            0.81,
+            0.12,
+            0,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP03",
+            "type.display_boost": "2.0"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T1-A1-5080",
+      "axis": "A1",
+      "basePresetId": "PS-T1",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T1-A1-50",
+        "AB-T1-A1-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T1-A1-50",
+          "targetL1": [
+            0.5,
+            0.81,
+            0.12,
+            0,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP03",
+            "type.display_boost": "2.0"
+          }
+        },
+        {
+          "id": "AB-T1-A1-80",
+          "targetL1": [
+            0.8,
+            0.81,
+            0.12,
+            0,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP03",
+            "type.scale_ratio": "1.25",
+            "type.display_boost": "2.0",
+            "layout.grid_mode": "asymmetric",
+            "motion.level": "subtle"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T1-A1-2080",
+      "axis": "A1",
+      "basePresetId": "PS-T1",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T1-A1-20",
+        "AB-T1-A1-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T1-A1-20",
+          "targetL1": [
+            0.2,
+            0.81,
+            0.12,
+            0,
+            0
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T1-A1-80",
+          "targetL1": [
+            0.8,
+            0.81,
+            0.12,
+            0,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP03",
+            "type.scale_ratio": "1.25",
+            "type.display_boost": "2.0",
+            "layout.grid_mode": "asymmetric",
+            "motion.level": "subtle"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T1-A2-2050",
+      "axis": "A2",
+      "basePresetId": "PS-T1",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T1-A2-20",
+        "AB-T1-A2-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T1-A2-20",
+          "targetL1": [
+            0.26,
+            0.2,
+            0.12,
+            0,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP02",
+            "color.palette_id": "PAL-T1-2",
+            "media.treatment": "grayscale"
+          }
+        },
+        {
+          "id": "AB-T1-A2-50",
+          "targetL1": [
+            0.26,
+            0.5,
+            0.12,
+            0,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP02",
+            "color.palette_id": "PAL-T1-1"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T1-A2-5080",
+      "axis": "A2",
+      "basePresetId": "PS-T1",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T1-A2-50",
+        "AB-T1-A2-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T1-A2-50",
+          "targetL1": [
+            0.26,
+            0.5,
+            0.12,
+            0,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP02",
+            "color.palette_id": "PAL-T1-1"
+          }
+        },
+        {
+          "id": "AB-T1-A2-80",
+          "targetL1": [
+            0.26,
+            0.8,
+            0.12,
+            0,
+            0
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T1-A2-2080",
+      "axis": "A2",
+      "basePresetId": "PS-T1",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T1-A2-20",
+        "AB-T1-A2-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T1-A2-20",
+          "targetL1": [
+            0.26,
+            0.2,
+            0.12,
+            0,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP02",
+            "color.palette_id": "PAL-T1-2",
+            "media.treatment": "grayscale"
+          }
+        },
+        {
+          "id": "AB-T1-A2-80",
+          "targetL1": [
+            0.26,
+            0.8,
+            0.12,
+            0,
+            0
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T1-A3-2050",
+      "axis": "A3",
+      "basePresetId": "PS-T1",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T1-A3-20",
+        "AB-T1-A3-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T1-A3-20",
+          "targetL1": [
+            0.26,
+            0.81,
+            0.2,
+            0,
+            0
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T1-A3-50",
+          "targetL1": [
+            0.26,
+            0.81,
+            0.5,
+            0,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP03",
+            "shape.radius_family": "soft",
+            "shape.border": "none"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T1-A3-5080",
+      "axis": "A3",
+      "basePresetId": "PS-T1",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T1-A3-50",
+        "AB-T1-A3-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T1-A3-50",
+          "targetL1": [
+            0.26,
+            0.81,
+            0.5,
+            0,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP03",
+            "shape.radius_family": "soft",
+            "shape.border": "none"
+          }
+        },
+        {
+          "id": "AB-T1-A3-80",
+          "targetL1": [
+            0.26,
+            0.81,
+            0.8,
+            0,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP03",
+            "shape.radius_family": "soft",
+            "shape.border": "none"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T1-A3-2080",
+      "axis": "A3",
+      "basePresetId": "PS-T1",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T1-A3-20",
+        "AB-T1-A3-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T1-A3-20",
+          "targetL1": [
+            0.26,
+            0.81,
+            0.2,
+            0,
+            0
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T1-A3-80",
+          "targetL1": [
+            0.26,
+            0.81,
+            0.8,
+            0,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP03",
+            "shape.radius_family": "soft",
+            "shape.border": "none"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T1-A4-2050",
+      "axis": "A4",
+      "basePresetId": "PS-T1",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T1-A4-20",
+        "AB-T1-A4-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T1-A4-20",
+          "targetL1": [
+            0.26,
+            0.81,
+            0.12,
+            0.2,
+            0
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T1-A4-50",
+          "targetL1": [
+            0.26,
+            0.81,
+            0.12,
+            0.5,
+            0
+          ],
+          "l2Overrides": {
+            "type.body_size": "17",
+            "type.body_leading": "1.7",
+            "space.density": "regular"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T1-A4-5080",
+      "axis": "A4",
+      "basePresetId": "PS-T1",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T1-A4-50",
+        "AB-T1-A4-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T1-A4-50",
+          "targetL1": [
+            0.26,
+            0.81,
+            0.12,
+            0.5,
+            0
+          ],
+          "l2Overrides": {
+            "type.body_size": "17",
+            "type.body_leading": "1.7",
+            "space.density": "regular"
+          }
+        },
+        {
+          "id": "AB-T1-A4-80",
+          "targetL1": [
+            0.26,
+            0.81,
+            0.12,
+            0.8,
+            0
+          ],
+          "l2Overrides": {
+            "type.body_size": "17",
+            "type.body_leading": "1.7",
+            "space.density": "regular"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T1-A4-2080",
+      "axis": "A4",
+      "basePresetId": "PS-T1",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T1-A4-20",
+        "AB-T1-A4-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T1-A4-20",
+          "targetL1": [
+            0.26,
+            0.81,
+            0.12,
+            0.2,
+            0
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T1-A4-80",
+          "targetL1": [
+            0.26,
+            0.81,
+            0.12,
+            0.8,
+            0
+          ],
+          "l2Overrides": {
+            "type.body_size": "17",
+            "type.body_leading": "1.7",
+            "space.density": "regular"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T1-A5-2050",
+      "axis": "A5",
+      "basePresetId": "PS-T1",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T1-A5-20",
+        "AB-T1-A5-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T1-A5-20",
+          "targetL1": [
+            0.26,
+            0.81,
+            0.12,
+            0,
+            0.2
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T1-A5-50",
+          "targetL1": [
+            0.26,
+            0.81,
+            0.12,
+            0,
+            0.5
+          ],
+          "l2Overrides": {
+            "depth.shadow_level": "1"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T1-A5-5080",
+      "axis": "A5",
+      "basePresetId": "PS-T1",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T1-A5-50",
+        "AB-T1-A5-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T1-A5-50",
+          "targetL1": [
+            0.26,
+            0.81,
+            0.12,
+            0,
+            0.5
+          ],
+          "l2Overrides": {
+            "depth.shadow_level": "1"
+          }
+        },
+        {
+          "id": "AB-T1-A5-80",
+          "targetL1": [
+            0.26,
+            0.81,
+            0.12,
+            0,
+            0.8
+          ],
+          "l2Overrides": {
+            "depth.shadow_level": "1"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T1-A5-2080",
+      "axis": "A5",
+      "basePresetId": "PS-T1",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T1-A5-20",
+        "AB-T1-A5-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T1-A5-20",
+          "targetL1": [
+            0.26,
+            0.81,
+            0.12,
+            0,
+            0.2
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T1-A5-80",
+          "targetL1": [
+            0.26,
+            0.81,
+            0.12,
+            0,
+            0.8
+          ],
+          "l2Overrides": {
+            "depth.shadow_level": "1"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T2-A1-2050",
+      "axis": "A1",
+      "basePresetId": "PS-T2",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T2-A1-20",
+        "AB-T2-A1-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T2-A1-20",
+          "targetL1": [
+            0.2,
+            0.23,
+            0.12,
+            0.62,
+            0
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T2-A1-50",
+          "targetL1": [
+            0.5,
+            0.23,
+            0.12,
+            0.62,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP07",
+            "type.display_boost": "1.5"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T2-A1-5080",
+      "axis": "A1",
+      "basePresetId": "PS-T2",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T2-A1-50",
+        "AB-T2-A1-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T2-A1-50",
+          "targetL1": [
+            0.5,
+            0.23,
+            0.12,
+            0.62,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP07",
+            "type.display_boost": "1.5"
+          }
+        },
+        {
+          "id": "AB-T2-A1-80",
+          "targetL1": [
+            0.8,
+            0.23,
+            0.12,
+            0.62,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP08",
+            "type.scale_ratio": "1.25",
+            "type.display_boost": "1.5",
+            "type.headline_weight": "800"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T2-A1-2080",
+      "axis": "A1",
+      "basePresetId": "PS-T2",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T2-A1-20",
+        "AB-T2-A1-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T2-A1-20",
+          "targetL1": [
+            0.2,
+            0.23,
+            0.12,
+            0.62,
+            0
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T2-A1-80",
+          "targetL1": [
+            0.8,
+            0.23,
+            0.12,
+            0.62,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP08",
+            "type.scale_ratio": "1.25",
+            "type.display_boost": "1.5",
+            "type.headline_weight": "800"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T2-A2-2050",
+      "axis": "A2",
+      "basePresetId": "PS-T2",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T2-A2-20",
+        "AB-T2-A2-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T2-A2-20",
+          "targetL1": [
+            0.3,
+            0.2,
+            0.12,
+            0.62,
+            0
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T2-A2-50",
+          "targetL1": [
+            0.3,
+            0.5,
+            0.12,
+            0.62,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP18",
+            "color.palette_id": "PAL-T2-2"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T2-A2-5080",
+      "axis": "A2",
+      "basePresetId": "PS-T2",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T2-A2-50",
+        "AB-T2-A2-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T2-A2-50",
+          "targetL1": [
+            0.3,
+            0.5,
+            0.12,
+            0.62,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP18",
+            "color.palette_id": "PAL-T2-2"
+          }
+        },
+        {
+          "id": "AB-T2-A2-80",
+          "targetL1": [
+            0.3,
+            0.8,
+            0.12,
+            0.62,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP18",
+            "color.palette_id": "PAL-T2-1",
+            "media.treatment": "none"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T2-A2-2080",
+      "axis": "A2",
+      "basePresetId": "PS-T2",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T2-A2-20",
+        "AB-T2-A2-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T2-A2-20",
+          "targetL1": [
+            0.3,
+            0.2,
+            0.12,
+            0.62,
+            0
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T2-A2-80",
+          "targetL1": [
+            0.3,
+            0.8,
+            0.12,
+            0.62,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP18",
+            "color.palette_id": "PAL-T2-1",
+            "media.treatment": "none"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T2-A3-2050",
+      "axis": "A3",
+      "basePresetId": "PS-T2",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T2-A3-20",
+        "AB-T2-A3-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T2-A3-20",
+          "targetL1": [
+            0.3,
+            0.23,
+            0.2,
+            0.62,
+            0
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T2-A3-50",
+          "targetL1": [
+            0.3,
+            0.23,
+            0.5,
+            0.62,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP17",
+            "shape.radius_family": "soft"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T2-A3-5080",
+      "axis": "A3",
+      "basePresetId": "PS-T2",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T2-A3-50",
+        "AB-T2-A3-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T2-A3-50",
+          "targetL1": [
+            0.3,
+            0.23,
+            0.5,
+            0.62,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP17",
+            "shape.radius_family": "soft"
+          }
+        },
+        {
+          "id": "AB-T2-A3-80",
+          "targetL1": [
+            0.3,
+            0.23,
+            0.8,
+            0.62,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP17",
+            "shape.radius_family": "soft"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T2-A3-2080",
+      "axis": "A3",
+      "basePresetId": "PS-T2",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T2-A3-20",
+        "AB-T2-A3-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T2-A3-20",
+          "targetL1": [
+            0.3,
+            0.23,
+            0.2,
+            0.62,
+            0
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T2-A3-80",
+          "targetL1": [
+            0.3,
+            0.23,
+            0.8,
+            0.62,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP17",
+            "shape.radius_family": "soft"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T2-A4-2050",
+      "axis": "A4",
+      "basePresetId": "PS-T2",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T2-A4-20",
+        "AB-T2-A4-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T2-A4-20",
+          "targetL1": [
+            0.3,
+            0.23,
+            0.12,
+            0.2,
+            0
+          ],
+          "l2Overrides": {
+            "type.body_size": "17",
+            "type.body_leading": "1.7",
+            "space.container": "1200"
+          }
+        },
+        {
+          "id": "AB-T2-A4-50",
+          "targetL1": [
+            0.3,
+            0.23,
+            0.12,
+            0.5,
+            0
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T2-A4-5080",
+      "axis": "A4",
+      "basePresetId": "PS-T2",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T2-A4-50",
+        "AB-T2-A4-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T2-A4-50",
+          "targetL1": [
+            0.3,
+            0.23,
+            0.12,
+            0.5,
+            0
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T2-A4-80",
+          "targetL1": [
+            0.3,
+            0.23,
+            0.12,
+            0.8,
+            0
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T2-A4-2080",
+      "axis": "A4",
+      "basePresetId": "PS-T2",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T2-A4-20",
+        "AB-T2-A4-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T2-A4-20",
+          "targetL1": [
+            0.3,
+            0.23,
+            0.12,
+            0.2,
+            0
+          ],
+          "l2Overrides": {
+            "type.body_size": "17",
+            "type.body_leading": "1.7",
+            "space.container": "1200"
+          }
+        },
+        {
+          "id": "AB-T2-A4-80",
+          "targetL1": [
+            0.3,
+            0.23,
+            0.12,
+            0.8,
+            0
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T2-A5-2050",
+      "axis": "A5",
+      "basePresetId": "PS-T2",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T2-A5-20",
+        "AB-T2-A5-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T2-A5-20",
+          "targetL1": [
+            0.3,
+            0.23,
+            0.12,
+            0.62,
+            0.2
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T2-A5-50",
+          "targetL1": [
+            0.3,
+            0.23,
+            0.12,
+            0.62,
+            0.5
+          ],
+          "l2Overrides": {
+            "depth.shadow_level": "1"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T2-A5-5080",
+      "axis": "A5",
+      "basePresetId": "PS-T2",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T2-A5-50",
+        "AB-T2-A5-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T2-A5-50",
+          "targetL1": [
+            0.3,
+            0.23,
+            0.12,
+            0.62,
+            0.5
+          ],
+          "l2Overrides": {
+            "depth.shadow_level": "1"
+          }
+        },
+        {
+          "id": "AB-T2-A5-80",
+          "targetL1": [
+            0.3,
+            0.23,
+            0.12,
+            0.62,
+            0.8
+          ],
+          "l2Overrides": {
+            "depth.style": "subtle-shadow",
+            "depth.shadow_level": "1"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T2-A5-2080",
+      "axis": "A5",
+      "basePresetId": "PS-T2",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T2-A5-20",
+        "AB-T2-A5-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T2-A5-20",
+          "targetL1": [
+            0.3,
+            0.23,
+            0.12,
+            0.62,
+            0.2
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T2-A5-80",
+          "targetL1": [
+            0.3,
+            0.23,
+            0.12,
+            0.62,
+            0.8
+          ],
+          "l2Overrides": {
+            "depth.style": "subtle-shadow",
+            "depth.shadow_level": "1"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T3-A1-2050",
+      "axis": "A1",
+      "basePresetId": "PS-T3",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T3-A1-20",
+        "AB-T3-A1-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T3-A1-20",
+          "targetL1": [
+            0.2,
+            0.31,
+            0.72,
+            0.12,
+            0.34
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T3-A1-50",
+          "targetL1": [
+            0.5,
+            0.31,
+            0.72,
+            0.12,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP10",
+            "type.scale_ratio": "1.25",
+            "type.display_boost": "1.25",
+            "type.headline_weight": "800"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T3-A1-5080",
+      "axis": "A1",
+      "basePresetId": "PS-T3",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T3-A1-50",
+        "AB-T3-A1-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T3-A1-50",
+          "targetL1": [
+            0.5,
+            0.31,
+            0.72,
+            0.12,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP10",
+            "type.scale_ratio": "1.25",
+            "type.display_boost": "1.25",
+            "type.headline_weight": "800"
+          }
+        },
+        {
+          "id": "AB-T3-A1-80",
+          "targetL1": [
+            0.8,
+            0.31,
+            0.72,
+            0.12,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP10",
+            "type.scale_ratio": "1.25",
+            "type.display_boost": "1.25",
+            "type.headline_weight": "800"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T3-A1-2080",
+      "axis": "A1",
+      "basePresetId": "PS-T3",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T3-A1-20",
+        "AB-T3-A1-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T3-A1-20",
+          "targetL1": [
+            0.2,
+            0.31,
+            0.72,
+            0.12,
+            0.34
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T3-A1-80",
+          "targetL1": [
+            0.8,
+            0.31,
+            0.72,
+            0.12,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP10",
+            "type.scale_ratio": "1.25",
+            "type.display_boost": "1.25",
+            "type.headline_weight": "800"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T3-A2-2050",
+      "axis": "A2",
+      "basePresetId": "PS-T3",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T3-A2-20",
+        "AB-T3-A2-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T3-A2-20",
+          "targetL1": [
+            0.16,
+            0.2,
+            0.72,
+            0.12,
+            0.34
+          ],
+          "l2Overrides": {
+            "color.palette_id": "PAL-T3-2"
+          }
+        },
+        {
+          "id": "AB-T3-A2-50",
+          "targetL1": [
+            0.16,
+            0.5,
+            0.72,
+            0.12,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP10",
+            "color.palette_id": "PAL-T3-1"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T3-A2-5080",
+      "axis": "A2",
+      "basePresetId": "PS-T3",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T3-A2-50",
+        "AB-T3-A2-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T3-A2-50",
+          "targetL1": [
+            0.16,
+            0.5,
+            0.72,
+            0.12,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP10",
+            "color.palette_id": "PAL-T3-1"
+          }
+        },
+        {
+          "id": "AB-T3-A2-80",
+          "targetL1": [
+            0.16,
+            0.8,
+            0.72,
+            0.12,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP10",
+            "color.palette_id": "PAL-T3-1"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T3-A2-2080",
+      "axis": "A2",
+      "basePresetId": "PS-T3",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T3-A2-20",
+        "AB-T3-A2-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T3-A2-20",
+          "targetL1": [
+            0.16,
+            0.2,
+            0.72,
+            0.12,
+            0.34
+          ],
+          "l2Overrides": {
+            "color.palette_id": "PAL-T3-2"
+          }
+        },
+        {
+          "id": "AB-T3-A2-80",
+          "targetL1": [
+            0.16,
+            0.8,
+            0.72,
+            0.12,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP10",
+            "color.palette_id": "PAL-T3-1"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T3-A3-2050",
+      "axis": "A3",
+      "basePresetId": "PS-T3",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T3-A3-20",
+        "AB-T3-A3-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T3-A3-20",
+          "targetL1": [
+            0.16,
+            0.31,
+            0.2,
+            0.12,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP18",
+            "shape.border": "hairline"
+          }
+        },
+        {
+          "id": "AB-T3-A3-50",
+          "targetL1": [
+            0.16,
+            0.31,
+            0.5,
+            0.12,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP18"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T3-A3-5080",
+      "axis": "A3",
+      "basePresetId": "PS-T3",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T3-A3-50",
+        "AB-T3-A3-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T3-A3-50",
+          "targetL1": [
+            0.16,
+            0.31,
+            0.5,
+            0.12,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP18"
+          }
+        },
+        {
+          "id": "AB-T3-A3-80",
+          "targetL1": [
+            0.16,
+            0.31,
+            0.8,
+            0.12,
+            0.34
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T3-A3-2080",
+      "axis": "A3",
+      "basePresetId": "PS-T3",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T3-A3-20",
+        "AB-T3-A3-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T3-A3-20",
+          "targetL1": [
+            0.16,
+            0.31,
+            0.2,
+            0.12,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP18",
+            "shape.border": "hairline"
+          }
+        },
+        {
+          "id": "AB-T3-A3-80",
+          "targetL1": [
+            0.16,
+            0.31,
+            0.8,
+            0.12,
+            0.34
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T3-A4-2050",
+      "axis": "A4",
+      "basePresetId": "PS-T3",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T3-A4-20",
+        "AB-T3-A4-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T3-A4-20",
+          "targetL1": [
+            0.16,
+            0.31,
+            0.72,
+            0.2,
+            0.34
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T3-A4-50",
+          "targetL1": [
+            0.16,
+            0.31,
+            0.72,
+            0.5,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.body_size": "16",
+            "space.density": "regular"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T3-A4-5080",
+      "axis": "A4",
+      "basePresetId": "PS-T3",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T3-A4-50",
+        "AB-T3-A4-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T3-A4-50",
+          "targetL1": [
+            0.16,
+            0.31,
+            0.72,
+            0.5,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.body_size": "16",
+            "space.density": "regular"
+          }
+        },
+        {
+          "id": "AB-T3-A4-80",
+          "targetL1": [
+            0.16,
+            0.31,
+            0.72,
+            0.8,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.body_size": "16",
+            "space.density": "regular"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T3-A4-2080",
+      "axis": "A4",
+      "basePresetId": "PS-T3",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T3-A4-20",
+        "AB-T3-A4-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T3-A4-20",
+          "targetL1": [
+            0.16,
+            0.31,
+            0.72,
+            0.2,
+            0.34
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T3-A4-80",
+          "targetL1": [
+            0.16,
+            0.31,
+            0.72,
+            0.8,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.body_size": "16",
+            "space.density": "regular"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T3-A5-2050",
+      "axis": "A5",
+      "basePresetId": "PS-T3",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T3-A5-20",
+        "AB-T3-A5-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T3-A5-20",
+          "targetL1": [
+            0.16,
+            0.31,
+            0.72,
+            0.12,
+            0.2
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T3-A5-50",
+          "targetL1": [
+            0.16,
+            0.31,
+            0.72,
+            0.12,
+            0.5
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T3-A5-5080",
+      "axis": "A5",
+      "basePresetId": "PS-T3",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T3-A5-50",
+        "AB-T3-A5-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T3-A5-50",
+          "targetL1": [
+            0.16,
+            0.31,
+            0.72,
+            0.12,
+            0.5
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T3-A5-80",
+          "targetL1": [
+            0.16,
+            0.31,
+            0.72,
+            0.12,
+            0.8
+          ],
+          "l2Overrides": {
+            "depth.style": "layered-shadow",
+            "depth.shadow_level": "2"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T3-A5-2080",
+      "axis": "A5",
+      "basePresetId": "PS-T3",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T3-A5-20",
+        "AB-T3-A5-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T3-A5-20",
+          "targetL1": [
+            0.16,
+            0.31,
+            0.72,
+            0.12,
+            0.2
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T3-A5-80",
+          "targetL1": [
+            0.16,
+            0.31,
+            0.72,
+            0.12,
+            0.8
+          ],
+          "l2Overrides": {
+            "depth.style": "layered-shadow",
+            "depth.shadow_level": "2"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T4-A1-2050",
+      "axis": "A1",
+      "basePresetId": "PS-T4",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T4-A1-20",
+        "AB-T4-A1-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T4-A1-20",
+          "targetL1": [
+            0.2,
+            0.96,
+            0.72,
+            0.5,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.display_boost": "1.0"
+          }
+        },
+        {
+          "id": "AB-T4-A1-50",
+          "targetL1": [
+            0.5,
+            0.96,
+            0.72,
+            0.5,
+            0.34
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T4-A1-5080",
+      "axis": "A1",
+      "basePresetId": "PS-T4",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T4-A1-50",
+        "AB-T4-A1-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T4-A1-50",
+          "targetL1": [
+            0.5,
+            0.96,
+            0.72,
+            0.5,
+            0.34
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T4-A1-80",
+          "targetL1": [
+            0.8,
+            0.96,
+            0.72,
+            0.5,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP05",
+            "type.display_boost": "1.5"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T4-A1-2080",
+      "axis": "A1",
+      "basePresetId": "PS-T4",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T4-A1-20",
+        "AB-T4-A1-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T4-A1-20",
+          "targetL1": [
+            0.2,
+            0.96,
+            0.72,
+            0.5,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.display_boost": "1.0"
+          }
+        },
+        {
+          "id": "AB-T4-A1-80",
+          "targetL1": [
+            0.8,
+            0.96,
+            0.72,
+            0.5,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP05",
+            "type.display_boost": "1.5"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T4-A2-2050",
+      "axis": "A2",
+      "basePresetId": "PS-T4",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T4-A2-20",
+        "AB-T4-A2-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T4-A2-20",
+          "targetL1": [
+            0.4,
+            0.2,
+            0.72,
+            0.5,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP10",
+            "color.palette_id": "PAL-T4-3",
+            "media.treatment": "none"
+          }
+        },
+        {
+          "id": "AB-T4-A2-50",
+          "targetL1": [
+            0.4,
+            0.5,
+            0.72,
+            0.5,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP10",
+            "color.palette_id": "PAL-T4-3"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T4-A2-5080",
+      "axis": "A2",
+      "basePresetId": "PS-T4",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T4-A2-50",
+        "AB-T4-A2-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T4-A2-50",
+          "targetL1": [
+            0.4,
+            0.5,
+            0.72,
+            0.5,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP10",
+            "color.palette_id": "PAL-T4-3"
+          }
+        },
+        {
+          "id": "AB-T4-A2-80",
+          "targetL1": [
+            0.4,
+            0.8,
+            0.72,
+            0.5,
+            0.34
+          ],
+          "l2Overrides": {
+            "color.palette_id": "PAL-T4-3"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T4-A2-2080",
+      "axis": "A2",
+      "basePresetId": "PS-T4",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T4-A2-20",
+        "AB-T4-A2-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T4-A2-20",
+          "targetL1": [
+            0.4,
+            0.2,
+            0.72,
+            0.5,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP10",
+            "color.palette_id": "PAL-T4-3",
+            "media.treatment": "none"
+          }
+        },
+        {
+          "id": "AB-T4-A2-80",
+          "targetL1": [
+            0.4,
+            0.8,
+            0.72,
+            0.5,
+            0.34
+          ],
+          "l2Overrides": {
+            "color.palette_id": "PAL-T4-3"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T4-A3-2050",
+      "axis": "A3",
+      "basePresetId": "PS-T4",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T4-A3-20",
+        "AB-T4-A3-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T4-A3-20",
+          "targetL1": [
+            0.4,
+            0.96,
+            0.2,
+            0.5,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP05",
+            "shape.radius_family": "soft",
+            "shape.border": "hairline"
+          }
+        },
+        {
+          "id": "AB-T4-A3-50",
+          "targetL1": [
+            0.4,
+            0.96,
+            0.5,
+            0.5,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP05",
+            "shape.radius_family": "soft"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T4-A3-5080",
+      "axis": "A3",
+      "basePresetId": "PS-T4",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T4-A3-50",
+        "AB-T4-A3-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T4-A3-50",
+          "targetL1": [
+            0.4,
+            0.96,
+            0.5,
+            0.5,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP05",
+            "shape.radius_family": "soft"
+          }
+        },
+        {
+          "id": "AB-T4-A3-80",
+          "targetL1": [
+            0.4,
+            0.96,
+            0.8,
+            0.5,
+            0.34
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T4-A3-2080",
+      "axis": "A3",
+      "basePresetId": "PS-T4",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T4-A3-20",
+        "AB-T4-A3-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T4-A3-20",
+          "targetL1": [
+            0.4,
+            0.96,
+            0.2,
+            0.5,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP05",
+            "shape.radius_family": "soft",
+            "shape.border": "hairline"
+          }
+        },
+        {
+          "id": "AB-T4-A3-80",
+          "targetL1": [
+            0.4,
+            0.96,
+            0.8,
+            0.5,
+            0.34
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T4-A4-2050",
+      "axis": "A4",
+      "basePresetId": "PS-T4",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T4-A4-20",
+        "AB-T4-A4-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T4-A4-20",
+          "targetL1": [
+            0.4,
+            0.96,
+            0.72,
+            0.2,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.body_size": "18",
+            "type.body_leading": "1.8",
+            "space.density": "airy",
+            "space.container": "1120"
+          }
+        },
+        {
+          "id": "AB-T4-A4-50",
+          "targetL1": [
+            0.4,
+            0.96,
+            0.72,
+            0.5,
+            0.34
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T4-A4-5080",
+      "axis": "A4",
+      "basePresetId": "PS-T4",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T4-A4-50",
+        "AB-T4-A4-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T4-A4-50",
+          "targetL1": [
+            0.4,
+            0.96,
+            0.72,
+            0.5,
+            0.34
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T4-A4-80",
+          "targetL1": [
+            0.4,
+            0.96,
+            0.72,
+            0.8,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.body_size": "16",
+            "type.body_leading": "1.6"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T4-A4-2080",
+      "axis": "A4",
+      "basePresetId": "PS-T4",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T4-A4-20",
+        "AB-T4-A4-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T4-A4-20",
+          "targetL1": [
+            0.4,
+            0.96,
+            0.72,
+            0.2,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.body_size": "18",
+            "type.body_leading": "1.8",
+            "space.density": "airy",
+            "space.container": "1120"
+          }
+        },
+        {
+          "id": "AB-T4-A4-80",
+          "targetL1": [
+            0.4,
+            0.96,
+            0.72,
+            0.8,
+            0.34
+          ],
+          "l2Overrides": {
+            "type.body_size": "16",
+            "type.body_leading": "1.6"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T4-A5-2050",
+      "axis": "A5",
+      "basePresetId": "PS-T4",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T4-A5-20",
+        "AB-T4-A5-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T4-A5-20",
+          "targetL1": [
+            0.4,
+            0.96,
+            0.72,
+            0.5,
+            0.2
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T4-A5-50",
+          "targetL1": [
+            0.4,
+            0.96,
+            0.72,
+            0.5,
+            0.5
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T4-A5-5080",
+      "axis": "A5",
+      "basePresetId": "PS-T4",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T4-A5-50",
+        "AB-T4-A5-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T4-A5-50",
+          "targetL1": [
+            0.4,
+            0.96,
+            0.72,
+            0.5,
+            0.5
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T4-A5-80",
+          "targetL1": [
+            0.4,
+            0.96,
+            0.72,
+            0.5,
+            0.8
+          ],
+          "l2Overrides": {
+            "depth.shadow_level": "2"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T4-A5-2080",
+      "axis": "A5",
+      "basePresetId": "PS-T4",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T4-A5-20",
+        "AB-T4-A5-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T4-A5-20",
+          "targetL1": [
+            0.4,
+            0.96,
+            0.72,
+            0.5,
+            0.2
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T4-A5-80",
+          "targetL1": [
+            0.4,
+            0.96,
+            0.72,
+            0.5,
+            0.8
+          ],
+          "l2Overrides": {
+            "depth.shadow_level": "2"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T5-A1-2050",
+      "axis": "A1",
+      "basePresetId": "PS-T5",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T5-A1-20",
+        "AB-T5-A1-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T5-A1-20",
+          "targetL1": [
+            0.2,
+            0.57,
+            0,
+            1,
+            0.56
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP08",
+            "type.scale_ratio": "1.25",
+            "type.display_boost": "1.5",
+            "type.headline_weight": "700",
+            "color.palette_id": "PAL-T5-2",
+            "layout.grid_mode": "bento"
+          }
+        },
+        {
+          "id": "AB-T5-A1-50",
+          "targetL1": [
+            0.5,
+            0.57,
+            0,
+            1,
+            0.56
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP08",
+            "type.scale_ratio": "1.25",
+            "type.display_boost": "1.5",
+            "type.headline_weight": "700",
+            "color.palette_id": "PAL-T5-2"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T5-A1-5080",
+      "axis": "A1",
+      "basePresetId": "PS-T5",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T5-A1-50",
+        "AB-T5-A1-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T5-A1-50",
+          "targetL1": [
+            0.5,
+            0.57,
+            0,
+            1,
+            0.56
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP08",
+            "type.scale_ratio": "1.25",
+            "type.display_boost": "1.5",
+            "type.headline_weight": "700",
+            "color.palette_id": "PAL-T5-2"
+          }
+        },
+        {
+          "id": "AB-T5-A1-80",
+          "targetL1": [
+            0.8,
+            0.57,
+            0,
+            1,
+            0.56
+          ],
+          "l2Overrides": {
+            "type.display_boost": "1.5",
+            "color.palette_id": "PAL-T5-2"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T5-A1-2080",
+      "axis": "A1",
+      "basePresetId": "PS-T5",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T5-A1-20",
+        "AB-T5-A1-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T5-A1-20",
+          "targetL1": [
+            0.2,
+            0.57,
+            0,
+            1,
+            0.56
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP08",
+            "type.scale_ratio": "1.25",
+            "type.display_boost": "1.5",
+            "type.headline_weight": "700",
+            "color.palette_id": "PAL-T5-2",
+            "layout.grid_mode": "bento"
+          }
+        },
+        {
+          "id": "AB-T5-A1-80",
+          "targetL1": [
+            0.8,
+            0.57,
+            0,
+            1,
+            0.56
+          ],
+          "l2Overrides": {
+            "type.display_boost": "1.5",
+            "color.palette_id": "PAL-T5-2"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T5-A2-2050",
+      "axis": "A2",
+      "basePresetId": "PS-T5",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T5-A2-20",
+        "AB-T5-A2-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T5-A2-20",
+          "targetL1": [
+            1,
+            0.2,
+            0,
+            1,
+            0.56
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP14",
+            "type.headline_weight": "900"
+          }
+        },
+        {
+          "id": "AB-T5-A2-50",
+          "targetL1": [
+            1,
+            0.5,
+            0,
+            1,
+            0.56
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T5-A2-5080",
+      "axis": "A2",
+      "basePresetId": "PS-T5",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T5-A2-50",
+        "AB-T5-A2-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T5-A2-50",
+          "targetL1": [
+            1,
+            0.5,
+            0,
+            1,
+            0.56
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T5-A2-80",
+          "targetL1": [
+            1,
+            0.8,
+            0,
+            1,
+            0.56
+          ],
+          "l2Overrides": {
+            "color.palette_id": "PAL-T5-1"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T5-A2-2080",
+      "axis": "A2",
+      "basePresetId": "PS-T5",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T5-A2-20",
+        "AB-T5-A2-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T5-A2-20",
+          "targetL1": [
+            1,
+            0.2,
+            0,
+            1,
+            0.56
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP14",
+            "type.headline_weight": "900"
+          }
+        },
+        {
+          "id": "AB-T5-A2-80",
+          "targetL1": [
+            1,
+            0.8,
+            0,
+            1,
+            0.56
+          ],
+          "l2Overrides": {
+            "color.palette_id": "PAL-T5-1"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T5-A3-2050",
+      "axis": "A3",
+      "basePresetId": "PS-T5",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T5-A3-20",
+        "AB-T5-A3-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T5-A3-20",
+          "targetL1": [
+            1,
+            0.57,
+            0.2,
+            1,
+            0.56
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP15",
+            "type.headline_weight": "800"
+          }
+        },
+        {
+          "id": "AB-T5-A3-50",
+          "targetL1": [
+            1,
+            0.57,
+            0.5,
+            1,
+            0.56
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP15",
+            "type.headline_weight": "800"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T5-A3-5080",
+      "axis": "A3",
+      "basePresetId": "PS-T5",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T5-A3-50",
+        "AB-T5-A3-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T5-A3-50",
+          "targetL1": [
+            1,
+            0.57,
+            0.5,
+            1,
+            0.56
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP15",
+            "type.headline_weight": "800"
+          }
+        },
+        {
+          "id": "AB-T5-A3-80",
+          "targetL1": [
+            1,
+            0.57,
+            0.8,
+            1,
+            0.56
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP11"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T5-A3-2080",
+      "axis": "A3",
+      "basePresetId": "PS-T5",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T5-A3-20",
+        "AB-T5-A3-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T5-A3-20",
+          "targetL1": [
+            1,
+            0.57,
+            0.2,
+            1,
+            0.56
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP15",
+            "type.headline_weight": "800"
+          }
+        },
+        {
+          "id": "AB-T5-A3-80",
+          "targetL1": [
+            1,
+            0.57,
+            0.8,
+            1,
+            0.56
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP11"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T5-A4-2050",
+      "axis": "A4",
+      "basePresetId": "PS-T5",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T5-A4-20",
+        "AB-T5-A4-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T5-A4-20",
+          "targetL1": [
+            1,
+            0.57,
+            0,
+            0.2,
+            0.56
+          ],
+          "l2Overrides": {
+            "type.body_leading": "1.7",
+            "space.density": "regular"
+          }
+        },
+        {
+          "id": "AB-T5-A4-50",
+          "targetL1": [
+            1,
+            0.57,
+            0,
+            0.5,
+            0.56
+          ],
+          "l2Overrides": {
+            "type.body_leading": "1.7",
+            "space.density": "regular"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T5-A4-5080",
+      "axis": "A4",
+      "basePresetId": "PS-T5",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T5-A4-50",
+        "AB-T5-A4-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T5-A4-50",
+          "targetL1": [
+            1,
+            0.57,
+            0,
+            0.5,
+            0.56
+          ],
+          "l2Overrides": {
+            "type.body_leading": "1.7",
+            "space.density": "regular"
+          }
+        },
+        {
+          "id": "AB-T5-A4-80",
+          "targetL1": [
+            1,
+            0.57,
+            0,
+            0.8,
+            0.56
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T5-A4-2080",
+      "axis": "A4",
+      "basePresetId": "PS-T5",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T5-A4-20",
+        "AB-T5-A4-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T5-A4-20",
+          "targetL1": [
+            1,
+            0.57,
+            0,
+            0.2,
+            0.56
+          ],
+          "l2Overrides": {
+            "type.body_leading": "1.7",
+            "space.density": "regular"
+          }
+        },
+        {
+          "id": "AB-T5-A4-80",
+          "targetL1": [
+            1,
+            0.57,
+            0,
+            0.8,
+            0.56
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T5-A5-2050",
+      "axis": "A5",
+      "basePresetId": "PS-T5",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T5-A5-20",
+        "AB-T5-A5-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T5-A5-20",
+          "targetL1": [
+            1,
+            0.57,
+            0,
+            1,
+            0.2
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T5-A5-50",
+          "targetL1": [
+            1,
+            0.57,
+            0,
+            1,
+            0.5
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T5-A5-5080",
+      "axis": "A5",
+      "basePresetId": "PS-T5",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T5-A5-50",
+        "AB-T5-A5-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T5-A5-50",
+          "targetL1": [
+            1,
+            0.57,
+            0,
+            1,
+            0.5
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T5-A5-80",
+          "targetL1": [
+            1,
+            0.57,
+            0,
+            1,
+            0.8
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T5-A5-2080",
+      "axis": "A5",
+      "basePresetId": "PS-T5",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T5-A5-20",
+        "AB-T5-A5-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T5-A5-20",
+          "targetL1": [
+            1,
+            0.57,
+            0,
+            1,
+            0.2
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T5-A5-80",
+          "targetL1": [
+            1,
+            0.57,
+            0,
+            1,
+            0.8
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T6-A1-2050",
+      "axis": "A1",
+      "basePresetId": "PS-T6",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T6-A1-20",
+        "AB-T6-A1-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T6-A1-20",
+          "targetL1": [
+            0.2,
+            0.7,
+            1,
+            0.62,
+            0.66
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP10",
+            "type.display_boost": "1.25",
+            "type.headline_weight": "500",
+            "color.palette_id": "PAL-T6-3",
+            "layout.grid_mode": "bento"
+          }
+        },
+        {
+          "id": "AB-T6-A1-50",
+          "targetL1": [
+            0.5,
+            0.7,
+            1,
+            0.62,
+            0.66
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP10",
+            "type.display_boost": "1.25",
+            "type.headline_weight": "500",
+            "color.palette_id": "PAL-T6-2",
+            "layout.grid_mode": "bento"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T6-A1-5080",
+      "axis": "A1",
+      "basePresetId": "PS-T6",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T6-A1-50",
+        "AB-T6-A1-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T6-A1-50",
+          "targetL1": [
+            0.5,
+            0.7,
+            1,
+            0.62,
+            0.66
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP10",
+            "type.display_boost": "1.25",
+            "type.headline_weight": "500",
+            "color.palette_id": "PAL-T6-2",
+            "layout.grid_mode": "bento"
+          }
+        },
+        {
+          "id": "AB-T6-A1-80",
+          "targetL1": [
+            0.8,
+            0.7,
+            1,
+            0.62,
+            0.66
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T6-A1-2080",
+      "axis": "A1",
+      "basePresetId": "PS-T6",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T6-A1-20",
+        "AB-T6-A1-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T6-A1-20",
+          "targetL1": [
+            0.2,
+            0.7,
+            1,
+            0.62,
+            0.66
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP10",
+            "type.display_boost": "1.25",
+            "type.headline_weight": "500",
+            "color.palette_id": "PAL-T6-3",
+            "layout.grid_mode": "bento"
+          }
+        },
+        {
+          "id": "AB-T6-A1-80",
+          "targetL1": [
+            0.8,
+            0.7,
+            1,
+            0.62,
+            0.66
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T6-A2-2050",
+      "axis": "A2",
+      "basePresetId": "PS-T6",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T6-A2-20",
+        "AB-T6-A2-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T6-A2-20",
+          "targetL1": [
+            0.79,
+            0.2,
+            1,
+            0.62,
+            0.66
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP15",
+            "type.headline_weight": "800",
+            "color.palette_id": "PAL-T6-1"
+          }
+        },
+        {
+          "id": "AB-T6-A2-50",
+          "targetL1": [
+            0.79,
+            0.5,
+            1,
+            0.62,
+            0.66
+          ],
+          "l2Overrides": {
+            "color.palette_id": "PAL-T6-1"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T6-A2-5080",
+      "axis": "A2",
+      "basePresetId": "PS-T6",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T6-A2-50",
+        "AB-T6-A2-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T6-A2-50",
+          "targetL1": [
+            0.79,
+            0.5,
+            1,
+            0.62,
+            0.66
+          ],
+          "l2Overrides": {
+            "color.palette_id": "PAL-T6-1"
+          }
+        },
+        {
+          "id": "AB-T6-A2-80",
+          "targetL1": [
+            0.79,
+            0.8,
+            1,
+            0.62,
+            0.66
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T6-A2-2080",
+      "axis": "A2",
+      "basePresetId": "PS-T6",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T6-A2-20",
+        "AB-T6-A2-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T6-A2-20",
+          "targetL1": [
+            0.79,
+            0.2,
+            1,
+            0.62,
+            0.66
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP15",
+            "type.headline_weight": "800",
+            "color.palette_id": "PAL-T6-1"
+          }
+        },
+        {
+          "id": "AB-T6-A2-80",
+          "targetL1": [
+            0.79,
+            0.8,
+            1,
+            0.62,
+            0.66
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T6-A3-2050",
+      "axis": "A3",
+      "basePresetId": "PS-T6",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T6-A3-20",
+        "AB-T6-A3-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T6-A3-20",
+          "targetL1": [
+            0.79,
+            0.7,
+            0.2,
+            0.62,
+            0.66
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP15",
+            "type.headline_weight": "800",
+            "shape.radius_family": "round",
+            "shape.border": "hairline"
+          }
+        },
+        {
+          "id": "AB-T6-A3-50",
+          "targetL1": [
+            0.79,
+            0.7,
+            0.5,
+            0.62,
+            0.66
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP15",
+            "type.headline_weight": "800",
+            "shape.radius_family": "round",
+            "shape.border": "hairline"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T6-A3-5080",
+      "axis": "A3",
+      "basePresetId": "PS-T6",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T6-A3-50",
+        "AB-T6-A3-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T6-A3-50",
+          "targetL1": [
+            0.79,
+            0.7,
+            0.5,
+            0.62,
+            0.66
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP15",
+            "type.headline_weight": "800",
+            "shape.radius_family": "round",
+            "shape.border": "hairline"
+          }
+        },
+        {
+          "id": "AB-T6-A3-80",
+          "targetL1": [
+            0.79,
+            0.7,
+            0.8,
+            0.62,
+            0.66
+          ],
+          "l2Overrides": {
+            "shape.radius_family": "round"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T6-A3-2080",
+      "axis": "A3",
+      "basePresetId": "PS-T6",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T6-A3-20",
+        "AB-T6-A3-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T6-A3-20",
+          "targetL1": [
+            0.79,
+            0.7,
+            0.2,
+            0.62,
+            0.66
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP15",
+            "type.headline_weight": "800",
+            "shape.radius_family": "round",
+            "shape.border": "hairline"
+          }
+        },
+        {
+          "id": "AB-T6-A3-80",
+          "targetL1": [
+            0.79,
+            0.7,
+            0.8,
+            0.62,
+            0.66
+          ],
+          "l2Overrides": {
+            "shape.radius_family": "round"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T6-A4-2050",
+      "axis": "A4",
+      "basePresetId": "PS-T6",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T6-A4-20",
+        "AB-T6-A4-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T6-A4-20",
+          "targetL1": [
+            0.79,
+            0.7,
+            1,
+            0.2,
+            0.66
+          ],
+          "l2Overrides": {
+            "type.body_size": "17",
+            "type.body_leading": "1.7"
+          }
+        },
+        {
+          "id": "AB-T6-A4-50",
+          "targetL1": [
+            0.79,
+            0.7,
+            1,
+            0.5,
+            0.66
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T6-A4-5080",
+      "axis": "A4",
+      "basePresetId": "PS-T6",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T6-A4-50",
+        "AB-T6-A4-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T6-A4-50",
+          "targetL1": [
+            0.79,
+            0.7,
+            1,
+            0.5,
+            0.66
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T6-A4-80",
+          "targetL1": [
+            0.79,
+            0.7,
+            1,
+            0.8,
+            0.66
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T6-A4-2080",
+      "axis": "A4",
+      "basePresetId": "PS-T6",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T6-A4-20",
+        "AB-T6-A4-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T6-A4-20",
+          "targetL1": [
+            0.79,
+            0.7,
+            1,
+            0.2,
+            0.66
+          ],
+          "l2Overrides": {
+            "type.body_size": "17",
+            "type.body_leading": "1.7"
+          }
+        },
+        {
+          "id": "AB-T6-A4-80",
+          "targetL1": [
+            0.79,
+            0.7,
+            1,
+            0.8,
+            0.66
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T6-A5-2050",
+      "axis": "A5",
+      "basePresetId": "PS-T6",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T6-A5-20",
+        "AB-T6-A5-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T6-A5-20",
+          "targetL1": [
+            0.79,
+            0.7,
+            1,
+            0.62,
+            0.2
+          ],
+          "l2Overrides": {
+            "depth.shadow_level": "1"
+          }
+        },
+        {
+          "id": "AB-T6-A5-50",
+          "targetL1": [
+            0.79,
+            0.7,
+            1,
+            0.62,
+            0.5
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T6-A5-5080",
+      "axis": "A5",
+      "basePresetId": "PS-T6",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T6-A5-50",
+        "AB-T6-A5-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T6-A5-50",
+          "targetL1": [
+            0.79,
+            0.7,
+            1,
+            0.62,
+            0.5
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T6-A5-80",
+          "targetL1": [
+            0.79,
+            0.7,
+            1,
+            0.62,
+            0.8
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T6-A5-2080",
+      "axis": "A5",
+      "basePresetId": "PS-T6",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T6-A5-20",
+        "AB-T6-A5-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T6-A5-20",
+          "targetL1": [
+            0.79,
+            0.7,
+            1,
+            0.62,
+            0.2
+          ],
+          "l2Overrides": {
+            "depth.shadow_level": "1"
+          }
+        },
+        {
+          "id": "AB-T6-A5-80",
+          "targetL1": [
+            0.79,
+            0.7,
+            1,
+            0.62,
+            0.8
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T7-A1-2050",
+      "axis": "A1",
+      "basePresetId": "PS-T7",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T7-A1-20",
+        "AB-T7-A1-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T7-A1-20",
+          "targetL1": [
+            0.2,
+            0.23,
+            0.32,
+            0.62,
+            0.7
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP09",
+            "type.scale_ratio": "1.2",
+            "type.display_boost": "1.0",
+            "type.headline_weight": "600"
+          }
+        },
+        {
+          "id": "AB-T7-A1-50",
+          "targetL1": [
+            0.5,
+            0.23,
+            0.32,
+            0.62,
+            0.7
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T7-A1-5080",
+      "axis": "A1",
+      "basePresetId": "PS-T7",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T7-A1-50",
+        "AB-T7-A1-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T7-A1-50",
+          "targetL1": [
+            0.5,
+            0.23,
+            0.32,
+            0.62,
+            0.7
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T7-A1-80",
+          "targetL1": [
+            0.8,
+            0.23,
+            0.32,
+            0.62,
+            0.7
+          ],
+          "l2Overrides": {
+            "type.scale_ratio": "1.333",
+            "type.display_boost": "1.5",
+            "type.headline_weight": "800"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T7-A1-2080",
+      "axis": "A1",
+      "basePresetId": "PS-T7",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T7-A1-20",
+        "AB-T7-A1-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T7-A1-20",
+          "targetL1": [
+            0.2,
+            0.23,
+            0.32,
+            0.62,
+            0.7
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP09",
+            "type.scale_ratio": "1.2",
+            "type.display_boost": "1.0",
+            "type.headline_weight": "600"
+          }
+        },
+        {
+          "id": "AB-T7-A1-80",
+          "targetL1": [
+            0.8,
+            0.23,
+            0.32,
+            0.62,
+            0.7
+          ],
+          "l2Overrides": {
+            "type.scale_ratio": "1.333",
+            "type.display_boost": "1.5",
+            "type.headline_weight": "800"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T7-A2-2050",
+      "axis": "A2",
+      "basePresetId": "PS-T7",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T7-A2-20",
+        "AB-T7-A2-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T7-A2-20",
+          "targetL1": [
+            0.54,
+            0.2,
+            0.32,
+            0.62,
+            0.7
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T7-A2-50",
+          "targetL1": [
+            0.54,
+            0.5,
+            0.32,
+            0.62,
+            0.7
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP14",
+            "type.headline_weight": "900"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T7-A2-5080",
+      "axis": "A2",
+      "basePresetId": "PS-T7",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T7-A2-50",
+        "AB-T7-A2-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T7-A2-50",
+          "targetL1": [
+            0.54,
+            0.5,
+            0.32,
+            0.62,
+            0.7
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP14",
+            "type.headline_weight": "900"
+          }
+        },
+        {
+          "id": "AB-T7-A2-80",
+          "targetL1": [
+            0.54,
+            0.8,
+            0.32,
+            0.62,
+            0.7
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP14",
+            "type.headline_weight": "900",
+            "color.palette_id": "PAL-T7-1",
+            "media.treatment": "none"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T7-A2-2080",
+      "axis": "A2",
+      "basePresetId": "PS-T7",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T7-A2-20",
+        "AB-T7-A2-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T7-A2-20",
+          "targetL1": [
+            0.54,
+            0.2,
+            0.32,
+            0.62,
+            0.7
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T7-A2-80",
+          "targetL1": [
+            0.54,
+            0.8,
+            0.32,
+            0.62,
+            0.7
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP14",
+            "type.headline_weight": "900",
+            "color.palette_id": "PAL-T7-1",
+            "media.treatment": "none"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T7-A3-2050",
+      "axis": "A3",
+      "basePresetId": "PS-T7",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T7-A3-20",
+        "AB-T7-A3-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T7-A3-20",
+          "targetL1": [
+            0.54,
+            0.23,
+            0.2,
+            0.62,
+            0.7
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP07"
+          }
+        },
+        {
+          "id": "AB-T7-A3-50",
+          "targetL1": [
+            0.54,
+            0.23,
+            0.5,
+            0.62,
+            0.7
+          ],
+          "l2Overrides": {
+            "shape.radius_family": "round"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T7-A3-5080",
+      "axis": "A3",
+      "basePresetId": "PS-T7",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T7-A3-50",
+        "AB-T7-A3-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T7-A3-50",
+          "targetL1": [
+            0.54,
+            0.23,
+            0.5,
+            0.62,
+            0.7
+          ],
+          "l2Overrides": {
+            "shape.radius_family": "round"
+          }
+        },
+        {
+          "id": "AB-T7-A3-80",
+          "targetL1": [
+            0.54,
+            0.23,
+            0.8,
+            0.62,
+            0.7
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP17",
+            "shape.radius_family": "round",
+            "shape.border": "none"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T7-A3-2080",
+      "axis": "A3",
+      "basePresetId": "PS-T7",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T7-A3-20",
+        "AB-T7-A3-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T7-A3-20",
+          "targetL1": [
+            0.54,
+            0.23,
+            0.2,
+            0.62,
+            0.7
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP07"
+          }
+        },
+        {
+          "id": "AB-T7-A3-80",
+          "targetL1": [
+            0.54,
+            0.23,
+            0.8,
+            0.62,
+            0.7
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP17",
+            "shape.radius_family": "round",
+            "shape.border": "none"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T7-A4-2050",
+      "axis": "A4",
+      "basePresetId": "PS-T7",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T7-A4-20",
+        "AB-T7-A4-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T7-A4-20",
+          "targetL1": [
+            0.54,
+            0.23,
+            0.32,
+            0.2,
+            0.7
+          ],
+          "l2Overrides": {
+            "type.body_size": "17",
+            "type.body_leading": "1.7",
+            "space.container": "1200"
+          }
+        },
+        {
+          "id": "AB-T7-A4-50",
+          "targetL1": [
+            0.54,
+            0.23,
+            0.32,
+            0.5,
+            0.7
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T7-A4-5080",
+      "axis": "A4",
+      "basePresetId": "PS-T7",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T7-A4-50",
+        "AB-T7-A4-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T7-A4-50",
+          "targetL1": [
+            0.54,
+            0.23,
+            0.32,
+            0.5,
+            0.7
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T7-A4-80",
+          "targetL1": [
+            0.54,
+            0.23,
+            0.32,
+            0.8,
+            0.7
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T7-A4-2080",
+      "axis": "A4",
+      "basePresetId": "PS-T7",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T7-A4-20",
+        "AB-T7-A4-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T7-A4-20",
+          "targetL1": [
+            0.54,
+            0.23,
+            0.32,
+            0.2,
+            0.7
+          ],
+          "l2Overrides": {
+            "type.body_size": "17",
+            "type.body_leading": "1.7",
+            "space.container": "1200"
+          }
+        },
+        {
+          "id": "AB-T7-A4-80",
+          "targetL1": [
+            0.54,
+            0.23,
+            0.32,
+            0.8,
+            0.7
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T7-A5-2050",
+      "axis": "A5",
+      "basePresetId": "PS-T7",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T7-A5-20",
+        "AB-T7-A5-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T7-A5-20",
+          "targetL1": [
+            0.54,
+            0.23,
+            0.32,
+            0.62,
+            0.2
+          ],
+          "l2Overrides": {
+            "depth.shadow_level": "0"
+          }
+        },
+        {
+          "id": "AB-T7-A5-50",
+          "targetL1": [
+            0.54,
+            0.23,
+            0.32,
+            0.62,
+            0.5
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T7-A5-5080",
+      "axis": "A5",
+      "basePresetId": "PS-T7",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T7-A5-50",
+        "AB-T7-A5-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T7-A5-50",
+          "targetL1": [
+            0.54,
+            0.23,
+            0.32,
+            0.62,
+            0.5
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T7-A5-80",
+          "targetL1": [
+            0.54,
+            0.23,
+            0.32,
+            0.62,
+            0.8
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T7-A5-2080",
+      "axis": "A5",
+      "basePresetId": "PS-T7",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T7-A5-20",
+        "AB-T7-A5-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T7-A5-20",
+          "targetL1": [
+            0.54,
+            0.23,
+            0.32,
+            0.62,
+            0.2
+          ],
+          "l2Overrides": {
+            "depth.shadow_level": "0"
+          }
+        },
+        {
+          "id": "AB-T7-A5-80",
+          "targetL1": [
+            0.54,
+            0.23,
+            0.32,
+            0.62,
+            0.8
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T8-A1-2050",
+      "axis": "A1",
+      "basePresetId": "PS-T8",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T8-A1-20",
+        "AB-T8-A1-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T8-A1-20",
+          "targetL1": [
+            0.2,
+            0.65,
+            0.25,
+            0.25,
+            0
+          ],
+          "l2Overrides": {
+            "type.scale_ratio": "1.25",
+            "type.display_boost": "1.5",
+            "color.palette_id": "PAL-T8-3"
+          }
+        },
+        {
+          "id": "AB-T8-A1-50",
+          "targetL1": [
+            0.5,
+            0.65,
+            0.25,
+            0.25,
+            0
+          ],
+          "l2Overrides": {
+            "type.display_boost": "1.5",
+            "color.palette_id": "PAL-T8-3"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T8-A1-5080",
+      "axis": "A1",
+      "basePresetId": "PS-T8",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T8-A1-50",
+        "AB-T8-A1-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T8-A1-50",
+          "targetL1": [
+            0.5,
+            0.65,
+            0.25,
+            0.25,
+            0
+          ],
+          "l2Overrides": {
+            "type.display_boost": "1.5",
+            "color.palette_id": "PAL-T8-3"
+          }
+        },
+        {
+          "id": "AB-T8-A1-80",
+          "targetL1": [
+            0.8,
+            0.65,
+            0.25,
+            0.25,
+            0
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T8-A1-2080",
+      "axis": "A1",
+      "basePresetId": "PS-T8",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T8-A1-20",
+        "AB-T8-A1-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T8-A1-20",
+          "targetL1": [
+            0.2,
+            0.65,
+            0.25,
+            0.25,
+            0
+          ],
+          "l2Overrides": {
+            "type.scale_ratio": "1.25",
+            "type.display_boost": "1.5",
+            "color.palette_id": "PAL-T8-3"
+          }
+        },
+        {
+          "id": "AB-T8-A1-80",
+          "targetL1": [
+            0.8,
+            0.65,
+            0.25,
+            0.25,
+            0
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.08,
+        1,
+        0.62
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T8-A2-2050",
+      "axis": "A2",
+      "basePresetId": "PS-T8",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T8-A2-20",
+        "AB-T8-A2-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T8-A2-20",
+          "targetL1": [
+            0.7,
+            0.2,
+            0.25,
+            0.25,
+            0
+          ],
+          "l2Overrides": {
+            "color.palette_id": "PAL-T8-2"
+          }
+        },
+        {
+          "id": "AB-T8-A2-50",
+          "targetL1": [
+            0.7,
+            0.5,
+            0.25,
+            0.25,
+            0
+          ],
+          "l2Overrides": {
+            "color.palette_id": "PAL-T8-1"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T8-A2-5080",
+      "axis": "A2",
+      "basePresetId": "PS-T8",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T8-A2-50",
+        "AB-T8-A2-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T8-A2-50",
+          "targetL1": [
+            0.7,
+            0.5,
+            0.25,
+            0.25,
+            0
+          ],
+          "l2Overrides": {
+            "color.palette_id": "PAL-T8-1"
+          }
+        },
+        {
+          "id": "AB-T8-A2-80",
+          "targetL1": [
+            0.7,
+            0.8,
+            0.25,
+            0.25,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP02",
+            "type.headline_weight": "500"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T8-A2-2080",
+      "axis": "A2",
+      "basePresetId": "PS-T8",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T8-A2-20",
+        "AB-T8-A2-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T8-A2-20",
+          "targetL1": [
+            0.7,
+            0.2,
+            0.25,
+            0.25,
+            0
+          ],
+          "l2Overrides": {
+            "color.palette_id": "PAL-T8-2"
+          }
+        },
+        {
+          "id": "AB-T8-A2-80",
+          "targetL1": [
+            0.7,
+            0.8,
+            0.25,
+            0.25,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP02",
+            "type.headline_weight": "500"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T8-A3-2050",
+      "axis": "A3",
+      "basePresetId": "PS-T8",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T8-A3-20",
+        "AB-T8-A3-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T8-A3-20",
+          "targetL1": [
+            0.7,
+            0.65,
+            0.2,
+            0.25,
+            0
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T8-A3-50",
+          "targetL1": [
+            0.7,
+            0.65,
+            0.5,
+            0.25,
+            0
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T8-A3-5080",
+      "axis": "A3",
+      "basePresetId": "PS-T8",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T8-A3-50",
+        "AB-T8-A3-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T8-A3-50",
+          "targetL1": [
+            0.7,
+            0.65,
+            0.5,
+            0.25,
+            0
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T8-A3-80",
+          "targetL1": [
+            0.7,
+            0.65,
+            0.8,
+            0.25,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP02",
+            "type.headline_weight": "500"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T8-A3-2080",
+      "axis": "A3",
+      "basePresetId": "PS-T8",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T8-A3-20",
+        "AB-T8-A3-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T8-A3-20",
+          "targetL1": [
+            0.7,
+            0.65,
+            0.2,
+            0.25,
+            0
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T8-A3-80",
+          "targetL1": [
+            0.7,
+            0.65,
+            0.8,
+            0.25,
+            0
+          ],
+          "l2Overrides": {
+            "type.pairing_id": "FP02",
+            "type.headline_weight": "500"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.45,
+        1,
+        0.55
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T8-A4-2050",
+      "axis": "A4",
+      "basePresetId": "PS-T8",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T8-A4-20",
+        "AB-T8-A4-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T8-A4-20",
+          "targetL1": [
+            0.7,
+            0.65,
+            0.25,
+            0.2,
+            0
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T8-A4-50",
+          "targetL1": [
+            0.7,
+            0.65,
+            0.25,
+            0.5,
+            0
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T8-A4-5080",
+      "axis": "A4",
+      "basePresetId": "PS-T8",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T8-A4-50",
+        "AB-T8-A4-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T8-A4-50",
+          "targetL1": [
+            0.7,
+            0.65,
+            0.25,
+            0.5,
+            0
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T8-A4-80",
+          "targetL1": [
+            0.7,
+            0.65,
+            0.25,
+            0.8,
+            0
+          ],
+          "l2Overrides": {
+            "space.density": "regular"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T8-A4-2080",
+      "axis": "A4",
+      "basePresetId": "PS-T8",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T8-A4-20",
+        "AB-T8-A4-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T8-A4-20",
+          "targetL1": [
+            0.7,
+            0.65,
+            0.25,
+            0.2,
+            0
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T8-A4-80",
+          "targetL1": [
+            0.7,
+            0.65,
+            0.25,
+            0.8,
+            0
+          ],
+          "l2Overrides": {
+            "space.density": "regular"
+          }
+        }
+      ],
+      "focusRegion": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T8-A5-2050",
+      "axis": "A5",
+      "basePresetId": "PS-T8",
+      "levelA": 0.2,
+      "levelB": 0.5,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T8-A5-20",
+        "AB-T8-A5-50"
+      ],
+      "images": [
+        {
+          "id": "AB-T8-A5-20",
+          "targetL1": [
+            0.7,
+            0.65,
+            0.25,
+            0.25,
+            0.2
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T8-A5-50",
+          "targetL1": [
+            0.7,
+            0.65,
+            0.25,
+            0.25,
+            0.5
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T8-A5-5080",
+      "axis": "A5",
+      "basePresetId": "PS-T8",
+      "levelA": 0.5,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T8-A5-50",
+        "AB-T8-A5-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T8-A5-50",
+          "targetL1": [
+            0.7,
+            0.65,
+            0.25,
+            0.25,
+            0.5
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T8-A5-80",
+          "targetL1": [
+            0.7,
+            0.65,
+            0.25,
+            0.25,
+            0.8
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    },
+    {
+      "id": "ABP-T8-A5-2080",
+      "axis": "A5",
+      "basePresetId": "PS-T8",
+      "levelA": 0.2,
+      "levelB": 0.8,
+      "templateId": "tpl-hero",
+      "pairImageIds": [
+        "AB-T8-A5-20",
+        "AB-T8-A5-80"
+      ],
+      "images": [
+        {
+          "id": "AB-T8-A5-20",
+          "targetL1": [
+            0.7,
+            0.65,
+            0.25,
+            0.25,
+            0.2
+          ],
+          "l2Overrides": {}
+        },
+        {
+          "id": "AB-T8-A5-80",
+          "targetL1": [
+            0.7,
+            0.65,
+            0.25,
+            0.25,
+            0.8
+          ],
+          "l2Overrides": {}
+        }
+      ],
+      "focusRegion": [
+        0,
+        0.55,
+        1,
+        0.45
+      ],
+      "promptKo": "어느 쪽이 더 마음에 드나요?",
+      "status": "draft"
+    }
+  ]
+}
