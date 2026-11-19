@@ -38,3 +38,10 @@
 - 선택: AC-00-01 = 01~09장 각각에 `대상` 열 값이 전부 P1|P2|P1,P2|운영자인 표가 1개 이상. AC-00-07 = 각 장에 끝 대괄호 태그 제목이 1개 이상이고 태그는 [P0]/[P2]/[P3]/[MVP 제외]로 시작
 - 영향 범위: scripts/qa/docs-check.ts(`qa:trace --docs`), BLK-004
 - 되돌리기 비용: 낮음
+
+## ASM-006 · M0 · conflict · 2026-11-19T14:40Z
+- 질문: 7.12.2 8d는 tuned 변경 커밋에 `diagnosis-tuned.json`·`tuning-log.json` 외 변경 0을 요구하지만, 9.5.6 규칙 1(entry 해시 = 파일)·규칙 3 예외를 지키려면 같은 커밋에서 `config/lock/locked-hashes.json`의 tuned entry 해시도 바꿔야 함
+- 근거 탐색: 07장 7.12.2 8단계, 09장 9.5.6 판정 규칙 1·3
+- 선택: 8d 검사에서 `config/lock/locked-hashes.json`도 허용. 그 커밋에서 tuned 외 entry가 바뀌면 guard:lock 규칙 3이 FAIL
+- 영향 범위: scripts/guard/stages/tuned.ts
+- 되돌리기 비용: 낮음

@@ -4,6 +4,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { z } from "zod";
 import { git, readJson, type Finding } from "../lib.js";
+import { LOCK_PATH } from "./lock.js";
 
 export const TUNED = "config/diagnosis-tuned.json";
 export const TUNING_LOG = "sim/reports/tuning-log.json";
@@ -112,7 +113,8 @@ export function tunedStage(): Finding[] {
       .filter(Boolean);
     if (!SIM_TUNE.test(subject))
       f(`${TUNED} 변경 커밋 ${c.slice(0, 7)}의 제목이 chore(sim-tune):이 아님`);
-    const extra = files.filter((p) => p !== TUNED && p !== TUNING_LOG);
+    // locked-hashes.json은 tuned entry 해시 갱신에 필요(ASM-006). 다른 entry 변경은 guard:lock 규칙 3이 잡는다
+    const extra = files.filter((p) => p !== TUNED && p !== TUNING_LOG && p !== LOCK_PATH);
     if (extra.length)
       f(`${TUNED} 변경 커밋 ${c.slice(0, 7)}에 다른 파일 변경: ${extra.join(", ")}`);
   }
