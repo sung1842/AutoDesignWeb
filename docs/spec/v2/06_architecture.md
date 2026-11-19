@@ -13,7 +13,7 @@
 | P5 | 모든 생성물은 재현 가능하다. 시안은 생성 당시 설정 스냅샷(모델·프롬프트·택소노미·렌더러 버전)을 갖는다. | `generation_jobs.config_snapshot` NOT NULL |
 | P6 | 비용은 호출 전에 막는다. 잡당·일일 상한을 초과하는 LLM 호출은 보내지 않는다(D-24). | 게이트웨이 예산 가드, `spend_daily` 예약 |
 | P7 | 외부 키가 없어도 전체 테스트가 통과한다(D-42). | `LLM_MODE=mock` 기본값, 로컬 Supabase |
-| P8 | 브라우저는 DB를 직접 질의하지 않는다. Supabase JS는 인증에만 쓴다. 모든 데이터는 API를 거친다. RLS는 2차 방어선으로 모든 테이블에 켠다. | 클라이언트 번들에 `.from(` 호출 0건 검사 |
+| P8 | 브라우저는 DB·PostgREST·Storage·`supabase-js`를 쓰지 않는다. 로그인(매직링크·Google·TOTP)도 서버 Route Handler가 `AuthPort`로 처리한다. 모든 데이터는 API를 거치고, 서버는 `DbPort`(6.1.2 R-5)로만 DB에 접근한다. RLS와 쓰기 권한 화이트리스트(6.3.5)는 2차 방어선으로 모든 테이블에 켠다(T-11). | 클라이언트 번들에 `@supabase/*` import 0건, 서버 코드 `.from(`·`.rpc(` 0건 guard(R-3) |
 | P9 | 추가 인프라를 만들지 않는다. MVP에서 Redis·별도 큐·별도 검색엔진을 쓰지 않는다. | 스택 표(6.14) 외 의존성 추가 시 결정 레지스터 갱신 필요 |
 
 ## 6.1 시스템 구성
@@ -43,14 +43,15 @@ flowchart LR
   EXT[("레퍼런스 사이트<br/>(수동 큐레이션 60개)")]
 
   UI -- "HTTPS JSON /api/*" --> WEB
-  UI -- "OAuth/매직링크" --> AU
+  UI -- "로그인 요청·콜백(/auth/*)<br/>httpOnly 세션 쿠키" --> WEB
+  WEB -- "AuthPort(서버 전용)" --> AU
   UI -. "공유·결과·후보: iframe src(서명)<br/>편집: iframe srcdoc(R-17)" .-> IF
   IF -- "GET /render/*" --> PRV
   IF -- "폰트·이미지 GET /assets/*" --> PRV
-  WEB -- "SQL(사용자 JWT / service role)" --> DB
+  WEB -- "SQL(DbPort: withUser / withAnon / withService)" --> DB
   WEB -- "pg-boss send" --> DB
   WEB -- "서명 URL 발급" --> ST
-  PRV -- "SQL 읽기" --> DB
+  PRV -- "SQL 읽기(DbPort.withService)" --> DB
   WK -- "pg-boss fetch/complete" --> DB
   WK -- "업로드" --> ST
   WK -- "Vercel AI SDK" --> LLM
@@ -64,13 +65,13 @@ flowchart LR
 
 | 구성요소 | 배포 단위 | 책임 | 금지(경계) | 보유 비밀 |
 |---|---|---|---|---|
-| **apps/web** (WEB_ORIGIN) | Vercel 프로젝트 1개 | 서비스 UI, REST API(Route Handlers), 인증 콜백, 익명 세션 쿠키, 진단 엔진 실행(동기), 프로젝트·잡 생성과 큐 투입, 서명 URL 발급, 버전 저장 시 서버 재컴파일·동기 게이트 재검사(R-17), 관리자 화면. 클라이언트 번들에서 isomorphic 컴파일러(`@tastefit/renderer`)와 `evaluateTokens`(04장)로 편집 미리보기 생성(01장 D-0105) | Playwright·LLM SDK import, 10초 초과 동기 작업, LLM 호출, 외부 URL fetch(Turnstile 검증·Supabase 제외) | Supabase service role, DB URL(pooled), PREVIEW_SIGNING_SECRET, IP_HMAC_KEY |
+| **apps/web** (WEB_ORIGIN) | Vercel 프로젝트 1개 | 서비스 UI, REST API(Route Handlers), 로그인 요청·인증 콜백·TOTP 검증(`AuthPort`, httpOnly 세션 쿠키 발급)과 콜백마다 `provision_user` 호출(T-12, 6.5.4), 익명 세션 쿠키, 모든 DB 접근을 `DbPort`로(R-5), 진단 엔진 실행(동기), 프로젝트·잡 생성과 큐 투입, 서명 URL 발급, 버전 저장 시 서버 재컴파일·동기 게이트 재검사(R-17), 관리자 화면. 클라이언트 번들에서 isomorphic 컴파일러(`@tastefit/renderer`)와 `evaluateTokens`(04장)로 편집 미리보기 생성(01장 D-0105) | Playwright·LLM SDK import, 10초 초과 동기 작업, LLM 호출, 외부 URL fetch(Turnstile 검증·Supabase 제외), 클라이언트 컴포넌트의 `@supabase/*` import, 역할 없는 DB 쿼리(R-5) | Supabase service role, `SUPABASE_ANON_KEY`(서버 전용), DB URL(pooled), PREVIEW_SIGNING_SECRET, IP_HMAC_KEY, CONSENT_HASH_KEY |
 | **preview 호스트** (PREVIEW_ORIGIN) | web과 같은 배포, 다른 등록 도메인. 미들웨어가 Host로 분기 | 공유·결과·후보 미리보기: 서명 검증 → DB에서 레이아웃 트리·토큰 읽기 → `@tastefit/renderer`로 정적 HTML 컴파일 → 엄격 CSP 헤더와 함께 응답. 이미지·아이콘을 `/assets/<sha256>.<ext>`로, 페이지 서브셋 폰트를 `/fonts/*`(6.6.1)로 서빙 | `/render/*`, `/assets/*`, `/fonts/*`, `/healthz` 외 모든 경로 404. 쿠키 읽기·쓰기 금지. 응답에 `<script>` 0개 | web과 동일 런타임(별도 비밀 없음) |
 | **apps/worker** | Fly.io 앱 1개(머신 1대 이상) | pg-boss 컨슈머: `generate`, `render`, `export`, `account-delete`, `retention`(크론), `alerts`(크론), `reconcile`(크론), `survey-build`(로컬 환경 전용). LLM 게이트웨이 호출, Chromium 렌더·게이트 측정·스크린샷, zip 생성 | 외부 URL 탐색(라우트 차단), 공개 HTTP 서비스 제공(내부 `/healthz`만), 사용자 요청 직접 수신 | Supabase service role, DB URL(direct), LLM API 키 |
 | **ingest CLI** (`pnpm ingest`) | 배포하지 않음. 관리자 로컬 Docker(worker 이미지 재사용) | 레퍼런스 URL 캡처·특징 추출·비전 태깅·pHash·스크린샷 업로드(→05장 5.4~5.6, 08장 8.1.4). `sources.status ∈ {manual_only, blocked, excluded}`·`excluded_domains`에는 요청 0 | 운영 서버에 설치·상시 실행 금지 | 실행 시 주입하는 service role 키, `ref_tagger` 역할 LLM 키(지출 상한 `REF_TAGGING_BUDGET_USD`) |
 | **빌드 스크립트** | 관리자 로컬/CI | `survey:build`(설문 자극물 사전 렌더, D-14), `eval:golden`·`eval:compare`(6.15, →07장), `db:seed`(택소노미 시드, →09장) | — | service role(로컬 실행 시) |
-| **Postgres** | Supabase | 앱 데이터, RLS, pg-boss 큐(`pgboss` 스키마), 레이트리밋·멱등성·예산 원장 | 앱 외부 직접 접속(관리자 SQL 콘솔 제외) | — |
-| **Supabase Auth** | Supabase | 매직링크, Google OAuth, Turnstile 캡차(로그인 요청) | — | Google OAuth 클라이언트 비밀(대시보드 설정) |
+| **Postgres** | Supabase | 앱 데이터, RLS·쓰기 권한 화이트리스트(6.3.5), pg-boss 큐(`pgboss` 스키마), 레이트리밋·멱등성·예산 원장 | 앱 외부 직접 접속(관리자 SQL 콘솔 제외). PostgREST(`/rest/v1`)는 앱이 쓰지 않는다(브라우저·서버 모두, T-11) | — |
+| **Supabase Auth** | Supabase | 매직링크, Google OAuth, TOTP, Turnstile 캡차(로그인 요청). 호출 주체는 web 서버의 `AuthPort` supabase 드라이버뿐이다(브라우저 직접 호출 없음) | — | Google OAuth 클라이언트 비밀(대시보드 설정) |
 | **Supabase Storage** | Supabase | 설문 이미지·렌더 결과·내보내기·레퍼런스 스크린샷·LLM 원문 저장(6.6) | private 버킷 public 전환 금지 | — |
 | **packages/llm** | 라이브러리 | 유일한 LLM 진입점. models.yaml 로드, 승인 공급자 검증, 예산 가드, 폴백, 로깅, MockProvider | worker·ingest·eval 외에서 import 금지 | — |
 | **packages/renderer** | 라이브러리(순수) | PageSchema + DesignTokens → 정적 HTML/CSS 문자열(내보내기 3종은 `@tastefit/exporter`가 이 출력으로 조립, →04장) | DOM·네트워크·파일 I/O, `tailwind`/`shadcn`/`lucide-react` 런타임 의존(D-28), `dangerouslySetInnerHTML` | — |
@@ -81,7 +82,8 @@ flowchart LR
 |---|---|---|
 | R-1 | `ai`, `@ai-sdk/*`, `@tastefit/llm`은 apps/worker, `scripts/eval-*`, ingest CLI에서만 import한다(apps/web 금지: 웹에는 LLM 키가 없다) | `scripts/guard/deps.ts` |
 | R-2 | 신규 패키지 `@tastefit/api-contract`(API 요청·응답 zod, 오류 코드 enum, 이벤트 레지스트리 zod)를 둔다. apps/web·e2e·tests가 공유한다. 의존 허용 zod, layout-schema(타입만). 의존 금지 db, llm, renderer (D-0601) | 동일 |
-| R-3 | 브라우저 번들에서 `@supabase/supabase-js`는 `auth.*` 호출만 한다. `.from(`·`.rpc(`·`.storage` 호출 0건 | 빌드 산출물 정적 검사 |
+| R-3 | (T-11, 옛 "브라우저 번들의 `supabase-js`는 `auth.*`만" → T-11로 대체) 브라우저 번들에 `@supabase/*` 모듈 0개. `supabase-js` import는 `AuthPort`·`StoragePort`의 supabase 드라이버 파일(`packages/*/src/drivers/supabase*`, 패키지 배치 원천 09장 9.1.3) 안에서만 허용. `rg "\.from\(\|\.rpc\(" apps/web apps/worker packages --glob '!packages/*/src/drivers/supabase*'`(Kysely `selectFrom` 등은 해당 없음) 결과 0건 | `scripts/guard/deps.ts` + 빌드 산출물 정적 검사(AC-06-59) |
+| R-5 | **`DbPort`**(`@tastefit/db`, 두 프로파일 공통, T-11). web·worker·스크립트의 모든 앱 쿼리는 아래 셋 중 하나 안에서만 실행한다. 역할 없는 쿼리를 만드는 API는 export하지 않는다(풀·Kysely 인스턴스 비공개).<br/>· `withUser(uid, aal, fn)` = `BEGIN; SET LOCAL ROLE authenticated; SELECT set_config('request.jwt.claims', '{"sub":<uid>,"role":"authenticated","aal":<aal>}', true); fn(tx); COMMIT`<br/>· `withAnon(fn)` = 같은 방식, `SET LOCAL ROLE anon`, 클레임 `{"role":"anon"}`<br/>· `withService(fn)` = `BEGIN; SET LOCAL ROLE service_role; SELECT set_config('request.jwt.claims', '{"role":"service_role"}', true); fn(tx); COMMIT`<br/>드라이버 **Kysely + `pg`**, 타입은 **kysely-codegen**(`pnpm db:types`가 `DATABASE_URL_DIRECT`에서 `packages/db/src/types.gen.ts` 생성, Docker 불필요. `supabase gen types`는 쓰지 않는다). 접속 사용자: native = shim의 `tastefit_app`(LOGIN, NOBYPASSRLS, `anon`·`authenticated`·`service_role` 멤버. shim의 `service_role`은 BYPASSRLS), supabase 프로파일·staging·prod = Supabase 기본 접속 사용자(Supavisor 트랜잭션 모드에서도 `SET LOCAL`·`set_config(…, true)`는 트랜잭션 안에서 유효). pg-boss는 자체 연결을 쓰되 `pgboss` 스키마만 다룬다 | `scripts/guard/deps.ts`(`pg`·`kysely` import는 `packages/db`만), AC-06-03·03b·59 |
 | R-4 | `@tastefit/renderer`와 `evaluateTokens`는 isomorphic이어야 한다(Node·브라우저 공용, `fs`·`path`·네트워크 import 0). apps/web 클라이언트 컴포넌트는 이 둘만 생성 계열 패키지에서 import할 수 있다(R-17) | 번들 검사 + 브라우저 단위 테스트 |
 
 ### 6.1.3 구성요소 × 데이터 항목 흐름표 (S-26, LG2-03)
@@ -273,12 +275,12 @@ SLO(R-25, 07장 M15): 첫 시안 카드 노출(첫 mockups.created_at − queued
 
 | 단계 | 동작 | 멱등 근거 |
 |---|---|---|
-| ① | `users.status='deleting'`, 세션 폐기(`auth.admin.signOut(uid,'global')`), 소유 공유 링크 비공개 | 같은 값 재설정 |
+| ① | `users.status='deleting'`, 세션 폐기(`AuthPort.adminSignOutAll(uid)`), 소유 공유 링크 비공개 | 같은 값 재설정 |
 | ② | `llm_calls where owner_id=:uid`의 `llm-payloads` 객체 삭제(이 단계는 ⑥보다 먼저다. 그 뒤에는 `owner_id`가 null이 되어 객체를 찾을 수 없다) | 없는 객체 삭제는 성공 처리 |
 | ③ | `renders/<uid>/`·`exports/<uid>/` 객체 삭제 | 같음 |
 | ④ | `consents where user_id=:uid` → `consents_archive(user_hash, doc_type, doc_version, agreed, agreed_at)`로 복사 후 원본 삭제(한 트랜잭션) | 원본이 없으면 건너뜀 |
 | ⑤ | `users.status ∈ {gen_suspended, suspended}`였으면 `sanctions(email_hash, level, until, reason_code)` upsert. `until`은 남은 정지 기간, 최대 1년 | upsert |
-| ⑥ | `auth.admin.deleteUser(uid)` → `users`·소유 행 cascade | 없는 사용자면 성공 처리 |
+| ⑥ | `AuthPort.adminDeleteUser(uid)`(→ `auth.users` 행 삭제) → `users`·소유 행 cascade | 없는 사용자면 성공 처리 |
 | ⑦ | `admin_audit_logs(action='account_deleted', target_type='user', target_id=user_hash)` | `target_id` 기준 중복 삽입 방지(존재 확인 후 삽입) |
 
 - 재가입: auth.users INSERT 트리거가 `sanctions`에 같은 `email_hash`가 있고 `until > now()`면 `users.status`를 그 `level`로 만든다. 이 사용자의 생성 API는 403 `ACCOUNT_SUSPENDED`다.
@@ -1097,7 +1099,7 @@ create table dev_mail_outbox (                        -- AuthPort·MailPort loca
 
 ### 6.3.4 서버 함수(트랜잭션 경계)
 
-모든 함수는 `security definer`, `set search_path = public`이며 `service_role`만 `EXECUTE` 권한을 가진다. web은 사용자 인증을 확인한 뒤 `p_user_id`를 넘겨 호출한다.
+모든 함수는 `security definer`, `set search_path = public`이며 `service_role`만 `EXECUTE` 권한을 가진다(`anon`·`authenticated`·`public`에서 `revoke execute`). web은 사용자 인증을 확인한 뒤 `DbPort.withService`(6.1.2 R-5) 안에서 `p_user_id`를 넘겨 호출한다.
 
 | 함수 | 입력 | 처리(한 트랜잭션) | 실패 반환 |
 |---|---|---|---|
@@ -1112,15 +1114,18 @@ create table dev_mail_outbox (                        -- AuthPort·MailPort loca
 
 ### 6.3.5 RLS 정책
 
-모든 `public` 테이블에 `alter table … enable row level security; alter table … force row level security;`를 적용한다. 정책이 없는 테이블은 `anon`·`authenticated` 역할에 0행이다. web 서버는 (a) 사용자 JWT를 담은 서버 클라이언트(`authenticated`)로 자기 소유 데이터를 읽고, (b) 그 외(익명 진단, 큐 투입, 관리자, 워커)는 service role로 처리한다.
+모든 `public` 테이블에 `alter table … enable row level security; alter table … force row level security;`를 적용한다. 정책이 없는 테이블은 `anon`·`authenticated` 역할에 0행이다. 브라우저는 DB에 닿지 않는다(P8). web 서버는 `DbPort`(6.1.2 R-5)로만 접근한다. (a) 로그인 사용자의 자기 소유 데이터 읽기와 아래 화이트리스트 쓰기는 `withUser(uid, aal)`(`authenticated`), (b) 공개 읽기는 `withAnon`, (c) 그 외 모든 쓰기(익명 진단, 프로젝트·버전·공유, 큐 투입, 관리자, 워커)는 `withService` 또는 6.3.4 security definer 함수로 한다(T-11).
 
-| 테이블 | `authenticated` SELECT | INSERT/UPDATE/DELETE | `anon` | 비고 |
+**쓰기 권한 원칙(T-11, LG3-01)**: `authenticated` 역할의 쓰기는 **`users.display_name` UPDATE와 `mockups(feedback, feedback_at, selected_at)` UPDATE 두 가지뿐**이다. 둘 다 컬럼 권한(`grant update (…) on … to authenticated`)과 소유 정책으로 좁힌다. `anon` 역할의 쓰기 권한·정책은 0개다. 이 표 밖의 `authenticated`/`anon` INSERT·UPDATE·DELETE 정책, 테이블 쓰기 권한, 컬럼 쓰기 권한은 두지 않는다(마이그레이션은 `revoke insert, update, delete on all tables in schema public from anon, authenticated` 후 위 두 컬럼 권한만 `grant`). 마스킹·고위험 브랜드 차단·G-13·공유 게이트·신고 숨김은 서버 API 안에서만 실행되므로, 이 원칙이 그 검사를 우회할 경로를 닫는다.
+
+| 테이블 | `authenticated` SELECT | `authenticated` 쓰기 | `anon` | 비고 |
 |---|---|---|---|---|
-| users | `id = auth.uid()` | UPDATE `display_name`만(컬럼 권한) | 없음 | role·quota 변경은 service role(관리자 API) |
-| projects | `owner_id = auth.uid()` | INSERT·UPDATE·DELETE `owner_id = auth.uid()`(INSERT는 `create_project()` 경유 권장) | 없음 | |
-| generation_jobs, candidates, mockups, mockup_versions, exports | `owner_id = auth.uid()` | mockups UPDATE(`feedback*`, `selected_at`)·mockup_versions INSERT만 `owner_id = auth.uid()`. 나머지 쓰기는 service role | 없음 | |
-| llm_calls, quota_ledger | `owner_id`/`user_id = auth.uid()`(사용량 표시용) | service role | 없음 | |
-| share_links | `owner_user_id = auth.uid()` | `owner_user_id = auth.uid()` | 없음 | 공개 조회는 서버가 service role로 `is_public and hidden_at is null`만 |
+| users | `id = auth.uid()` | UPDATE `display_name`만(컬럼 권한 + `id = auth.uid()`) | 없음 | `role`·`status`·quota 변경은 `withService`(관리자 API, `provision_user` 6.5.4) |
+| projects | `owner_id = auth.uid()` | 없음 | 없음 | 생성 = `POST /api/projects` → `create_project()`(6.3.4), 수정·삭제 = 서버 API → `withService`. 옛 "authenticated INSERT·UPDATE·DELETE 허용" → T-11로 대체 |
+| generation_jobs, candidates, mockup_versions, exports | `owner_id = auth.uid()` | 없음 | 없음 | `mockup_versions` 생성 = `POST /api/mockups/:id/versions` → `withService`(서버 재컴파일·게이트, R-17). 옛 "mockup_versions INSERT 허용" → T-11로 대체 |
+| mockups | `owner_id = auth.uid()` | UPDATE `feedback`·`feedback_at`·`selected_at`만(컬럼 권한 + `owner_id = auth.uid()`) | 없음 | `current_version_id`·`adopted_*` 등 나머지 컬럼은 `withService`(`mark_adopted()` 6.3.4) |
+| llm_calls, quota_ledger | `owner_id`/`user_id = auth.uid()`(사용량 표시용) | 없음 | 없음 | 쓰기 = `withService` |
+| share_links | `owner_user_id = auth.uid()` | 없음 | 없음 | 생성·해제 = `POST/DELETE /api/share` → `withService`(게이트 통과 버전만). 공개 조회는 서버가 `withService`로 `is_public and hidden_at is null`만. 옛 "owner_user_id = auth.uid() 쓰기 허용" → T-11로 대체 |
 | diagnosis_sessions, diagnosis_results | `user_id = auth.uid()`(결과는 세션 조인) | service role | 없음 | 익명 소유 확인은 서버가 `anon_id` 쿠키로(AC-06-12) |
 | survey_answers, impressions, brief_drafts | 없음 | service role | 없음 | |
 | consents | `user_id = auth.uid()` | service role | 없음 | |
@@ -1131,13 +1136,25 @@ create table dev_mail_outbox (                        -- AuthPort·MailPort loca
 | events, rate_limits, idempotency_keys, feature_flags, blocked_brands, reports, support_tickets, eval_*, worker_heartbeats, alert_state, identity_links, invites | 없음 | service role | 없음 | |
 | admin_audit_logs | 없음 | service role INSERT만. `UPDATE`·`DELETE` 권한을 service role에서도 `revoke`하고 트리거로 거부 | 없음 | append-only(00장 AC-00-20) |
 
-**Storage 정책**: 모든 private 버킷은 `storage.objects`에 `anon`·`authenticated` 정책을 두지 않는다(service role만). 사용자 접근은 서버가 발급한 서명 URL로만 한다(6.6).
+위 표에서 "service role"은 `authenticated`·`anon` 쓰기 0, 쓰기는 `withService`(또는 6.3.4 함수)만이라는 뜻이다.
+
+**심층 방어 트리거(T-11, LG3-01 3번)**: 권한 실수로 위 원칙이 풀려도 핵심 게이트 컬럼이 지켜지도록 트리거를 둔다.
+
+| 트리거 | 대상 | 동작 |
+|---|---|---|
+| `mockup_versions_service_only` | `mockup_versions` BEFORE INSERT | `current_user`가 `service_role`이 아니면(즉 `anon`·`authenticated`이면) `raise exception 'mockup_versions insert requires service_role' using errcode = '42501'`. 6.3.4 security definer 함수는 버전을 만들지 않으므로 예외 목록이 없다 |
+| `share_links_hidden_service_only` | `share_links` BEFORE UPDATE | `hidden_at`·`hidden_reason`이 바뀌고(`IS DISTINCT FROM`) `current_user ≠ service_role`이면 같은 예외 |
+
+**권한 스냅샷(T-11, LG3-01 4번)**: `pnpm db:grants-snapshot`이 `pg_policies`(public 스키마), `information_schema.role_table_grants`, `information_schema.column_privileges`에서 `anon`·`authenticated`의 INSERT·UPDATE·DELETE 정책·권한을 덤프하고 `packages/db/grants.snapshot.json`(이 절 표가 원천)과 비교한다. 허용 목록 밖 항목이 1개라도 있으면 FAIL이고 `verify:m1`이 실패한다(09장 guard). 스냅샷 파일 갱신은 이 절을 고치는 결정과 같은 커밋에서만 한다.
+
+**Storage 정책**: 모든 private 버킷은 `storage.objects`에 `anon`·`authenticated` 정책을 두지 않는다(service role만). 사용자 접근은 서버가 `StoragePort.signedUrl`로 발급한 서명 URL로만 한다(6.6). public 버킷(`survey-assets`)은 `StoragePort.publicUrl(bucket, path)`(6.13.1)로 만든 URL로 읽는다. 브라우저는 Storage API를 직접 호출하지 않는다(P8).
 
 ### 6.3.6 수용 기준(데이터 모델)
 
 - **AC-06-01**: `STACK_PROFILE=supabase`: 빈 DB에 마이그레이션 전체 적용 후 `supabase db reset` 2회 연속 성공, `supabase db lint` 오류 0. `STACK_PROFILE=native`(S-01): shim 위에 빈 DB(drop/create) 적용 2회가 `psql -v ON_ERROR_STOP=1`로 성공. `supabase db lint`는 `needs_ci`(`supabase-db-lint`).
 - **AC-06-02**: `pg_tables where schemaname='public'`의 모든 테이블이 `rowsecurity = true`이고 `forcerowsecurity = true`이다(테스트가 목록을 동적으로 조회).
-- **AC-06-03**: RLS 테스트 — 사용자 B의 JWT로 사용자 A의 projects·generation_jobs·candidates·mockups·mockup_versions·exports·share_links를 조회하면 각 0행, `anon` 키로 diagnosis_sessions·survey_answers·brief_drafts·reference_sites를 조회하면 0행.
+- **AC-06-03**: RLS 테스트 — `DbPort.withUser(B)`로 사용자 A의 projects·generation_jobs·candidates·mockups·mockup_versions·exports·share_links를 조회하면 각 0행, `DbPort.withAnon`으로 diagnosis_sessions·survey_answers·brief_drafts·reference_sites를 조회하면 0행. 같은 테스트 코드가 native(shim, 접속 사용자 `tastefit_app`)와 supabase 프로파일(CI)에서 수정 없이 통과한다. supabase 프로파일 CI는 같은 조회를 사용자 B의 JWT·anon 키로 REST(`/rest/v1`)에 직접 보내서도 0행을 확인한다(needs_ci `supabase-rest-rls`, T-11 ⑥).
+- **AC-06-03b**(T-11, LG3-01): 쓰기 화이트리스트 테스트 — 사용자 A로 ① `projects` INSERT·UPDATE ② `mockup_versions` INSERT(`gate_status='passed'`) ③ `share_links` INSERT와 `hidden_at=null` UPDATE ④ `mockups.current_version_id` UPDATE를 시도하면 네 경우 모두 권한 오류(`42501`)이고 DB 변경은 0행이다. 같은 사용자의 `mockups.feedback` UPDATE와 `users.display_name` UPDATE는 성공한다. `anon`의 INSERT·UPDATE·DELETE는 모든 public 테이블에서 실패한다. native는 `DbPort.withUser(A)`·`withAnon`(즉 `SET LOCAL ROLE` 후 SQL)로, supabase 프로파일 CI는 추가로 A의 JWT·anon 키로 REST 직접 호출로 검사한다(needs_ci `supabase-rest-rls`). 심층 방어 트리거 확인: 권한을 임시로 `grant insert on mockup_versions to authenticated`한 테스트 트랜잭션에서도 ②는 트리거 예외로 실패한다(롤백). `pnpm db:grants-snapshot`이 6.3.5 허용 목록과 같고, 목록 밖 정책 1개를 추가한 픽스처 마이그레이션에서는 FAIL이다.
 - **AC-06-04**: `is_l1` CHECK — 키가 4개이거나 `A1` 키를 쓰거나 값이 1.01인 벡터를 `survey_items.x_card`에 넣으면 INSERT가 실패한다. 데스크톱 자산 `bytes=143361`인 자극물 INSERT도 실패한다(R-07).
 - **AC-06-05**: 같은 사용자가 `queued` 잡이 있는 상태에서 두 번째 잡을 INSERT하면 `gen_one_active_per_user` 위반으로 실패한다.
 - **AC-06-06**: `admin_audit_logs`에 대한 UPDATE·DELETE는 service role에서도 실패한다.
@@ -1154,7 +1171,7 @@ create table dev_mail_outbox (                        -- AuthPort·MailPort loca
 | 버전 | 단일 클라이언트이므로 경로 버전 없음(`/api/*`). 응답 헤더 `X-App-Version: <git short sha>` |
 | 요청 ID | 클라이언트가 보내지 않으면 서버가 UUID v7 생성. 응답 헤더 `X-Request-Id`로 반환, 로그·잡에 전파 |
 | CSRF | 상태 변경 메서드(POST·PATCH·DELETE)는 ① `Origin` 헤더 = `WEB_ORIGIN` ② `Content-Type: application/json` 둘 다 요구. 불일치 403 `FORBIDDEN_ORIGIN`. 쿠키는 `SameSite=Lax` |
-| 인증 | Supabase SSR 쿠키 세션(`@supabase/ssr`). 표 `인증` 열: `anon`=익명 쿠키만 필요, `user`=로그인, `consent`=로그인 + 현재 버전 `terms`·`age_14` 동의(08장 8.7.4), `admin`=`users.role='admin'` |
+| 인증 | 서버가 `AuthPort`(6.13.1)로 발급·갱신하는 httpOnly 세션 쿠키(T-11. 옛 `@supabase/ssr` 브라우저 세션 → T-11로 대체). 표 `인증` 열: `anon`=익명 쿠키만 필요, `user`=로그인, `consent`=로그인 + 현재 버전 `terms`·`age_14` 동의(08장 8.7.4), `admin`=6.5.4 관리자 권한(`users.role='admin'` ∧ 현재 `ADMIN_EMAILS` ∧ `aal2`, T-12) |
 | 페이지네이션 | 커서 기반 `?cursor=<opaque>&limit=<1..50, 기본 20>` → `{items, nextCursor: string|null}` |
 | 캐시 | 사용자 데이터 응답은 `Cache-Control: private, no-store`. 공개 정적 데이터는 6.7 |
 | 존재 은닉 | 남의 리소스·관리자 경로는 403 대신 404 `NOT_FOUND` |
@@ -1390,12 +1407,12 @@ MockupCard = { mockupId, variant: 'v_true'|'v_fit'|'v_bal', isFallback, harmonyS
 
 | 항목 | 값 |
 |---|---|
-| 방식 | Supabase Auth 이메일 매직링크 + Google OAuth(D-41), PKCE. 비밀번호 로그인 비활성 |
+| 방식 | Supabase Auth 이메일 매직링크 + Google OAuth(D-41), PKCE. 비밀번호 로그인 비활성. 로그인 요청·콜백·TOTP는 모두 web 서버 Route Handler가 `AuthPort`로 처리한다. 브라우저는 Supabase Auth를 직접 호출하지 않는다(T-11 ①) |
 | 봇 방어 | Supabase Auth 캡차 = Cloudflare Turnstile(매직링크 요청에 필수, 08장 D-0810). IP당 가입·링크 요청 10회/일(`rl_hit`) |
 | 매직링크 메일 | Supabase 커스텀 SMTP = Resend(미국, `legal/processors.yaml`의 `email-sender` 확정값, R-29). 링크 유효 1시간, 1회용 |
-| 세션 | `@supabase/ssr` 쿠키(액세스 1시간, 리프레시 회전), 미들웨어에서 갱신 |
+| 세션 | 서버가 설정하는 httpOnly 쿠키(`HttpOnly; Secure; SameSite=Lax; Path=/`, 액세스 1시간, 리프레시 회전). 미들웨어가 `AuthPort.getUser`로 검증·갱신하고 `{uid, aal}`을 `DbPort.withUser`에 넘긴다. 브라우저 JS는 토큰을 읽을 수 없다(T-11) |
 | Google 범위 | `openid email`을 요청하되, 공급자가 보낸 프로필 필드(이름·사진)는 `minimize_auth_metadata` 트리거가 저장 직후 지운다(6.3.3, S-25, 08장 8.7.1) |
-| 첫 로그인 | `users` 행 생성 → `/onboarding/consent`(08장 8.7.4 B) → 거부 시 `auth.admin.deleteUser` |
+| 첫 로그인 | 콜백마다 `provision_user`(6.5.4, T-12)로 `users` 행 upsert → 첫 로그인이면 `/onboarding/consent`(08장 8.7.4 B) → 거부 시 `AuthPort.adminDeleteUser(uid)` |
 | 가입 차단 | `SIGNUP_ENABLED=false`면 콜백에서 신규 사용자(`users.created_at` < 10초)를 삭제하고 `/login?error=SIGNUP_DISABLED`로 이동 |
 | 로그아웃 | Supabase 세션 폐기 + `anon_id` 쿠키 **재발급**(로그아웃 후 익명 진단이 이전 계정에 귀속되지 않게) |
 | 테스트 | 테스트 전용 로그인 라우트를 두지 않는다. E2E는 같은 매직링크 흐름으로 로그인한다. supabase 프로파일은 Mailpit, native 프로파일은 `AuthPort` local 드라이버가 기록한 `dev_mail_outbox`를 테스트 픽스처 함수(HTTP 라우트 아님)로 읽는다(S-01, 09장 D-0909). 07장 TC-S-09는 "라우트 부재"로 통과 |
@@ -1421,8 +1438,12 @@ MockupCard = { mockupId, variant: 'v_true'|'v_fit'|'v_bal', isFallback, harmonyS
 
 ### 6.5.4 관리자
 
-- `ADMIN_EMAILS`(쉼표 구분)에 있는 이메일로 첫 로그인하면 `users.role='admin'`. 목록에서 빠져도 자동 강등하지 않는다(ADM-06에서 수동).
-- 미들웨어(서버측 `role` 조회, 60초 캐시 금지)와 Route Handler 양쪽에서 검사하고 비관리자는 404(00장 AC-00-19).
+- **권한 원천(T-12, TL3-02)**: 관리자 권한 = `users.role='admin'` ∧ 요청 시점의 `ADMIN_EMAILS`(쉼표 구분, 소문자·trim 비교)에 그 계정 이메일 포함 ∧ 세션 `aal2`. 셋 중 하나라도 거짓이면 비관리자다. 이 문장이 유일한 원천이고 6.11.2·6.4.1은 이것을 참조한다.
+- **`provision_user`**: 로그인 콜백(supabase `/auth/callback`, local `AuthPort.exchange`)이 성공할 때마다 web이 `DbPort.withService`로 `provision_user(p_user_id, p_is_admin, p_email_hash)`(security definer, `service_role`만 EXECUTE, DDL은 6.3.3)를 호출한다. 한 트랜잭션에서 ① `users` upsert ② `role`을 `p_is_admin`(= 현재 `ADMIN_EMAILS` 포함 여부)에 맞춰 승격·강등 ③ `sanctions`·`abuse_holds`에서 `email_hash` 일치·미만료 행을 찾아 `users.status` 승계를 처리한다. `p_email_hash = HMAC-SHA256(lower(trim(email)), CONSENT_HASH_KEY)`는 web이 계산한다. 키는 DB(GUC·테이블·Vault)에 두지 않는다.
+- `auth.users` 트리거는 `users` 생성·관리자 판정·제재 승계를 하지 않는다. `minimize_auth_metadata`(6.3.3, S-25)만 유지한다.
+- 관리자 역할을 화면에서 수동으로 승격·강등하는 기능은 두지 않는다(옛 6.5.4 수동 승격 규칙·ADM-06 수동 승격 → T-12로 대체). 승격·해제는 `ADMIN_EMAILS` 변경으로만 하고, 다음 로그인의 `provision_user`가 `users.role`을 맞춘다. 그 전이라도 요청 시점 검사 때문에 목록에서 빠진 계정은 즉시 비관리자다.
+- 미들웨어(서버측 `role` 조회, 캐시 금지)와 Route Handler 양쪽에서 위 세 조건을 검사하고 비관리자는 404(00장 AC-00-19).
+- **AC-06-60**(T-12, TL3-02): ① 마이그레이션 SQL 전체에 `ADMIN_EMAILS`·`CONSENT_HASH_KEY`·`current_setting('app.` 문자열이 0건이다. ② 정지 계정 탈퇴 → 같은 이메일 재가입(콜백 → `provision_user`) → 생성 API 403 `ACCOUNT_SUSPENDED`가 native·supabase 양쪽에서 통과한다. ③ `users.role='admin'`이지만 현재 `ADMIN_EMAILS`에 없는 계정의 `aal2` 세션으로 `/api/admin/users` 요청 → 404, 그 계정이 다시 로그인하면 `users.role='user'`. ④ `ADMIN_EMAILS`에 있는 계정의 첫 로그인 후 `users.role='admin'`이고 `aal1`에서는 404. ⑤ `rg -P "자동 강등하지\s*않" docs/spec/v2/06_architecture.md` 결과가 0건이다(옛 강등 생략 규칙 잔존 검사).
 
 ### 6.5.5 수용 기준(인증)
 
@@ -1797,7 +1818,7 @@ async function callLlm(req) {
 
 **관리자 접근 통제(S-28, LG2-06)**:
 - `/admin/*`·`/api/admin/*`는 `aal2` 세션만 허용한다. `aal1`이면 API는 404(존재 은닉, AC-00-19), 화면은 `/admin/mfa`로 보낸다. supabase 프로파일은 Supabase Auth MFA(TOTP), native는 `AuthPort` local의 otplib TOTP로 시험한다(실제 Supabase MFA는 `gotrue-mfa` needs_ci).
-- 관리자 역할은 매 요청마다 `ADMIN_EMAILS`를 다시 확인한다. 목록에서 빠지면 즉시 404다(자동 강등, `users.role`은 다음 로그인 때 갱신).
+- 관리자 권한은 6.5.4 권한 원천(`users.role='admin'` ∧ 요청 시점 `ADMIN_EMAILS` ∧ `aal2`, T-12)을 매 요청 검사한다. `ADMIN_EMAILS`에서 빠지면 다음 요청부터 404이고, `users.role`은 다음 로그인의 `provision_user`가 `user`로 바꾼다.
 - 개인정보를 돌려주는 관리자 GET(`users`, `support`, `reports`, `rights-requests`, `jobs/:id`, 서명 URL 발급)은 `admin_audit_logs(action='pii_view', target_type, target_id)`를 1행 남긴다.
 - `admin_audit_logs.before/after`에는 PII 키(`email`, `brand`, `details`, `requester_email`)를 넣지 않는다. 저장 전 6.12.1 리댁션 함수를 거친다.
 - 접속기록(감사 로그)은 기본 1년 보관하고 월 1회 점검한다(09장 운영 체크리스트). 보관 기간 1년/2년의 적정성은 사람 확인(08장 8.14 Q16). 콘솔 MFA·service role 키 보관은 08장 8.15 수동 항목이다.
@@ -1864,13 +1885,15 @@ X-Robots-Tag: noindex, nofollow
 **서비스(WEB_ORIGIN) 응답 헤더**(Next 미들웨어, 요청마다 nonce):
 
 ```
-Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-{nonce}' 'strict-dynamic' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: {SUPABASE_URL}; font-src 'self'; connect-src 'self' {SUPABASE_URL}; frame-src {PREVIEW_ORIGIN} https://challenges.cloudflare.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests
+Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-{nonce}' 'strict-dynamic' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: {STORAGE_PUBLIC_ORIGIN}; font-src 'self'; connect-src 'self'; frame-src {PREVIEW_ORIGIN} https://challenges.cloudflare.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 X-Content-Type-Options: nosniff
 Referrer-Policy: strict-origin-when-cross-origin
 Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
 Cross-Origin-Opener-Policy: same-origin
 ```
+
+`{STORAGE_PUBLIC_ORIGIN}`은 public 버킷 URL의 오리진(6.13.2, native = `WEB_ORIGIN`)이고, 브라우저가 Supabase에 직접 연결하지 않으므로 `connect-src`에 Supabase 오리진을 넣지 않는다(T-11. 옛 `{SUPABASE_URL}` 두 곳 → T-11로 대체). `STORAGE_PUBLIC_ORIGIN = WEB_ORIGIN`이면 `'self'`와 같은 오리진이 중복되어도 그대로 둔다(바이트 비교 픽스처 기준).
 
 **환경별 기대값(S-01)**: 위 문자열은 `APP_ENV∈{staging, prod}` 기대값이다. `APP_ENV=local`에서는 CSP 끝의 `; upgrade-insecure-requests`와 `Strict-Transport-Security` 헤더를 뺀다(http 로컬). 그 밖의 바이트는 같다. AC-06-25·서비스 CSP 테스트는 `tests/fixtures/csp/{local,prod}.txt` 두 벌을 오리진 치환 후 바이트 비교한다. 쿠키 `Secure` 속성은 localhost에서도 유지한다(브라우저가 localhost를 보안 컨텍스트로 취급).
 
@@ -1996,16 +2019,18 @@ local 환경은 두 프로파일 중 하나로 돈다. `STACK_PROFILE=supabase|n
 | 구성 | `supabase` 프로파일 | `native` 프로파일(Docker 없음) |
 |---|---|---|
 | DB | Supabase CLI 로컬 Postgres | 시스템 PostgreSQL 16. `pnpm dev:stack`이 `initdb` → `/tmp/tastefit-pg`(포트 54322) → 기동. 마이그레이션 전에 `packages/db/shim/0000_supabase_shim.sql` 적용 |
-| shim 내용 | 적용 안 함(파일 상단 가드가 `auth` 스키마 존재 시 건너뜀) | 역할 `anon`·`authenticated`·`service_role`(bypassrls), 스키마 `auth`, `auth.users(id uuid pk, email text, raw_user_meta_data jsonb, created_at)`, `auth.identities(id, user_id, provider, identity_data jsonb, created_at)`, `auth.uid()`·`auth.role()`·`auth.jwt()` = `current_setting('request.jwt.claims', true)::jsonb`의 `sub`·`role`·전체. RLS 테스트는 `set local role authenticated; set local request.jwt.claims = '{"sub":…,"aal":…}'` |
+| shim 내용 | 적용 안 함(파일 상단 가드가 `auth` 스키마 존재 시 건너뜀) | 역할 `anon`·`authenticated`(NOLOGIN)·`service_role`(NOLOGIN, BYPASSRLS), 앱 접속 역할 `tastefit_app`(LOGIN, NOBYPASSRLS, 세 역할의 멤버, 6.1.2 R-5), 스키마 `auth`, `auth.users(id uuid pk, email text, raw_user_meta_data jsonb, created_at)`, `auth.identities(id, user_id, provider, identity_data jsonb, created_at)`, `auth.uid()`·`auth.role()`·`auth.jwt()` = `current_setting('request.jwt.claims', true)::jsonb`의 `sub`·`role`·전체. RLS 테스트는 앱과 같은 `DbPort.withUser`·`withAnon`으로 돈다(`SET LOCAL ROLE` + `request.jwt.claims`) |
+| DB 접근(T-11) | `DbPort`(6.1.2 R-5, Kysely + `pg`). 접속 = Supabase 기본 사용자, web은 `DATABASE_URL_POOLED`(Supavisor 트랜잭션 모드) | 같은 `DbPort` 코드. 접속 = `tastefit_app`, `DATABASE_URL_POOLED` 미설정 시 `DATABASE_URL_DIRECT` 사용(local 한정) |
+| 타입 생성(T-11) | `pnpm db:types` = kysely-codegen(`DATABASE_URL_DIRECT`) | 같음(Docker 불필요). `supabase gen types`는 두 프로파일 모두 쓰지 않는다 |
 | 마이그레이션 검사(AC-06-01) | `supabase db reset` 2회 + `supabase db lint` | 빈 DB(drop/create) 적용 2회, `psql -v ON_ERROR_STOP=1`. lint는 `needs_ci` |
-| Storage | `StoragePort` 드라이버 `supabase` | 드라이버 `fs`: `/tmp/tastefit-storage/<bucket>/<path>`. 서명 URL = `/api/_storage/<bucket>/<path>?exp&sig`(HMAC). 이 라우트는 `APP_ENV=local`일 때만 등록 |
-| Auth | `AuthPort`(`issueMagicLink`·`exchange`·`getUser`·`signOut`·`enrollTotp`·`verifyTotp`) 드라이버 `supabase`(GoTrue + Mailpit) | 드라이버 `local`: 매직링크를 발송하지 않고 `dev_mail_outbox(to, subject, body, created_at)`에 기록. 링크는 실제와 같은 `/auth/callback` 경로. 세션 = HS256 JWT(`LOCAL_JWT_SECRET`, 클레임 `sub`·`role`·`aal`). 관리자 MFA는 otplib TOTP로 검증 후 `aal2` 발급 |
+| Storage | `StoragePort`(`put`·`get`·`remove`·`list`·`signedUrl(bucket, path, ttl)`·`publicUrl(bucket, path)`) 드라이버 `supabase`. `publicUrl` = Supabase public 객체 URL(오리진 = `STORAGE_PUBLIC_ORIGIN`) | 드라이버 `fs`: `/tmp/tastefit-storage/<bucket>/<path>`. 서명 URL = `${WEB_ORIGIN}/api/_storage/<bucket>/<path>?exp&sig`(HMAC). `publicUrl` = `${WEB_ORIGIN}/api/_storage/public/<bucket>/<path>`(public 버킷만, 서명 없음, `Cache-Control: public, max-age=31536000, immutable`), `STORAGE_PUBLIC_ORIGIN = WEB_ORIGIN`. 라우트 `/api/_storage/*`는 파일로 **항상 존재**하고 `APP_ENV≠local` 또는 `STORAGE_DRIVER≠fs`이면 404를 반환한다. 6.4.3에 "local 전용"으로 표시하고 `api-parity`·AC-06-08 계약 수집에서 제외 목록에 둔다(TL3-11. 옛 "`APP_ENV=local`일 때만 등록" → T-11로 대체) |
+| Auth | `AuthPort`(`issueMagicLink`·`exchange`·`getUser`·`signOut`·`enrollTotp`·`verifyTotp`·`adminSignOutAll(uid)`·`adminDeleteUser(uid)`, T-11 ⑤) 드라이버 `supabase`(GoTrue + Mailpit, 서버에서만 `SUPABASE_URL`·`SUPABASE_ANON_KEY`·`SUPABASE_SERVICE_ROLE_KEY` 사용, `admin*` = `auth.admin.signOut(uid,'global')`·`auth.admin.deleteUser`) | 드라이버 `local`: 매직링크를 발송하지 않고 `dev_mail_outbox(to, subject, body, created_at)`에 기록. 링크는 실제와 같은 `/auth/callback` 경로. `exchange` 성공 시 shim `auth.users`에 `(id, email)` upsert(→ `minimize_auth_metadata` 발화) 후 web이 `provision_user` 호출(T-12, 6.5.4). 세션 = HS256 JWT(`LOCAL_JWT_SECRET`, 클레임 `sub`·`role`·`aal`)를 httpOnly 쿠키로. `adminSignOutAll` = 해당 `sub`의 세션 세대 번호 증가(이전 JWT 거부), `adminDeleteUser` = `auth.users` 행 삭제(→ `users` cascade). 관리자 MFA는 otplib TOTP로 검증 후 `aal2` 발급 |
 | 메일·봇 방어 | `MailPort`·`TurnstilePort` 실제 드라이버 | `MailPort=local`(outbox 기록), `TurnstilePort=local`(항상 성공, 토큰 형식만 검사) |
 | worker | worker 컨테이너(Docker) | `node apps/worker` 프로세스. 브라우저는 `/opt/pw-browsers` Chromium(09장) |
 | 오리진 | `WEB_ORIGIN=http://localhost:3000`, `PREVIEW_ORIGIN=http://127.0.0.1:3001` | 같음 |
 
 규칙:
-1. `localhost`와 `127.0.0.1`은 서로 다른 site이므로 미리보기 격리(6.11.4)의 "다른 등록 도메인" 요건을 로컬에서 대신한다. 미리보기 서버는 web 프로세스가 3001 포트에서 함께 연다.
+1. `localhost`와 `127.0.0.1`은 서로 다른 site이므로 미리보기 격리(6.11.4)의 "다른 등록 도메인" 요건을 로컬에서 대신한다. 미리보기 서버는 `pnpm dev:stack`이 같은 빌드로 띄우는 **2번째 프로세스** `next start -p 3001`이다. Host 분기 미들웨어는 그대로 쓴다(TL3-11. 옛 "web 프로세스가 3001 포트에서 함께 연다" → T-11로 대체).
 2. **E2E 로그인**: native는 테스트 픽스처 함수가 DB의 `dev_mail_outbox`를 읽어 링크를 연다. HTTP 우회 라우트는 0개이므로 R-10과 TC-S-09가 유지된다. 우회가 아니라 같은 매직링크 흐름의 발송 수단만 바뀐다.
 3. **기동 거부**: `APP_ENV≠local`인데 `AUTH_DRIVER=local`, `STORAGE_DRIVER=fs`, `MAIL_DRIVER=local`, `TURNSTILE_DRIVER=local` 중 하나라도 설정되면 기동을 거부한다(종료 코드 1, 변수 이름 출력). `dev_mail_outbox` 테이블은 local 전용 마이그레이션 `9000_local_only.sql`에만 있고 staging·prod 마이그레이션 목록에 들어가지 않는다.
 4. **CI 위임**: native에서 확인할 수 없는 단계는 `needs_ci`로 기록한다. 목록은 07장 7.12.1 `deferrable.needs_ci`가 원천이다(`supabase-db-lint`, `supabase-storage-policy`, `gotrue-magiclink-e2e`, `gotrue-mfa`, `gotrue-google-metadata`, `worker-image-build`, `visual-docker-baseline`, `browser-webkit`, `browser-firefox`, `net-isolation-docker`, `lock-digest`). GitHub Actions(ubuntu, Docker 있음)에서 같은 verify를 `STACK_PROFILE=supabase`로 돌리고 에이전트는 `gh run watch`로 결과를 받는다. 워크플로 push가 권한으로 거부되면 HUMAN_TODO에 적고 needs_ci로 계속한다.
@@ -2016,10 +2041,11 @@ local 환경은 두 프로파일 중 하나로 돈다. `STACK_PROFILE=supabase|n
 | AC-06-50 | Docker 데몬이 없는 컨테이너에서 `pnpm dev:stack`이 120초 안에 native로 기동하고 `GET /api/health`가 200 `{db:"ok", queue:"ok"}`를 반환한다. |
 | AC-06-51 | native에서 06장 DDL 전체가 shim 위에 적용되고 AC-06-02~07의 RLS·제약 테스트가 통과한다. |
 | AC-06-52 | native E2E: 익명 진단 → 매직링크(`dev_mail_outbox`) → 귀속 → 시안 3개가 통과한다. 프로덕션 빌드에 `dev_mail_outbox`를 읽는 HTTP 라우트가 0개이고, `APP_ENV=prod` + `AUTH_DRIVER=local`이면 기동이 거부된다. |
+| AC-06-59 | (T-11, TL3-01·TL3-11) 데이터 접근 단일 경로. ① guard: 브라우저 번들(`.next/static`)에 `@supabase/*` 모듈 0개, `rg "\.from\(\|\.rpc\(" apps/web apps/worker packages --glob '!packages/*/src/drivers/supabase*'` 0건, `supabase-js` import가 AuthPort·StoragePort supabase 드라이버 밖에 0건, `pg`·`kysely` import가 `packages/db` 밖에 0건. ② native에서 `pnpm db:types`가 Docker 없이 `types.gen.ts`를 만들고 web·worker가 컴파일된다. ③ native에서 `GET /api/survey-items`의 `assets.desktop.url`(`StoragePort.publicUrl`)을 브라우저가 열면 200 `image/webp`이고 서비스 CSP 위반 보고 0건. ④ native에서 계정 삭제 E2E(09장 M7 ③)가 통과하고 `AuthPort.adminDeleteUser` 후 `auth.users` 0행, `adminSignOutAll` 이전 세션 쿠키로 `/api/me` → 401. ⑤ native에서 `.env.example`의 supabase 전용 변수(`SUPABASE_URL`·`SUPABASE_ANON_KEY`·`SUPABASE_SERVICE_ROLE_KEY`·`DATABASE_URL_POOLED`)를 비워도 기동되고, `APP_ENV=staging`에서 하나라도 비우면 종료 코드 1이다. ⑥ prod 빌드(`APP_ENV=prod`)에서 `/api/_storage/*` 요청 → 404이고 `api-parity`가 이 라우트를 누락·초과로 보고하지 않는다. native에서 `curl http://127.0.0.1:3001/healthz` → 200. ⑦ `NEXT_PUBLIC_SUPABASE` 문자열이 코드·`.env.example`에 0건이다. |
 
 ### 6.13.2 환경 변수
 
-`@tastefit/config`가 서비스별 zod 스키마로 기동 시 검증하고, 누락·형식 오류 시 변수 이름을 모두 출력하고 종료 코드 1로 끝난다. `.env.example`은 이 표와 같아야 한다(CI 비교).
+`@tastefit/config`가 서비스별 zod 스키마로 기동 시 검증하고, 누락·형식 오류 시 변수 이름을 모두 출력하고 종료 코드 1로 끝난다. `.env.example`은 이 표와 같아야 한다(CI 비교). "supabase 프로파일·staging·prod에서 필수"는 `APP_ENV ∈ {staging, prod}` 또는 `STACK_PROFILE=supabase`일 때 필수라는 뜻이다(T-11, AC-06-59 ⑤). `NEXT_PUBLIC_` 접두어 변수에는 Supabase 관련 값을 두지 않는다.
 
 | 이름 | 서비스 | 필수 | 기본값 | 설명 |
 |---|---|---|---|---|
@@ -2029,13 +2055,13 @@ local 환경은 두 프로파일 중 하나로 돈다. `STACK_PROFILE=supabase|n
 | `LOCAL_JWT_SECRET` | web | native일 때 필수 | — | ≥32바이트. local 드라이버 전용, 커밋 금지(`.env.local`) |
 | `WEB_ORIGIN` | web, worker | 필수 | — | 서비스 오리진(CSP·CSRF·메일 링크) |
 | `PREVIEW_ORIGIN` | web, worker | 필수 | — | 미리보기 오리진(다른 등록 도메인) |
-| `NEXT_PUBLIC_SUPABASE_URL` | web | 필수 | — | |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | web | 필수 | — | 공개 키 |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | web | 필수(staging·prod) | — | |
-| `SUPABASE_URL` | worker, 스크립트 | 필수 | — | |
-| `SUPABASE_SERVICE_ROLE_KEY` | web, worker, 스크립트 | 필수 | — | 비밀 |
-| `DATABASE_URL_POOLED` | web | 필수 | — | Supavisor 트랜잭션 모드(6543), pg-boss 생산자 |
-| `DATABASE_URL_DIRECT` | worker, 마이그레이션 | 필수 | — | 직접 연결(5432) |
+| `SUPABASE_URL` | web, worker, 스크립트(서버 전용) | supabase 프로파일·staging·prod에서 필수, native 선택 | — | AuthPort·StoragePort supabase 드라이버만 읽는다. 옛 `NEXT_PUBLIC_SUPABASE_URL` 폐지(→ T-11로 대체) |
+| `SUPABASE_ANON_KEY` | web(서버 전용) | supabase 프로파일·staging·prod에서 필수, native 선택 | — | AuthPort supabase 드라이버의 GoTrue 호출용. 브라우저로 내보내지 않는다. 옛 `NEXT_PUBLIC_SUPABASE_ANON_KEY` 폐지(→ T-11로 대체) |
+| `SUPABASE_SERVICE_ROLE_KEY` | web, worker, 스크립트 | supabase 프로파일·staging·prod에서 필수, native 선택 | — | 비밀. AuthPort `admin*`·StoragePort supabase 드라이버 전용(DB 접근은 `DbPort`, 키 불필요) |
+| `STORAGE_PUBLIC_ORIGIN` | web, worker | 필수 | native·fs = `WEB_ORIGIN` | public 버킷 URL 오리진(`StoragePort.publicUrl`), 서비스 CSP `img-src`(6.11.4) |
+| `DATABASE_URL_POOLED` | web | supabase 프로파일·staging·prod에서 필수 | local 미설정 시 `DATABASE_URL_DIRECT` | Supavisor 트랜잭션 모드(6543), `DbPort`·pg-boss 생산자 |
+| `DATABASE_URL_DIRECT` | web(local), worker, 마이그레이션, `pnpm db:types` | 필수 | — | 직접 연결(5432). native = `tastefit_app@127.0.0.1:54322` |
 | `PREVIEW_SIGNING_SECRET` | web | 필수 | — | ≥32바이트 base64 |
 | `PREVIEW_SIGNING_SECRET_PREV` | web | 선택 | — | 교체 중 이전 키 |
 | `IP_HMAC_KEY` | web | 필수 | — | |
@@ -2176,14 +2202,14 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 
 ## 6.17 수용 기준 총괄
 
-이 장의 AC는 각 절 끝에 있다(AC-06-01~37, 45~58). 검증 위치는 다음과 같다(테스트 ID 체계 →07장 D-0707).
+이 장의 AC는 각 절 끝에 있다(AC-06-01~37, 03b, 45~60). 검증 위치는 다음과 같다(테스트 ID 체계 →07장 D-0707).
 
 | AC 범위 | 내용 | 계층 | 마일스톤(→09장) |
 |---|---|---|---|
-| AC-06-01~07 | 스키마·RLS·제약 | 통합(현재 `STACK_PROFILE`, 6.13.1) | M1 |
+| AC-06-01~07, 03b | 스키마·RLS·쓰기 화이트리스트·권한 스냅샷·제약 | 통합(현재 `STACK_PROFILE`, 6.13.1) | M1 |
 | AC-06-08~14, 45~49 | API 계약·멱등·CSRF·소유·임시본·앵커·내보내기·내 데이터 | 계약·통합·E2E | M4~M7 |
-| AC-06-15~18 | 인증·귀속·쿠키 | E2E(supabase: Mailpit, native: `dev_mail_outbox` 픽스처) | M5 |
-| AC-06-50~52 | 스택 프로파일(native) 기동·DDL·E2E | 통합·E2E(native) | M0·M1·M5 |
+| AC-06-15~18, 60 | 인증·귀속·쿠키·`provision_user`·관리자 권한 원천 | E2E(supabase: Mailpit, native: `dev_mail_outbox` 픽스처) | M5 |
+| AC-06-50~52, 59 | 스택 프로파일(native) 기동·DDL·E2E·`DbPort` 단일 경로·`db:types`·`publicUrl`·`/api/_storage` | 통합·E2E(native) | M0·M1·M5 |
 | AC-06-19~23 | 레이트리밋·킬 스위치·원가·승인 공급자 | 통합(MockProvider 시나리오) | M5·M7 |
 | AC-06-24~28 | 보안(컴파일러 산출물·CSP·서명·SSRF) | 정적 검사·E2E | M2·M8 |
 | AC-06-29~31 | 관측성·알림 | 통합 | M7 |
@@ -2218,7 +2244,7 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 | D-0608 | 진단 다음 문항은 클라이언트 낙관 계산 + 서버 권위, 서버 p95 ≤ 200ms | 07장 150ms·서버 권위 동시 충족 | 02, 07, 09 | 유효 |
 | D-0609 | 모델 승격 블라인드 40쌍·Wilson 하한 ≥ 0.35 | 30쌍·0.40은 동등 모델 항상 거절 | 07 | → R-24로 대체(채택) |
 | D-0610 | `anon_id` 쿠키 30일, 진단 활동 시 연장, 로그아웃 시 재발급 | 08장 익명 보관 30일 | 01, 02, 08 | 유효(무활동 `abandoned` 기준은 02장 30분을 따름) |
-| D-0611 | 브라우저는 Supabase DB·Storage 직접 호출 금지(인증만) | 계약 일원화 | 01, 09 | 유효 |
+| D-0611 | 브라우저는 Supabase DB·Storage 직접 호출 금지(인증만) | 계약 일원화 | 01, 09 | → T-11로 대체(인증도 서버 `AuthPort` 경유, 브라우저 `supabase-js` 0) |
 | D-0612 | 오류 코드 통일(`BLOCKED_BRAND{reason}` 등) | 장 간 불일치 | 00, 01, 08 | → R-13으로 대체 |
 | D-0613 | 테이블 이름 확정 | 00장 IF-07 | 00, 05, 08 | → R-18로 대체(진단 = `diagnosis_sessions`·`survey_answers`·`impressions`·`diagnosis_results`, 02장 2.3) |
 | D-0614 | `mockup_versions`는 전체 스냅샷 저장, append-only, 복원 = 새 버전 | 재현·캐시 단순화 | 01, 04 | 유효 |
@@ -2256,6 +2282,8 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 | 지원 브라우저 | 6.14.1 | 01, 04, 07 | R-33 |
 | 내보내기 공통 파일 | 6.4.3 | 04, 08 | `AI_NOTICE.md`·`LICENSES.md`·`CREDITS.md`·`licenses/`, `dtcg_json`도 zip |
 | `processors.yaml` | 6.9.2 | 08 | `email-sender` = Resend(R-29) 확정, `effective_from` |
+| `DbPort`·`AuthPort`·`StoragePort`(T-11) | 6.1.2 R-3·R-5, 6.3.5, 6.13.1, 6.13.2 | 07, 08, 09 | 09장 9.1.2·9.1.3 db 패키지 의존(`supabase-js` → Kysely + `pg`), M1 `supabase gen types` → `pnpm db:types`, M0 native 기동, guard(R-3·R-5·`db:grants-snapshot`). 07장 needs_ci `supabase-rest-rls`. 08장 8.7.5 "서버 경유" 참조 |
+| 관리자 권한 원천·`provision_user`(T-12) | 6.5.4, 6.11.2 | 00, 08 | ADM-06 수동 승격 삭제, 08장 8.15 참조 문구 |
 | 09장 마일스톤 표기 | — | 09 | `V-TRUE` 라벨·`prompts/{role}.v{N}.md`·응답 API p95 300ms 기본값을 R-03·R-12·D-0608에 맞춰야 함 |
 
 ## 6.20 반영 추적
@@ -2332,4 +2360,6 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 | S-26 | Major | 6.1.3 구성요소 × P1~P13 흐름표, `compliance:flows`, AC-06-58 | |
 | S-27(06) | Major | 6.10.1 `rep:day:ip`·`mail:day:to`, Turnstile 필수 | 절차 본문은 08 |
 | S-28 | Major | 6.11.2 관리자 접근 통제(aal2, ADMIN_EMAILS 매 요청, pii_view, 리댁션, 1년 보관), AC-06-57 | |
+| T-11 (TL3-01·LG3-01·TL3-11) | Blocker | 6.0 P8, 6.1.1, 6.1.2 R-3·R-5, 6.3.4, 6.3.5 쓰기 화이트리스트·심층 방어 트리거·권한 스냅샷, 6.4.1 인증, 6.5.2, 6.2.5 ①⑥, 6.11.4 CSP, 6.13.1, 6.13.2, D-0611, AC-06-03·03b·59 | S-01 보완. DDL 본문(정책·grant·트리거 SQL)은 06-b 단위 |
+| T-12 (TL3-02) | Major | 6.5.4 권한 원천·`provision_user`, 6.11.2, 6.4.1, 6.5.2 첫 로그인, AC-06-60 | S-21·S-28 보완. `provision_user` DDL·6.3.3 `users` 주석·6.2.5 재가입 행은 06-b 단위 |
 | S-32·S-37(06) | Major | 6.4.3 MockupCard `movedAxes`·`diffFromTrue`·brandColorNotice 5값 | |
