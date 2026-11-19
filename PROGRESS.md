@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T17:08Z, since: 2026-11-19T17:53Z}
+- lock: 
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-20 07:08
-- 마지막 갱신: 2026-11-20 02:53 KST (예약 세션: M1 완료, 다음 M2 하위 단위 계획)
+- 마지막 갱신: 2026-11-20 02:54 KST (예약 세션: M1 완료·M2 계획 작성, 다음 M2-01)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -70,7 +70,7 @@
 |---|---|---|---|---|---|---|---|
 | M0 | done | 2026-11-19T12:50Z | 2026-11-19T14:46Z | m0-done | pass_blocked | 5 | 7 |
 | M1 | done | 2026-11-19T14:47Z | 2026-11-19T17:53Z | m1-done | pass_blocked | 6 | 15 |
-| M2 | todo | – | – | – | – | – | – |
+| M2 | in_progress | 2026-11-19T17:54Z | – | – | – | – | – |
 | M3 | todo | – | – | – | – | – | – |
 | M4 | todo | – | – | – | – | – | – |
 | M5 | todo | – | – | – | – | – | – |
@@ -109,6 +109,21 @@
   - [x] 09 `db:types`(kysely-codegen ^0.20, AD-030) + web·worker 컴파일(⑧) 녹색
   - [x] 10 `db:schema-parity`(⑨ 차이 0, 이름 잠금 충돌 BLK-006) + `db:grants-snapshot`(6.3.5, 허용 6항목 일치·위반 검출 확인)
   - [x] 11 verify:m1 pass_blocked(BLK-001~006) → m1-done. AC-06-32(m0 stack) 1회 간헐 실패 후 재실행 통과
+- M2 계획(9.4.4, AC: 03-02~11·15~38·41·42·44~46, 04-03~11·17·18·18a·30, 06-24~26·28. 읽을 장은 CLAUDE.md 구현 규칙 3절):
+  - [ ] 01 M2 수용 테스트(acMilestones M2 + 9.4.4 ①~⑧) `test(acc)` 커밋 → qa:trace --audit → 자체 잠금, traceability M2 행
+  - [ ] 02 design-spec a: mapL1toL2 용도 경로·snapToFeasible(03장 3.3) → L2
+  - [ ] 03 design-spec b: L2 → DesignTokens(03장 토큰·매핑·폰트) → DesignSpec(04장 4.2.1 zod)
+  - [ ] 04 layout-schema: PageSchema zod·블록 슬롯·폴백 + JSON Schema 정적 검사(⑥)
+  - [ ] 05 renderer a: CSS Modules+CSS 변수, renderToStaticMarkup, 토큰→변수, 블록 일부
+  - [ ] 06 renderer b: 나머지 블록·variant 전부(blocks.json 20블록·53 variant)
+  - [ ] 07 assets: 로컬 @font-face·이미지 경로·아이콘 SVG 인라인, 100회 SHA 동일(④)
+  - [ ] 08 폴백 생성기(앵커 프리셋 + standardTree, AC-04-25 72조합) + fixtures/layouts 30+(①)
+  - [ ] 09 Playwright(chromium) 렌더 하네스 + 하드 게이트 4종 선구현(②: 대비 AA·가로 넘침·겹침·깨진 이미지)
+  - [ ] 10 worker render 잡(뷰포트 5 스크린샷)·외부 요청 0(③)
+  - [ ] 11 미리보기 오리진 라우트·sandbox iframe·CSP 문자열 일치(⑧)
+  - [ ] 12 시각 회귀 기준선 24장(⑤, 로컬 chromium 가능분만, 나머지 needs_ci)
+  - [ ] 13 renderer 금지 의존성 검사(⑦) 확인
+  - [ ] 14 verify:m2 → m2-done(tags 맵)
 - M3 이월: B18 정규화기를 추출기로 재생성(9.2.4 코퍼스 200 렌더, ASM-020), B15 골격을 실제 예시로 교체 후 자체 잠금(ASM-021)
 - [x] M0 [x] M1 [ ] M2 [ ] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
 
@@ -116,6 +131,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-20 02:54 | M2 계획 14단위 작성 → 다음: M2-01 수용 테스트
 - 2026-11-20 02:53 | M1 완료: verify:m1 pass_blocked(BLK-001~006), m1-done → 다음: M2 계획(09장 9.4.4)
 - 2026-11-20 02:32 | M1-10 db:schema-parity 차이 0·db:grants-snapshot 일치, BLK-006 → 다음: M1-11 verify:m1·m1-done
 - 2026-11-20 02:29 | M1-09 db:types(kysely-codegen)·types.gen.ts 51테이블, ⑧ 녹색, guard deps ok → 다음: M1-10 schema-parity
@@ -130,4 +146,3 @@
 - 2026-11-20 01:29 | M1-04b3 references 60(쿼터·[임시])·golden 32 골격(7.2.3 θ*·브랜드 경계값) → 다음: c1 B14·B17·B23
 - 2026-11-20 01:27 | M1-04b2 ab_plan 120(ABP·AB ID, focus_region)·approvals 168(temp 게이트 미실행 rejected) → 다음: b3 레퍼런스·골든
 - 2026-11-20 01:26 | M1-04b1 templates.json(한결 고정 문안)·card_plan 48(브리지 L2 오버라이드·alt), ASM-016 → 다음: b2 A/B·승인
-- 2026-11-20 01:24 | M1-04b0 @tastefit/taxonomy mapL1toL2(앵커 재현 8/8·160 허용·단조), ASM-015 → 다음: b1 템플릿·카드
