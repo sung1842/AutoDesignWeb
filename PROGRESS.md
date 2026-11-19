@@ -30,7 +30,7 @@
 - 라운드 3: [x] PM [x] 프로덕트 디자이너 [x] UX [x] UI [x] 테크 리드 [x] AI/ML [x] QA [x] 법무 → [x] decisions_v4(T-01~T-36) [x] 반영(아래 22단위)
 - 라운드 3 반영 단위(decisions_v4.md "반영 순서" 참고): [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 07-a [x] 07-b [x] 07-c [x] 07-d [x] 09-a [x] 09-b [x] 09-c [x] 01-a [x] 01-b [x] 04-a [x] 04-b [x] 03-a [x] 03-b [x] 08-a [x] 02-a [x] 05-a [x] 00-a [x] 잔여 표기 grep
 - 라운드 4(1.1 규칙: 리뷰어 3명·패킷 `docs/reviews/round4/packet.md`): [x] R-A 제품·경험 [x] R-B 기술·품질 [x] R-C 법무 → [x] decisions_v5(U-01~U-13) [ ] 반영(아래 9단위)
-- 라운드 4 반영 단위(decisions_v5.md "반영 순서"): [x] 06-a [x] 06-b [ ] 07-a [ ] 09-a [ ] 02-a [ ] 04-a+03-a [ ] 01-a [ ] 08-a [ ] 잔여 grep
+- 라운드 4 반영 단위(decisions_v5.md "반영 순서"): [x] 06-a [x] 06-b [x] 07-a [ ] 09-a [ ] 02-a [ ] 04-a+03-a [ ] 01-a [ ] 08-a [ ] 잔여 grep
 - 판정 기록(라운드별 C1/C2/C3):
   - R2 PM: FAIL/FAIL/FAIL (Blocker 0, Major 5: 예산-목표 불일치, 취소 시 한도 규칙 충돌, KPI 쿼리 분모, 검증 표본 확보, 00↔07·09 불일치)
   - R2 UX: FAIL/FAIL/FAIL (1라운드 19/19 해결, Blocker 0, Major 3: 결과 신뢰 문구 01↔02 불일치, 진단 카드 크기 규칙이 실제 화면에서 불성립, 편집 가능 판정을 화면 폭으로 해 200% 확대 시 편집 소실)
@@ -62,6 +62,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 16:12 | r4 07-a: 배정표(07/07b/07c·신규 AC)·AC-07-23 ③ 범위 규칙, maxGateRuns 의미, 종료 3↔pass_blocked, SPEC_SOURCE 맵, TC-B-20
 - 2026-11-19 16:12 | r4 06-b: 탈퇴 ③b→③·deleteOwnedRenders·suspend_source·hold 해제/A12·rights_unverified_7d·purge least()·verify 302
 - 2026-11-19 16:11 | r4 06-a: 6.9.4 사건 t1·cacheState·est 0.23676·overrun 거부 집합, llm_calls 시각 2컬럼, AC-06-07 분할
 - 2026-11-19 16:10 | decisions_v5 작성(U-01~U-13, Major 13 전부 대응, Minor 2건만 수용 기준용) → 다음: 06-a
