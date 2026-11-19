@@ -31,7 +31,9 @@ export interface TraceReport {
 export function extractIds(specDir: string): { ac: Set<string>; tc: Set<string> } {
   const ac = new Set<string>();
   const tc = new Set<string>();
-  for (const f of readdirSync(specDir).filter((n) => /^\d\d_.*\.md$/.test(n)).sort()) {
+  for (const f of readdirSync(specDir)
+    .filter((n) => /^\d\d_.*\.md$/.test(n))
+    .sort()) {
     for (const line of readFileSync(join(specDir, f), "utf8").split("\n")) {
       for (const m of line.matchAll(AC_RE)) ac.add(m[0]);
       if (!line.includes("[P2]")) for (const m of line.matchAll(TC_RE)) tc.add(m[0]);
@@ -184,7 +186,9 @@ function auditMain(root: string, specDir: string, r: TraceReport): number {
     const via = h.decl === h.use ? "" : ` (리터럴 위치 ${h.decl})`;
     process.stdout.write(`FAIL audit ${h.use}: thresholds 잎 값 리터럴 ${h.value}${via}\n`);
   }
-  process.stdout.write(`qa:trace --audit: 중복 배정 ${r.duplicated.length}, 리터럴 ${hits.length}\n`);
+  process.stdout.write(
+    `qa:trace --audit: 중복 배정 ${r.duplicated.length}, 리터럴 ${hits.length}\n`,
+  );
   return hits.length || r.duplicated.length ? 1 : 0;
 }
 

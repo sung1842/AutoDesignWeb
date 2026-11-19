@@ -46,7 +46,9 @@ function resolveImport(from: string, spec: string): string | null {
   if (!spec.startsWith(".")) return null;
   const base = resolve(dirname(from), spec);
   const cands = [base, base.replace(/\.(m?js)$/, ".ts"), `${base}.ts`, join(base, "index.ts")];
-  return cands.find((c) => existsSync(c) && statSync(c).isFile() && /\.(ts|tsx|mts)$/.test(c)) ?? null;
+  return (
+    cands.find((c) => existsSync(c) && statSync(c).isFile() && /\.(ts|tsx|mts)$/.test(c)) ?? null
+  );
 }
 
 /** 사양 상수 표(07장 7.12.1)의 행별 수치 집합. `%`가 붙은 수는 n과 n/100을 모두 넣는다. */
@@ -149,7 +151,8 @@ export function audit(root: string, specDir = join(root, "docs/spec/FINAL")): Au
       const e = ts.isParenthesizedExpression(n) ? n.expression : n;
       const v = numericValue(e);
       let d: Decl | null = null;
-      if (v !== null) d = { value: v, at: `${rel(f)}:${lineOf(sf, e.getStart(sf))}`, name: "", file: f };
+      if (v !== null)
+        d = { value: v, at: `${rel(f)}:${lineOf(sf, e.getStart(sf))}`, name: "", file: f };
       else if (ts.isIdentifier(e)) d = lookup(f, e.text);
       if (!d || !leaves.has(d.value) || allow.has(d.value) || scExempt(d)) return;
       hits.push({ use: `${rel(f)}:${lineOf(sf, e.getStart(sf))}`, decl: d.at, value: d.value });
