@@ -188,7 +188,7 @@ describe("AC-03-30~32 이미지", () => {
     expect(count).toEqual(COUNTS);
   });
 
-  it("AC-03-31·32: img src는 이미지 팩·플레이스홀더만, 외부 요청 0, local_business 빈 이미지 슬롯 0, img width·height, 첫 화면 이미지 ≤ 250KB", async () => {
+  it("AC-03-31 / AC-03-32: img src는 이미지 팩·플레이스홀더만, 외부 요청 0, local_business 빈 이미지 슬롯 0, img width·height, 첫 화면 이미지 ≤ 250KB", async () => {
     const bad: string[] = [];
     for (const x of trees()) {
       const m = await h.measure(x.html, 1280);

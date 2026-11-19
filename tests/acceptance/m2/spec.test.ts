@@ -343,7 +343,7 @@ describe("AC-04-05 calibrate() 30건", () => {
   }
 });
 
-describe("AC-04-06·07 target_vector 용도 범위·moved_axes", () => {
+describe("AC-04-06 / AC-04-07 target_vector 용도 범위·moved_axes", () => {
   it("속성 기반 1,000회: target_vector ∈ 용도 범위·소수 3자리, moved_axes 형식", () => {
     const r = rng(406);
     const bad: string[] = [];

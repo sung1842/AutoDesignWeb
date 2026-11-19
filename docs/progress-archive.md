@@ -142,3 +142,4 @@
 - 2026-11-20 01:27 | M1-04b2 ab_plan 120(ABP·AB ID, focus_region)·approvals 168(temp 게이트 미실행 rejected) → 다음: b3 레퍼런스·골든
 - 2026-11-20 01:29 | M1-04b3 references 60(쿼터·[임시])·golden 32 골격(7.2.3 θ*·브랜드 경계값) → 다음: c1 B14·B17·B23
 - 2026-11-20 01:31 | M1-04c1 cliche ko48·en28·legal md 3·processors/data-flows(스텁 3, ASM-017) → 다음: c2 B18·B20·B21·B22·B24
+- 2026-11-20 02:13 | M1-04c2a B20 copy_templates 44·axis_hints 10·B21 87·B22 6·B24 62, validate 교차 참조 → 다음: c2b B18

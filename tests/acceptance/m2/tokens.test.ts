@@ -2,7 +2,7 @@
 // 판정은 packages 공개 API로만 한다. API 계약·해석은 ASSUMPTIONS ASM-023.
 import { describe, expect, it } from "vitest";
 import { createHash } from "node:crypto";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { contrast, mapL1toL2, type L1, type L2 } from "../../../packages/taxonomy/src/index.js";
 import {
@@ -458,5 +458,19 @@ describe("AC-03-09~11 mapL1toL2", () => {
         }
       }
     expect(bad).toEqual([]);
+  });
+});
+
+describe("AC-03-38 harmony.json 배점", () => {
+  it("AC-03-38: H1~H12 배점 합 100, 04장 4.10.3 표 배점과 차이 0", () => {
+    const hs = (data.harmony as Obj[]).filter((x) => /^H([1-9]|1[0-2])$/.test(x.id as string));
+    expect(hs).toHaveLength(12);
+    expect(hs.reduce((n, x) => n + (x.points as number), 0)).toBe(100);
+    const doc = readFileSync(join(ROOT, "docs/spec/FINAL/04_generation.md"), "utf8");
+    const table = new Map<string, number>();
+    for (const m of doc.matchAll(/^\| (H\d+) \|[^|]*\|[^|]*\| (\d+) \|/gm))
+      table.set(m[1]!, Number(m[2]));
+    expect(table.size).toBe(12);
+    for (const x of hs) expect(table.get(x.id as string), x.id as string).toBe(x.points);
   });
 });
