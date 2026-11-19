@@ -17,7 +17,8 @@
     "dev:stack": "tsx scripts/stack/dev-stack.ts",
     "db:native": "tsx scripts/stack/native-pg.ts",
     "guard": "tsx scripts/guard/index.ts",
-    "guard:count": "tsx scripts/guard/stages/count.ts"
+    "guard:count": "tsx scripts/guard/stages/count.ts",
+    "qa:trace": "tsx scripts/qa/trace.ts"
   },
   "devDependencies": {
     "@tastefit/config": "workspace:^",
