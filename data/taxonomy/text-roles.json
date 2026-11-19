@@ -1,0 +1,386 @@
+{
+  "bundle": "text-roles",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "hero.headline",
+      "stepDesktop": "t-1",
+      "stepMobile": "t-1",
+      "weight": "heading",
+      "leading": "heading",
+      "trackingClass": "heading",
+      "element": "h1",
+      "stepVariants": [
+        "t-display",
+        "t-1"
+      ],
+      "stepRuleKo": "t-display(hero.type-only·full-bleed-image) / 그 외 hero variant t-1",
+      "noteKo": "줄 예산은 3.8.1 `headlineBudget`"
+    },
+    {
+      "id": "section.title",
+      "stepDesktop": "t-2",
+      "stepMobile": "t-2",
+      "weight": "heading",
+      "leading": "heading",
+      "trackingClass": "heading",
+      "element": "h2"
+    },
+    {
+      "id": "card.title",
+      "stepDesktop": "t-4",
+      "stepMobile": "t-4",
+      "weight": "heading",
+      "leading": "heading",
+      "trackingClass": "heading",
+      "element": "h3"
+    },
+    {
+      "id": "item.title",
+      "stepDesktop": "t-4",
+      "stepMobile": "t-4",
+      "weight": "heading",
+      "leading": "heading",
+      "trackingClass": "heading",
+      "element": "h3"
+    },
+    {
+      "id": "lead",
+      "stepDesktop": "t-lead",
+      "stepMobile": "t-lead",
+      "weight": "body",
+      "leading": "body",
+      "trackingClass": "body",
+      "element": "p"
+    },
+    {
+      "id": "body",
+      "stepDesktop": "t-body",
+      "stepMobile": "t-body",
+      "weight": "body",
+      "leading": "body",
+      "trackingClass": "body",
+      "element": "p"
+    },
+    {
+      "id": "caption",
+      "stepDesktop": "t-caption",
+      "stepMobile": "t-caption",
+      "weight": "body",
+      "leading": "1.5",
+      "trackingClass": "body",
+      "element": "p",
+      "elementsAllowed": [
+        "p",
+        "figcaption"
+      ],
+      "noteKo": "≥ 12px 하한"
+    },
+    {
+      "id": "eyebrow",
+      "stepDesktop": "t-small",
+      "stepMobile": "t-small",
+      "weight": "emphasis",
+      "leading": "body",
+      "trackingClass": "label",
+      "element": "p",
+      "noteKo": "라벨 자간(3.8.2)"
+    },
+    {
+      "id": "stat.value",
+      "stepDesktop": "t-2",
+      "stepMobile": "t-2",
+      "weight": "heading",
+      "leading": "heading",
+      "trackingClass": "heading",
+      "element": "p",
+      "noteKo": "`font-variant-numeric: tabular-nums`"
+    },
+    {
+      "id": "pricing.price",
+      "stepDesktop": "t-3",
+      "stepMobile": "t-3",
+      "weight": "heading",
+      "leading": "heading",
+      "trackingClass": "heading",
+      "element": "p",
+      "noteKo": "pricing 블록 전용(옛 `price` → T-29로 이름 변경)"
+    },
+    {
+      "id": "quote",
+      "stepDesktop": "t-3",
+      "stepMobile": "t-3",
+      "weight": "body",
+      "leading": "body",
+      "trackingClass": "body",
+      "element": "blockquote"
+    },
+    {
+      "id": "cta.headline",
+      "stepDesktop": "t-2",
+      "stepMobile": "t-2",
+      "weight": "heading",
+      "leading": "heading",
+      "trackingClass": "heading",
+      "element": "h2",
+      "stepVariants": [
+        "t-2",
+        "t-display"
+      ],
+      "stepRuleKo": "band = t-2, big-type = t-display"
+    },
+    {
+      "id": "footer.wordmark",
+      "stepDesktop": "t-3",
+      "stepMobile": "t-3",
+      "weight": "heading",
+      "leading": "heading",
+      "trackingClass": "heading",
+      "element": "p",
+      "stepVariants": [
+        "t-display",
+        "t-3"
+      ],
+      "stepRuleKo": "big-type = t-display, 그 외 t-3"
+    },
+    {
+      "id": "nav.wordmark",
+      "stepDesktop": "t-lead",
+      "stepMobile": "t-lead",
+      "weight": "heading",
+      "leading": "heading",
+      "trackingClass": "heading",
+      "element": "a",
+      "stepVariants": [
+        "t-lead",
+        "t-body"
+      ],
+      "stepRuleKo": "t-lead(데스크톱 19~22px, 3.4.6) → 줄 예산 초과 시 t-body → 375에서 2줄 허용(04장 4.10.2, T-28·T-30)",
+      "noteKo": "3.13.4. 옛 \"20~24px 고정(단계 밖)\" → T-28로 대체"
+    },
+    {
+      "id": "button.label",
+      "stepDesktop": "t-body",
+      "stepMobile": "t-body",
+      "weight": "emphasis",
+      "leading": "1.2",
+      "trackingClass": "body",
+      "element": "span",
+      "stepVariants": [
+        "t-small",
+        "t-body"
+      ],
+      "stepRuleKo": "sm t-small, md·lg t-body",
+      "noteKo": "T-29"
+    },
+    {
+      "id": "nav.link",
+      "stepDesktop": "t-small",
+      "stepMobile": "t-small",
+      "weight": "body",
+      "leading": "body",
+      "trackingClass": "body",
+      "element": "a",
+      "stepVariants": [
+        "t-small",
+        "t-body"
+      ],
+      "stepRuleKo": "t-small(데스크톱 15px 미만이면 t-body)",
+      "noteKo": "T-29"
+    },
+    {
+      "id": "tag.label",
+      "stepDesktop": "t-caption",
+      "stepMobile": "t-caption",
+      "weight": "emphasis",
+      "leading": "1.2",
+      "trackingClass": "body",
+      "element": "span",
+      "noteKo": "T-29"
+    },
+    {
+      "id": "form.label",
+      "stepDesktop": "t-small",
+      "stepMobile": "t-small",
+      "weight": "emphasis",
+      "leading": "body",
+      "trackingClass": "body",
+      "element": "label",
+      "noteKo": "T-29"
+    },
+    {
+      "id": "form.input",
+      "stepDesktop": "t-body",
+      "stepMobile": "t-body",
+      "weight": "body",
+      "leading": "body",
+      "trackingClass": "body",
+      "element": "input",
+      "stepVariants": [
+        "t-body"
+      ],
+      "stepRuleKo": "t-body(≥ 16px 하한, iOS 확대 방지)",
+      "noteKo": "T-29"
+    },
+    {
+      "id": "form.help",
+      "stepDesktop": "t-caption",
+      "stepMobile": "t-caption",
+      "weight": "body",
+      "leading": "1.5",
+      "trackingClass": "body",
+      "element": "p",
+      "noteKo": "T-29"
+    },
+    {
+      "id": "form.error",
+      "stepDesktop": "t-caption",
+      "stepMobile": "t-caption",
+      "weight": "body",
+      "leading": "1.5",
+      "trackingClass": "body",
+      "element": "p",
+      "noteKo": "T-29"
+    },
+    {
+      "id": "accordion.question",
+      "stepDesktop": "t-lead",
+      "stepMobile": "t-lead",
+      "weight": "heading",
+      "leading": "heading",
+      "trackingClass": "heading",
+      "element": "button",
+      "noteKo": "T-29"
+    },
+    {
+      "id": "menu.item",
+      "stepDesktop": "t-body",
+      "stepMobile": "t-body",
+      "weight": "emphasis",
+      "leading": "body",
+      "trackingClass": "body",
+      "element": "p",
+      "noteKo": "T-29"
+    },
+    {
+      "id": "menu.desc",
+      "stepDesktop": "t-small",
+      "stepMobile": "t-small",
+      "weight": "body",
+      "leading": "body",
+      "trackingClass": "body",
+      "element": "p",
+      "noteKo": "T-29"
+    },
+    {
+      "id": "menu.price",
+      "stepDesktop": "t-body",
+      "stepMobile": "t-body",
+      "weight": "emphasis",
+      "leading": "body",
+      "trackingClass": "body",
+      "element": "p",
+      "noteKo": "`tabular-nums`, 항목명 크기 이하(T-29)"
+    },
+    {
+      "id": "pricing.plan",
+      "stepDesktop": "t-4",
+      "stepMobile": "t-4",
+      "weight": "heading",
+      "leading": "heading",
+      "trackingClass": "heading",
+      "element": "h3",
+      "noteKo": "T-29"
+    },
+    {
+      "id": "stat.label",
+      "stepDesktop": "t-small",
+      "stepMobile": "t-small",
+      "weight": "emphasis",
+      "leading": "body",
+      "trackingClass": "body",
+      "element": "p",
+      "elementsAllowed": [
+        "p",
+        "span"
+      ],
+      "noteKo": "`list.index` = 01/02/03(T-29)"
+    },
+    {
+      "id": "list.index",
+      "stepDesktop": "t-small",
+      "stepMobile": "t-small",
+      "weight": "emphasis",
+      "leading": "body",
+      "trackingClass": "body",
+      "element": "p",
+      "elementsAllowed": [
+        "p",
+        "span"
+      ],
+      "noteKo": "`list.index` = 01/02/03(T-29)"
+    },
+    {
+      "id": "proof.name",
+      "stepDesktop": "t-small",
+      "stepMobile": "t-small",
+      "weight": "emphasis",
+      "leading": "body",
+      "trackingClass": "body",
+      "element": "p",
+      "elementsAllowed": [
+        "p",
+        "span"
+      ],
+      "noteKo": "T-29"
+    },
+    {
+      "id": "avatar.initials",
+      "stepDesktop": "t-small",
+      "stepMobile": "t-small",
+      "weight": "emphasis",
+      "leading": "body",
+      "trackingClass": "body",
+      "element": "p",
+      "elementsAllowed": [
+        "p",
+        "span"
+      ],
+      "noteKo": "T-29"
+    },
+    {
+      "id": "info.row",
+      "stepDesktop": "t-body",
+      "stepMobile": "t-body",
+      "weight": "body",
+      "leading": "body",
+      "trackingClass": "body",
+      "element": "p",
+      "noteKo": "location 블록(T-29)"
+    },
+    {
+      "id": "footer.link",
+      "stepDesktop": "t-small",
+      "stepMobile": "t-small",
+      "weight": "body",
+      "leading": "body",
+      "trackingClass": "body",
+      "element": "a",
+      "noteKo": "T-29"
+    },
+    {
+      "id": "footer.legal",
+      "stepDesktop": "t-caption",
+      "stepMobile": "t-caption",
+      "weight": "body",
+      "leading": "1.5",
+      "trackingClass": "body",
+      "element": "p",
+      "noteKo": "T-29"
+    }
+  ]
+}

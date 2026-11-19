@@ -633,6 +633,78 @@ function genPalettes(ctx: Ctx): Out[] {
   return [{ path: "data/taxonomy/palettes.json", content: bundle(ctx, "palettes", items) }];
 }
 
+// ---------- B25 text-roles.json (03장 3.1.5a 표, 자간 3.8.2·행간 3.8.3) ----------
+function genTextRoles(ctx: Ctx): Out[] {
+  const rows = table(section(chapter(ctx.root, "03_design_system.md"), "### 3.1.5a"));
+  const items: Obj[] = [];
+  for (const r of rows) {
+    const roles = [...(r[0] ?? "").matchAll(/`([^`]+)`/g)].map((m) => m[1] ?? "");
+    const stepCell = r[1] ?? "";
+    const steps = [...stepCell.matchAll(/`(t-[a-z0-9]+)`/g)].map((m) => m[1] ?? "");
+    const weight = r[2] ?? "";
+    const elements = (r[3] ?? "").split("·").map((x) => x.trim());
+    for (const role of roles) {
+      const simple = steps.length === 1 && stepCell.trim() === `\`${steps[0] ?? ""}\``;
+      // 기본 단계: "그 외 …"·"md" 뒤의 단계, 없으면 첫 단계. 모바일 단계 = 데스크톱 단계(3.1.5a)
+      const other = /(?:그 외|md)[^`]*`(t-[a-z0-9]+)`/.exec(stepCell)?.[1];
+      const step = other ?? steps[0];
+      const leading = ["button.label", "tag.label"].includes(role)
+        ? "1.2"
+        : steps[0] === "t-caption"
+          ? "1.5"
+          : weight === "heading"
+            ? "heading"
+            : "body";
+      const tracking = role === "eyebrow" ? "label" : weight === "heading" ? "heading" : "body";
+      const item: Obj = {
+        id: role,
+        stepDesktop: step ?? "",
+        stepMobile: step ?? "",
+        weight,
+        leading,
+        trackingClass: tracking,
+        element: elements[0] ?? "",
+      };
+      if (elements.length > 1) item.elementsAllowed = elements;
+      if (!simple) {
+        item.stepVariants = steps;
+        item.stepRuleKo = stepCell.replace(/`/g, "");
+      }
+      if (r[4]) item.noteKo = r[4];
+      items.push(item);
+    }
+  }
+  return [{ path: "data/taxonomy/text-roles.json", content: bundle(ctx, "text-roles", items) }];
+}
+
+// ---------- C03 icons/map.json (03장 3.9.1 세트·3.9.2 의미 아이콘 40개) ----------
+function genIcons(ctx: Ctx): Out[] {
+  const md = chapter(ctx.root, "03_design_system.md");
+  const rows = table(section(md, "### 3.9.2"));
+  const items: Obj[] = [];
+  for (const r of rows) {
+    const split = (c: string): string[] => c.split("/").map((x) => x.replace(/[†]/g, "").trim());
+    const ids = split((r[0] ?? "").replace(/\(.*\)/, ""));
+    const ph = split(r[1] ?? "");
+    const tb = split(r[2] ?? "");
+    const io = split(r[3] ?? "");
+    ids.forEach((id, i) => {
+      const verify = [r[1], r[2], r[3]].some((c) => (c ?? "").includes("†"));
+      const noteKo = /\(([^)]*)\)/.exec(r[0] ?? "")?.[1];
+      items.push({
+        id,
+        phosphor: ph[i] ?? ph[0] ?? "",
+        tabler: tb[i] ?? tb[0] ?? "",
+        iconoir: io[i] ?? io[0] ?? "",
+        ...(verify ? { needsNameCheck: true } : {}),
+        ...(noteKo ? { noteKo } : {}),
+      });
+    });
+  }
+  if (items.length !== 40) throw new Error(`3.9.2 의미 아이콘 ${items.length} ≠ 40`);
+  return [{ path: "data/icons/map.json", content: bundle(ctx, "icons", items) }];
+}
+
 /** 생성기 목록(의존 순서). 나머지 묶음은 M1-04b 이후 단위에서 추가한다. */
 export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genAxes,
@@ -642,6 +714,8 @@ export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genMapping,
   genPresets,
   genPalettes,
+  genTextRoles,
+  genIcons,
 ];
 
 function isHuman(abs: string): boolean {

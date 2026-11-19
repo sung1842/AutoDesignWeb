@@ -1,0 +1,253 @@
+{
+  "bundle": "icons",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "arrow-right",
+      "phosphor": "arrow-right",
+      "tabler": "arrow-right",
+      "iconoir": "arrow-right"
+    },
+    {
+      "id": "arrow-up-right",
+      "phosphor": "arrow-up-right",
+      "tabler": "arrow-up-right",
+      "iconoir": "arrow-up-right"
+    },
+    {
+      "id": "chevron-down",
+      "phosphor": "caret-down",
+      "tabler": "chevron-down",
+      "iconoir": "nav-arrow-down"
+    },
+    {
+      "id": "plus",
+      "phosphor": "plus",
+      "tabler": "plus",
+      "iconoir": "plus"
+    },
+    {
+      "id": "minus",
+      "phosphor": "minus",
+      "tabler": "minus",
+      "iconoir": "minus"
+    },
+    {
+      "id": "close",
+      "phosphor": "x",
+      "tabler": "x",
+      "iconoir": "xmark"
+    },
+    {
+      "id": "menu",
+      "phosphor": "list",
+      "tabler": "menu-2",
+      "iconoir": "menu"
+    },
+    {
+      "id": "check",
+      "phosphor": "check",
+      "tabler": "check",
+      "iconoir": "check"
+    },
+    {
+      "id": "phone",
+      "phosphor": "phone",
+      "tabler": "phone",
+      "iconoir": "phone"
+    },
+    {
+      "id": "mail",
+      "phosphor": "envelope-simple",
+      "tabler": "mail",
+      "iconoir": "mail"
+    },
+    {
+      "id": "map-pin",
+      "phosphor": "map-pin",
+      "tabler": "map-pin",
+      "iconoir": "map-pin"
+    },
+    {
+      "id": "clock",
+      "phosphor": "clock",
+      "tabler": "clock",
+      "iconoir": "clock"
+    },
+    {
+      "id": "calendar",
+      "phosphor": "calendar-blank",
+      "tabler": "calendar",
+      "iconoir": "calendar"
+    },
+    {
+      "id": "chat",
+      "phosphor": "chat-circle",
+      "tabler": "message-circle",
+      "iconoir": "chat-bubble"
+    },
+    {
+      "id": "globe",
+      "phosphor": "globe-simple",
+      "tabler": "world",
+      "iconoir": "globe"
+    },
+    {
+      "id": "lock",
+      "phosphor": "lock-simple",
+      "tabler": "lock",
+      "iconoir": "lock"
+    },
+    {
+      "id": "shield-check",
+      "phosphor": "shield-check",
+      "tabler": "shield-check",
+      "iconoir": "shield-check"
+    },
+    {
+      "id": "bolt",
+      "phosphor": "lightning",
+      "tabler": "bolt",
+      "iconoir": "flash"
+    },
+    {
+      "id": "chart",
+      "phosphor": "chart-line-up",
+      "tabler": "chart-line",
+      "iconoir": "graph-up"
+    },
+    {
+      "id": "users",
+      "phosphor": "users-three",
+      "tabler": "users",
+      "iconoir": "group"
+    },
+    {
+      "id": "settings",
+      "phosphor": "gear-six",
+      "tabler": "settings",
+      "iconoir": "settings"
+    },
+    {
+      "id": "code",
+      "phosphor": "code",
+      "tabler": "code",
+      "iconoir": "code"
+    },
+    {
+      "id": "download",
+      "phosphor": "download-simple",
+      "tabler": "download",
+      "iconoir": "download"
+    },
+    {
+      "id": "coffee",
+      "phosphor": "coffee",
+      "tabler": "coffee",
+      "iconoir": "coffee-cup"
+    },
+    {
+      "id": "utensils",
+      "phosphor": "fork-knife",
+      "tabler": "tools-kitchen-2",
+      "iconoir": "cutlery",
+      "needsNameCheck": true
+    },
+    {
+      "id": "store",
+      "phosphor": "storefront",
+      "tabler": "building-store",
+      "iconoir": "shop"
+    },
+    {
+      "id": "camera",
+      "phosphor": "camera",
+      "tabler": "camera",
+      "iconoir": "camera"
+    },
+    {
+      "id": "brush",
+      "phosphor": "paint-brush",
+      "tabler": "brush",
+      "iconoir": "design-pencil",
+      "needsNameCheck": true
+    },
+    {
+      "id": "leaf",
+      "phosphor": "leaf",
+      "tabler": "leaf",
+      "iconoir": "leaf"
+    },
+    {
+      "id": "package",
+      "phosphor": "package",
+      "tabler": "package",
+      "iconoir": "package"
+    },
+    {
+      "id": "truck",
+      "phosphor": "truck",
+      "tabler": "truck",
+      "iconoir": "delivery-truck"
+    },
+    {
+      "id": "card",
+      "phosphor": "credit-card",
+      "tabler": "credit-card",
+      "iconoir": "credit-card"
+    },
+    {
+      "id": "heart",
+      "phosphor": "heart",
+      "tabler": "heart",
+      "iconoir": "heart"
+    },
+    {
+      "id": "quote",
+      "phosphor": "quotes",
+      "tabler": "quote",
+      "iconoir": "quote"
+    },
+    {
+      "id": "image",
+      "phosphor": "image",
+      "tabler": "photo",
+      "iconoir": "media-image"
+    },
+    {
+      "id": "link",
+      "phosphor": "link-simple",
+      "tabler": "link",
+      "iconoir": "link"
+    },
+    {
+      "id": "warning-circle",
+      "phosphor": "warning-circle",
+      "tabler": "alert-circle",
+      "iconoir": "warning-circle"
+    },
+    {
+      "id": "info",
+      "phosphor": "info",
+      "tabler": "info-circle",
+      "iconoir": "info-circle"
+    },
+    {
+      "id": "car",
+      "phosphor": "car",
+      "tabler": "car",
+      "iconoir": "car",
+      "noteKo": "주차"
+    },
+    {
+      "id": "wifi",
+      "phosphor": "wifi-high",
+      "tabler": "wifi",
+      "iconoir": "wifi"
+    }
+  ]
+}
