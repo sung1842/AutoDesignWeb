@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { GUARD_FAIL, commit, edit, guard, run, tmpRepo } from "../acceptance/_support/sh.js";
+import { GUARD_FAIL, commit, edit, git, guard, run, tmpRepo } from "../acceptance/_support/sh.js";
 
 const LOCK = "config/lock/locked-hashes.json";
 const TUNED = "config/diagnosis-tuned.json";
@@ -24,6 +24,12 @@ function retune(d: string, from: string, to: string): void {
     e.sha256 = sha(body);
     return JSON.stringify(o, null, 2) + "\n";
   });
+}
+
+/** 지정 파일만 커밋한다(공용 commit()의 `add -A`는 node_modules 심볼릭 링크까지 담는다). */
+function commitOnly(d: string, subject: string, files: string[]): void {
+  git(d, "add", "--", ...files);
+  git(d, "commit", "--quiet", "-m", `${subject}\n\nMilestone: M0`);
 }
 
 describe("guard 메타 ⑥: 위반마다 종료 코드 1", () => {
@@ -109,7 +115,7 @@ describe("guard 8단계: 진단 튜닝 자체 잠금", () => {
   it("값 집합 안 변경 + chore(sim-tune): 단독 커밋 → guard:tuned 통과", async () => {
     const d = tmpRepo();
     retune(d, '"calibKappa": 1.3', '"calibKappa": 1.4');
-    commit(d, "chore(sim-tune): calibKappa 1.4");
+    commitOnly(d, "chore(sim-tune): calibKappa 1.4", [TUNED, LOCK]);
     const r = await guard(d);
     expect(r.out).not.toContain("guard:tuned:");
     expect(r.code, r.out).not.toBe(GUARD_FAIL);
@@ -118,7 +124,7 @@ describe("guard 8단계: 진단 튜닝 자체 잠금", () => {
   it("chore(sim-tune): 아닌 커밋으로 변경 → F20", async () => {
     const d = tmpRepo();
     retune(d, '"calibKappa": 1.3', '"calibKappa": 1.4');
-    commit(d, "fix(diagnosis): tune");
+    commitOnly(d, "fix(diagnosis): tune", [TUNED, LOCK]);
     const r = await guard(d);
     expect(r.code).toBe(GUARD_FAIL);
     expect(r.out).toContain("F20");
@@ -127,7 +133,7 @@ describe("guard 8단계: 진단 튜닝 자체 잠금", () => {
   it("값 집합 밖 값 → F20", async () => {
     const d = tmpRepo();
     retune(d, '"calibKappa": 1.3', '"calibKappa": 1.35');
-    commit(d, "chore(sim-tune): 집합 밖");
+    commitOnly(d, "chore(sim-tune): 집합 밖", [TUNED, LOCK]);
     const r = await guard(d);
     expect(r.code).toBe(GUARD_FAIL);
     expect(r.out).toContain("calibKappa");
