@@ -2,7 +2,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { getThresholds, thresholdNumber } from "@tastefit/config";
-import type { L1 } from "./map.js";
+import { AXES, type L1 } from "./map.js";
 
 export interface TypeDef {
   id: string;
@@ -176,8 +176,8 @@ export function checkBridgeRules(tax: Taxonomy): string[] {
         out.push(`규칙3 ${a.id}–${b.id}: 거리 < 0.45`);
     }
   const col = (k: number): number[] => svs.map((s) => s.l1[k] ?? 0);
-  for (let a = 0; a < 5; a++) {
-    for (let b = a + 1; b < 5; b++) {
+  for (let a = 0; a < AXES.length; a++) {
+    for (let b = a + 1; b < AXES.length; b++) {
       const r = pearson(col(a), col(b));
       if (Math.abs(r) > BRIDGE.corrMax)
         out.push(`규칙3 축 A${a + 1}–A${b + 1}: |r| ${r.toFixed(2)} > 0.30`);
