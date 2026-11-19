@@ -27,7 +27,7 @@
 ## P2. 리뷰 루프
 - 라운드 2: [x] PM [x] 프로덕트 디자이너 [x] UX [x] UI [x] 테크 리드 [x] AI/ML [x] QA [x] 법무 → [x] decisions_v3(S-01~S-41) [x] 반영(아래 20단위)
 - 라운드 2 반영 단위(decisions_v3.md "반영 순서" 참고): [x] 07-a [x] 07-b [x] 07-c [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 09-a [x] 09-b [x] 09-c [x] 04-a [x] 04-b [x] 04-c [x] 03 [x] 02 [x] 05 [x] 01 [x] 08 [x] 00 [x] 잔여 표기 grep
-- 라운드 3: [ ] PM [ ] 프로덕트 디자이너 [ ] UX [ ] UI [ ] 테크 리드 [ ] AI/ML [ ] QA [ ] 법무 → [ ] decisions_v4 [ ] 반영
+- 라운드 3: [x] PM [ ] 프로덕트 디자이너 [x] UX [ ] UI [ ] 테크 리드 [ ] AI/ML [ ] QA [ ] 법무 → [ ] decisions_v4 [ ] 반영
 - 판정 기록(라운드별 C1/C2/C3):
   - R2 PM: FAIL/FAIL/FAIL (Blocker 0, Major 5: 예산-목표 불일치, 취소 시 한도 규칙 충돌, KPI 쿼리 분모, 검증 표본 확보, 00↔07·09 불일치)
   - R2 UX: FAIL/FAIL/FAIL (1라운드 19/19 해결, Blocker 0, Major 3: 결과 신뢰 문구 01↔02 불일치, 진단 카드 크기 규칙이 실제 화면에서 불성립, 편집 가능 판정을 화면 폭으로 해 200% 확대 시 편집 소실)
@@ -36,6 +36,8 @@
   - R2 PD: FAIL/FAIL/FAIL (1라운드 23건 중 20 해결·3 부분, Blocker 0, Major 5: S08 근거 칩 부재·v_true 문구 모순, 03 허용 조합이 04 린터에서 항상 실패(AIL-06·AIL-03), 사진 톤·업종 필터 부재, styleguide.html 내보내기 누락, 검증 대조군 약함)
   - R2 UI: FAIL/FAIL/PASS (1라운드 24건 중 20 해결·4 부분, Blocker 0, Major 4: 밝은 브랜드색 대비 보정 실패 경로 없음, 텍스트 역할→타입 단계 표 부재(H7 T3 2.47), 히어로 8~24자와 타입 스케일 불일치, 폰트 서브셋 전략·enum 불일치)
   - R2 AI: FAIL/FAIL/FAIL (1라운드 24건 중 22 해결·1 부분, Blocker 1: 05장 정규화 분위수 표·few-shot 48개의 임시 시드 규칙 부재(B1~B17) / Major 4: 진단 시뮬 단일 시드 판정·튜닝 겹침·멈춤 규칙 없음, 골든 M1 95%±0.12가 RMSE 0.12와 모순(QA2-05와 충돌 → v3 결정), gen_copy 실패·거절 처리 미정, MockProvider가 04장 분할 호출과 다르고 ok 시나리오가 수리 경로를 안 탐)
+  - R3 PM: FAIL/FAIL/FAIL (2라운드 PM2-01·02·03·05 해결, 04·07 부분, 06 미해결(Minor). Blocker 0, Major 4: S-18 표본 운영 기능이 00장에만 있음(01 화면·06 API·A5/A7 쿼리 없음), 노출 전 취소 환불 반복으로 일 예산 소진(차단 없음), 평가·staging LLM 원가가 예산 모델에 없음, 09 M0~M8에 00장 제품 기능(이벤트·KPI·어드민 KPI·초대코드·한도·관심 페이지·지원) 배정 없음)
+  - R3 UX: FAIL/FAIL/FAIL (UX2-05 해결, 01·02·03 부분, 04·06·07·08·09 미해결 — 2라운드 수용 기준이 01장에 안 들어감. Blocker 0, Major 5: 자극물 크기 규칙이 tablet·좁은 desktop·A/B·mobile에서 불성립, S-31 누락(768px 미만 내보내기 숨김 잔존·확대 검증 없음), S03 ② 안내 데이터가 ResultView에 없음, S08 안내 데이터 원천 누락·partial 의미 충돌, S-18 검증 UI가 화면·API에 없음)
   - R2 LEGAL: FAIL/FAIL/FAIL (1라운드 20건 중 14 해결·6 부분, Blocker 0, Major 7: 편집 시 남용 검사 우회·불법 업종 미필터, Supabase Auth 메타데이터 이름·사진 저장, 국외이전 목록 누락(Fly.io·Vercel·llm-judge), 탈퇴와 DDL 충돌(동의 기록·감사 로그·정지 회피), 익명 폼 남용, 관리자 MFA·열람 로그 부재, 법무 문서 경로 08↔09 불일치·컴플라이언스 임시 시드 규칙 부재)
 
 ## P3. 최종 기획서와 구현 준비
@@ -48,6 +50,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 09:20 | 라운드 3 PM·UX 리뷰 작성(둘 다 FAIL/FAIL/FAIL, Major 4·5). 재개 예약 create_trigger는 예약 세션이라 거부됨(HUMAN_TODO 기존 항목)
 - 2026-11-19 06:35 | 잔여 grep 완료: 지정 패턴(muRange·data/legal·page_generate·vision_score·P0-β·vector·allow_soft_round_shadow·평면 thresholds 키) 0건(07 옛 키 대응표 제외). 09 9.5.6 평면 키 블록 삭제→07 참조, 06 AC-06-34 방향·07 시각 기준선·브라우저 매트릭스(S-02) 보완, 문서 내 thresholds 키 경로 전부 07 블록에 존재 확인. 라운드 2 반영 끝 → 다음은 라운드 3 리뷰
 - 2026-11-19 06:34 | 00 반영: 목표-예산 검산(WAM ≥ 30, O2 ≥ 150, Phase 2 ④ 교체), 취소 한도, KPI 쿼리(공유 열람 제외·초대 분모·마지막 평가·7일 코호트), §5.4 검증 운영·adoption_followup_answer, A3·Q2 P-1b, A2s·A1c, 편집 기기 규칙, §14 상태 갱신, 옛 테이블명 정리
 - 2026-11-19 06:32 | 08 반영: 보관표(노출되지 않은 후보·diagnosis_sessions·consents_archive·sanctions·접속기록), 8.9.2 입력별 적용 단계 표·금지 업종·reason enum·AC-08-41b~d, 익명 창구 방어·AC-08-43b, privacy_request 확인, AC-08-23 release 모드, AC-08-29 메타데이터, 국외 이전 문구·데이터 흐름 원천, Q5·Q6·Q13 보강·Q16 신설, 8.15 수동 항목(06 Google 범위 행 포함)
