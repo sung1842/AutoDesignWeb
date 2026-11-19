@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T16:09Z, since: 2026-11-19T17:10Z}
+- lock: {owner: 2026-11-19T16:09Z, since: 2026-11-19T17:20Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
@@ -101,7 +101,7 @@
   - [x] 01 M1 수용 테스트(acMilestones M1 + 9.4.3 ①~⑨) `test(acc)` 커밋 → qa:trace --audit → 자체 잠금, traceability.yaml M1 행
   - [x] 02 packages/data-contracts B1~B17 zod(09장 9.2 묶음 정의)
   - [x] 03 `data:validate`(25묶음, B19 0개 허용, 교차 참조 고아 0) — todo 자리표시 교체
-  - [ ] 04 `seed:temp` 결정적 PRNG(provenance temp, tmp_ 접두사, 2회 바이트 동일): [x] a1 골격·B1 축·B2 유형·B4 용도(장 표 파싱) [x] a2a taxonomy·mapping [x] a2b presets 8종 [x] a2b2 palettes 32벌(OKLCH→hex·색역·대비 재검사, ASM-011) [x] a2c1 text-roles(B25)·icons [ ] a2c2 signatures·harmony [ ] a2c3 blocks·components·tokens/schema [ ] a3 폰트·페어링·이미지 [ ] b 카드·A/B·승인·레퍼런스·골든 골격 [ ] c B14~B24 나머지
+  - [ ] 04 `seed:temp` 결정적 PRNG(provenance temp, tmp_ 접두사, 2회 바이트 동일): [x] a1 골격·B1 축·B2 유형·B4 용도(장 표 파싱) [x] a2a taxonomy·mapping [x] a2b presets 8종 [x] a2b2 palettes 32벌(OKLCH→hex·색역·대비 재검사, ASM-011) [x] a2c1 text-roles(B25)·icons [x] a2c2 signatures·harmony [ ] a2c3 blocks·components·tokens/schema [ ] a3 폰트·페어링·이미지 [ ] b 카드·A/B·승인·레퍼런스·골든 골격 [ ] c B14~B24 나머지
   - [ ] 05 packages/taxonomy 로더 + centroid(03장 3.4.7) 일치·최소 거리 검사
   - [ ] 06 packages/db 마이그레이션 SQL(06장 DDL, MVP분) + native 빈 DB 2회 적용(ON_ERROR_STOP)
   - [ ] 07 RLS 정책·DbPort(withAnon) + RLS 테스트(⑦, AC-06-03b)
@@ -115,6 +115,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-20 02:20 | M1-04a2c2 signatures.json(장식 8+시그니처 12)·harmony.json(상수·H1~H12 합 100·CF 12) → 다음: a2c3
 - 2026-11-20 02:10 | M1-04a2c1 text-roles.json 33역할(기본 단계·행간·자간 분류)·icons/map.json 40개 → 다음: a2c2 signatures·harmony
 - 2026-11-20 02:00 | M1-04a2b2 palettes.json 32벌(표 hex 전부 일치·대비 실패 0)·taxonomy/color.ts, ASM-011 → 다음: a2c
 - 2026-11-20 01:45 | M1-04a2b presets 8종(3.4.1·3.4.4~3.4.7·3.6.6, 기본값⊂허용 확인) → 다음: a2b2 palettes.json

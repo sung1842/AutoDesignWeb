@@ -1,0 +1,378 @@
+{
+  "bundle": "harmony",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "constants",
+      "kind": "constants",
+      "brandColorMinChroma": 0.04,
+      "brandColorMergeDeltaE": 0.02,
+      "brandColorMax": 3,
+      "relationRanges": {
+        "analogous": [
+          15,
+          45
+        ],
+        "split-complementary": [
+          135,
+          165
+        ],
+        "complementary": [
+          160,
+          200
+        ]
+      },
+      "achromaticPrimaryExempt": 0.04,
+      "accentChromaMaxRatio": 1.3,
+      "bgChromaMax": {
+        "light": 0.03,
+        "tinted-light": 0.035
+      },
+      "surfaceDeltaL": [
+        0.02,
+        0.06
+      ],
+      "accentAreaMax": 0.1,
+      "forbiddenHuePair": [
+        [
+          270,
+          310
+        ],
+        [
+          220,
+          260
+        ]
+      ],
+      "displayToBody": [
+        2.5,
+        8
+      ],
+      "fontWeightsMax": 3,
+      "nonMonoFamiliesMax": 2,
+      "capWithConflict": 79,
+      "colorRulesKo": {
+        "색 공간": "OKLCH. hue 차 = 원 위 최소 각도",
+        "브랜드 색": "C ≥ 0.04인 고유 색(ΔE_OK < 0.02 병합). neutral·상태색·사진 제외. 허용 ≤ 3(H1 만점)",
+        "primary↔accent 관계": "유사 15~45°, 분할보색 135~165°, 보색 160~200°, accent 없음(단색). primary C < 0.04(무채 primary)이면 관계 검사 면제(만점)",
+        "채도 균형": "accent C ≤ primary C × 1.3(primary C < 0.04이면 면제), bg C ≤ 0.03(tinted-light 팔레트 ≤ 0.035, 컬러 배경 팔레트 [P2] ≤ 0.08)",
+        "surface": "\\",
+        "accent 면적": "≤ 10%(1280 전체 페이지 픽셀 기준, 04장 렌더 측정)",
+        "AA 우선": "미적 선택과 대비가 충돌하면 대비가 이긴다(연회색 본문, neumorph 불가)",
+        "금지 hue 조합": "그라디언트 생성 경로 없음(MVP). 팔레트 안에 hue 270~310과 220~260 브랜드 색 동시 사용 금지(AIL-01 예방)"
+      }
+    },
+    {
+      "id": "H1",
+      "kind": "score",
+      "nameKo": "브랜드 색 수",
+      "points": 12,
+      "ruleKo": "≤ 3: 12, 4: 4, ≥ 5: 0",
+      "rule": {
+        "measure": "brandColorCount",
+        "tiers": [
+          {
+            "max": 3,
+            "points": 12
+          },
+          {
+            "eq": 4,
+            "points": 4
+          },
+          {
+            "min": 5,
+            "points": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "H2",
+      "kind": "score",
+      "nameKo": "색 관계",
+      "points": 10,
+      "ruleKo": "범위 안(또는 단색·무채 primary) 10, 밖 0",
+      "rule": {
+        "measure": "colorRelationInRange",
+        "pass": 10,
+        "fail": 0
+      }
+    },
+    {
+      "id": "H3",
+      "kind": "score",
+      "nameKo": "채도 균형",
+      "points": 5,
+      "ruleKo": "조건 2개 각 2.5",
+      "rule": {
+        "measure": "chromaBalanceConditions",
+        "perCondition": 2.5,
+        "conditions": 2
+      }
+    },
+    {
+      "id": "H4",
+      "kind": "score",
+      "nameKo": "폰트 패밀리(mono 제외)",
+      "points": 8,
+      "ruleKo": "≤ 2: 8, 3 이상: 0",
+      "rule": {
+        "measure": "nonMonoFamilies",
+        "tiers": [
+          {
+            "max": 2,
+            "points": 8
+          },
+          {
+            "min": 3,
+            "points": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "H5",
+      "kind": "score",
+      "nameKo": "weight 종류",
+      "points": 5,
+      "ruleKo": "≤ 3: 5, 4: 2, ≥ 5: 0",
+      "rule": {
+        "measure": "fontWeights",
+        "tiers": [
+          {
+            "max": 3,
+            "points": 5
+          },
+          {
+            "eq": 4,
+            "points": 2
+          },
+          {
+            "min": 5,
+            "points": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "H6",
+      "kind": "score",
+      "nameKo": "타입 스케일 준수",
+      "points": 10,
+      "ruleKo": "≥ 95%: 10, 90~95%: 5, < 90%: 0",
+      "rule": {
+        "measure": "typeScaleConformance",
+        "tiers": [
+          {
+            "minRatio": 0.95,
+            "points": 10
+          },
+          {
+            "minRatio": 0.9,
+            "points": 5
+          },
+          {
+            "minRatio": 0,
+            "points": 0
+          }
+        ],
+        "tolerancePx": 0.5
+      }
+    },
+    {
+      "id": "H7",
+      "kind": "score",
+      "nameKo": "display/body 비(1280)",
+      "points": 8,
+      "ruleKo": "2.5~8.0: 8, 밖: 0",
+      "rule": {
+        "measure": "displayToBody1280",
+        "range": [
+          2.5,
+          8
+        ],
+        "pass": 8,
+        "fail": 0
+      }
+    },
+    {
+      "id": "H8",
+      "kind": "score",
+      "nameKo": "간격 준수(4pt)",
+      "points": 10,
+      "ruleKo": "≥ 95%: 10, 90~95%: 5, < 90%: 0",
+      "rule": {
+        "measure": "spacingConformance4pt",
+        "tiers": [
+          {
+            "minRatio": 0.95,
+            "points": 10
+          },
+          {
+            "minRatio": 0.9,
+            "points": 5
+          },
+          {
+            "minRatio": 0,
+            "points": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "H9",
+      "kind": "score",
+      "nameKo": "radius 계열",
+      "points": 8,
+      "ruleKo": "100%: 8, ≥ 95%: 4, 미만 0",
+      "rule": {
+        "measure": "radiusFamilyConformance",
+        "tiers": [
+          {
+            "minRatio": 1,
+            "points": 8
+          },
+          {
+            "minRatio": 0.95,
+            "points": 4
+          },
+          {
+            "minRatio": 0,
+            "points": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "H10",
+      "kind": "score",
+      "nameKo": "상충 조합",
+      "points": 10,
+      "ruleKo": "0건: 10, ≥ 1건: 0 + 상한 79",
+      "rule": {
+        "measure": "conflictCount",
+        "tiers": [
+          {
+            "max": 0,
+            "points": 10
+          },
+          {
+            "min": 1,
+            "points": 0
+          }
+        ],
+        "capOnViolation": 79
+      }
+    },
+    {
+      "id": "H11",
+      "kind": "score",
+      "nameKo": "장식 예산",
+      "points": 6,
+      "ruleKo": "`decor` 수 ≤ `decor.max`: 6, 초과 1개당 −3",
+      "rule": {
+        "measure": "decorOverMax",
+        "base": 6,
+        "perOver": -3,
+        "floor": 0
+      }
+    },
+    {
+      "id": "H12",
+      "kind": "score",
+      "nameKo": "리듬",
+      "points": 8,
+      "ruleKo": "LT-05~08 위반 1건당 −2(최소 0). RH-01·RH-02 포함 제안(D-0307)",
+      "rule": {
+        "measure": "rhythmViolations",
+        "base": 8,
+        "perViolation": -2,
+        "floor": 0,
+        "rules": [
+          "LT-05",
+          "LT-06",
+          "LT-07",
+          "LT-08"
+        ]
+      }
+    },
+    {
+      "id": "CF-01",
+      "kind": "conflict",
+      "comboKo": "glass + 뒤 배경이 단색",
+      "preventionKo": "컴파일러: glass는 이미지·색면 위 요소에만"
+    },
+    {
+      "id": "CF-02",
+      "kind": "conflict",
+      "comboKo": "brutal-offset + subtle/layered 그림자 혼용",
+      "preventionKo": "depth.style 1종"
+    },
+    {
+      "id": "CF-03",
+      "kind": "conflict",
+      "comboKo": "sharp family + pill 버튼",
+      "preventionKo": "`buttonPill`은 round·pill만"
+    },
+    {
+      "id": "CF-04",
+      "kind": "conflict",
+      "comboKo": "`contrastSerif` 페어링(FP02, FP06, FP20) + 기하 고딕 본문 + round/pill family",
+      "preventionKo": "허용 집합에서 제외: contrastSerif 페어링을 허용하는 유형은 T1·T4·T8이며 T1·T8은 round/pill 불허, T4의 FP06은 본문이 serif(Hahmlet)라 해당 없음"
+    },
+    {
+      "id": "CF-05",
+      "kind": "conflict",
+      "comboKo": "grain + glass",
+      "preventionKo": "SIG-07 충돌 규칙"
+    },
+    {
+      "id": "CF-06",
+      "kind": "conflict",
+      "comboKo": "다크 bg + 순흑(L < 0.05) 그림자",
+      "preventionKo": "3.12(다크에서 그림자 없음)"
+    },
+    {
+      "id": "CF-07",
+      "kind": "conflict",
+      "comboKo": "보라→파랑 그라디언트",
+      "preventionKo": "그라디언트 생성 경로 없음"
+    },
+    {
+      "id": "CF-08",
+      "kind": "conflict",
+      "comboKo": "duotone + vivid 팔레트",
+      "preventionKo": "SIG-10 요구 조건"
+    },
+    {
+      "id": "CF-09",
+      "kind": "conflict",
+      "comboKo": "장식 효과 3종 이상",
+      "preventionKo": "decor.max ≤ 2"
+    },
+    {
+      "id": "CF-10",
+      "kind": "conflict",
+      "comboKo": "다크 테마 + brutal-offset",
+      "preventionKo": "3.12",
+      "proposedByCh03": true
+    },
+    {
+      "id": "CF-11",
+      "kind": "conflict",
+      "comboKo": "SIG-06 마키 + `motion.level = none`",
+      "preventionKo": "SIG-06 요구 조건",
+      "proposedByCh03": true
+    },
+    {
+      "id": "CF-12",
+      "kind": "conflict",
+      "comboKo": "hero.centered + eyebrow Tag(\"New/신규/출시/✨/Introducing\" 포함)",
+      "preventionKo": "04장 AIL-04와 동일 판정",
+      "proposedByCh03": true
+    }
+  ]
+}

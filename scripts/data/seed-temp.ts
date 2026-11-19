@@ -705,6 +705,179 @@ function genIcons(ctx: Ctx): Out[] {
   return [{ path: "data/icons/map.json", content: bundle(ctx, "icons", items) }];
 }
 
+// ---------- C03 signatures.json (03장 3.2.4 장식 효과 + 시그니처 12종) ----------
+const codeList = (c: string): string[] =>
+  [...c.matchAll(/`([^`]+)`|\b(SIG-\d\d)\b/g)].map((m) => m[1] ?? m[2] ?? "");
+
+function genSignatures(ctx: Ctx): Out[] {
+  const sec = section(chapter(ctx.root, "03_design_system.md"), "### 3.2.4");
+  const decorRows = table(sec);
+  const sigSec = sec.slice(sec.indexOf("시그니처 디테일("));
+  const sigRows = table(sigSec);
+  const decors: Obj[] = decorRows.map((r) => ({
+    id: unquote(r[0] ?? ""),
+    kind: "decor",
+    nameKo: r[1] ?? "",
+    sourceKo: r[2] ?? "",
+  }));
+  const sigs: Obj[] = sigRows.map((r) => {
+    const decor = unquote(r[2] ?? "");
+    const reserved = (r[1] ?? "").includes("예약");
+    const item: Obj = {
+      id: r[0] ?? "",
+      kind: "signature",
+      nameKo: r[1] ?? "",
+      decorId: decor === "—" ? null : decor,
+      reserved,
+    };
+    if (!reserved) {
+      item.blocksKo = r[3] ?? "";
+      item.requiresKo = r[4] ?? "";
+      // 충돌: SIG ID와 DecorId만 구조화, 나머지 문장은 conflictsKo에 남긴다.
+      item.conflicts = codeList(r[5] ?? "").filter(
+        (x) => x.startsWith("SIG-") || decorRows.some((d) => unquote(d[0] ?? "") === x),
+      );
+      item.conflictsKo = r[5] ?? "";
+    }
+    return item;
+  });
+  if (sigs.length !== 12) throw new Error(`3.2.4 시그니처 ${sigs.length} ≠ 12`);
+  return [
+    {
+      path: "data/taxonomy/signatures.json",
+      content: bundle(ctx, "signatures", [...decors, ...sigs]),
+    },
+  ];
+}
+
+// ---------- C03 harmony.json (03장 3.14 색 규칙·H1~H12·CF-01~12) ----------
+/** 3.14.3 득점 규칙의 구조화(문장 원문은 ruleKo로 함께 둔다). */
+const H_RULES: Record<string, Obj> = {
+  H1: {
+    measure: "brandColorCount",
+    tiers: [
+      { max: 3, points: 12 },
+      { eq: 4, points: 4 },
+      { min: 5, points: 0 },
+    ],
+  },
+  H2: { measure: "colorRelationInRange", pass: 10, fail: 0 },
+  H3: { measure: "chromaBalanceConditions", perCondition: 2.5, conditions: 2 },
+  H4: {
+    measure: "nonMonoFamilies",
+    tiers: [
+      { max: 2, points: 8 },
+      { min: 3, points: 0 },
+    ],
+  },
+  H5: {
+    measure: "fontWeights",
+    tiers: [
+      { max: 3, points: 5 },
+      { eq: 4, points: 2 },
+      { min: 5, points: 0 },
+    ],
+  },
+  H6: {
+    measure: "typeScaleConformance",
+    tiers: [
+      { minRatio: 0.95, points: 10 },
+      { minRatio: 0.9, points: 5 },
+      { minRatio: 0, points: 0 },
+    ],
+    tolerancePx: 0.5,
+  },
+  H7: { measure: "displayToBody1280", range: [2.5, 8.0], pass: 8, fail: 0 },
+  H8: {
+    measure: "spacingConformance4pt",
+    tiers: [
+      { minRatio: 0.95, points: 10 },
+      { minRatio: 0.9, points: 5 },
+      { minRatio: 0, points: 0 },
+    ],
+  },
+  H9: {
+    measure: "radiusFamilyConformance",
+    tiers: [
+      { minRatio: 1, points: 8 },
+      { minRatio: 0.95, points: 4 },
+      { minRatio: 0, points: 0 },
+    ],
+  },
+  H10: {
+    measure: "conflictCount",
+    tiers: [
+      { max: 0, points: 10 },
+      { min: 1, points: 0 },
+    ],
+    capOnViolation: 79,
+  },
+  H11: { measure: "decorOverMax", base: 6, perOver: -3, floor: 0 },
+  H12: {
+    measure: "rhythmViolations",
+    base: 8,
+    perViolation: -2,
+    floor: 0,
+    rules: ["LT-05", "LT-06", "LT-07", "LT-08"],
+  },
+};
+
+function genHarmony(ctx: Ctx): Out[] {
+  const md = chapter(ctx.root, "03_design_system.md");
+  const colorRows = table(section(md, "### 3.14.1"));
+  const hRows = table(section(md, "### 3.14.3"));
+  const cfRows = table(section(md, "### 3.14.4"));
+  const constants: Obj = {
+    id: "constants",
+    kind: "constants",
+    brandColorMinChroma: 0.04,
+    brandColorMergeDeltaE: 0.02,
+    brandColorMax: 3,
+    relationRanges: {
+      analogous: [15, 45],
+      "split-complementary": [135, 165],
+      complementary: [160, 200],
+    },
+    achromaticPrimaryExempt: 0.04,
+    accentChromaMaxRatio: 1.3,
+    bgChromaMax: { light: 0.03, "tinted-light": 0.035 },
+    surfaceDeltaL: [0.02, 0.06],
+    accentAreaMax: 0.1,
+    forbiddenHuePair: [
+      [270, 310],
+      [220, 260],
+    ],
+    displayToBody: [2.5, 8.0],
+    fontWeightsMax: 3,
+    nonMonoFamiliesMax: 2,
+    capWithConflict: 79,
+    colorRulesKo: Object.fromEntries(colorRows.map((r) => [r[0] ?? "", r[1] ?? ""])),
+  };
+  const hs: Obj[] = hRows.map((r) => ({
+    id: r[0] ?? "",
+    kind: "score",
+    nameKo: r[1] ?? "",
+    points: Number(r[2]),
+    ruleKo: r[3] ?? "",
+    rule: H_RULES[r[0] ?? ""] ?? {},
+  }));
+  const total = hs.reduce((a, h) => a + Number(h.points), 0);
+  if (total !== 100) throw new Error(`3.14.3 배점 합 ${total} ≠ 100(AC-03-38)`);
+  const cfs: Obj[] = cfRows.map((r) => ({
+    id: (r[0] ?? "").replace(/\(추가\)/, ""),
+    kind: "conflict",
+    comboKo: r[1] ?? "",
+    preventionKo: r[2] ?? "",
+    ...((r[0] ?? "").includes("추가") ? { proposedByCh03: true } : {}),
+  }));
+  return [
+    {
+      path: "data/taxonomy/harmony.json",
+      content: bundle(ctx, "harmony", [constants, ...hs, ...cfs]),
+    },
+  ];
+}
+
 /** 생성기 목록(의존 순서). 나머지 묶음은 M1-04b 이후 단위에서 추가한다. */
 export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genAxes,
@@ -716,6 +889,8 @@ export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genPalettes,
   genTextRoles,
   genIcons,
+  genSignatures,
+  genHarmony,
 ];
 
 function isHuman(abs: string): boolean {

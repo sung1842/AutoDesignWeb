@@ -1,0 +1,201 @@
+{
+  "bundle": "signatures",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "grain",
+      "kind": "decor",
+      "nameKo": "그레인 질감 타일",
+      "sourceKo": "SIG-07"
+    },
+    {
+      "id": "glass",
+      "kind": "decor",
+      "nameKo": "반투명 블러 패널",
+      "sourceKo": "`depth.style = glass`"
+    },
+    {
+      "id": "brutal-offset",
+      "kind": "decor",
+      "nameKo": "하드 오프셋 그림자",
+      "sourceKo": "`depth.style = brutal-offset`"
+    },
+    {
+      "id": "oversized-type",
+      "kind": "decor",
+      "nameKo": "장식용 거대 숫자·타이포",
+      "sourceKo": "SIG-03"
+    },
+    {
+      "id": "outline-text",
+      "kind": "decor",
+      "nameKo": "외곽선 디스플레이 텍스트",
+      "sourceKo": "SIG-11"
+    },
+    {
+      "id": "grid-pattern",
+      "kind": "decor",
+      "nameKo": "그리드 라인 노출 배경",
+      "sourceKo": "SIG-04"
+    },
+    {
+      "id": "duotone",
+      "kind": "decor",
+      "nameKo": "사진 듀오톤",
+      "sourceKo": "SIG-10(`media.treatment = duotone`)"
+    },
+    {
+      "id": "marquee",
+      "kind": "decor",
+      "nameKo": "흐르는 텍스트 띠",
+      "sourceKo": "SIG-06"
+    },
+    {
+      "id": "SIG-01",
+      "kind": "signature",
+      "nameKo": "얇은 괘선",
+      "decorId": null,
+      "reserved": false,
+      "blocksKo": "value, feature, faq, menu, footer",
+      "requiresKo": "`shape.border ≠ bold`",
+      "conflicts": [
+        "SIG-04"
+      ],
+      "conflictsKo": "SIG-04"
+    },
+    {
+      "id": "SIG-02",
+      "kind": "signature",
+      "nameKo": "섹션 넘버링(01/02)",
+      "decorId": null,
+      "reserved": false,
+      "blocksKo": "섹션 제목 eyebrow 전체",
+      "requiresKo": "섹션 수 ≥ 4",
+      "conflicts": [
+        "SIG-08"
+      ],
+      "conflictsKo": "SIG-08"
+    },
+    {
+      "id": "SIG-03",
+      "kind": "signature",
+      "nameKo": "거대 숫자",
+      "decorId": "oversized-type",
+      "reserved": false,
+      "blocksKo": "stats, process, value",
+      "requiresKo": "숫자 슬롯 존재",
+      "conflicts": [
+        "SIG-11"
+      ],
+      "conflictsKo": "SIG-11"
+    },
+    {
+      "id": "SIG-04",
+      "kind": "signature",
+      "nameKo": "그리드 라인 노출",
+      "decorId": "grid-pattern",
+      "reserved": false,
+      "blocksKo": "hero, showcase",
+      "requiresKo": "`layout.grid_mode ≠ bento`",
+      "conflicts": [
+        "SIG-01",
+        "glass"
+      ],
+      "conflictsKo": "SIG-01, `glass`"
+    },
+    {
+      "id": "SIG-05",
+      "kind": "signature",
+      "nameKo": "(예약, MVP 미사용)",
+      "decorId": null,
+      "reserved": true
+    },
+    {
+      "id": "SIG-06",
+      "kind": "signature",
+      "nameKo": "마키",
+      "decorId": "marquee",
+      "reserved": false,
+      "blocksKo": "cta 위 띠, hero 하단 띠",
+      "requiresKo": "`motion.level = subtle`",
+      "conflicts": [],
+      "conflictsKo": "—"
+    },
+    {
+      "id": "SIG-07",
+      "kind": "signature",
+      "nameKo": "그레인",
+      "decorId": "grain",
+      "reserved": false,
+      "blocksKo": "페이지 전체 배경",
+      "requiresKo": "`theme = light`",
+      "conflicts": [
+        "glass"
+      ],
+      "conflictsKo": "`glass`(CF-05)"
+    },
+    {
+      "id": "SIG-08",
+      "kind": "signature",
+      "nameKo": "모노 라벨",
+      "decorId": null,
+      "reserved": false,
+      "blocksKo": "eyebrow·stats 라벨",
+      "requiresKo": "페어링에 mono 존재",
+      "conflicts": [
+        "SIG-02"
+      ],
+      "conflictsKo": "SIG-02"
+    },
+    {
+      "id": "SIG-09",
+      "kind": "signature",
+      "nameKo": "와이드 자간 라벨",
+      "decorId": null,
+      "reserved": false,
+      "blocksKo": "eyebrow, nav 링크(라틴 대문자만 +0.08em, 한글은 +0.02em)",
+      "requiresKo": "—",
+      "conflicts": [],
+      "conflictsKo": "—"
+    },
+    {
+      "id": "SIG-10",
+      "kind": "signature",
+      "nameKo": "사진 듀오톤",
+      "decorId": "duotone",
+      "reserved": false,
+      "blocksKo": "모든 사진",
+      "requiresKo": "`color.chroma ≠ vivid`(CF-08)",
+      "conflicts": [],
+      "conflictsKo": "`media.treatment ≠ duotone` 이외 처리"
+    },
+    {
+      "id": "SIG-11",
+      "kind": "signature",
+      "nameKo": "아웃라인 디스플레이",
+      "decorId": "outline-text",
+      "reserved": false,
+      "blocksKo": "hero(display 단계 1줄만), footer big-type",
+      "requiresKo": "display ≥ 72px",
+      "conflicts": [
+        "SIG-03"
+      ],
+      "conflictsKo": "SIG-03"
+    },
+    {
+      "id": "SIG-12",
+      "kind": "signature",
+      "nameKo": "비대칭 이미지 오프셋",
+      "decorId": null,
+      "reserved": false,
+      "blocksKo": "hero.split, story, about",
+      "requiresKo": "이미지 슬롯 존재",
+      "conflicts": [],
+      "conflictsKo": "—"
+    }
+  ]
+}
