@@ -456,4 +456,79 @@ export const CONFIG_GENERATORS = [
   genHighRiskBrands,
   genProhibited,
   genImageTagKeywords,
+  genNormalizer,
 ];
+
+// ---------- B18 data/normalizers/2026-S0.json (05장 5.8.2 스키마, 09장 9.2.4 B18 합성 부트스트랩) ----------
+// M1에는 렌더러·추출기가 없어 코퍼스 200 렌더를 만들 수 없다(ASM-020). 분위표는 특징 단위 범위의 등간격 자리표시이고
+// `corpus.n = 0`, 전 축 reliable=false로 둔다. M3(추출기) 단위에서 seed:temp가 9.2.4 절차로 다시 만든다.
+const FEATURE_RANGE: Record<string, { transform: "identity" | "log1p"; lo: number; hi: number }> = {
+  F01: { transform: "identity", lo: 0, hi: 32 },
+  F02: { transform: "identity", lo: 0, hi: 1 },
+  F04: { transform: "identity", lo: 0, hi: 4 },
+  F05: { transform: "identity", lo: 0, hi: 1 },
+  F06: { transform: "identity", lo: 0, hi: 48 },
+  F07: { transform: "identity", lo: 0, hi: 1 },
+  F08: { transform: "identity", lo: 0, hi: 6 },
+  F09: { transform: "identity", lo: 0, hi: 1 },
+  F10: { transform: "identity", lo: 0, hi: 1 },
+  F11: { transform: "log1p", lo: 0, hi: Math.log1p(400) },
+  F12: { transform: "identity", lo: 0, hi: 200 },
+  F13: { transform: "identity", lo: 0, hi: 12 },
+  F14: { transform: "identity", lo: -1, hi: 1 },
+  F15: { transform: "identity", lo: -0.05, hi: 0.05 },
+  F16: { transform: "identity", lo: 0, hi: 1 },
+  F18: { transform: "identity", lo: 1, hi: 8 },
+  F19: { transform: "identity", lo: 0, hi: 0.25 },
+  F21: { transform: "identity", lo: 1, hi: 8 },
+  F22: { transform: "identity", lo: 0, hi: 10 },
+  F23: { transform: "identity", lo: 0, hi: 1 },
+};
+const r6 = (x: number): number => Math.round(x * 1e6) / 1e6;
+
+export function genNormalizer(ctx: Ctx): Out[] {
+  const sec = section(chapter(ctx.root, "05_reference_trend.md"), "### 5.5.4");
+  const mapping: Obj = {};
+  for (const [axisCell = "", comp = ""] of table(sec)) {
+    const axis = axisCell.split(" ")[1] ?? "";
+    const weights: Record<string, number> = {};
+    const sign: Record<string, number> = {};
+    for (const part of comp.split(" · ")) {
+      const m = /^(\(1−)?(F\d\d)\b.*?\)?\s+([\d.]+)$/.exec(part.trim());
+      if (!m?.[2] || !m[3]) throw new Error(`5.5.4 해석 실패: ${part}`);
+      weights[m[2]] = Number(m[3]);
+      if (m[1]) sign[m[2]] = -1;
+    }
+    const sum = Object.values(weights).reduce((a, b) => a + b, 0);
+    if (Math.abs(sum - 1) > 1e-9) throw new Error(`5.5.4 ${axis} 가중치 합 ${sum}`);
+    mapping[axis] = { weights, sign, b0: 0, b1: 1, source: "initial" };
+  }
+  const used = new Set(
+    Object.values(mapping).flatMap((m) => Object.keys((m as Obj).weights as Obj)),
+  );
+  const features: Obj = {};
+  for (const f of [...used].sort()) {
+    const fr = FEATURE_RANGE[f];
+    if (!fr) throw new Error(`특징 범위 없음: ${f}`);
+    features[f] = {
+      transform: fr.transform,
+      q: Array.from({ length: 101 }, (_, i) => r6(fr.lo + ((fr.hi - fr.lo) * i) / 100)),
+      placeholder: true,
+    };
+  }
+  const axes = Object.keys(mapping);
+  const body: Obj = {
+    version: "2026-S0",
+    provenance: "temp",
+    extractor_version: "0.0.0-bootstrap",
+    font_class_table_version: "1",
+    trend_feature_def_version: "1",
+    corpus: { n: 0, hash: null, pending: "M3 seed:temp 재생성(09장 9.2.4 B18 코퍼스 200 렌더)" },
+    features,
+    mapping,
+    reliable: Object.fromEntries(axes.map((a) => [a, false])),
+    subjective: Object.fromEntries(axes.map((a) => [a, false])),
+    inter_rater: "unverified",
+  };
+  return [{ path: "data/normalizers/2026-S0.json", content: `${JSON.stringify(body, null, 2)}\n` }];
+}

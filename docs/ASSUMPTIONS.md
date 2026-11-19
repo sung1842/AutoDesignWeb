@@ -136,3 +136,10 @@
 - 선택: B21 공개적으로 알려진 국내 금융·통신·포털·커머스·물류·공공기관 87개(domains 빈 배열). 8.9.2 (b) 부분 포함 규칙의 오탐을 피하려고 일반 영단어 부분열이 되는 짧은 alias(SKT·nts·nps·apple)는 넣지 않았다. B22 범주 6 × 키워드 10~12(일반 단어 부분열 오탐 우려 단어 제외). B24 키워드 62개, 각 1태그(03장 3.10.2 ImageTag만, data:validate 교차 참조 추가). 적정성은 사람 확인(HUMAN_TODO, 08장 Q13)
 - 영향 범위: config/high_risk_brands.json·prohibited_categories.json·image_tag_keywords.json, M5 compliance/abuse·industryTags
 - 되돌리기 비용: 낮음
+
+## ASM-020 · M1 · conflict · 2026-11-19T17:14Z
+- 질문: 09장 9.2.4 B18은 코퍼스 200 렌더 + 추출기로 분위표·b0/b1을 만들라고 하지만, 렌더러(M2)·추출기(M3)가 M1에 없다. 그런데 M1 ① data:validate는 25묶음(B18 포함) 존재를 요구한다
+- 근거 탐색: 05장 5.5.3·5.5.4·5.8.2·5.9 temp 분기, 09장 9.2.2·9.2.4 B18·9.4.3 ①·9.4.4 ③
+- 선택: M1에는 5.8.2 스키마의 부트스트랩 `2026-S0`을 만든다. mapping = 5.5.4 `mapping.initial` 그대로(b0=0·b1=1, (1−F)는 sign −1), 분위표 = 특징 단위 범위 등간격 자리표시(`placeholder: true`), `corpus.n=0`, 전 축 reliable=false, inter_rater unverified. M3 추출기 단위에서 seed:temp가 9.2.4 절차(200 렌더, b0·b1만 최소제곱)로 다시 만든다(PROGRESS M3에 할 일로 기록). 홀드아웃 재적합 금지(F19)는 그때 그대로 지킨다
+- 영향 범위: data/normalizers/2026-S0.json, M3 extractor-roundtrip·M4 survey:build
+- 되돌리기 비용: 낮음(M3에서 재생성)
