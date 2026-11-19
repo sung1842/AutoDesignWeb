@@ -25,3 +25,4 @@
 - [ ] (ASM-012) `data/taxonomy/blocks.json` temp 문안(블록 기본 제목·nav 라벨)과 variant별 allowed_bg 값 확인. 03장 3.6.1 "50 variant"(표 합계 53, nav 제외 해석) 표기 정정 여부
 - [ ] (ASM-013) B6 폰트 26종 원본 파일·OFL 원문·RFN 여부 확인 후 `data/fonts/registry.json`(human)로 교체. temp는 파일 없음(`filesPending`)이라 M2 렌더는 폴백 스택으로만 가능
 - [ ] (ASM-014) 03장 3.10.2 톤 분포 "각 ≥ 30%"가 8장 카테고리에서 성립 불가 → 기준 정정(예: 각 ≥ 25% 또는 장수 9 이상). B8 실사진 192장 투입 시 함께 확인
+- [ ] (ASM-015) AC-03-11 단조성에서 `type.headline_weight`(페어링 전환 시 웨이트 목록 변경) 제외 해석 확인. 03장 3.3.2·AC-03-11 문구 정정 여부
