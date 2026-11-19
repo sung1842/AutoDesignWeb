@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P2
-- lock: {owner: 2026-11-19T11:08Z, since: 2026-11-19T11:20Z}
+- lock: {owner: 2026-11-19T11:08Z, since: 2026-11-19T11:25Z}
 - limit.next_reset_kst: 2026-11-20 01:08
 - 마지막 갱신: 2026-11-19 16:10 KST (예약 세션: decisions_v5 작성)
 
@@ -29,8 +29,9 @@
 - 라운드 2 반영 단위(decisions_v3.md "반영 순서" 참고): [x] 07-a [x] 07-b [x] 07-c [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 09-a [x] 09-b [x] 09-c [x] 04-a [x] 04-b [x] 04-c [x] 03 [x] 02 [x] 05 [x] 01 [x] 08 [x] 00 [x] 잔여 표기 grep
 - 라운드 3: [x] PM [x] 프로덕트 디자이너 [x] UX [x] UI [x] 테크 리드 [x] AI/ML [x] QA [x] 법무 → [x] decisions_v4(T-01~T-36) [x] 반영(아래 22단위)
 - 라운드 3 반영 단위(decisions_v4.md "반영 순서" 참고): [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 07-a [x] 07-b [x] 07-c [x] 07-d [x] 09-a [x] 09-b [x] 09-c [x] 01-a [x] 01-b [x] 04-a [x] 04-b [x] 03-a [x] 03-b [x] 08-a [x] 02-a [x] 05-a [x] 00-a [x] 잔여 표기 grep
-- 라운드 4(1.1 규칙: 리뷰어 3명·패킷 `docs/reviews/round4/packet.md`): [x] R-A 제품·경험 [x] R-B 기술·품질 [x] R-C 법무 → [x] decisions_v5(U-01~U-13) [ ] 반영(아래 9단위)
-- 라운드 4 반영 단위(decisions_v5.md "반영 순서"): [x] 06-a [x] 06-b [x] 07-a [x] 09-a [x] 02-a [x] 04-a+03-a [x] 01-a [x] 08-a [ ] 잔여 grep
+- 라운드 4(1.1 규칙: 리뷰어 3명·패킷 `docs/reviews/round4/packet.md`): [x] R-A 제품·경험 [x] R-B 기술·품질 [x] R-C 법무 → [x] decisions_v5(U-01~U-13) [x] 반영(아래 9단위)
+- 라운드 4 반영 단위(decisions_v5.md "반영 순서"): [x] 06-a [x] 06-b [x] 07-a [x] 09-a [x] 02-a [x] 04-a+03-a [x] 01-a [x] 08-a [x] 잔여 grep
+- 라운드 5(패킷 `docs/reviews/round5/packet.md`): [ ] 패킷 [ ] R-A [ ] R-B [ ] R-C → [ ] decisions_v6 [ ] 반영
 - 판정 기록(라운드별 C1/C2/C3):
   - R2 PM: FAIL/FAIL/FAIL (Blocker 0, Major 5: 예산-목표 불일치, 취소 시 한도 규칙 충돌, KPI 쿼리 분모, 검증 표본 확보, 00↔07·09 불일치)
   - R2 UX: FAIL/FAIL/FAIL (1라운드 19/19 해결, Blocker 0, Major 3: 결과 신뢰 문구 01↔02 불일치, 진단 카드 크기 규칙이 실제 화면에서 불성립, 편집 가능 판정을 화면 폭으로 해 200% 확대 시 편집 소실)
@@ -62,6 +63,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 20:25 | 잔여 grep: 옛 표기 6종 대체 문맥뿐, 신규 AC 정의 각 1건. 라운드 4 반영 완료 → 다음: r5 패킷
 - 2026-11-19 20:20 | r4 08-a: 8.7.7 hold·증거·감사 호출·미확인 요청 행, 8.7.9·8.9.5 ③b→③, AC-08-33·56·57, 신규 58·59, 00 ADM-04
 - 2026-11-19 16:15 | r4 01-a: 1.12.2 기본 규칙·신규 3코드 행, verify 착지 S14 support.verified, AC-01-60
 - 2026-11-19 16:15 | r4 04-a+03-a: maxChars_job 정수·t-1 계산(전 조합 ≥10 확인), defaultImageTag 폴백, AC-04-44·46
