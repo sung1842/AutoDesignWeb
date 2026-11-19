@@ -147,3 +147,4 @@
 - 2026-11-20 02:15 | M1-04c3 B15 골격, M1-04 완료: data:validate 33묶음 녹색, data.test 9/11 → 다음: M1-05 taxonomy 로더
 - 2026-11-20 02:22 | M1-05 loadTaxonomy·nearestType·checkBridgeRules(+단위 5), data.test 11/11, verify:fast pass_blocked → 다음: M1-06 마이그레이션
 - 2026-11-20 02:23 | M1-06 마이그레이션 0001~0006+9000 local·db:reset, AC-06-01 녹색 → 다음: M1-07 RLS·DbPort
+- 2026-11-20 02:26 | M1-07 RLS·DbPort·픽스처, shim에 auth 테이블 service_role 권한, db.test 13/17 → 다음: M1-08 db:seed

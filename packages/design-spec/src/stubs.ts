@@ -3,6 +3,7 @@ import type { L1, L2 } from "@tastefit/taxonomy";
 import type { DesignData } from "./data.js";
 import { todo } from "./todo.js";
 import { predictL1Vec } from "./predict.js";
+import { letterSpacingEmImpl, signatureEligibleImpl } from "./signature.js";
 import type {
   DerivedTokens,
   DesignSpec,
@@ -35,9 +36,8 @@ export function exportTokens(
 export function predictL1(l2: L2, data: DesignData): Vec5 {
   return predictL1Vec(l2, data);
 }
-export function signatureEligible(_id: string, _ctx: SigCtx): boolean {
-  void [_id, _ctx];
-  return todo("M2-03", "signatureEligible");
+export function signatureEligible(id: string, ctx: SigCtx): boolean {
+  return signatureEligibleImpl(id, ctx);
 }
 export interface CompileInput {
   taste: TasteResult;
@@ -64,9 +64,8 @@ export function expectedSize(_tokens: Record<string, unknown>, _step: string, _v
   void [_tokens, _step, _vw];
   return todo("M2-03", "expectedSize");
 }
-export function letterSpacingEm(_px: number, _cls: "sans" | "serif" | "latin-heading"): number {
-  void [_px, _cls];
-  return todo("M2-03", "letterSpacingEm");
+export function letterSpacingEm(px: number, cls: "sans" | "serif" | "latin-heading"): number {
+  return letterSpacingEmImpl(px, cls);
 }
 export interface TreeOptions {
   pairingId?: string;
