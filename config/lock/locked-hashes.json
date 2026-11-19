@@ -49,6 +49,12 @@
       "lockedBy": "spec",
       "lockedAt": "2026-11-19T13:20:55Z",
       "commit": "acd413d"
+    },
+    "config/diagnosis-tuned.json": {
+      "sha256": "2df08a6f4302d26218a302d22a87276956cf27cb7b014c25d458a529173ef240",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T13:20:56Z",
+      "commit": "6351f50"
     }
   }
 }
