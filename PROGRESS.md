@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T13:10Z, since: 2026-11-19T13:22Z}
+- lock: {owner: 2026-11-19T13:10Z, since: 2026-11-19T13:27Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
@@ -89,7 +89,7 @@
   - [x] 04 packages/config: env zod(06장 env 목록)·thresholds 로더·네트워크 가드, .env.example, env:init(.env.local 비밀값)
   - [x] 05 spec:extract(--from FINAL/review-pass/--init-tuned) → config/thresholds.json·test-policy.json(lockedBy spec), diagnosis-tuned.json(자체 잠금)
   - [x] 06 native 스택: PG16(:54322, runuser postgres) + packages/db/shim, `pnpm dev:stack`·`db:native` (web·worker `dev` 스크립트·local 드라이버는 07·M1)
-  - [ ] 07 web `/api/health`, worker `/health`, 필수 env 누락 시 종료 1
+  - [x] 07 web `/api/health`(Next 16, tsconfig.next.json), worker `/health`(:8081, pg-boss migrate), 필수 env 누락 시 종료 1 — stack.test 8/8 녹색
   - [ ] 08 guard 1~4단계(잠금 해시·금지 패턴·테스트 수·deps/라이선스)
   - [ ] 09 guard 5~7단계(spec 대조·baseRef·DECISIONS_LOG append-only·qa:trace --audit)
   - [ ] 10 tests/guard 메타 테스트(⑥⑦)
@@ -102,6 +102,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 23:10 | M0-07 web·worker health, env 종료 1, m0 stack.test 8/8 녹색 → 다음: M0-08 guard 1~4
 - 2026-11-19 22:55 | M0-06 native PG+shim 기동 확인(tastefit_app 접속), dev:stack 골격 → 다음: M0-07 health
 - 2026-11-19 22:45 | M0-05 spec:extract, review-pass=FINAL 바이트 동일 확인, config 3파일 잠금 → 다음: M0-06 native 스택
 - 2026-11-19 22:35 | M0-04 config(env·dotenv·thresholds·network guard)+단위테스트, AD-026 → 다음: M0-05 spec:extract

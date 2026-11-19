@@ -13,6 +13,16 @@
   },
   "scripts": {
     "build": "tsc -b",
-    "typecheck": "tsc -b --pretty false"
+    "typecheck": "tsc -b --pretty false",
+    "dev": "tsx src/main.ts",
+    "start:check-env": "tsx src/main.ts --check-env"
+  },
+  "dependencies": {
+    "@tastefit/config": "workspace:^",
+    "@tastefit/db": "workspace:^",
+    "pg-boss": "^12.0.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.0"
   }
 }

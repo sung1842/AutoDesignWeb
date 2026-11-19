@@ -13,6 +13,20 @@
   },
   "scripts": {
     "build": "tsc -b",
-    "typecheck": "tsc -b --pretty false"
+    "typecheck": "tsc -b --pretty false",
+    "dev": "tsx src/check-env.ts && next dev -p 3000",
+    "start:check-env": "tsx src/check-env.ts"
+  },
+  "dependencies": {
+    "@tastefit/config": "workspace:^",
+    "@tastefit/db": "workspace:^",
+    "next": "^16.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tsx": "^4.23.0"
   }
 }

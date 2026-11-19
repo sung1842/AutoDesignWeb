@@ -2,3 +2,7 @@ docs/
 tools/
 *.md
 pnpm-lock.yaml
+config/thresholds.json
+config/test-policy.json
+config/lock/
+.next/

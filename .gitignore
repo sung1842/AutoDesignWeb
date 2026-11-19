@@ -8,3 +8,6 @@ reports/*.partial.json
 coverage/
 dist/
 *.tsbuildinfo
+apps/web/AGENTS.md
+apps/web/next-env.d.ts
+*.tsbuildinfo
