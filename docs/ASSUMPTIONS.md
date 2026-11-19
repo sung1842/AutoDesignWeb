@@ -45,3 +45,10 @@
 - 선택: 8d 검사에서 `config/lock/locked-hashes.json`도 허용. 그 커밋에서 tuned 외 entry가 바뀌면 guard:lock 규칙 3이 FAIL
 - 영향 범위: scripts/guard/stages/tuned.ts
 - 되돌리기 비용: 낮음
+
+## ASM-007 · M0 · conflict · 2026-11-19T15:00Z
+- 질문: 9.4.2 종료 처리·9.5.6 표는 M0 끝에 `scripts/verify/**`·`scripts/guard/**`·`.guard/verify-scripts.json` 자체 잠금을 요구하는데, 9.5.6 규칙 4는 "이번 커밋에서 새로 추가된 파일만 등록"이라 여러 커밋에 걸쳐 만든 이 파일들을 잠글 수 없음
+- 근거 탐색: 09장 9.4.2·9.5.6 판정 규칙 4·5
+- 선택: `guard:self-lock --m0-end`(닫힌 목록, entry 없는 추적 파일만)을 9.4.2가 명시한 1회 예외로 둔다. guard가 import하는 판정 코드 `scripts/qa/**`(7단계)·`scripts/spec/**`(5·6단계)와 AD-023이 M0 종료 잠금을 정한 `docs/dependency-allowlist.md`도 같이 잠근다(잠금을 늘리는 쪽이라 기준 완화 아님)
+- 영향 범위: scripts/guard/self-lock.ts, config/lock/locked-hashes.json
+- 되돌리기 비용: 낮음(사람 relock)

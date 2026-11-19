@@ -1,8 +1,8 @@
 {
   "milestone": "M0",
-  "gitSha": "7e8b5213b067037d111c60e9c8cf84afff316b64",
-  "startedAt": "2026-11-19T14:31:53.655Z",
-  "finishedAt": "2026-11-19T14:34:46.344Z",
+  "gitSha": "bb888e2c3823f85d4eaf5c0f0e0682b4797ef5d7",
+  "startedAt": "2026-11-19T14:37:50.057Z",
+  "finishedAt": "2026-11-19T14:40:45.726Z",
   "steps": [
     {
       "name": "guard",
@@ -12,37 +12,42 @@
         "BLK-001",
         "BLK-003"
       ],
-      "durationMs": 2545
+      "durationMs": 2442
     },
     {
       "name": "lint",
       "status": "pass",
       "details": "",
-      "durationMs": 1649
+      "durationMs": 1612
     },
     {
       "name": "typecheck",
       "status": "pass",
       "details": "",
-      "durationMs": 504
+      "durationMs": 487
     },
     {
       "name": "unit",
       "status": "pass",
-      "details": "20건 통과",
-      "durationMs": 40274
+      "details": "26건 통과",
+      "durationMs": 37870
     },
     {
       "name": "trace",
       "status": "pass",
       "details": "WARN AC-06-99: 배정표에 없음 → M8로 간주(다음 spec-lock 전에 표에 넣어야 함)\nqa:trace: AC 24/24 pass (≤M0), TC 판정 제외\n",
-      "durationMs": 1469
+      "durationMs": 1313
     },
     {
       "name": "acceptance:m0",
-      "status": "fail",
-      "details": "실패 7건:\n[BLK-002] tests/acceptance/m0/guard.test.ts > M0 guard AC-07-25: DECISIONS_LOG append-only 예외 1개 AC-07-25: CLAUDE.md·07·09장의 DECISIONS_LOG 경로가 하나뿐이다\n[BLK-004] tests/acceptance/m0/qa-trace.test.ts > M0 qa:trace AC-00-01 / AC-00-07: 문서 검사(qa:trace --docs) 통과\ntests/acceptance/m0/repo.test.ts > M0 저장소 정적 검사 AC-09-11: spec-lock 이후 모든 커밋이 Conventional Commits + Milestone 꼬리말\ntests/acceptance/m0/repo.test.ts > M0 네트워크·LLM 모드 AC-07-01: LLM_MODE=replay에서 녹화 없는 요청은 E_REPLAY_MISS\ntests/acceptance/m0/repo.test.ts > M0 네트워크·LLM 모드 AC-07-01: CI 워크플로의 모든 잡이 NO_EXTERNAL_NETWORK=1·LLM_MODE=mock 환경으로 실행된다\ntests/acceptance/m0/spec-extract.test.ts > M0 spec:extract AC-07-24: FINAL 값 1개를 바꾸면 두 출력이 달라지고 guard 6단계가 FAIL\ntests/acceptance/m0/stack.test.ts > M0 env 검증 AC-06-32: 기본 env(.env.example + local)로는 web·worker env 검사 통과",
-      "durationMs": 126243
+      "status": "blocked",
+      "details": "55/58 통과, blocked:\n[BLK-002] tests/acceptance/m0/guard.test.ts > M0 guard AC-07-25: DECISIONS_LOG append-only 예외 1개 AC-07-25: CLAUDE.md·07·09장의 DECISIONS_LOG 경로가 하나뿐이다\n[BLK-004] tests/acceptance/m0/qa-trace.test.ts > M0 qa:trace AC-00-01 / AC-00-07: 문서 검사(qa:trace --docs) 통과\n[BLK-005] tests/acceptance/m0/repo.test.ts > M0 저장소 정적 검사 AC-09-11: spec-lock 이후 모든 커밋이 Conventional Commits + Milestone 꼬리말",
+      "blockedBy": [
+        "BLK-002",
+        "BLK-004",
+        "BLK-005"
+      ],
+      "durationMs": 131941
     },
     {
       "name": "e2e:m0",
@@ -51,5 +56,5 @@
       "durationMs": 0
     }
   ],
-  "result": "fail"
+  "result": "pass_blocked"
 }
