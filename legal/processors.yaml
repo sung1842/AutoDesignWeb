@@ -1,0 +1,128 @@
+# provenance: temp (seed:temp, 09장 9.2.4 B23). approved는 사람만 true로 바꾼다.
+- id: supabase
+  name: Supabase Inc.
+  country: 대한민국(서울 리전 데이터 저장) / 미국(운영 법인)
+  purpose: 데이터베이스·인증·파일 저장
+  items:
+    - P1
+    - P2
+    - P3
+    - P4
+    - P5
+    - P6
+    - P7
+    - P8
+    - P9
+    - P10
+    - P13
+  timing_method: 서비스 이용 시 상시, TLS 암호화 전송
+  retention: 8.7.7 보관 기간표에 따름, 위탁 계약 종료 시 파기
+  approved: false
+  items_note: P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P13
+  approved_by: null
+- id: vercel
+  name: Vercel Inc.
+  country: 미국(운영 법인), 함수 실행 리전 서울 `icn1`(06장)
+  purpose: 웹 호스팅, 접속 기록
+  items:
+    - P1
+    - P2
+    - P3
+    - P4
+    - P5
+    - P8
+    - P9
+    - P10
+    - P11
+    - P13
+  retention: 공급자 정책(플랜별 로그 보관 기간) [원문 확인]
+  approved: false
+  items_note: P11
+  approved_by: null
+- id: flyio
+  name: Fly.io, Inc.
+  country: 일본(도쿄 `nrt` 리전, 06장) / 미국(운영 법인) [원문 확인]
+  purpose: 렌더·채점 워커 실행
+  items:
+    - P2
+    - P4
+    - P5
+    - P6
+    - P7
+    - P11
+  retention: 처리 중 일시 저장, 영구 저장 없음
+  approved: false
+  items_note: P5, P6
+  approved_by: null
+- id: llm-primary
+  name: (06장 models.yaml 확정 LLM 공급자 법인명. 역할 gen_copy·gen_layout·ref_tagger)
+  country: 미국
+  purpose: 시안 레이아웃·카피 생성, 레퍼런스 태깅
+  items:
+    - P2
+    - P4
+  timing_method: 생성 요청 시 API, TLS 암호화 전송
+  retention: 공급자 API 데이터 보관 정책(학습 미사용, 보관 ≤ 30일 또는 ZDR) [원문 확인]
+  trains_on_api_data: false
+  approved: false
+  items_note: P4(마스킹 후), P2의 취향 벡터·유형
+  approved_by: null
+- id: sentry
+  name: Functional Software, Inc. (Sentry)
+  country: 미국
+  purpose: 오류 추적
+  items:
+    - P12
+  retention: 30일(프로젝트 설정)
+  approved: false
+  items_note: P12
+  approved_by: null
+- id: cloudflare-turnstile
+  name: Cloudflare, Inc.
+  country: 미국
+  purpose: 자동화 요청(봇) 차단
+  items:
+    - P10
+  retention: 공급자 정책 [원문 확인]
+  approved: false
+  items_note: P10의 일부(브라우저 신호)
+  approved_by: null
+- id: email-sender
+  name: Resend, Inc. (Supabase 커스텀 SMTP, R-29·06장 D-0603)
+  country: 미국
+  purpose: 로그인 링크·공지 메일 발송
+  items:
+    - P3
+    - P13
+  retention: 공급자 정책(발송 로그) [원문 확인]
+  approved: false
+  items_note: P3의 이메일
+  approved_by: null
+- id: llm-secondary
+  name: (확정 전 — 08장 8.7.6에 항목 없음)
+  purpose: LLM `gen_layout`·`gen_copy`
+  items:
+    - P4
+  items_note: 06장 6.1.3 흐름표에서 생성
+  approved: false
+  approved_by: null
+  stub: true
+- id: llm-judge
+  name: (확정 전 — 08장 8.7.6에 항목 없음)
+  purpose: LLM `judge_vision`
+  items:
+    - P5
+  items_note: 06장 6.1.3 흐름표에서 생성
+  approved: false
+  approved_by: null
+  stub: true
+- id: turnstile
+  name: (확정 전 — 08장 8.7.6에 항목 없음)
+  purpose: Cloudflare Turnstile
+  items:
+    - P10
+    - P11
+  items_note: 06장 6.1.3 흐름표에서 생성
+  approved: false
+  approved_by: null
+  stub: true

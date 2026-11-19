@@ -1,0 +1,81 @@
+# provenance: temp (seed:temp, 09장 9.2.4 B23). approved는 사람만 true로 바꾼다.
+- component: web / Vercel
+  processor_ids:
+    - vercel
+  process:
+    - P11
+  transit:
+    - P1
+    - P2
+    - P3
+    - P4
+    - P5
+    - P8
+    - P9
+    - P10
+    - P13
+- component: worker / Fly.io
+  processor_ids:
+    - flyio
+  process:
+    - P5
+    - P11
+  transit:
+    - P2
+    - P4
+    - P6
+    - P7
+- component: Supabase
+  processor_ids:
+    - supabase
+  process:
+    - P1
+    - P2
+    - P3
+    - P4
+    - P5
+    - P6
+    - P7
+    - P8
+    - P9
+    - P10
+    - P13
+  transit: []
+- component: LLM `gen_layout`·`gen_copy`
+  processor_ids:
+    - llm-primary
+    - llm-secondary
+  process: []
+  transit:
+    - P4
+- component: LLM `judge_vision`
+  processor_ids:
+    - llm-judge
+  process: []
+  transit:
+    - P5
+- component: LLM `ref_tagger`
+  processor_ids:
+    - llm-primary
+  process: []
+  transit: []
+- component: Sentry
+  processor_ids:
+    - sentry
+  process:
+    - P12
+  transit: []
+- component: Resend
+  processor_ids:
+    - email-sender
+  process: []
+  transit:
+    - P3
+    - P13
+- component: Cloudflare Turnstile
+  processor_ids:
+    - turnstile
+  process: []
+  transit:
+    - P10
+    - P11

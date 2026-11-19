@@ -19,6 +19,7 @@ import {
   type PresetLite,
   mapL1toL2,
 } from "../../packages/taxonomy/src/map.js";
+import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
 import { chapter, section, table, unquote } from "./spec-md.js";
 
 export const SEED = 20261116;
@@ -2001,6 +2002,142 @@ function genGolden(ctx: Ctx): Out[] {
   return out;
 }
 
+// ---------- B14 linter/cliche_{ko,en}.json (04장 4.6.4 사전 v1 그대로) ----------
+function clichePattern(text: string, lang: "ko" | "en"): string {
+  const esc = (x: string): string => x.replace(/[.*+?^${}[\]\\]/g, "\\$&");
+  if (lang === "ko") return esc(text.replace(/^~/, ""));
+  // "seamless(ly)"·"next-gen(eration)" → 선택 접미, "(er|ing)" → 필수 대안
+  return text
+    .split(/(\([^)]*\))/)
+    .map((part) => (part.startsWith("(") ? (part.includes("|") ? part : `${part}?`) : esc(part)))
+    .join("");
+}
+
+function genCliche(ctx: Ctx): Out[] {
+  const sec = section(chapter(ctx.root, "04_generation.md"), "### 4.6.4");
+  const list = (label: string): string[] =>
+    (new RegExp(`${label}\\(\\d+\\): (.+?)\\.\\n`).exec(sec)?.[1] ?? "")
+      .split(" · ")
+      .map((x) => x.trim());
+  const ko = list("한국어");
+  const en = list("영어");
+  if (ko.length !== 48 || en.length !== 28)
+    throw new Error(`4.6.4 사전 수 ko ${ko.length}/48 en ${en.length}/28`);
+  const mk = (lang: "ko" | "en", arr: string[]): Obj[] =>
+    arr.map((text, i) => ({
+      id: `${lang}-${String(i + 1).padStart(2, "0")}`,
+      text,
+      pattern: clichePattern(text, lang),
+      flags: "iu",
+    }));
+  return [
+    { path: "data/linter/cliche_ko.json", content: bundle(ctx, "cliche", mk("ko", ko)) },
+    { path: "data/linter/cliche_en.json", content: bundle(ctx, "cliche", mk("en", en)) },
+  ];
+}
+
+// ---------- B17 legal/{terms,privacy,sources}.md (09장 9.2.4 B17: 임시 1줄 + 08장 필수 항목 제목) ----------
+const LEGAL_SECTIONS: Record<string, string[]> = {
+  terms: ["8.5", "8.6", "8.9"],
+  privacy: ["8.7", "8.8"],
+  sources: ["8.1", "8.4"],
+};
+const LEGAL_TITLE: Record<string, string> = {
+  terms: "이용약관",
+  privacy: "개인정보 처리방침",
+  sources: "출처·라이선스 고지",
+};
+export const LEGAL_HUMAN_TODO =
+  "- [ ] (B17, seed:temp 자동) 법무 문안 확정(변호사 검토 권장): legal/terms.md·privacy.md·sources.md";
+
+function genLegal(ctx: Ctx): Out[] {
+  const md = chapter(ctx.root, "08_legal.md");
+  const heads = md.split("\n").filter((l) => /^#{2,3} 8\.\d/.test(l));
+  return Object.entries(LEGAL_SECTIONS).map(([name, prefixes]) => {
+    const titles = heads
+      .filter((h) =>
+        prefixes.some((p) => new RegExp(`^#{2,3} ${p.replace(".", "\\.")}(\\.|\\s)`).test(h)),
+      )
+      .map((h) => `- ${h.replace(/^#+ /, "")}`);
+    return {
+      path: `legal/${name}.md`,
+      content: `# ${LEGAL_TITLE[name] ?? name}\n\n[임시 문안 — 08장 확정본으로 교체]\n\n## 08장 필수 항목\n\n${titles.join("\n")}\n`,
+    };
+  });
+}
+
+// ---------- B23 legal/processors.yaml(08장 8.7.6, 전부 approved:false) · data-flows.yaml(06장 6.1.3) ----------
+function flowRows(
+  root: string,
+): { component: string; processorIds: string[]; process: string[]; transit: string[] }[] {
+  const rows = table(section(chapter(root, "06_architecture.md"), "### 6.1.3"));
+  return rows.map((r) => {
+    const cells = r.slice(1, 14);
+    const pick = (mark: string): string[] =>
+      cells.map((c, i) => (c.includes(mark) ? `P${i + 1}` : "")).filter(Boolean);
+    return {
+      component: (r[0] ?? "").replace(/\(`[^)]*\)/g, "").trim(),
+      processorIds: [...(r[0] ?? "").matchAll(/`([a-z-]+)`/g)].map((m) => m[1] ?? ""),
+      process: pick("●"),
+      transit: pick("○"),
+    };
+  });
+}
+
+function genProcessors(ctx: Ctx): Out[] {
+  // 코드 블록 안 "# ..." 주석이 제목으로 잘리지 않게 다음 절 제목까지 직접 자른다
+  const md8 = chapter(ctx.root, "08_legal.md");
+  const sec = md8.slice(md8.indexOf("### 8.7.6 "), md8.indexOf("### 8.7.7 "));
+  const block = /```yaml\n([\s\S]*?)```/.exec(sec)?.[1] ?? "";
+  const list = (parseYaml(block) as Obj[]) ?? [];
+  const flows = flowRows(ctx.root);
+  const procs = list.map((p) => {
+    const raw = (Array.isArray(p.items) ? p.items : []).map(String);
+    const codes = new Set(raw.flatMap((x) => [...x.matchAll(/P\d+/g)].map((m) => m[0])));
+    // 6.1.3 compliance:flows ①: items ⊇ 흐름표 해당 행(● ∪ ○) → 합집합(ASM-017)
+    for (const f of flows)
+      if (f.processorIds.includes(String(p.id)))
+        for (const c of [...f.process, ...f.transit]) codes.add(c);
+    const items = [...codes].sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)));
+    return { ...p, items, items_note: raw.join(", "), approved: false, approved_by: null };
+  });
+  // 흐름표에만 있는 processor_id(llm-judge·llm-secondary·turnstile)는 확정 전 스텁으로 둔다(ASM-017)
+  const known = new Set(procs.map((p) => String(p.id)));
+  for (const f of flows)
+    for (const id of f.processorIds)
+      if (!known.has(id)) {
+        known.add(id);
+        const items = [
+          ...new Set(
+            flows
+              .filter((g) => g.processorIds.includes(id))
+              .flatMap((g) => [...g.process, ...g.transit]),
+          ),
+        ].sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)));
+        procs.push({
+          id,
+          name: "(확정 전 — 08장 8.7.6에 항목 없음)",
+          purpose: f.component,
+          items,
+          items_note: "06장 6.1.3 흐름표에서 생성",
+          approved: false,
+          approved_by: null,
+          stub: true,
+        });
+      }
+  const flowsDoc = flows.map((f) => ({
+    component: f.component,
+    processor_ids: f.processorIds,
+    process: f.process,
+    transit: f.transit,
+  }));
+  const head = "# provenance: temp (seed:temp, 09장 9.2.4 B23). approved는 사람만 true로 바꾼다.\n";
+  return [
+    { path: "legal/processors.yaml", content: head + stringifyYaml(procs, { lineWidth: 0 }) },
+    { path: "legal/data-flows.yaml", content: head + stringifyYaml(flowsDoc, { lineWidth: 0 }) },
+  ];
+}
+
 /** 생성기 목록(의존 순서). 나머지 묶음은 M1-04b 이후 단위에서 추가한다. */
 export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genAxes,
@@ -2026,6 +2163,9 @@ export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genApprovals,
   genReferences,
   genGolden,
+  genCliche,
+  genLegal,
+  genProcessors,
 ];
 
 function isHuman(abs: string): boolean {
@@ -2053,6 +2193,10 @@ export function seedTemp(root: string): { written: string[]; skippedHuman: strin
       writeFileSync(abs, o.content);
       written.push(o.path);
     }
+  // 9.2.4 B17: 법무 문안 확정 항목을 HUMAN_TODO에 1회 추가(이미 있으면 그대로)
+  const todo = join(root, "HUMAN_TODO.md");
+  if (existsSync(todo) && !readFileSync(todo, "utf8").includes(LEGAL_HUMAN_TODO))
+    writeFileSync(todo, `${readFileSync(todo, "utf8").replace(/\n*$/, "\n")}${LEGAL_HUMAN_TODO}\n`);
   return { written, skippedHuman };
 }
 

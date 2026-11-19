@@ -27,3 +27,5 @@
 - [ ] (ASM-014) 03장 3.10.2 톤 분포 "각 ≥ 30%"가 8장 카테고리에서 성립 불가 → 기준 정정(예: 각 ≥ 25% 또는 장수 9 이상). B8 실사진 192장 투입 시 함께 확인
 - [ ] (ASM-015) AC-03-11 단조성에서 `type.headline_weight`(페어링 전환 시 웨이트 목록 변경) 제외 해석 확인. 03장 3.3.2·AC-03-11 문구 정정 여부
 - [ ] (ASM-016) 설문 카드 alt 축 서술 사전(5축×5구간)과 tpl-text 본문 2단락 문안 확정(02장 2.4.3·2.4.6)
+- [ ] (B17, seed:temp 자동) 법무 문안 확정(변호사 검토 권장): legal/terms.md·privacy.md·sources.md
+- [ ] (ASM-017) processors.yaml(08장 8.7.6)과 흐름표(06장 6.1.3)의 processor_id·items 불일치 정리(llm-judge·llm-secondary 항목 추가, turnstile/cloudflare-turnstile 통일, vercel items)
