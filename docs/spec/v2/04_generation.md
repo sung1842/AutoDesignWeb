@@ -121,7 +121,7 @@ DesignSpec = {
     rhythm: { max_centered_ratio: 0.4, inverse_sections: [1, 2],
               max_same_bg_run: 2, forbid_strict_alternation: true,
               pad_variation_min: 1 },
-    image_tags_allowed: ImageTag[]
+    image_tags_allowed: ImageTag[]                // T-34: purposeTags(purpose) ∩ industryTags(BrandInput). industryTags 매칭 0이면 {storefront} ∪ common.texture-*. LT-10이 강제
   },
   copy: {
     tone_id: "T-PRECISE" | "T-WARM" | "T-EDITORIAL" | "T-PLAYFUL",
@@ -518,6 +518,8 @@ AIL-12 항목 4개 미만 bento, CTA 블록 3개 이상, 같은 deck 참조 반�
 
 후보 = 변형 3 × 패턴 슬롯 2. 같은 변형의 두 후보는 토큰이 같고(명세서 공유) 구성이 다르다. 변형이 다르면 토큰이 다르다.
 
+**후보 인덱스(T-18)**: `candidateIndex = variantIndex × 2 + slotIndex`, 변형 순서 `[v_true, v_fit, v_bal]`(variantIndex 0·1·2), 슬롯 0 = 패턴 슬롯 1, 슬롯 1 = 패턴 슬롯 2. 그래서 0·1 = `v_true`, 2·3 = `v_fit`, 4·5 = `v_bal`이다. 재생성·수정·다양성 재호출은 원래 후보의 인덱스를 그대로 쓴다(06장 `candidates.slot`(= candidateIndex 0~5), 09장 9.6.2와 같은 규칙).
+
 패턴 카탈로그 (`config/patterns.json`, 용도당 4개, 명세서가 2개를 슬롯에 배정). 블록 이름의 원천은 03장 `blocks.json` 블록 ID다(03장 3.17 "블록 ID = 04장 패턴 이름"):
 
 | 용도 | 패턴 ID | 섹션 순서 힌트(hero, nav, footer 제외) | hero 힌트 |
@@ -543,7 +545,7 @@ AIL-12 항목 4개 미만 bento, CTA 블록 3개 이상, 같은 deck 참조 반�
 - V-BAL: 용도 표준 1 + 유형 선호 1.
 - 잡 전체에서 같은 패턴은 최대 2회.
 
-다양성 조건(위반 시 해당 후보만 재호출 1회, 비용은 수정 루프 예산에서 차감):
+다양성 조건(위반 시 해당 후보만 재호출 1회, `llm_calls.call_kind='diversity'`·`candidates.origin='diversity'`. 비용 생략 기준은 수정 루프와 같은 `skipRepairEff`(06장 6.9.4 ⑤)이고, 호출 수는 AC-04-23의 `repair_quality` 상한 3에 세지 않는다). **재호출 결과도 조건 위반이면 그 후보는 `eligible=false`(사유 `DIVERSITY`)**이고, 같은 변형에 다른 eligible 후보가 없으면 그 변형은 폴백(4.12)이다(T-18):
 
 | 조건 | 기준 |
 |---|---|
@@ -552,7 +554,9 @@ AIL-12 항목 4개 미만 bento, CTA 블록 3개 이상, 같은 deck 참조 반�
 | 잡 6개 후보의 block 시퀀스 완전 일치 쌍 | 0쌍 |
 | 잡 6개 후보의 hero variant 종류 | ≥ 3종(허용 목록이 3종 미만이면 허용 목록 전체) |
 
-**AC-04-16** 골든 세트에서 위 다양성 조건 충족률 100%(재호출 후), 6개 후보 렌더 벡터의 평균 쌍 거리 D ≥ 0.20.
+**AC-04-16**(T-18로 개정) 골든 세트에서 **노출 집합 기준** 다양성 조건 충족률 100%(위반 후보는 `eligible=false`라 노출될 수 없으므로 더 엄격하다. 옛 "100%(재호출 후)" → T-18로 대체), 6개 후보 렌더 벡터의 평균 쌍 거리 D ≥ 0.20.
+
+**AC-04-47**(T-18) Mock 통합 테스트: ① `mixed` 단일 잡(GS-01)에서 후보 1(`v_true` 슬롯 1)의 `diversity` 재호출 1회 후 조건을 충족하고, 후보 2(`v_fit` 슬롯 0)의 `repair_quality` 1회가 TM·S_free를 회복한다(07장 TC-R-15 개수) ② 재호출 출력도 위반이 되도록 `!` 시나리오(`mixed!@1`)를 주면 후보 1은 `eligible=false`(`DIVERSITY`)이고 후보 0이 노출된다 ③ 같은 변형 두 후보가 모두 `DIVERSITY`면 그 변형은 폴백이고 잡 상태는 R-15 규칙을 따른다 ④ 모든 `candidates` 행의 `slot`(= candidateIndex)이 위 공식과 (변형, 슬롯)에 맞는다.
 
 ---
 
@@ -600,17 +604,23 @@ AIL-12 항목 4개 미만 bento, CTA 블록 3개 이상, 같은 deck 참조 반�
 asset_id = 후보집합[ sha256(job_seed ‖ section.id ‖ slot_id) mod |후보집합| ]   # 정렬 = asset_id 오름차순
 후보집합이 비면 → 블록의 no-image 대체 variant(블록 메타 `fallback_variant`)로 치환하고 G-01 재검사
 
-톤·업종 규칙(S-34, PD2-03):
+톤·업종 규칙(S-34·T-34):
 tonePref = warm  if t.temperature ≥ 0.60
            cool  if t.temperature ≤ 0.40
            neutral 그 밖
-후보집합 정렬 1순위 = 같은 톤, 2순위 = neutral. 반대 톤은 후보집합에서 제외한다.
-페이지의 첫 사진이 정한 톤을 나머지 슬롯도 따른다.
-업종 태그 = config/image_tag_keywords.json(B24, 약 50항목, 결정론 사전)으로
-            BrandInput.description·key_points의 명사 → 허용 태그 부분집합.
-업종 매칭 0건 → hero 외 사진 슬롯은 fallback_variant 또는 shape-graphic으로 대체,
-                hero는 storefront·common.texture-*만 허용.
-                01장 S08 안내 키 drafts.photoSubstituted 표시.
+pageTone = tonePref ∈ {warm, cool} ? tonePref
+         : 섹션 순서 → 슬롯 순서로 처음 선택된 "톤 태그 있는" 사진의 톤(질감 이미지는 건너뜀, 없으면 neutral)
+후보집합(위 조건) → C1 = {i ∈ 후보집합 : i.tone == pageTone}
+                     C2 = {i ∈ 후보집합 : i.tone == neutral}
+                     C  = |C1| > 0 ? C1 : C2                    # 반대 톤은 어떤 단계에서도 제외
+                     C = ∅ → fallback_variant(블록 메타)로 치환하고 G-01 재검사
+asset_id = C[ sha256(job_seed ‖ section.id ‖ slot_id) mod |C| ]   # C는 asset_id 오름차순 정렬
+업종 태그 = industryTags(BrandInput): config/image_tag_keywords.json(B24, 결정론 사전)으로
+            BrandInput.description·key_points의 명사 → 태그 집합. image_tags_allowed는 명세 단계(4.2.1)에서 정해지고
+            LLM은 그 안에서만 slot.tag를 고른다(LT-10).
+업종 매칭 0건 → image_tags_allowed = {storefront} ∪ common.texture-*. 이때 hero 외 사진 슬롯은
+                fallback_variant 또는 shape-graphic으로 대체(이 절의 업종 처리는 이것 하나).
+photoSubstituted(T-26) = 이 페이지에서 사진 슬롯 1개 이상이 위 대체 또는 C = ∅로 치환됨(06장 MockupCard, 01장 drafts.photoSubstituted).
 portfolio work.items·showcase 이미지 슬롯 → placeholder: true
                 (미리보기 오버레이·README "교체 필요 이미지"·E-12 경고 대상. 생성 HTML에는 표시하지 않음)
 ```
@@ -618,6 +628,7 @@ portfolio work.items·showcase 이미지 슬롯 → placeholder: true
 
 **AC-04-17** 같은 입력으로 컴파일 100회 반복 시 SHA-256 1종. 블록 CSS 전체에 대한 리터럴 검사 위반 0건.
 **AC-04-18** 컴파일 산출물의 외부 도메인 참조(`http(s)://`) 0건, `<script>`·`on*` 속성 0건.
+**AC-04-44**(T-34·T-35, PD3-04·PD3-05) ① 키워드 사전 픽스처 30건(매칭 20 + 비매칭 10)에서 `image_tags_allowed`가 기대 집합과 같다(단위) ② MockProvider가 허용 밖 태그를 내는 픽스처에서 LT-10 스키마 오류가 난다 ③ 골든 노출 시안의 한 페이지 안 warm↔cool 혼용 0건, `pageTone`과 반대 톤 사진 0건(manifest 대조) ④ portfolio 골든 시안의 `work`·`showcase` 이미지 100%가 README "교체 필요 이미지" 목록에 있다 ⑤ 매칭 0 픽스처에서 `photoSubstituted = true`, 매칭 있는 픽스처에서 false(07장 TC-B-20).
 **AC-04-18a** 같은 입력에 대해 브라우저(Playwright 내 번들 실행)와 Node에서 `compile()` 결과 SHA-256이 같다(isomorphic 검증, R-17).
 
 ---
@@ -701,11 +712,13 @@ portfolio work.items·showcase 이미지 슬롯 → placeholder: true
 입력: v = toL1(extractL2(render@1280))(05장, normalizer_version = 시즌 ID), 목표 t = spec.target_vector, σ(사용자)
 # 상수 generation.taste.{tau,lambdaLayout,d0}, 노출 하한 generation.tasteFloor·sFreeFloor (R-09, 07장 7.12.1)
 λ_k  = 1.5 (A1, A4)  |  1.0 (A2, A3, A5)                # 레이아웃 영향 축 가중
-w_k  = λ_k / (σ_k² + τ²),  τ = 0.05,   Σ w_k = 1 로 정규화
+m_k  = reliable_k · (subjective_k ? 0.5 : 1)            # T-19: 05장 D-056 reliable(ρ ≥ 0.70), subjective 플래그(05장 5.9)
+w_k  = m_k · λ_k / (σ_k² + τ²),  τ = 0.05,   Σ w_k = 1 로 정규화(m_k = 0인 축은 빠짐)
 d    = sqrt( Σ_k w_k (v_k − t_k)² )
 TM   = 100 · clip(1 − d / 0.40, 0, 1)                   # d = 0.10 → 75점, d = 0.40 → 0점
-S_free = 100 · clip(1 − sqrt( mean_{k∈{A1,A4}} (v_k − t_k)² ) / 0.30, 0, 1)
-노출 조건: TM ≥ 75 ∧ S_free ≥ 65
+F    = {A1, A4} ∩ {k : reliable_k}
+S_free = F = ∅ ? null : 100 · clip(1 − sqrt( mean_{k∈F} (v_k − t_k)² ) / 0.30, 0, 1)
+노출 조건: TM ≥ 75 ∧ (S_free = null ∨ S_free ≥ 65)       # null이면 경고 SFREE_NA(QualityReport.warnings)
 ```
 
 순환 문제와 대응:
@@ -719,6 +732,10 @@ S_free = 100 · clip(1 − sqrt( mean_{k∈{A1,A4}} (v_k − t_k)² ) / 0.30, 0,
 | TM 단독 선택 시 다양성 감소 | (5) 순위 점수에서 TM 비중 ≤ 0.45(§4.12) |
 
 변형별 비교 대상: 각 후보는 자기 변형의 t(t_TRUE / t_FIT / t_BAL)와 비교한다. 범주형(L2) 일치는 명세 컴파일로 보장되므로 TM에 포함하지 않는다.
+
+- **reliable 마스크(T-19, AI3-02)**: 추출기 축이 사람 지각과 안 맞으면(`reliable=false`) 그 축은 TM 가중에서 빠지고 S_free 집합에서도 빠진다. S_free = null은 "측정 불가"를 명시하는 값이고 노출을 막지 않는다(대신 경고 `SFREE_NA`, 골든 M8은 null 아닌 값만으로 최솟값을 내고 null 수를 적는다, 07장 7.2.5). 빈 평균을 0이나 100으로 채우지 않는다. `axis_gaps`(4.11.2)는 reliable 축만 담는다. 원천은 이 절이고 05장 D-056은 이 절의 `m_k`를 참조한다.
+
+**AC-04-45**(T-19) 단위 테스트: ① `reliable = {A1:false, A4:false}` 픽스처에서 `S_free = null`, 경고 `SFREE_NA` 1건, TM 가중 합에 A1·A4 기여 0, 노출 판정은 TM만으로 한다 ② `reliable = {A1:true, A4:false}`이면 S_free는 A1 한 축으로 계산된다 ③ `subjective_k = true`인 축의 w_k는 같은 조건의 비주관 축의 절반(정규화 전) ④ `axis_gaps`에 unreliable 축이 0개다.
 
 ### 4.10.5 비전 채점 (MVP 기록 전용, 편향 보정)
 
@@ -821,11 +838,11 @@ QualityReport = {
   "keep": ["sections[0]", "footer"]
 }
 ```
-- `axis_gaps`는 |v_k − t_k| 상위 3축 중 0.10 이상인 축만. 축별 힌트 문구는 `config/axis_hints.json`의 고정 문장(방향 2종 × 5축).
+- `axis_gaps`는 **reliable 축 중** |v_k − t_k| 상위 3축 중 0.10 이상인 축만(T-19). 축별 힌트 문구는 `config/axis_hints.json`의 고정 문장(방향 2종 × 5축).
 - 카피 원인 위반(AIL-13·14·19·21·23)은 레이아웃 repair가 아니라 `gen_copy` 패치 1회로 처리하고, 덱 변경 후 해당 덱을 쓰는 모든 후보를 재병합·재검사한다. 패치 후에도 위반 키가 남으면 그 키의 위반 항목을 제외한 다른 index로 대체하고, 대체가 없으면 용도별 템플릿 문구(`config/copy_templates.json`, 브랜드명·한 줄 소개 치환)로 바꾼다.
 
 **AC-04-22** 장애 주입(MockProvider) 8종 — 타임아웃, 500, 429, 깨진 JSON, 스키마 위반 반복, 린터 error 반복, 1차·폴백 모델 모두 다운, 같은 사용자 동시 생성 요청 2건(1건만 실행, 2번째는 409 `JOB_IN_PROGRESS` + `details.jobId`, R-13) — 에서 무한 대기 0, 처리되지 않은 예외 0, 사용자는 시안 ≥ 1개 또는 재시도 화면을 본다(QA-11).
-**AC-04-23** 어떤 후보도 `round > 1`을 갖지 않는다. 잡당 `repair_quality` 호출 수 ≤ 3.
+**AC-04-23** 어떤 후보도 `round > 1`을 갖지 않는다. 잡당 레이아웃 `repair_quality` 호출 수 ≤ 3(`diversity`·카피 패치는 세지 않는다. 카피 패치 = `role='gen_copy' ∧ call_kind='repair_quality'`, 잡당 ≤ 1, T-18).
 
 ---
 
@@ -1078,7 +1095,7 @@ H < 80과 TM은 저장·내보내기 차단 사유가 아니다(사용자 선택
 |---|---|---|---|
 | 큐 대기 → 워커 시작 | 1s | 3s | 전역 동시 잡 5 초과 대기 시간은 SLO 측정에서 분리 기록(R-16, → 06장) |
 | S1 명세 컴파일 ×3 | 0.1s | 0.3s | |
-| S2 카피 덱 ∥ 레이아웃 ×6 | 18s | 30s | 병렬, 둘 중 늦은 쪽 |
+| S2 카피 덱 ∥ 레이아웃 ×6 | 19.5s | 33s | 카피·후보 0 먼저, 후보 0 첫 토큰(TTFT ≈ 1~2s, 상한 3s) 뒤 후보 1~5(캐시 예열, 06장 6.9.4 ①, T-17). 둘 중 늦은 쪽 |
 | S3 검증·린트·병합 | 0.1s | 0.2s | |
 | S4~S5 컴파일·렌더·게이트·추출 ×6(동시 3) | 9s | 14s | 후보당 ≤ 5s |
 | 원본 유사도 가드 | 0.3s | 1s | pHash 1회/후보 + 7속성 비교(R-20) |
@@ -1086,7 +1103,7 @@ H < 80과 TM은 저장·내보내기 차단 사유가 아니다(사용자 선택
 | S6 수정 루프(발생 잡 비율 가정 35%) | 0s | 28s | repair 호출 + 재렌더 |
 | S7 비전 채점(변형별 2회, 병렬, 기록 전용) | 0s | 0s | 선택과 병렬로 비동기 기록. 선택·노출을 기다리게 하지 않는다(R-12) |
 | S8~S9 선택·저장·썸네일 | 1s | 2s | |
-| **합계** | **≈ 31s** (repair 발생 잡 ≈ 56s) | **≈ 77s** | 첫 시안 카드 노출(폴링 반영) p50 ≤ 45s 목표, 예상 ≈ 25s |
+| **합계** | **≈ 32.5s** (repair 발생 잡 ≈ 57.5s) | **≈ 80s** | 첫 시안 카드 노출(폴링 반영) p50 ≤ 45s 목표, 예상 ≈ 26.5s. 예열 대기는 합격선(R-25)을 바꾸지 않는다 |
 
 경계: 120s 폴백 경로, 180s 강제 종료(§4.12). 편집 반영 p95 스타일 ≤ 200ms·구조 ≤ 500ms(R-17), 버전 저장 → `gate_status='passed'` p95 ≤ 15s(06장 AC-06-41). 수치 원천은 `config/thresholds.json`.
 
@@ -1097,23 +1114,23 @@ H < 80과 TM은 저장·내보내기 차단 사유가 아니다(사용자 선택
 | 항목 | 토큰(호출당) | 호출 수 | 비용(가정) |
 |---|---|---|---|
 | 카피 덱 | 입력 2.5k / 출력 2.5k | 1 | $0.045 |
-| 레이아웃 정적 프리픽스 | 4.5k (캐시 쓰기 1 + 읽기 5) | 6 | $0.024 |
+| 레이아웃 정적 프리픽스 | 4.5k (캐시 쓰기 1 + 읽기 5. 성립 조건 = 06장 6.9.4 ① 예열 순서, T-17) | 6 | $0.024 |
 | 레이아웃 가변 입력 / 출력 | 2.5k / 1.0k | 6 | $0.135 |
 | 수정 루프(상한) | 가변 3k + 캐시 4.5k / 출력 1.0k | ≤ 3 | ≤ $0.076 |
 | 카피 패치(상한) | 3k / 1k | ≤ 1 | ≤ $0.024 |
 | 비전 채점 | 입력 3.5k(이미지 2장) / 출력 0.3k | 6 | $0.030 |
-| **기본 경로 합계** | | | **≈ $0.23** |
+| **기본 경로 합계** | | | **≈ $0.23**(공식값 $0.23363, 계산식·검산의 원천은 06장 6.9.4 ②) |
 | **상한 경로 합계(강등 전)** | | | ≈ $0.33 → 아래 강등으로 ≤ $0.30 |
 
 예산 가드(`cost_guard`)의 판정식·추정식·예약-정산 동작의 원천은 06장 6.9.4이고 이 절은 참조만 한다(S-13). 요약: 잡 단위 뮤텍스 아래 `spent + reserved + est ≤ generation.costGuard.capUsd`로 판정하고, `est`는 실측 입력 × 1.1 기준 식 하나다. 단계 생략 임계는
 - `spent + reserved ≥ generation.costGuard.skipVisionUsd`(0.24)이면 비전 채점 생략(기록 전용이라 품질 영향 없음),
 - `≥ generation.costGuard.skipRepairUsd`(0.27)이면 수정 루프·카피 패치 생략(누락 변형은 폴백),
 - 판정식을 넘으면 호출하지 않는다(하드 상한 `capUsd` 0.30).
-위 비용표의 단가는 mock 고정 단가(06장 6.9.2 `pricing["mock/*"]`)와 같다. 실제 청구가 추정을 넘어 0.30을 넘으면 잡은 죽지 않고 A11 경고로 기록된다(06장 CHECK ≤ 0.36).
+위 비용표의 단가는 mock 고정 단가(06장 6.9.2 `pricing["mock/*"]`)와 같다. 생략 기준은 실효 cap 비율로 같이 내려간다(06장 6.9.4 ⑤). 실제 청구가 추정을 넘어 cap을 넘으면 잡은 죽지 않고 A11 경고 1건 후 그 잡의 이후 예약이 전부 거부된다(06장 6.9.4 ⑥ `usage_overrun`, CHECK는 `≥ 0`만. 옛 "CHECK ≤ 0.36" → T-17로 대체).
 일·월 지출 상한은 00장 IF-09 플래그 `GEN_DAILY_BUDGET_USD = 10`, `GEN_MONTHLY_BUDGET_USD = 150`(R-22). 초과 시 신규 생성 503 `GEN_BUDGET_EXCEEDED`, 80% 도달 시 운영자 알림. 판정 위치·SQL은 06장 6.10.3. 상한 생략이 발생하면 잡 오류 코드 `COST_CAP`를 종료 상태와 별개로 기록한다(06장). 모든 호출은 `llm_calls`에 토큰·비용·지연·프롬프트 버전 기록.
 
 **AC-04-36** 골든 세트 전체 실행(32케이스 × 3회, R-11)에서 첫 시안 카드 노출 p50 ≤ 45s, 잡 p50 ≤ 60s, p95 ≤ 90s(R-25), 잡당 비용 최대값 ≤ $0.30, 평균 ≤ $0.25(07장 골든 M14·M15). 수치는 `generation_jobs`·`llm_calls` SQL로 산출된다.
-**AC-04-37** 통합 테스트(06장 AC-06-56과 같은 픽스처): MockProvider 단가를 10배(`cost_spike`)로 설정하면 비전 채점·수정 루프가 순서대로 생략되고 잡 비용이 $0.30을 넘지 않는다. 일일 예산 초과 시 신규 요청이 503을 받는다.
+**AC-04-37**(T-17로 개정) 통합 테스트(시나리오 정의 원천 06장 6.9.4 ⑦): ① `cost_spike`(단가 10배, 추정 반영)에서 넘는 호출은 `budget_skipped`이고 잡 비용 ≤ `capEff`(06장 AC-06-21) ② `cost_ramp`(단가 1.20배)에서 비전 채점 → 수정 루프 순서로 생략된다(06장 AC-06-61) ③ 일일 예산 초과 시 신규 요청이 503을 받는다. 옛 "단가 10배에서 순서대로 생략"은 두 시나리오로 나눴다(→ T-17로 대체).
 
 ---
 
@@ -1245,6 +1262,10 @@ H < 80과 TM은 저장·내보내기 차단 사유가 아니다(사용자 선택
 | S-09(04) | 4.3 predictL1 = 의도값·toL1 = 측정값, 4.7.1 few-shot 0개 처리 | |
 | S-12 | 4.7.1 gen_copy 실패 규칙(repair_schema → fallback ≤60s → 템플릿 덱, 안전 거부 비우회) | 기대 결과는 07 TC-R-16~18 |
 | S-13(04) | 4.17.2 가드는 06 6.9.4 참조, 키 경로 | |
+| T-17(04) | 4.17.1 S2 예열 지연, 4.17.2 캐시 성립 조건·공식값·usage_overrun 참조, AC-04-37 개정 | 원천 06장 6.9.4 |
+| T-18(04) | 4.8 후보 인덱스·diversity 기록·재호출 위반 시 `DIVERSITY`, AC-04-16 노출 집합 기준·AC-04-23 카피 패치 정의, AC-04-47 | |
+| T-19(04) | 4.10.4 `m_k`·reliable 마스크·S_free null·`SFREE_NA`, 4.11.2 `axis_gaps` reliable만, AC-04-45 | |
+| T-34·T-26(04) | 4.2.1 `image_tags_allowed`, 4.9.4 단계형 선택·`pageTone`·업종 처리 단일화·`photoSubstituted`, AC-04-44 | |
 | S-16(04) | 4.12 취소 한도 규칙 | 원천 06 6.2.3 |
 | S-24(04) | 4.10.2 G-13 `abuse_terms`, 게이트 범위 G-01~G-13, 4.15.2 저장·렌더 게이트 | |
 | S-33(04) | AIL-06 `allowSoftRoundShadow`, 4.15.2 클라이언트 S 단계 규칙 | |

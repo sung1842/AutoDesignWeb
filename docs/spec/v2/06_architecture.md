@@ -859,7 +859,7 @@ create table candidates (
   job_id          uuid not null references generation_jobs(id) on delete cascade,
   owner_id        uuid not null references users(id) on delete cascade,
   variant         text not null check (variant in ('v_true','v_fit','v_bal')),   -- D-008
-  slot            smallint not null check (slot between 0 and 5),      -- 패턴 슬롯(04장 4.8)
+  slot            smallint not null check (slot between 0 and 5),      -- candidateIndex = variantIndex × 2 + 패턴 슬롯(04장 4.8, T-18). 재호출·수정도 원 후보와 같은 값
   origin          text not null check (origin in ('llm','repair','diversity','fallback')),  -- diversity = 다양성 위반 재호출(T-18, 04 4.8)
   round           smallint not null default 0 check (round in (0,1)),
   tokens          jsonb not null,                     -- TokenSet(03장)
