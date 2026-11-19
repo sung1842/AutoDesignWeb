@@ -11,7 +11,8 @@
     "typecheck": "tsc -b --pretty false",
     "test": "vitest run",
     "format": "prettier --check .",
-    "guard:self-lock": "tsx scripts/guard/self-lock.ts"
+    "guard:self-lock": "tsx scripts/guard/self-lock.ts",
+    "env:init": "tsx scripts/env/init-local.ts"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
