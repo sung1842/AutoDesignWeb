@@ -41,7 +41,8 @@ export const typeDef = z.looseObject({
     .max(14)
     .refine((s) => !/mbti/i.test(s), "MBTI 금지(D-01)"),
   summaryKo: z.string().min(1).max(60),
-  descriptionKo: z.string().min(200).max(400),
+  // 02장 2.11.2 고정 문안(154~190자)이 표기 범위 200~400자보다 짧다. 문안이 단일 원천(R-04)이라 하한은 두지 않는다(ASM-010).
+  descriptionKo: z.string().min(1).max(400),
   strengthsKo: z.array(z.string().min(1).max(30)).length(3),
   centroid: l1Tuple,
   anchorPresetId: z.string().regex(/^PS-T[1-8]$/),

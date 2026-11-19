@@ -110,3 +110,4 @@
 - 2026-11-19 22:55 | M0-06 native PG+shim 기동 확인(tastefit_app 접속), dev:stack 골격 → 다음: M0-07 health
 - 2026-11-19 23:10 | M0-07 web·worker health, env 종료 1, m0 stack.test 8/8 녹색 → 다음: M0-08 guard 1~4
 - 2026-11-19 23:15 | BLK-001 라이선스 규칙 locked-conflict 기록(HUMAN_TODO) → 다음: M0-08 guard 1~4
+- 2026-11-19 23:25 | M0-08 guard 1~4단계(exit 3=BLK-001), BLK-002(자체잠금 테스트 정규식 오류) → 다음: M0-09 guard 5~7

@@ -1,0 +1,204 @@
+{
+  "bundle": "purposes",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "saas",
+      "nameKo": "SaaS·앱 소개",
+      "requiredSections": [
+        "hero",
+        "cta"
+      ],
+      "requiredAny": [
+        "value",
+        "feature"
+      ],
+      "optionalSections": [
+        "value",
+        "feature",
+        "showcase",
+        "stats",
+        "process",
+        "proof",
+        "pricing",
+        "faq"
+      ],
+      "forbiddenSections": [
+        "menu",
+        "highlight",
+        "gallery",
+        "location",
+        "story"
+      ],
+      "sectionCount": [
+        6,
+        8
+      ],
+      "standardHero": [
+        "split",
+        "left-aligned"
+      ],
+      "forbiddenL2": [],
+      "axisClip": {
+        "A1": [
+          0,
+          1
+        ],
+        "A2": [
+          0,
+          1
+        ],
+        "A3": [
+          0,
+          1
+        ],
+        "A4": [
+          0,
+          1
+        ],
+        "A5": [
+          0,
+          1
+        ]
+      },
+      "imageTags": [
+        "saas.*",
+        "common.*"
+      ],
+      "defaultImageTag": "saas.architecture"
+    },
+    {
+      "id": "local_business",
+      "nameKo": "가게 소개(카페·식당·공방)",
+      "requiredSections": [
+        "hero",
+        "menu",
+        "location"
+      ],
+      "requiredAny": [],
+      "optionalSections": [
+        "highlight",
+        "gallery",
+        "story",
+        "about",
+        "proof",
+        "faq",
+        "cta",
+        "contact"
+      ],
+      "forbiddenSections": [
+        "pricing",
+        "process",
+        "showcase",
+        "value"
+      ],
+      "sectionCount": [
+        6,
+        7
+      ],
+      "standardHero": [
+        "full-bleed-image",
+        "split"
+      ],
+      "forbiddenL2": [
+        {
+          "key": "media.mode",
+          "value": "type-led",
+          "replace": "photo-led",
+          "noPhoto": "shape-graphic"
+        }
+      ],
+      "axisClip": {
+        "A1": [
+          0,
+          1
+        ],
+        "A2": [
+          0,
+          1
+        ],
+        "A3": [
+          0,
+          1
+        ],
+        "A4": [
+          0,
+          1
+        ],
+        "A5": [
+          0,
+          1
+        ]
+      },
+      "imageTags": [
+        "local_business.*",
+        "common.*"
+      ],
+      "defaultImageTag": "local_business.storefront"
+    },
+    {
+      "id": "portfolio",
+      "nameKo": "포트폴리오",
+      "requiredSections": [
+        "hero",
+        "gallery",
+        "contact"
+      ],
+      "requiredAny": [],
+      "optionalSections": [
+        "about",
+        "service",
+        "showcase",
+        "stats",
+        "proof",
+        "process",
+        "cta"
+      ],
+      "forbiddenSections": [
+        "menu",
+        "location",
+        "pricing"
+      ],
+      "sectionCount": [
+        5,
+        7
+      ],
+      "standardHero": [
+        "type-only",
+        "split"
+      ],
+      "forbiddenL2": [],
+      "axisClip": {
+        "A1": [
+          0,
+          1
+        ],
+        "A2": [
+          0,
+          1
+        ],
+        "A3": [
+          0,
+          1
+        ],
+        "A4": [
+          0,
+          1
+        ],
+        "A5": [
+          0,
+          1
+        ]
+      },
+      "imageTags": [
+        "portfolio.*",
+        "common.*"
+      ],
+      "defaultImageTag": "portfolio.studio"
+    }
+  ]
+}

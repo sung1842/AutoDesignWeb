@@ -1,0 +1,45 @@
+{
+  "bundle": "axes",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "A1",
+      "key": "expression",
+      "nameKo": "표현성",
+      "lowLabelKo": "미니멀",
+      "highLabelKo": "표현적"
+    },
+    {
+      "id": "A2",
+      "key": "temperature",
+      "nameKo": "온도",
+      "lowLabelKo": "차가움",
+      "highLabelKo": "따뜻함"
+    },
+    {
+      "id": "A3",
+      "key": "shape",
+      "nameKo": "형태",
+      "lowLabelKo": "날카로움",
+      "highLabelKo": "부드러움"
+    },
+    {
+      "id": "A4",
+      "key": "density",
+      "nameKo": "밀도",
+      "lowLabelKo": "여유",
+      "highLabelKo": "밀도"
+    },
+    {
+      "id": "A5",
+      "key": "depth",
+      "nameKo": "깊이",
+      "lowLabelKo": "평면",
+      "highLabelKo": "입체"
+    }
+  ]
+}
