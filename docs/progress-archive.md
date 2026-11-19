@@ -130,3 +130,4 @@
 - 2026-11-20 01:12 | M1-04a2b presets 8종(3.4.1·3.4.4~3.4.7·3.6.6, 기본값⊂허용 확인) → 다음: a2b2 palettes.json
 - 2026-11-20 01:14 | M1-04a2b2 palettes.json 32벌(표 hex 전부 일치·대비 실패 0)·taxonomy/color.ts, ASM-011 → 다음: a2c
 - 2026-11-20 01:15 | M1-04a2c1 text-roles.json 33역할(기본 단계·행간·자간 분류)·icons/map.json 40개 → 다음: a2c2 signatures·harmony
+- 2026-11-20 01:16 | M1-04a2c2 signatures.json(장식 8+시그니처 12)·harmony.json(상수·H1~H12 합 100·CF 12) → 다음: a2c3

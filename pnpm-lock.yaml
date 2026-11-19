@@ -143,7 +143,11 @@ importers:
 
   packages/storage: {}
 
-  packages/taxonomy: {}
+  packages/taxonomy:
+    dependencies:
+      '@tastefit/config':
+        specifier: workspace:^
+        version: link:../config
 
   packages/ui: {}
 
