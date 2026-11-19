@@ -29,7 +29,7 @@
     "verify:m6": "tsx scripts/verify/run.ts m6",
     "verify:m7": "tsx scripts/verify/run.ts m7",
     "verify:m8": "tsx scripts/verify/run.ts m8",
-    "data:validate": "tsx scripts/todo.ts data:validate M1",
+    "data:validate": "tsx scripts/data/validate.ts",
     "seed:temp": "tsx scripts/todo.ts seed:temp M1",
     "db:seed": "tsx scripts/todo.ts db:seed M1",
     "survey:build": "tsx scripts/todo.ts survey:build M4",
@@ -46,6 +46,7 @@
     "typescript": "^5.9.0",
     "typescript-eslint": "^8.0.0",
     "vitest": "^3.2.0",
+    "yaml": "^2.9.0",
     "zod": "^4.0.0"
   }
 }

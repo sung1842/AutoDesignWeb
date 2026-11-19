@@ -109,3 +109,4 @@
 - 2026-11-19 22:45 | M0-05 spec:extract, review-pass=FINAL 바이트 동일 확인, config 3파일 잠금 → 다음: M0-06 native 스택
 - 2026-11-19 22:55 | M0-06 native PG+shim 기동 확인(tastefit_app 접속), dev:stack 골격 → 다음: M0-07 health
 - 2026-11-19 23:10 | M0-07 web·worker health, env 종료 1, m0 stack.test 8/8 녹색 → 다음: M0-08 guard 1~4
+- 2026-11-19 23:15 | BLK-001 라이선스 규칙 locked-conflict 기록(HUMAN_TODO) → 다음: M0-08 guard 1~4
