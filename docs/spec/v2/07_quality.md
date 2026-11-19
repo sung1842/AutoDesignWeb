@@ -334,6 +334,8 @@ G = 0.35·mean(M8 TM) + 0.25·mean(M7) + 0.15·(100·M5) + 0.15·(100·M12 렌�
   "reportId": "20261116-gen_layout@v3-rev7",
   "commit": "<sha>", "thresholdsSha256": "<sha256>",
   "modelsRevision": 7,
+  "runsPlanned": 96, "runsCompleted": 96, "abortReason": null,   // T-21: 예산 중단 시 runsCompleted < 96, abortReason = "EVAL_BUDGET_EXCEEDED"(06장 6.10.3). runsCompleted < runsPlanned인 리포트는 golden-live fail
+  "evalSpendUsd": 23.4,   // purpose='eval' 합계(EVAL_RUN_BUDGET_USD 이하)
   "roles": { "gen_layout": { "model": "...", "promptVersion": "gen_layout@v3" }, "gen_copy": { "...": "..." } },
   "metrics": { "M1": {...}, "...": {}, "M15": { "firstP50": 38.0, "p50": 51.2, "p95": 77.9 }, "G": 86.4 },
   "cases": [ { "id": "GS-01", "runs": [ { "seed": 0, "jobId": "...", "status": "succeeded",
@@ -833,13 +835,78 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
 
   | 상태 | 조건(맞지 않으면 fail) | 등록 단계 |
   |---|---|---|
-  | `temp` | 해당 데이터 묶음의 `provenance`가 `temp`(09장 9.8) | `font-budget`, `asset-license-verify`, `normalizer-human`, `extractor-human-label`, `fewshot-count`, `high-risk-domains`, `legal-text` |
+  | `temp` | 해당 단계의 데이터 묶음(카탈로그 "허용 보류" 열, 09장 9.2)의 `provenance`가 `temp` | `data-provenance`, `extractor-roundtrip`, `font-budget`, `asset-license-verify`, `normalizer-human`, `extractor-human-label`, `fewshot-count`, `high-risk-domains`, `legal-text` |
   | `needs_live` | `LLM_MODE≠live` | `golden-live`, `judge-vision-live`, `model-promotion` |
-  | `manual` | 사람 입력 파일(`release/manual-checklist.md`·`eval/blind/reports/*`)이 비어 있음 | `blind-*`, `usability-*`, `k6-staging`, `processor-approval` |
-  | `needs_ci` | 로컬 실행이고 `STACK_PROFILE=native` 또는 필요 브라우저·변수 부재(S-01) | `lock-digest`, `supabase-db-lint`, `supabase-storage-policy`, `gotrue-magiclink-e2e`, `gotrue-mfa`, `gotrue-google-metadata`, `worker-image-build`, `visual-docker-baseline`, `browser-webkit`, `browser-firefox`, `net-isolation-docker` |
+  | `manual` | 사람 입력 파일(`release/manual-checklist.md`·`eval/blind/reports/*`·`release/usability/*`)이 비어 있음 | `blind-*`, `usability-*`, `k6-staging`, `processor-approval`, `a11y-screenreader`, `device-smoke`, `legal-checklist`, `console-mfa`, `golden-muref-approval` |
+  | `needs_ci` | 로컬 실행이고 `STACK_PROFILE=native` 또는 필요 브라우저·변수 부재(S-01) | `ci-green-3x`, `lock-digest`, `supabase-db-lint`, `supabase-storage-policy`, `supabase-rest-rls`, `gotrue-magiclink-e2e`, `gotrue-mfa`, `gotrue-google-metadata`, `gotrue-auth-tables`, `worker-image-build`, `visual-docker-baseline`, `browser-webkit`, `browser-firefox`, `net-isolation-docker` |
 
-- **종료 코드**: 0 = 모든 단계 `pass`. 2 = `fail` 0이고 모든 보류가 허용표 안이며 조건 충족. 1 = 그 밖(표에 없는 단계의 보류, 조건 불충족 보류 포함). 종료 코드 0은 `needs_ci`·`temp`가 하나라도 있으면 불가다.
-- 메타 테스트: 허용표에 없는 단계 ID가 `temp`를 반환하는 가짜 단계를 넣으면 `release:check`가 1을 반환한다(AC-07-19).
+- **단계 카탈로그(T-05, QA3-04)**: `release:check`가 보고하는 단계는 아래 표가 전부다. 표는 `spec:test-policy.steps`(7.12.1)로 추출·잠금된다. 카탈로그에 없는 단계 ID를 보고하거나 카탈로그 단계 하나라도 빠뜨리면 종료 코드 1이다. 한 단계는 "판정" 열의 내용만 검사하고, 다른 단계의 조건을 섞어 넣지 않는다(예: temp 데이터 0 검사는 `data-provenance`에서만).
+
+  | 단계 ID | 게이트 | 판정 | 실행 | 허용 보류(조건) | blockable |
+  |---|---|---|---|---|---|
+  | `ci-green-3x` | G1 | 같은 커밋 PR 파이프라인 green 3회 연속, flaky 0, 재시도 0 | CI 실행 ID 3개(`reports/ci-runs.json`) | needs_ci(로컬 실행) | |
+  | `coverage` | G1 | `coverage.*`(7.12.1) 충족 | `pnpm test --coverage` | — | |
+  | `guard` | G1 | `pnpm guard` green(잠금·의존·R-3·R-5) | `pnpm guard` | — | |
+  | `qa-trace` | G1 | `qa:trace --audit` green(AC 배정·리터럴 감사) | `pnpm qa:trace --audit` | — | |
+  | `data-validate` | G1 | 설문 이미지·데이터 스키마 검증 100% | `pnpm data:validate` | — | |
+  | `data-provenance` | G1 | `provenance:"temp"`·`tmp_` 데이터 0 | `pnpm data:validate --summary` | temp(요약의 temp 묶음 ≥ 1) | |
+  | `survey-items-count` | G1 | 09장 M4 ① 활성 카드·A/B 쌍 수(02장 2.6.1) | `pnpm survey:build --check` | — | 예 |
+  | `extractor-roundtrip` | G1 | 추출기 왕복 오차 ≤ `release.extractor.roundtripAbsMax`, reliable 축 ≥ `reliableAxesMin` | `pnpm eval:extractor --roundtrip` | temp(B18 temp일 때 **실패 축만** temp, reliable 축 < 3이면 fail, T-06) | |
+  | `font-render` | G1 | TC-F-01 | `pnpm test:e2e -g TC-F-01` | — | |
+  | `lock-digest` | G1 | `QA_LOCK_DIGEST` 일치 | CI 비밀 대조 | needs_ci(로컬) | |
+  | `worker-image-build` | G1 | 워커 이미지 빌드 | Docker | needs_ci(Docker 없음) | |
+  | `golden-live` | G2 | 골든 32×3 합격선(7.2.5)·회귀·M14·M15, 리포트 `runsCompleted = 96`(예산 중단 미완료는 fail, T-21) | `pnpm eval:golden --mode live` | needs_live(`LLM_MODE≠live`) | |
+  | `golden-mock` | G2 | 골든 mock 32×3 구조 합격선(7.2.5 mock 열) | `pnpm eval:golden --mode mock` | — | |
+  | `golden-muref-approval` | G2 | `tuned` 변경 시 muRef 재생성 사람 승인 기록(7.2.2, T-04) | `release/manual-checklist.md` | manual(기록 파일 비어 있음) | |
+  | `judge-vision-live` | G2 | `judge_vision` live 일치도 | `pnpm eval:judge --mode live` | needs_live | |
+  | `model-promotion` | G2 | 7.2.8 승격 리포트 존재 | `eval/reports/*` | needs_live | |
+  | `sim-diagnosis-gate` | G2 | 진단 시뮬레이션 기준(7.3.1) | `pnpm sim:diagnosis` | — | 예 |
+  | `extractor-human-label` | G2 | 추출기 사람 라벨 기준(7.3.2) | `pnpm eval:extractor --labels` | temp(B13 temp) | |
+  | `normalizer-human` | G2 | human 정규화기 기준(05장 5.9) | `pnpm eval:normalizer` | temp(B18 temp) | |
+  | `fewshot-count` | G2 | few-shot ≥ 48(04장 4.18) | `pnpm data:validate --fewshot` | temp(B19 비어 있음·temp) | |
+  | `perf-lighthouse` | G3 | 7.5.1 Lighthouse 항목 | Lighthouse CI | — | |
+  | `perf-server` | G3 | 7.5.1 서버 처리 항목(`perf.*` 키) | `pnpm test:perf` | — | |
+  | `cost-guards` | G3 | TC-C-01·04·06, AC-06-56·61·62 | `pnpm test:int -g cost` | — | |
+  | `k6-staging` | G3 | TC-C-02 부하 | k6(staging) | manual(staging 결과 파일 없음) | |
+  | `font-budget` | G3 | 폰트 용량 예산 | `pnpm fonts:budget` | temp(B6 temp) | |
+  | `a11y-auto` | G4 | 7.7.1 자동 항목·E2E-05 | `pnpm test:a11y` | — | |
+  | `a11y-golden` | G4 | 7.7.2 골든 노출 시안 전수(mock 노출분) | `pnpm eval:golden --mode mock --a11y` | — | |
+  | `a11y-screenreader` | G4 | 스크린리더 수동 스모크 | 체크리스트 | manual | |
+  | `browser-chromium` | G5 | Chromium 조합 E2E·미지원 배너 | `pnpm test:e2e --project=chromium*` | — | |
+  | `browser-webkit` | G5 | WebKit 조합 | Playwright | needs_ci(브라우저 없음) | |
+  | `browser-firefox` | G5 | Firefox 조합 | Playwright | needs_ci(브라우저 없음) | |
+  | `visual-docker-baseline` | G5 | Docker 기준 시각 회귀 | Playwright(Docker) | needs_ci | |
+  | `device-smoke` | G5 | 실기기 2대 수동 스모크 | 체크리스트 | manual | |
+  | `security-tests` | G6 | TC-S 전부·TC-X-05·TC-X-08 | `pnpm test:security` | — | |
+  | `deps-audit` | G6 | `pnpm audit --prod` high/critical 0 | `pnpm audit --prod` | — | |
+  | `compliance-check` | G6 | `pnpm compliance:check` | `pnpm compliance:check` | — | |
+  | `legal-text` | G6 | 법무 원문 확정 | `pnpm legal:check` | temp(B17 temp) | |
+  | `high-risk-domains` | G6 | 고위험 브랜드 목록 확정 | `pnpm data:validate --b21` | temp(B21 temp) | |
+  | `asset-license-verify` | G6 | 자산 라이선스 원문 대조 | `pnpm assets:verify` | temp(B6·B7·자산 레지스트리 temp) | |
+  | `legal-checklist` | G6 | 08장 8.15 수동 항목 | 체크리스트 | manual | |
+  | `console-mfa` | G6 | 콘솔 MFA·service role 키 보관(08장 8.15) | 체크리스트 | manual | |
+  | `processor-approval` | G6 | 처리자 승인 원문 확인 | 체크리스트 | manual | |
+  | `supabase-db-lint` | G6 | `supabase db lint` | Supabase CLI | needs_ci(native) | |
+  | `supabase-storage-policy` | G6 | 버킷 정책 | Supabase | needs_ci(native) | |
+  | `supabase-rest-rls` | G6 | AC-06-03b REST 직접 호출(T-11) | Supabase | needs_ci(native) | |
+  | `gotrue-magiclink-e2e` | G6 | GoTrue 매직링크 E2E | Supabase | needs_ci(native) | |
+  | `gotrue-mfa` | G6 | GoTrue TOTP | Supabase | needs_ci(native) | |
+  | `gotrue-google-metadata` | G6 | Google 메타데이터 미저장 | Supabase | needs_ci(native) | |
+  | `gotrue-auth-tables` | G6 | GoTrue 내부 테이블 실측(T-13) | Supabase | needs_ci(native) | |
+  | `net-isolation-docker` | G6 | 워커 네트워크 격리 | Docker | needs_ci | |
+  | `blind-p5`, `blind-p6` | G7a | P-5·P-6 | `eval/blind/reports/*` | manual | |
+  | `blind-p1a`, `blind-p1b`, `blind-p2`, `blind-p4` | G7b | 7.8 | `eval/blind/reports/*` | manual | |
+  | `usability-r2` | G7c | 사용성 R2(00장 §5.3) | `release/usability/R2.md` | manual | |
+
+  `blockable` 열은 그 단계의 fail이 종료 코드 3을 허용하는 단계다. 추가로 어떤 단계든 open `locked-conflict` BLK가 `blockedBy`로 가리키면 그 BLK에 한해 blockable로 본다(09장 9.5.3).
+
+- **종료 코드**(T-05):
+  - 0 = 모든 단계 `pass`. `needs_ci`·`temp`·`manual`·`needs_live`가 하나라도 있으면 0은 불가다.
+  - 2 = `fail` 0이고 모든 보류가 허용표 안이며 조건 충족.
+  - 3 = **구현 완료, 기록된 막힘 있음**: ① 모든 `fail` 단계가 blockable(`sim-diagnosis-gate`, `survey-items-count`, 또는 open `locked-conflict` BLK 대상) ② 각 fail 단계 결과에 open BLK ID가 `blockedBy`로 있음 ③ 그 BLK에 재현 명령이 있음 ④ 나머지 보류는 2의 조건 충족. **3은 출시 불가**다.
+  - 1 = 그 밖(카탈로그 밖 단계·누락, 허용표 밖 보류, 조건 불충족 보류, BLK 연결 없는 fail 포함).
+  - 09장 9.9.2 완료 조건은 0·2·3이다(옛 "0 또는 2" → T-05로 대체).
+- 메타 테스트: 허용표에 없는 단계 ID가 `temp`를 반환하는 가짜 단계를 넣으면 `release:check`가 1을 반환한다(AC-07-19). 카탈로그·종료 코드 3은 AC-07-21.
 
 ---
 
@@ -1029,15 +1096,76 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
   "visual": { "maxDiffPixelRatio": 0.01 },
   "auditAllowLiterals": [0, 1, 0.5, 100],
   "deferrable": {
-    "temp": ["font-budget", "asset-license-verify", "normalizer-human", "extractor-human-label", "fewshot-count", "high-risk-domains", "legal-text"],
+    "temp": ["data-provenance", "extractor-roundtrip", "font-budget", "asset-license-verify", "normalizer-human", "extractor-human-label", "fewshot-count", "high-risk-domains", "legal-text"],
     "needs_live": ["golden-live", "judge-vision-live", "model-promotion"],
-    "manual": ["blind-*", "usability-*", "k6-staging", "processor-approval"],
-    "needs_ci": ["lock-digest", "supabase-db-lint", "supabase-storage-policy", "gotrue-magiclink-e2e", "gotrue-mfa", "gotrue-google-metadata", "worker-image-build", "visual-docker-baseline", "browser-webkit", "browser-firefox", "net-isolation-docker"]
-  }
+    "manual": ["blind-*", "usability-*", "k6-staging", "processor-approval", "a11y-screenreader", "device-smoke", "legal-checklist", "console-mfa", "golden-muref-approval"],
+    "needs_ci": ["ci-green-3x", "lock-digest", "supabase-db-lint", "supabase-storage-policy", "supabase-rest-rls", "gotrue-magiclink-e2e", "gotrue-mfa", "gotrue-google-metadata", "gotrue-auth-tables", "worker-image-build", "visual-docker-baseline", "browser-webkit", "browser-firefox", "net-isolation-docker"]
+  },
+  "blockable": ["sim-diagnosis-gate", "survey-items-count"],
+  "exitCodes": { "pass": 0, "fail": 1, "deferredOk": 2, "blockedRecorded": 3 },
+  "steps": [
+    ["ci-green-3x", "G1"],
+    ["coverage", "G1"],
+    ["guard", "G1"],
+    ["qa-trace", "G1"],
+    ["data-validate", "G1"],
+    ["data-provenance", "G1"],
+    ["survey-items-count", "G1"],
+    ["extractor-roundtrip", "G1"],
+    ["font-render", "G1"],
+    ["lock-digest", "G1"],
+    ["worker-image-build", "G1"],
+    ["golden-live", "G2"],
+    ["golden-mock", "G2"],
+    ["golden-muref-approval", "G2"],
+    ["judge-vision-live", "G2"],
+    ["model-promotion", "G2"],
+    ["sim-diagnosis-gate", "G2"],
+    ["extractor-human-label", "G2"],
+    ["normalizer-human", "G2"],
+    ["fewshot-count", "G2"],
+    ["perf-lighthouse", "G3"],
+    ["perf-server", "G3"],
+    ["cost-guards", "G3"],
+    ["k6-staging", "G3"],
+    ["font-budget", "G3"],
+    ["a11y-auto", "G4"],
+    ["a11y-golden", "G4"],
+    ["a11y-screenreader", "G4"],
+    ["browser-chromium", "G5"],
+    ["browser-webkit", "G5"],
+    ["browser-firefox", "G5"],
+    ["visual-docker-baseline", "G5"],
+    ["device-smoke", "G5"],
+    ["security-tests", "G6"],
+    ["deps-audit", "G6"],
+    ["compliance-check", "G6"],
+    ["legal-text", "G6"],
+    ["high-risk-domains", "G6"],
+    ["asset-license-verify", "G6"],
+    ["legal-checklist", "G6"],
+    ["console-mfa", "G6"],
+    ["processor-approval", "G6"],
+    ["supabase-db-lint", "G6"],
+    ["supabase-storage-policy", "G6"],
+    ["supabase-rest-rls", "G6"],
+    ["gotrue-magiclink-e2e", "G6"],
+    ["gotrue-mfa", "G6"],
+    ["gotrue-google-metadata", "G6"],
+    ["gotrue-auth-tables", "G6"],
+    ["net-isolation-docker", "G6"],
+    ["blind-p5", "G7a"],
+    ["blind-p6", "G7a"],
+    ["blind-p1a", "G7b"],
+    ["blind-p1b", "G7b"],
+    ["blind-p2", "G7b"],
+    ["blind-p4", "G7b"],
+    ["usability-r2", "G7c"]
+  ]
 }
 ```
 
-`config/test-policy.json`도 위 블록(`<!-- spec:test-policy -->`)에서 `spec:extract`로 만든다. `deferrable`은 보류 허용표(S-03)이고 상태 enum·종료 코드 규칙은 7.11.2가 원천이다. 테스트 타임아웃 값은 04·06장이 정의하는 런타임 값과 별개로 러너 설정에만 두며 판정 기준이 아니다.
+`config/test-policy.json`도 위 블록(`<!-- spec:test-policy -->`)에서 `spec:extract`로 만든다. `steps`는 7.11.2 단계 카탈로그(`[단계 ID, 게이트]`, T-05)이고 `release:check`는 이 목록과 보고 단계 집합이 같아야 한다. `blockable`·`exitCodes`는 종료 코드 3 규칙(T-05)이다. `deferrable`은 보류 허용표(S-03)이고 상태 enum·종료 코드 규칙은 7.11.2가 원천이다. 테스트 타임아웃 값은 04·06장이 정의하는 런타임 값과 별개로 러너 설정에만 두며 판정 기준이 아니다.
 
 ### 7.12.2 잠금 검사 (이중 검증)
 
@@ -1134,6 +1262,7 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
 | AC-07-18 | Given 수용 테스트 본문에 `expect(h).toBeGreaterThanOrEqual(80)` 같은 허용 목록 밖 수치 리터럴, When `pnpm qa:trace --audit`, Then FAIL하고 파일·줄을 출력한다. |
 | AC-07-19 | Given 허용표(`deferrable`)에 없는 단계가 `temp`를 반환하거나, `LLM_MODE=live`인데 `golden-live`가 `needs_live`를 반환, When `pnpm release:check`, Then 종료 코드 1. 모든 보류가 허용표 안이고 fail 0이면 2, 전부 pass면 0. |
 | AC-07-20 | 변이 테스트: 진단 엔진의 β를 8.0 → 8.5로 바꾸고 골든 M1a를 실행하면 FAIL한다. `build-answers`를 같은 커밋에서 2회 실행하면 바이트가 같다. |
+| AC-07-21 | (T-05, QA3-04) 메타 테스트 ① 클린 클론·`seed:temp`·키 없음·native에서 모든 자동 단계가 pass이면 `release:check` 종료 코드 2이고 `reports/release-check.json`에 카탈로그(`spec:test-policy.steps`)의 단계 ID가 전부, 그리고 그것만 있다 ② 카탈로그에 없는 단계 ID를 보고하는 가짜 단계를 넣거나 카탈로그 단계 1개를 빼면 1 ③ `sim-diagnosis-gate` fail + 결과의 `blockedBy`가 재현 명령 있는 open BLK를 가리키면 3, `blockedBy`가 없거나 BLK가 closed면 1 ④ blockable이 아닌 `coverage` fail에 BLK를 연결해도 1(그 BLK가 `locked-conflict`가 아니면) ⑤ 09장 AC-09-06과 G1 `data-provenance`를 같은 temp 픽스처로 실행하면 둘 다 "temp 묶음 있음 → 2"로 일치한다 ⑥ `LLM_MODE=live`에서 `golden-live` 리포트 `runsCompleted < 96`(예산 중단)이면 `golden-live` fail이고 종료 코드 1이다(T-21). |
 | AC-07-22 | (T-08, QA3-05) 메타 테스트: `tests/acceptance/` 안의 `expect(res.status).toBe(404)`와 `expect(list).toHaveLength(72)`는 `pnpm qa:trace --audit` PASS다. `expect(h).toBeGreaterThanOrEqual(80)`은 FAIL이고, 헬퍼 파일 `const H = 80` + `toBeGreaterThanOrEqual(H)`도 FAIL이며 둘 다 파일·줄을 출력한다. 사양 상수 표 밖의 수치를 비교 기준으로 쓰는 AC 문장 1개를 넣은 픽스처 문서에서 `qa:trace` 키 커버리지 검사가 FAIL한다. `config/forbidden-allowlist.json`에 숫자 리터럴 항목이 있으면 guard가 FAIL한다. |
 | AC-07-24 | (T-02, QA3-08) 메타 테스트: FINAL `spec:thresholds` 블록의 값 1개를 `review-pass` 시점 블록과 다르게 만든 저장소에서 `spec-lock` 생성 절차(`pnpm spec:extract --from FINAL`·`--from review-pass` 대조)와 `pnpm guard` 6단계가 모두 FAIL한다. `review-pass` 태그가 없으면 guard가 FAIL한다. `spec:extract`·`qa:trace`의 입력 경로는 코드 상수 1개(`docs/spec/FINAL/07_quality.md`)이고 09장 9.8.1과 같다. |
 | AC-07-25 | (T-01, QA3-01) 메타 테스트: `spec-lock` 이후 `docs/spec/DECISIONS_LOG.md` 끝에 AD 1줄을 추가한 커밋에서 `pnpm guard`는 PASS다. 같은 파일의 기존 줄 1개를 수정하거나 삭제한 커밋, `docs/spec/FINAL/07_quality.md` 1바이트를 바꾼 커밋, `docs/spec/INDEX.md`를 바꾼 커밋에서는 FAIL이다. `rg 'DECISIONS_LOG'`로 CLAUDE.md·07·09를 검색하면 경로가 `docs/spec/DECISIONS_LOG.md` 하나로 나온다. |
@@ -1238,6 +1367,10 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
 | T-02(QA3-08) | spec 고정점 = `review-pass`, 추출 원천 `docs/spec/FINAL/07_quality.md` 1개 | 7.12.1, 7.12.2 6단계·사람 없는 운영 표, 7.12.3, 7.1.7 경로, AC-07-24 |
 | T-03(QA3-02·AI3-05) | `diagnosis.tunable`·`config/diagnosis-tuned.json` 분리, 자체 잠금 | 7.12.1 블록·잠금 대상 표·옛 키 대응표, 7.12.2 3·8단계, 7.12.3 · 탐색 규칙·AC-02-36은 02장 |
 | T-08(QA3-05·AI3-06·PM3-08·QA3-10) | `qa:trace --audit` 재정의, 신규 키 8개, 사양 상수 표, `auditAllowLiterals` | 7.12.1 블록·대응표·사양 상수 표, 7.12.2 감사 정의 표, 7.5.1, TC-C-02, AC-07-22 |
+| T-05(QA3-04) | 단계 카탈로그 57단계·`spec:test-policy.steps`·`blockable`·`exitCodes`, 허용표 추가(temp `data-provenance`·`extractor-roundtrip`, manual 5종, needs_ci `ci-green-3x`·`supabase-rest-rls`·`gotrue-auth-tables`), 종료 코드 3, temp 묶음 대응, "9.8" → "9.2" | 7.11.2, 7.12.1 블록, AC-07-21 |
+| T-06(AI3-01) | `extractor-roundtrip` temp 상태 분류(실패 축만 temp, reliable < 3 fail), `survey-items-count` blockable | 7.11.2 카탈로그 |
+| T-11(TL3-01) | needs_ci `supabase-rest-rls` | 7.11.2 허용표·카탈로그 |
+| T-21(PM3-03) | 골든 리포트 `runsPlanned`·`runsCompleted`·`abortReason`·`evalSpendUsd`, `golden-live` 미완료 fail | 7.2.7, 7.11.2 카탈로그, AC-07-21 ⑥ |
 | S-03 | 보류 상태 enum·허용표·종료 코드, 진단 API 부하 로컬 측정 | 7.1.5, 7.11.2, 7.5.1, AC-07-19 |
 | S-07 | 골든 M1a·M1b, muRef, build-answers 결정론 | 7.2.2, 7.2.4, 7.2.5, AC-07-20 |
 | S-11·S-12 | MockProvider 역할별·`mixed`·`copy_*@gen_copy` 시나리오의 사용자 결과 | 7.1.4, TC-R-14~18 |
