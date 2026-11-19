@@ -102,7 +102,7 @@
 - 영향 범위: data/images/**, 04장 이미지 선택(M2)
 - 되돌리기 비용: 낮음
 
-## ASM-015 · M1 · conflict · 2026-11-19T16:33Z
+## ASM-015 · M1 · conflict · 2026-11-19T16:24Z
 - 질문: AC-03-11(한 축 증가 시 구동 서수 키 인덱스 감소 0건)이 `type.headline_weight`에서는 3.3.2 규칙만으로 성립하지 않음. A1이 커지며 페어링이 바뀌면(예: PS-T5 FP08→FP13, 허용 웨이트 700~900 → 400) 웨이트 목록 자체가 바뀌어 인덱스가 떨어짐(8유형 × A1 격자에서 4건)
 - 근거 탐색: 03장 3.3.2(headline_weight k = 페어링 허용 웨이트 수 − 1, "페어링 확정 후 계산"), 3.7.3 페어링 웨이트, AC-03-11
 - 선택: AC-03-11 판정 대상은 값 목록이 고정된 서수 키(k 숫자 또는 허용 집합 순서)로 보고 headline_weight는 제외한다. headline_weight는 "선택된 페어링 안에서" 단조(같은 페어링 구간에서 감소 0)로만 검사. M2/M3 수용 테스트도 이 해석을 따른다
@@ -116,7 +116,7 @@
 - 영향 범위: data/survey/templates.json·card_plan.json, M4 survey:build
 - 되돌리기 비용: 낮음
 
-## ASM-017 · M1 · conflict · 2026-11-19T16:36Z
+## ASM-017 · M1 · conflict · 2026-11-19T16:31Z
 - 질문: B23에서 08장 8.7.6 processors.yaml 예시와 06장 6.1.3 흐름표가 어긋남: ① vercel items [P11] vs 흐름표 P1~P13 다수(compliance:flows ①은 items ⊇ 흐름표 행) ② 흐름표의 `llm-judge`·`llm-secondary`·`turnstile`이 8.7.6에 없음(대신 `cloudflare-turnstile`) — AC-06-58은 llm-judge 필수 ③ 9.2.4 B23은 전 항목 approved:false
 - 근거 탐색: 06장 6.1.3, 08장 8.7.6·8.8.2, 09장 9.2.4 B23
 - 선택: 8.7.6 YAML을 그대로 옮기되 items는 원문 P코드 ∪ 흐름표 행(원문은 `items_note`), 흐름표에만 있는 id는 `stub: true` 항목으로 추가, `cloudflare-turnstile`은 원문대로 두고 `turnstile` 스텁을 별도로 둔다. 전부 approved:false. 장 간 id 정리는 HUMAN_TODO
