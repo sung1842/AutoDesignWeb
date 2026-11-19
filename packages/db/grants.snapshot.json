@@ -1,0 +1,11 @@
+{
+  "_source": "06장 6.3.5 쓰기 권한 원칙(T-11): authenticated는 users.display_name·mockups(feedback, feedback_at, selected_at) UPDATE만, anon 0. 이 파일 갱신은 6.3.5를 고치는 결정과 같은 커밋에서만.",
+  "allowed": [
+    "column UPDATE mockups.feedback authenticated",
+    "column UPDATE mockups.feedback_at authenticated",
+    "column UPDATE mockups.selected_at authenticated",
+    "column UPDATE users.display_name authenticated",
+    "policy UPDATE mockups mockups_owner_update authenticated",
+    "policy UPDATE users users_self_update authenticated"
+  ]
+}

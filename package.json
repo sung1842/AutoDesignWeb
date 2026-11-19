@@ -35,6 +35,7 @@
     "db:seed": "tsx scripts/data/db-seed.ts",
     "db:types": "tsx scripts/data/db-types.ts",
     "db:schema-parity": "tsx scripts/data/schema-parity.ts",
+    "db:grants-snapshot": "tsx scripts/data/grants-snapshot.ts",
     "survey:build": "tsx scripts/todo.ts survey:build M4",
     "eval:golden": "tsx scripts/todo.ts eval:golden M7",
     "release:check": "tsx scripts/todo.ts release:check M8"
