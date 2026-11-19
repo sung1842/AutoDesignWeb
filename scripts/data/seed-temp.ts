@@ -5,6 +5,13 @@ import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import type { Json, Obj } from "./load.js";
+import {
+  type Oklch,
+  contrast,
+  fitGamut,
+  oklchToHex,
+  parseOklch,
+} from "../../packages/taxonomy/src/color.js";
 import { chapter, section, table, unquote } from "./spec-md.js";
 
 export const SEED = 20261116;
@@ -429,6 +436,203 @@ function genPresets(ctx: Ctx): Out[] {
   });
 }
 
+// ---------- C03 palettes.json (03장 3.4.2 기본 + 3.4.3 대안 해석, 3.1.3 대비 재검사) ----------
+const PAL_ROLES = [
+  "bg",
+  "surface",
+  "surface-inverse",
+  "fg",
+  "fg-muted",
+  "fg-inverse",
+  "border",
+  "border-strong",
+  "primary",
+  "on-primary",
+  "primary-hover",
+  "accent",
+  "on-accent",
+  "focus",
+] as const;
+type Role = (typeof PAL_ROLES)[number];
+/** 3.4.3 tintHue가 바꾸는 역할(bg 유지). */
+const TINT_ROLES: Role[] = [
+  "surface",
+  "surface-inverse",
+  "fg",
+  "fg-muted",
+  "border",
+  "border-strong",
+];
+/** 3.4.3 끝 문단: PAL-T{n}-0 tintHue. T2 무채, T6은 역할별 값이라 단일값 없음(ASM-011). */
+const BASE_TINT_HUE: (number | null)[] = [85, null, 210, 75, 100, null, 250, 80];
+/** 3.1.3 하드 대비 쌍 [앞, 뒤, 하한]. */
+const CONTRAST_PAIRS: [Role, Role, number][] = [
+  ["fg", "bg", 4.5],
+  ["fg", "surface", 4.5],
+  ["fg-muted", "bg", 4.5],
+  ["fg-muted", "surface", 4.5],
+  ["fg-inverse", "surface-inverse", 4.5],
+  ["border-strong", "bg", 3],
+  ["primary", "bg", 3],
+  ["on-primary", "primary", 4.5],
+  ["on-primary", "primary-hover", 4.5],
+  ["on-accent", "accent", 4.5],
+  ["focus", "bg", 3],
+  ["focus", "surface", 3],
+];
+
+interface RoleVal {
+  oklch: Oklch;
+  link?: Role;
+}
+
+const hueDiff = (a: number, b: number): number => {
+  const d = Math.abs(a - b) % 360;
+  return d > 180 ? 360 - d : d;
+};
+const r2 = (x: number): number => Math.round(x * 100) / 100;
+
+/** 파생 속성(3.2.2 warm·chroma 항, 3.2.1 structure·chroma). 브랜드 색 = primary·accent(ASM-011). */
+function paletteAttrs(roles: Partial<Record<Role, Oklch>>): Obj {
+  const brand = [roles.primary, roles.accent].filter((c): c is Oklch => c !== undefined);
+  const chromatic = brand.filter((c) => c.c >= 0.04);
+  const warm =
+    brand.length === 0
+      ? 0.5
+      : 0.5 +
+        0.5 *
+          (brand.reduce(
+            (s, c) => s + Math.cos(((c.h - 50) * Math.PI) / 180) * Math.min(1, c.c / 0.04),
+            0,
+          ) /
+            brand.length);
+  const cmax = chromatic.reduce((m, c) => Math.max(m, c.c), 0);
+  const chromaScore = Math.min(1, Math.max(0, (cmax - 0.04) / 0.16));
+  let structure = "mono";
+  if (chromatic.length === 1) structure = "accent-on-neutral";
+  if (chromatic.length >= 2) {
+    const d = hueDiff(chromatic[0]?.h ?? 0, chromatic[1]?.h ?? 0);
+    structure = d <= 60 ? "analogous" : d >= 165 ? "complementary" : "split-complementary";
+  }
+  const chroma = cmax < 0.1 ? "muted" : cmax <= 0.16 ? "medium" : "vivid";
+  return {
+    warm: r2(warm),
+    chromaScore: r2(chromaScore),
+    structure,
+    chroma,
+    brandColorCount: chromatic.length,
+  };
+}
+
+function genPalettes(ctx: Ctx): Out[] {
+  const md = chapter(ctx.root, "03_design_system.md");
+  const base = table(section(md, "### 3.4.2"));
+  const alts = table(section(md, "### 3.4.3"));
+  const presets = table(section(md, "### 3.4.1"));
+  const cell = (role: string, n: number): string =>
+    base.find((r) => unquote(r[0] ?? "") === role)?.[n] ?? "—";
+  const baseRoles = (n: number): Partial<Record<Role, RoleVal>> => {
+    const out: Partial<Record<Role, RoleVal>> = {};
+    for (const role of PAL_ROLES) {
+      const c = cell(role, n).trim();
+      if (c === "—") continue;
+      const link = /^= ([a-z-]+)/.exec(c)?.[1] as Role | undefined;
+      if (link) out[role] = { oklch: { l: 0, c: 0, h: 0 }, link };
+      else out[role] = { oklch: parseOklch(/`([^`]+)`/.exec(c)?.[1] ?? "") };
+    }
+    return out;
+  };
+  const resolve = (rv: Partial<Record<Role, RoleVal>>): Partial<Record<Role, Oklch>> => {
+    const out: Partial<Record<Role, Oklch>> = {};
+    for (const role of PAL_ROLES) {
+      const v = rv[role];
+      if (!v) continue;
+      out[role] = v.link ? (rv[v.link]?.oklch ?? { l: 0, c: 0, h: 0 }) : v.oklch;
+    }
+    return out;
+  };
+  const items: Obj[] = [];
+  for (let n = 1; n <= 8; n++) {
+    const b = baseRoles(n);
+    const theme = (presets[n - 1]?.[3] ?? "").startsWith("dark") ? "dark" : "light";
+    const pal0Struct = (cell("structure / chroma", n).split("/")[0] ?? "").trim();
+    for (let q = 0; q <= 3; q++) {
+      const id = `PAL-T${n}-${q}`;
+      const roles: Partial<Record<Role, RoleVal>> = structuredClone(b);
+      let tintHue = BASE_TINT_HUE[n - 1] ?? null;
+      let noteKo = "";
+      if (q > 0) {
+        const a = alts.find((r) => r[0] === id) ?? [];
+        noteKo = a[6] ?? "";
+        const hueOf = (c: string): number | null =>
+          c === "유지" || c === "—" || c === "" ? null : Number(c);
+        const [tH, pH, aH] = [hueOf(a[1] ?? ""), hueOf(a[2] ?? ""), hueOf(a[3] ?? "")];
+        const setHue = (role: Role, h: number | null): void => {
+          const v = roles[role];
+          if (v && !v.link && h !== null) v.oklch = fitGamut({ ...v.oklch, h });
+        };
+        if (tH !== null) tintHue = tH;
+        for (const r of TINT_ROLES) setHue(r, tH);
+        setHue("primary", pH);
+        setHue("primary-hover", pH);
+        setHue("accent", aH);
+        // 예외 표기 행: L·C 명시값(3.4.3)
+        const ex = /primary `([^`]+)`, hover `([^`]+)`/.exec(noteKo);
+        if (ex) {
+          roles.primary = { oklch: parseOklch(ex[1] ?? "") };
+          roles["primary-hover"] = { oklch: parseOklch(ex[2] ?? "") };
+        }
+      }
+      const res = resolve(roles);
+      const hex: Partial<Record<Role, string>> = {};
+      for (const [k, v] of Object.entries(res)) hex[k as Role] = oklchToHex(v);
+      const out: Obj = {};
+      for (const role of PAL_ROLES) {
+        const v = res[role];
+        const rv = roles[role];
+        out[role] = v
+          ? {
+              oklch: [v.l, Math.round(v.c * 1e4) / 1e4, v.h],
+              hex: hex[role] ?? "",
+              ...(rv?.link ? { link: rv.link } : {}),
+            }
+          : null;
+      }
+      const ratios: Obj = {};
+      const failures: string[] = [];
+      for (const [f, g, min] of CONTRAST_PAIRS) {
+        const hf = hex[f];
+        const hg = hex[g];
+        if (!hf || !hg) continue;
+        const r = contrast(hf, hg);
+        ratios[`${f}/${g}`] = r;
+        if (r < min) failures.push(`${f}/${g} ${r} < ${min}`);
+      }
+      const accentTextSafe =
+        hex.accent !== undefined &&
+        contrast(hex.accent, hex.bg ?? "#FFFFFF") >= 4.5 &&
+        contrast(hex.accent, hex.surface ?? "#FFFFFF") >= 4.5;
+      const attrs = paletteAttrs(res);
+      if (q === 0 && !pal0Struct.startsWith(String(attrs.structure).slice(0, 10)))
+        failures.push(`structure 계산 ${String(attrs.structure)} ≠ 3.4.2 ${pal0Struct}`);
+      items.push({
+        id,
+        typeId: `T${n}`,
+        index: q,
+        theme,
+        tintHue,
+        roles: out,
+        ...attrs,
+        accentTextSafe,
+        contrast: ratios,
+        contrastFailures: failures,
+        ...(noteKo ? { noteKo } : {}),
+      });
+    }
+  }
+  return [{ path: "data/taxonomy/palettes.json", content: bundle(ctx, "palettes", items) }];
+}
+
 /** 생성기 목록(의존 순서). 나머지 묶음은 M1-04b 이후 단위에서 추가한다. */
 export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genAxes,
@@ -437,6 +641,7 @@ export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genTaxonomy,
   genMapping,
   genPresets,
+  genPalettes,
 ];
 
 function isHuman(abs: string): boolean {

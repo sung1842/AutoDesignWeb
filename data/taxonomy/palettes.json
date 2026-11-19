@@ -1,0 +1,4425 @@
+{
+  "bundle": "palettes",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "PAL-T1-0",
+      "typeId": "T1",
+      "index": 0,
+      "theme": "light",
+      "tintHue": 85,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.975,
+            0.008,
+            85
+          ],
+          "hex": "#F9F6F1"
+        },
+        "surface": {
+          "oklch": [
+            0.945,
+            0.01,
+            85
+          ],
+          "hex": "#F0ECE5"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.24,
+            0.012,
+            60
+          ],
+          "hex": "#241E1A"
+        },
+        "fg": {
+          "oklch": [
+            0.22,
+            0.01,
+            60
+          ],
+          "hex": "#1E1A16"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.46,
+            0.01,
+            60
+          ],
+          "hex": "#5C5753"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.96,
+            0.008,
+            85
+          ],
+          "hex": "#F4F1EC"
+        },
+        "border": {
+          "oklch": [
+            0.88,
+            0.01,
+            85
+          ],
+          "hex": "#DAD7D0"
+        },
+        "border-strong": {
+          "oklch": [
+            0.6,
+            0.01,
+            60
+          ],
+          "hex": "#857F7A"
+        },
+        "primary": {
+          "oklch": [
+            0.26,
+            0.012,
+            60
+          ],
+          "hex": "#29231E"
+        },
+        "on-primary": {
+          "oklch": [
+            0.975,
+            0.008,
+            85
+          ],
+          "hex": "#F9F6F1"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.34,
+            0.012,
+            60
+          ],
+          "hex": "#3D3732"
+        },
+        "accent": {
+          "oklch": [
+            0.5,
+            0.085,
+            32
+          ],
+          "hex": "#8D5044"
+        },
+        "on-accent": {
+          "oklch": [
+            0.985,
+            0.005,
+            85
+          ],
+          "hex": "#FCFAF6"
+        },
+        "focus": {
+          "oklch": [
+            0.5,
+            0.085,
+            32
+          ],
+          "hex": "#8D5044",
+          "link": "accent"
+        }
+      },
+      "warm": 0.81,
+      "chromaScore": 0.28,
+      "structure": "accent-on-neutral",
+      "chroma": "muted",
+      "brandColorCount": 1,
+      "accentTextSafe": true,
+      "contrast": {
+        "fg/bg": 16.03,
+        "fg/surface": 14.68,
+        "fg-muted/bg": 6.61,
+        "fg-muted/surface": 6.05,
+        "fg-inverse/surface-inverse": 14.61,
+        "border-strong/bg": 3.66,
+        "primary/bg": 14.39,
+        "on-primary/primary": 14.39,
+        "on-primary/primary-hover": 10.87,
+        "on-accent/accent": 5.98,
+        "focus/bg": 5.79,
+        "focus/surface": 5.3
+      },
+      "contrastFailures": []
+    },
+    {
+      "id": "PAL-T1-1",
+      "typeId": "T1",
+      "index": 1,
+      "theme": "light",
+      "tintHue": 85,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.975,
+            0.008,
+            85
+          ],
+          "hex": "#F9F6F1"
+        },
+        "surface": {
+          "oklch": [
+            0.945,
+            0.01,
+            85
+          ],
+          "hex": "#F0ECE5"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.24,
+            0.012,
+            60
+          ],
+          "hex": "#241E1A"
+        },
+        "fg": {
+          "oklch": [
+            0.22,
+            0.01,
+            60
+          ],
+          "hex": "#1E1A16"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.46,
+            0.01,
+            60
+          ],
+          "hex": "#5C5753"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.96,
+            0.008,
+            85
+          ],
+          "hex": "#F4F1EC"
+        },
+        "border": {
+          "oklch": [
+            0.88,
+            0.01,
+            85
+          ],
+          "hex": "#DAD7D0"
+        },
+        "border-strong": {
+          "oklch": [
+            0.6,
+            0.01,
+            60
+          ],
+          "hex": "#857F7A"
+        },
+        "primary": {
+          "oklch": [
+            0.26,
+            0.012,
+            60
+          ],
+          "hex": "#29231E"
+        },
+        "on-primary": {
+          "oklch": [
+            0.975,
+            0.008,
+            85
+          ],
+          "hex": "#F9F6F1"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.34,
+            0.012,
+            60
+          ],
+          "hex": "#3D3732"
+        },
+        "accent": {
+          "oklch": [
+            0.5,
+            0.085,
+            145
+          ],
+          "hex": "#427044"
+        },
+        "on-accent": {
+          "oklch": [
+            0.985,
+            0.005,
+            85
+          ],
+          "hex": "#FCFAF6"
+        },
+        "focus": {
+          "oklch": [
+            0.5,
+            0.085,
+            145
+          ],
+          "hex": "#427044",
+          "link": "accent"
+        }
+      },
+      "warm": 0.55,
+      "chromaScore": 0.28,
+      "structure": "accent-on-neutral",
+      "chroma": "muted",
+      "brandColorCount": 1,
+      "accentTextSafe": true,
+      "contrast": {
+        "fg/bg": 16.03,
+        "fg/surface": 14.68,
+        "fg-muted/bg": 6.61,
+        "fg-muted/surface": 6.05,
+        "fg-inverse/surface-inverse": 14.61,
+        "border-strong/bg": 3.66,
+        "primary/bg": 14.39,
+        "on-primary/primary": 14.39,
+        "on-primary/primary-hover": 10.87,
+        "on-accent/accent": 5.54,
+        "focus/bg": 5.36,
+        "focus/surface": 4.9
+      },
+      "contrastFailures": [],
+      "noteKo": "올리브"
+    },
+    {
+      "id": "PAL-T1-2",
+      "typeId": "T1",
+      "index": 2,
+      "theme": "light",
+      "tintHue": 85,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.975,
+            0.008,
+            85
+          ],
+          "hex": "#F9F6F1"
+        },
+        "surface": {
+          "oklch": [
+            0.945,
+            0.01,
+            85
+          ],
+          "hex": "#F0ECE5"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.24,
+            0.012,
+            60
+          ],
+          "hex": "#241E1A"
+        },
+        "fg": {
+          "oklch": [
+            0.22,
+            0.01,
+            60
+          ],
+          "hex": "#1E1A16"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.46,
+            0.01,
+            60
+          ],
+          "hex": "#5C5753"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.96,
+            0.008,
+            85
+          ],
+          "hex": "#F4F1EC"
+        },
+        "border": {
+          "oklch": [
+            0.88,
+            0.01,
+            85
+          ],
+          "hex": "#DAD7D0"
+        },
+        "border-strong": {
+          "oklch": [
+            0.6,
+            0.01,
+            60
+          ],
+          "hex": "#857F7A"
+        },
+        "primary": {
+          "oklch": [
+            0.26,
+            0.012,
+            60
+          ],
+          "hex": "#29231E"
+        },
+        "on-primary": {
+          "oklch": [
+            0.975,
+            0.008,
+            85
+          ],
+          "hex": "#F9F6F1"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.34,
+            0.012,
+            60
+          ],
+          "hex": "#3D3732"
+        },
+        "accent": {
+          "oklch": [
+            0.5,
+            0.085,
+            250
+          ],
+          "hex": "#3B6692"
+        },
+        "on-accent": {
+          "oklch": [
+            0.985,
+            0.005,
+            85
+          ],
+          "hex": "#FCFAF6"
+        },
+        "focus": {
+          "oklch": [
+            0.5,
+            0.085,
+            250
+          ],
+          "hex": "#3B6692",
+          "link": "accent"
+        }
+      },
+      "warm": 0.34,
+      "chromaScore": 0.28,
+      "structure": "accent-on-neutral",
+      "chroma": "muted",
+      "brandColorCount": 1,
+      "accentTextSafe": true,
+      "contrast": {
+        "fg/bg": 16.03,
+        "fg/surface": 14.68,
+        "fg-muted/bg": 6.61,
+        "fg-muted/surface": 6.05,
+        "fg-inverse/surface-inverse": 14.61,
+        "border-strong/bg": 3.66,
+        "primary/bg": 14.39,
+        "on-primary/primary": 14.39,
+        "on-primary/primary-hover": 10.87,
+        "on-accent/accent": 5.75,
+        "focus/bg": 5.56,
+        "focus/surface": 5.09
+      },
+      "contrastFailures": [],
+      "noteKo": "잉크 블루"
+    },
+    {
+      "id": "PAL-T1-3",
+      "typeId": "T1",
+      "index": 3,
+      "theme": "light",
+      "tintHue": 85,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.975,
+            0.008,
+            85
+          ],
+          "hex": "#F9F6F1"
+        },
+        "surface": {
+          "oklch": [
+            0.945,
+            0.01,
+            85
+          ],
+          "hex": "#F0ECE5"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.24,
+            0.012,
+            60
+          ],
+          "hex": "#241E1A"
+        },
+        "fg": {
+          "oklch": [
+            0.22,
+            0.01,
+            60
+          ],
+          "hex": "#1E1A16"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.46,
+            0.01,
+            60
+          ],
+          "hex": "#5C5753"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.96,
+            0.008,
+            85
+          ],
+          "hex": "#F4F1EC"
+        },
+        "border": {
+          "oklch": [
+            0.88,
+            0.01,
+            85
+          ],
+          "hex": "#DAD7D0"
+        },
+        "border-strong": {
+          "oklch": [
+            0.6,
+            0.01,
+            60
+          ],
+          "hex": "#857F7A"
+        },
+        "primary": {
+          "oklch": [
+            0.26,
+            0.012,
+            60
+          ],
+          "hex": "#29231E"
+        },
+        "on-primary": {
+          "oklch": [
+            0.975,
+            0.008,
+            85
+          ],
+          "hex": "#F9F6F1"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.34,
+            0.012,
+            60
+          ],
+          "hex": "#3D3732"
+        },
+        "accent": {
+          "oklch": [
+            0.5,
+            0.085,
+            65
+          ],
+          "hex": "#84582A"
+        },
+        "on-accent": {
+          "oklch": [
+            0.985,
+            0.005,
+            85
+          ],
+          "hex": "#FCFAF6"
+        },
+        "focus": {
+          "oklch": [
+            0.5,
+            0.085,
+            65
+          ],
+          "hex": "#84582A",
+          "link": "accent"
+        }
+      },
+      "warm": 0.82,
+      "chromaScore": 0.28,
+      "structure": "accent-on-neutral",
+      "chroma": "muted",
+      "brandColorCount": 1,
+      "accentTextSafe": true,
+      "contrast": {
+        "fg/bg": 16.03,
+        "fg/surface": 14.68,
+        "fg-muted/bg": 6.61,
+        "fg-muted/surface": 6.05,
+        "fg-inverse/surface-inverse": 14.61,
+        "border-strong/bg": 3.66,
+        "primary/bg": 14.39,
+        "on-primary/primary": 14.39,
+        "on-primary/primary-hover": 10.87,
+        "on-accent/accent": 5.9,
+        "focus/bg": 5.71,
+        "focus/surface": 5.22
+      },
+      "contrastFailures": [],
+      "noteKo": "오커"
+    },
+    {
+      "id": "PAL-T2-0",
+      "typeId": "T2",
+      "index": 0,
+      "theme": "light",
+      "tintHue": null,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.99,
+            0,
+            0
+          ],
+          "hex": "#FCFCFC"
+        },
+        "surface": {
+          "oklch": [
+            0.955,
+            0,
+            0
+          ],
+          "hex": "#F0F0F0"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.17,
+            0,
+            0
+          ],
+          "hex": "#0F0F0F"
+        },
+        "fg": {
+          "oklch": [
+            0.17,
+            0,
+            0
+          ],
+          "hex": "#0F0F0F"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.45,
+            0,
+            0
+          ],
+          "hex": "#555555"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.99,
+            0,
+            0
+          ],
+          "hex": "#FCFCFC"
+        },
+        "border": {
+          "oklch": [
+            0.88,
+            0,
+            0
+          ],
+          "hex": "#D7D7D7"
+        },
+        "border-strong": {
+          "oklch": [
+            0.55,
+            0,
+            0
+          ],
+          "hex": "#717171"
+        },
+        "primary": {
+          "oklch": [
+            0.48,
+            0.15,
+            258
+          ],
+          "hex": "#1D5AB0"
+        },
+        "on-primary": {
+          "oklch": [
+            1,
+            0,
+            0
+          ],
+          "hex": "#FFFFFF"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.42,
+            0.14,
+            258
+          ],
+          "hex": "#104A97"
+        },
+        "accent": null,
+        "on-accent": null,
+        "focus": {
+          "oklch": [
+            0.48,
+            0.15,
+            258
+          ],
+          "hex": "#1D5AB0",
+          "link": "primary"
+        }
+      },
+      "warm": 0.06,
+      "chromaScore": 0.69,
+      "structure": "accent-on-neutral",
+      "chroma": "medium",
+      "brandColorCount": 1,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 18.68,
+        "fg/surface": 16.82,
+        "fg-muted/bg": 7.26,
+        "fg-muted/surface": 6.54,
+        "fg-inverse/surface-inverse": 18.68,
+        "border-strong/bg": 4.75,
+        "primary/bg": 6.51,
+        "on-primary/primary": 6.68,
+        "on-primary/primary-hover": 8.57,
+        "focus/bg": 6.51,
+        "focus/surface": 5.86
+      },
+      "contrastFailures": []
+    },
+    {
+      "id": "PAL-T2-1",
+      "typeId": "T2",
+      "index": 1,
+      "theme": "light",
+      "tintHue": null,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.99,
+            0,
+            0
+          ],
+          "hex": "#FCFCFC"
+        },
+        "surface": {
+          "oklch": [
+            0.955,
+            0,
+            0
+          ],
+          "hex": "#F0F0F0"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.17,
+            0,
+            0
+          ],
+          "hex": "#0F0F0F"
+        },
+        "fg": {
+          "oklch": [
+            0.17,
+            0,
+            0
+          ],
+          "hex": "#0F0F0F"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.45,
+            0,
+            0
+          ],
+          "hex": "#555555"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.99,
+            0,
+            0
+          ],
+          "hex": "#FCFCFC"
+        },
+        "border": {
+          "oklch": [
+            0.88,
+            0,
+            0
+          ],
+          "hex": "#D7D7D7"
+        },
+        "border-strong": {
+          "oklch": [
+            0.55,
+            0,
+            0
+          ],
+          "hex": "#717171"
+        },
+        "primary": {
+          "oklch": [
+            0.48,
+            0.15,
+            29
+          ],
+          "hex": "#A13126"
+        },
+        "on-primary": {
+          "oklch": [
+            1,
+            0,
+            0
+          ],
+          "hex": "#FFFFFF"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.42,
+            0.14,
+            29
+          ],
+          "hex": "#89221A"
+        },
+        "accent": null,
+        "on-accent": null,
+        "focus": {
+          "oklch": [
+            0.48,
+            0.15,
+            29
+          ],
+          "hex": "#A13126",
+          "link": "primary"
+        }
+      },
+      "warm": 0.97,
+      "chromaScore": 0.69,
+      "structure": "accent-on-neutral",
+      "chroma": "medium",
+      "brandColorCount": 1,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 18.68,
+        "fg/surface": 16.82,
+        "fg-muted/bg": 7.26,
+        "fg-muted/surface": 6.54,
+        "fg-inverse/surface-inverse": 18.68,
+        "border-strong/bg": 4.75,
+        "primary/bg": 6.86,
+        "on-primary/primary": 7.04,
+        "on-primary/primary-hover": 9.1,
+        "focus/bg": 6.86,
+        "focus/surface": 6.17
+      },
+      "contrastFailures": [],
+      "noteKo": "시그널 레드"
+    },
+    {
+      "id": "PAL-T2-2",
+      "typeId": "T2",
+      "index": 2,
+      "theme": "light",
+      "tintHue": null,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.99,
+            0,
+            0
+          ],
+          "hex": "#FCFCFC"
+        },
+        "surface": {
+          "oklch": [
+            0.955,
+            0,
+            0
+          ],
+          "hex": "#F0F0F0"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.17,
+            0,
+            0
+          ],
+          "hex": "#0F0F0F"
+        },
+        "fg": {
+          "oklch": [
+            0.17,
+            0,
+            0
+          ],
+          "hex": "#0F0F0F"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.45,
+            0,
+            0
+          ],
+          "hex": "#555555"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.99,
+            0,
+            0
+          ],
+          "hex": "#FCFCFC"
+        },
+        "border": {
+          "oklch": [
+            0.88,
+            0,
+            0
+          ],
+          "hex": "#D7D7D7"
+        },
+        "border-strong": {
+          "oklch": [
+            0.55,
+            0,
+            0
+          ],
+          "hex": "#717171"
+        },
+        "primary": {
+          "oklch": [
+            0.48,
+            0.115,
+            155
+          ],
+          "hex": "#0B703F"
+        },
+        "on-primary": {
+          "oklch": [
+            1,
+            0,
+            0
+          ],
+          "hex": "#FFFFFF"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.42,
+            0.1,
+            155
+          ],
+          "hex": "#095C34"
+        },
+        "accent": null,
+        "on-accent": null,
+        "focus": {
+          "oklch": [
+            0.48,
+            0.115,
+            155
+          ],
+          "hex": "#0B703F",
+          "link": "primary"
+        }
+      },
+      "warm": 0.37,
+      "chromaScore": 0.47,
+      "structure": "accent-on-neutral",
+      "chroma": "medium",
+      "brandColorCount": 1,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 18.68,
+        "fg/surface": 16.82,
+        "fg-muted/bg": 7.26,
+        "fg-muted/surface": 6.54,
+        "fg-inverse/surface-inverse": 18.68,
+        "border-strong/bg": 4.75,
+        "primary/bg": 6.01,
+        "on-primary/primary": 6.16,
+        "on-primary/primary-hover": 8.1,
+        "focus/bg": 6.01,
+        "focus/surface": 5.41
+      },
+      "contrastFailures": [],
+      "noteKo": "그린"
+    },
+    {
+      "id": "PAL-T2-3",
+      "typeId": "T2",
+      "index": 3,
+      "theme": "light",
+      "tintHue": null,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.99,
+            0,
+            0
+          ],
+          "hex": "#FCFCFC"
+        },
+        "surface": {
+          "oklch": [
+            0.955,
+            0,
+            0
+          ],
+          "hex": "#F0F0F0"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.17,
+            0,
+            0
+          ],
+          "hex": "#0F0F0F"
+        },
+        "fg": {
+          "oklch": [
+            0.17,
+            0,
+            0
+          ],
+          "hex": "#0F0F0F"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.45,
+            0,
+            0
+          ],
+          "hex": "#555555"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.99,
+            0,
+            0
+          ],
+          "hex": "#FCFCFC"
+        },
+        "border": {
+          "oklch": [
+            0.88,
+            0,
+            0
+          ],
+          "hex": "#D7D7D7"
+        },
+        "border-strong": {
+          "oklch": [
+            0.55,
+            0,
+            0
+          ],
+          "hex": "#717171"
+        },
+        "primary": {
+          "oklch": [
+            0.48,
+            0.125,
+            50
+          ],
+          "hex": "#934404"
+        },
+        "on-primary": {
+          "oklch": [
+            1,
+            0,
+            0
+          ],
+          "hex": "#FFFFFF"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.42,
+            0.11,
+            50
+          ],
+          "hex": "#7B3702"
+        },
+        "accent": null,
+        "on-accent": null,
+        "focus": {
+          "oklch": [
+            0.48,
+            0.125,
+            50
+          ],
+          "hex": "#934404",
+          "link": "primary"
+        }
+      },
+      "warm": 1,
+      "chromaScore": 0.53,
+      "structure": "accent-on-neutral",
+      "chroma": "medium",
+      "brandColorCount": 1,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 18.68,
+        "fg/surface": 16.82,
+        "fg-muted/bg": 7.26,
+        "fg-muted/surface": 6.54,
+        "fg-inverse/surface-inverse": 18.68,
+        "border-strong/bg": 4.75,
+        "primary/bg": 6.66,
+        "on-primary/primary": 6.84,
+        "on-primary/primary-hover": 8.78,
+        "focus/bg": 6.66,
+        "focus/surface": 6
+      },
+      "contrastFailures": [],
+      "noteKo": "번트 오렌지"
+    },
+    {
+      "id": "PAL-T3-0",
+      "typeId": "T3",
+      "index": 0,
+      "theme": "light",
+      "tintHue": 210,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.985,
+            0.006,
+            220
+          ],
+          "hex": "#F6FBFD"
+        },
+        "surface": {
+          "oklch": [
+            0.955,
+            0.016,
+            200
+          ],
+          "hex": "#E5F4F4"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.3,
+            0.04,
+            210
+          ],
+          "hex": "#113339"
+        },
+        "fg": {
+          "oklch": [
+            0.24,
+            0.02,
+            230
+          ],
+          "hex": "#152127"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.47,
+            0.02,
+            230
+          ],
+          "hex": "#505D64"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.98,
+            0.006,
+            220
+          ],
+          "hex": "#F4F9FB"
+        },
+        "border": {
+          "oklch": [
+            0.9,
+            0.015,
+            210
+          ],
+          "hex": "#D3E1E3"
+        },
+        "border-strong": {
+          "oklch": [
+            0.58,
+            0.03,
+            210
+          ],
+          "hex": "#668084"
+        },
+        "primary": {
+          "oklch": [
+            0.47,
+            0.08,
+            195
+          ],
+          "hex": "#016869"
+        },
+        "on-primary": {
+          "oklch": [
+            0.99,
+            0.004,
+            220
+          ],
+          "hex": "#F9FCFE"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.41,
+            0.07,
+            195
+          ],
+          "hex": "#005656"
+        },
+        "accent": null,
+        "on-accent": null,
+        "focus": {
+          "oklch": [
+            0.47,
+            0.08,
+            195
+          ],
+          "hex": "#016869",
+          "link": "primary"
+        }
+      },
+      "warm": 0.09,
+      "chromaScore": 0.25,
+      "structure": "accent-on-neutral",
+      "chroma": "muted",
+      "brandColorCount": 1,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 15.74,
+        "fg/surface": 14.52,
+        "fg-muted/bg": 6.51,
+        "fg-muted/surface": 6.01,
+        "fg-inverse/surface-inverse": 12.71,
+        "border-strong/bg": 4.03,
+        "primary/bg": 6.32,
+        "on-primary/primary": 6.39,
+        "on-primary/primary-hover": 8.26,
+        "focus/bg": 6.32,
+        "focus/surface": 5.83
+      },
+      "contrastFailures": []
+    },
+    {
+      "id": "PAL-T3-1",
+      "typeId": "T3",
+      "index": 1,
+      "theme": "light",
+      "tintHue": 150,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.985,
+            0.006,
+            220
+          ],
+          "hex": "#F6FBFD"
+        },
+        "surface": {
+          "oklch": [
+            0.955,
+            0.016,
+            150
+          ],
+          "hex": "#E9F3EB"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.3,
+            0.04,
+            150
+          ],
+          "hex": "#1F3423"
+        },
+        "fg": {
+          "oklch": [
+            0.24,
+            0.02,
+            150
+          ],
+          "hex": "#19221A"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.47,
+            0.02,
+            150
+          ],
+          "hex": "#535E55"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.98,
+            0.006,
+            220
+          ],
+          "hex": "#F4F9FB"
+        },
+        "border": {
+          "oklch": [
+            0.9,
+            0.015,
+            150
+          ],
+          "hex": "#D7E1D9"
+        },
+        "border-strong": {
+          "oklch": [
+            0.58,
+            0.03,
+            150
+          ],
+          "hex": "#6E8071"
+        },
+        "primary": {
+          "oklch": [
+            0.47,
+            0.08,
+            150
+          ],
+          "hex": "#376742"
+        },
+        "on-primary": {
+          "oklch": [
+            0.99,
+            0.004,
+            220
+          ],
+          "hex": "#F9FCFE"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.41,
+            0.07,
+            150
+          ],
+          "hex": "#2C5536"
+        },
+        "accent": null,
+        "on-accent": null,
+        "focus": {
+          "oklch": [
+            0.47,
+            0.08,
+            150
+          ],
+          "hex": "#376742",
+          "link": "primary"
+        }
+      },
+      "warm": 0.41,
+      "chromaScore": 0.25,
+      "structure": "accent-on-neutral",
+      "chroma": "muted",
+      "brandColorCount": 1,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 15.66,
+        "fg/surface": 14.38,
+        "fg-muted/bg": 6.49,
+        "fg-muted/surface": 5.96,
+        "fg-inverse/surface-inverse": 12.57,
+        "border-strong/bg": 4.03,
+        "primary/bg": 6.32,
+        "on-primary/primary": 6.4,
+        "on-primary/primary-hover": 8.28,
+        "focus/bg": 6.32,
+        "focus/surface": 5.81
+      },
+      "contrastFailures": [],
+      "noteKo": "세이지"
+    },
+    {
+      "id": "PAL-T3-2",
+      "typeId": "T3",
+      "index": 2,
+      "theme": "light",
+      "tintHue": 255,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.985,
+            0.006,
+            220
+          ],
+          "hex": "#F6FBFD"
+        },
+        "surface": {
+          "oklch": [
+            0.955,
+            0.016,
+            255
+          ],
+          "hex": "#E9F1FB"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.3,
+            0.04,
+            255
+          ],
+          "hex": "#202F42"
+        },
+        "fg": {
+          "oklch": [
+            0.24,
+            0.02,
+            255
+          ],
+          "hex": "#192029"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.47,
+            0.02,
+            255
+          ],
+          "hex": "#535C66"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.98,
+            0.006,
+            220
+          ],
+          "hex": "#F4F9FB"
+        },
+        "border": {
+          "oklch": [
+            0.9,
+            0.015,
+            255
+          ],
+          "hex": "#D8DFE8"
+        },
+        "border-strong": {
+          "oklch": [
+            0.58,
+            0.03,
+            255
+          ],
+          "hex": "#6F7C8C"
+        },
+        "primary": {
+          "oklch": [
+            0.47,
+            0.08,
+            255
+          ],
+          "hex": "#3B5C87"
+        },
+        "on-primary": {
+          "oklch": [
+            0.99,
+            0.004,
+            220
+          ],
+          "hex": "#F9FCFE"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.41,
+            0.07,
+            255
+          ],
+          "hex": "#2F4C70"
+        },
+        "accent": null,
+        "on-accent": null,
+        "focus": {
+          "oklch": [
+            0.47,
+            0.08,
+            255
+          ],
+          "hex": "#3B5C87",
+          "link": "primary"
+        }
+      },
+      "warm": 0.05,
+      "chromaScore": 0.25,
+      "structure": "accent-on-neutral",
+      "chroma": "muted",
+      "brandColorCount": 1,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 15.73,
+        "fg/surface": 14.4,
+        "fg-muted/bg": 6.51,
+        "fg-muted/surface": 5.96,
+        "fg-inverse/surface-inverse": 12.79,
+        "border-strong/bg": 4.07,
+        "primary/bg": 6.56,
+        "on-primary/primary": 6.64,
+        "on-primary/primary-hover": 8.53,
+        "focus/bg": 6.56,
+        "focus/surface": 6.01
+      },
+      "contrastFailures": [],
+      "noteKo": "스카이 슬레이트"
+    },
+    {
+      "id": "PAL-T3-3",
+      "typeId": "T3",
+      "index": 3,
+      "theme": "light",
+      "tintHue": 40,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.985,
+            0.006,
+            220
+          ],
+          "hex": "#F6FBFD"
+        },
+        "surface": {
+          "oklch": [
+            0.955,
+            0.016,
+            40
+          ],
+          "hex": "#FAEDE8"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.3,
+            0.04,
+            40
+          ],
+          "hex": "#3F271E"
+        },
+        "fg": {
+          "oklch": [
+            0.24,
+            0.02,
+            40
+          ],
+          "hex": "#281C18"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.47,
+            0.02,
+            40
+          ],
+          "hex": "#655752"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.98,
+            0.006,
+            220
+          ],
+          "hex": "#F4F9FB"
+        },
+        "border": {
+          "oklch": [
+            0.9,
+            0.015,
+            40
+          ],
+          "hex": "#E7DBD7"
+        },
+        "border-strong": {
+          "oklch": [
+            0.58,
+            0.03,
+            40
+          ],
+          "hex": "#8B756D"
+        },
+        "primary": {
+          "oklch": [
+            0.47,
+            0.08,
+            40
+          ],
+          "hex": "#814A37"
+        },
+        "on-primary": {
+          "oklch": [
+            0.99,
+            0.004,
+            220
+          ],
+          "hex": "#F9FCFE"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.41,
+            0.07,
+            40
+          ],
+          "hex": "#6A3C2C"
+        },
+        "accent": null,
+        "on-accent": null,
+        "focus": {
+          "oklch": [
+            0.47,
+            0.08,
+            40
+          ],
+          "hex": "#814A37",
+          "link": "primary"
+        }
+      },
+      "warm": 0.99,
+      "chromaScore": 0.25,
+      "structure": "accent-on-neutral",
+      "chroma": "muted",
+      "brandColorCount": 1,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 15.86,
+        "fg/surface": 14.44,
+        "fg-muted/bg": 6.62,
+        "fg-muted/surface": 6.03,
+        "fg-inverse/surface-inverse": 13.01,
+        "border-strong/bg": 4.14,
+        "primary/bg": 6.78,
+        "on-primary/primary": 6.86,
+        "on-primary/primary-hover": 8.87,
+        "focus/bg": 6.78,
+        "focus/surface": 6.18
+      },
+      "contrastFailures": [],
+      "noteKo": "클레이"
+    },
+    {
+      "id": "PAL-T4-0",
+      "typeId": "T4",
+      "index": 0,
+      "theme": "light",
+      "tintHue": 75,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.955,
+            0.022,
+            75
+          ],
+          "hex": "#F9EEE0"
+        },
+        "surface": {
+          "oklch": [
+            0.925,
+            0.028,
+            70
+          ],
+          "hex": "#F3E3D3"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.3,
+            0.04,
+            45
+          ],
+          "hex": "#3F271D"
+        },
+        "fg": {
+          "oklch": [
+            0.25,
+            0.028,
+            50
+          ],
+          "hex": "#2D1E15"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.46,
+            0.03,
+            55
+          ],
+          "hex": "#665448"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.955,
+            0.02,
+            75
+          ],
+          "hex": "#F8EFE2"
+        },
+        "border": {
+          "oklch": [
+            0.86,
+            0.03,
+            70
+          ],
+          "hex": "#DECEBC"
+        },
+        "border-strong": {
+          "oklch": [
+            0.58,
+            0.035,
+            55
+          ],
+          "hex": "#8B7567"
+        },
+        "primary": {
+          "oklch": [
+            0.5,
+            0.13,
+            40
+          ],
+          "hex": "#9E4421"
+        },
+        "on-primary": {
+          "oklch": [
+            0.99,
+            0.005,
+            75
+          ],
+          "hex": "#FEFBF8"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.44,
+            0.12,
+            40
+          ],
+          "hex": "#873616"
+        },
+        "accent": {
+          "oklch": [
+            0.66,
+            0.11,
+            80
+          ],
+          "hex": "#B58A3A"
+        },
+        "on-accent": {
+          "oklch": [
+            0.22,
+            0.03,
+            50
+          ],
+          "hex": "#26160E"
+        },
+        "focus": {
+          "oklch": [
+            0.4,
+            0.1,
+            40
+          ],
+          "hex": "#733119"
+        }
+      },
+      "warm": 0.96,
+      "chromaScore": 0.56,
+      "structure": "analogous",
+      "chroma": "medium",
+      "brandColorCount": 2,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 14.01,
+        "fg/surface": 12.79,
+        "fg-muted/bg": 6.26,
+        "fg-muted/surface": 5.71,
+        "fg-inverse/surface-inverse": 12.13,
+        "border-strong/bg": 3.78,
+        "primary/bg": 5.55,
+        "on-primary/primary": 6.16,
+        "on-primary/primary-hover": 7.92,
+        "on-accent/accent": 5.53,
+        "focus/bg": 8.4,
+        "focus/surface": 7.67
+      },
+      "contrastFailures": []
+    },
+    {
+      "id": "PAL-T4-1",
+      "typeId": "T4",
+      "index": 1,
+      "theme": "light",
+      "tintHue": 60,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.955,
+            0.022,
+            75
+          ],
+          "hex": "#F9EEE0"
+        },
+        "surface": {
+          "oklch": [
+            0.925,
+            0.028,
+            60
+          ],
+          "hex": "#F5E2D4"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.3,
+            0.04,
+            60
+          ],
+          "hex": "#3D2919"
+        },
+        "fg": {
+          "oklch": [
+            0.25,
+            0.028,
+            60
+          ],
+          "hex": "#2C1E14"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.46,
+            0.03,
+            60
+          ],
+          "hex": "#655447"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.955,
+            0.02,
+            75
+          ],
+          "hex": "#F8EFE2"
+        },
+        "border": {
+          "oklch": [
+            0.86,
+            0.03,
+            60
+          ],
+          "hex": "#E0CDBE"
+        },
+        "border-strong": {
+          "oklch": [
+            0.58,
+            0.035,
+            60
+          ],
+          "hex": "#8A7666"
+        },
+        "primary": {
+          "oklch": [
+            0.5,
+            0.13,
+            25
+          ],
+          "hex": "#A03F3C"
+        },
+        "on-primary": {
+          "oklch": [
+            0.99,
+            0.005,
+            75
+          ],
+          "hex": "#FEFBF8"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.44,
+            0.12,
+            25
+          ],
+          "hex": "#89312F"
+        },
+        "accent": {
+          "oklch": [
+            0.66,
+            0.11,
+            65
+          ],
+          "hex": "#C08343"
+        },
+        "on-accent": {
+          "oklch": [
+            0.22,
+            0.03,
+            50
+          ],
+          "hex": "#26160E"
+        },
+        "focus": {
+          "oklch": [
+            0.4,
+            0.1,
+            40
+          ],
+          "hex": "#733119"
+        }
+      },
+      "warm": 0.97,
+      "chromaScore": 0.56,
+      "structure": "analogous",
+      "chroma": "medium",
+      "brandColorCount": 2,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 14.07,
+        "fg/surface": 12.82,
+        "fg-muted/bg": 6.29,
+        "fg-muted/surface": 5.73,
+        "fg-inverse/surface-inverse": 12.05,
+        "border-strong/bg": 3.76,
+        "primary/bg": 5.6,
+        "on-primary/primary": 6.22,
+        "on-primary/primary-hover": 8,
+        "on-accent/accent": 5.45,
+        "focus/bg": 8.4,
+        "focus/surface": 7.65
+      },
+      "contrastFailures": [],
+      "noteKo": "벽돌"
+    },
+    {
+      "id": "PAL-T4-2",
+      "typeId": "T4",
+      "index": 2,
+      "theme": "light",
+      "tintHue": 75,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.955,
+            0.022,
+            75
+          ],
+          "hex": "#F9EEE0"
+        },
+        "surface": {
+          "oklch": [
+            0.925,
+            0.028,
+            70
+          ],
+          "hex": "#F3E3D3"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.3,
+            0.04,
+            45
+          ],
+          "hex": "#3F271D"
+        },
+        "fg": {
+          "oklch": [
+            0.25,
+            0.028,
+            50
+          ],
+          "hex": "#2D1E15"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.46,
+            0.03,
+            55
+          ],
+          "hex": "#665448"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.955,
+            0.02,
+            75
+          ],
+          "hex": "#F8EFE2"
+        },
+        "border": {
+          "oklch": [
+            0.86,
+            0.03,
+            70
+          ],
+          "hex": "#DECEBC"
+        },
+        "border-strong": {
+          "oklch": [
+            0.58,
+            0.035,
+            55
+          ],
+          "hex": "#8B7567"
+        },
+        "primary": {
+          "oklch": [
+            0.5,
+            0.115,
+            60
+          ],
+          "hex": "#915006"
+        },
+        "on-primary": {
+          "oklch": [
+            0.99,
+            0.005,
+            75
+          ],
+          "hex": "#FEFBF8"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.44,
+            0.1,
+            60
+          ],
+          "hex": "#7A4306"
+        },
+        "accent": {
+          "oklch": [
+            0.66,
+            0.11,
+            100
+          ],
+          "hex": "#A2933B"
+        },
+        "on-accent": {
+          "oklch": [
+            0.22,
+            0.03,
+            50
+          ],
+          "hex": "#26160E"
+        },
+        "focus": {
+          "oklch": [
+            0.4,
+            0.1,
+            40
+          ],
+          "hex": "#733119"
+        }
+      },
+      "warm": 0.91,
+      "chromaScore": 0.47,
+      "structure": "analogous",
+      "chroma": "medium",
+      "brandColorCount": 2,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 14.01,
+        "fg/surface": 12.79,
+        "fg-muted/bg": 6.26,
+        "fg-muted/surface": 5.71,
+        "fg-inverse/surface-inverse": 12.13,
+        "border-strong/bg": 3.78,
+        "primary/bg": 5.46,
+        "on-primary/primary": 6.07,
+        "on-primary/primary-hover": 7.73,
+        "on-accent/accent": 5.62,
+        "focus/bg": 8.4,
+        "focus/surface": 7.67
+      },
+      "contrastFailures": [],
+      "noteKo": "호박(primary C 0.115)"
+    },
+    {
+      "id": "PAL-T4-3",
+      "typeId": "T4",
+      "index": 3,
+      "theme": "light",
+      "tintHue": 100,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.955,
+            0.022,
+            75
+          ],
+          "hex": "#F9EEE0"
+        },
+        "surface": {
+          "oklch": [
+            0.925,
+            0.028,
+            100
+          ],
+          "hex": "#EAE7D2"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.3,
+            0.04,
+            100
+          ],
+          "hex": "#322E16"
+        },
+        "fg": {
+          "oklch": [
+            0.25,
+            0.028,
+            100
+          ],
+          "hex": "#252212"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.46,
+            0.03,
+            100
+          ],
+          "hex": "#5C5945"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.955,
+            0.02,
+            75
+          ],
+          "hex": "#F8EFE2"
+        },
+        "border": {
+          "oklch": [
+            0.86,
+            0.03,
+            100
+          ],
+          "hex": "#D5D2BC"
+        },
+        "border-strong": {
+          "oklch": [
+            0.58,
+            0.035,
+            100
+          ],
+          "hex": "#7F7B63"
+        },
+        "primary": {
+          "oklch": [
+            0.5,
+            0.13,
+            140
+          ],
+          "hex": "#357426"
+        },
+        "on-primary": {
+          "oklch": [
+            0.99,
+            0.005,
+            75
+          ],
+          "hex": "#FEFBF8"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.44,
+            0.12,
+            140
+          ],
+          "hex": "#28621A"
+        },
+        "accent": {
+          "oklch": [
+            0.66,
+            0.11,
+            100
+          ],
+          "hex": "#A2933B"
+        },
+        "on-accent": {
+          "oklch": [
+            0.22,
+            0.03,
+            50
+          ],
+          "hex": "#26160E"
+        },
+        "focus": {
+          "oklch": [
+            0.4,
+            0.1,
+            40
+          ],
+          "hex": "#733119"
+        }
+      },
+      "warm": 0.66,
+      "chromaScore": 0.56,
+      "structure": "analogous",
+      "chroma": "medium",
+      "brandColorCount": 2,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 13.92,
+        "fg/surface": 12.8,
+        "fg-muted/bg": 6.17,
+        "fg-muted/surface": 5.67,
+        "fg-inverse/surface-inverse": 11.98,
+        "border-strong/bg": 3.72,
+        "primary/bg": 4.98,
+        "on-primary/primary": 5.53,
+        "on-primary/primary-hover": 7.14,
+        "on-accent/accent": 5.62,
+        "focus/bg": 8.4,
+        "focus/surface": 7.72
+      },
+      "contrastFailures": [],
+      "noteKo": "세이지"
+    },
+    {
+      "id": "PAL-T5-0",
+      "typeId": "T5",
+      "index": 0,
+      "theme": "light",
+      "tintHue": 100,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.97,
+            0.015,
+            100
+          ],
+          "hex": "#F7F6EA"
+        },
+        "surface": {
+          "oklch": [
+            0.93,
+            0.03,
+            100
+          ],
+          "hex": "#ECE9D2"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B"
+        },
+        "fg": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.4,
+            0,
+            0
+          ],
+          "hex": "#484848"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.97,
+            0.015,
+            100
+          ],
+          "hex": "#F7F6EA"
+        },
+        "border": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B"
+        },
+        "border-strong": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B"
+        },
+        "primary": {
+          "oklch": [
+            0.5,
+            0.21,
+            262
+          ],
+          "hex": "#1256D8"
+        },
+        "on-primary": {
+          "oklch": [
+            1,
+            0,
+            0
+          ],
+          "hex": "#FFFFFF"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.44,
+            0.2,
+            262
+          ],
+          "hex": "#0244BE"
+        },
+        "accent": {
+          "oklch": [
+            0.9,
+            0.17,
+            105
+          ],
+          "hex": "#EFE345"
+        },
+        "on-accent": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B"
+        },
+        "focus": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B",
+          "link": "fg"
+        }
+      },
+      "warm": 0.43,
+      "chromaScore": 1,
+      "structure": "split-complementary",
+      "chroma": "vivid",
+      "brandColorCount": 2,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 18.11,
+        "fg/surface": 16.07,
+        "fg-muted/bg": 8.41,
+        "fg-muted/surface": 7.47,
+        "fg-inverse/surface-inverse": 18.11,
+        "border-strong/bg": 18.11,
+        "primary/bg": 5.77,
+        "on-primary/primary": 6.27,
+        "on-primary/primary-hover": 8.16,
+        "on-accent/accent": 14.75,
+        "focus/bg": 18.11,
+        "focus/surface": 16.07
+      },
+      "contrastFailures": []
+    },
+    {
+      "id": "PAL-T5-1",
+      "typeId": "T5",
+      "index": 1,
+      "theme": "light",
+      "tintHue": 100,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.97,
+            0.015,
+            100
+          ],
+          "hex": "#F7F6EA"
+        },
+        "surface": {
+          "oklch": [
+            0.93,
+            0.03,
+            100
+          ],
+          "hex": "#ECE9D2"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B"
+        },
+        "fg": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.4,
+            0,
+            0
+          ],
+          "hex": "#484848"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.97,
+            0.015,
+            100
+          ],
+          "hex": "#F7F6EA"
+        },
+        "border": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B"
+        },
+        "border-strong": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B"
+        },
+        "primary": {
+          "oklch": [
+            0.5,
+            0.205,
+            29
+          ],
+          "hex": "#BC0002"
+        },
+        "on-primary": {
+          "oklch": [
+            1,
+            0,
+            0
+          ],
+          "hex": "#FFFFFF"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.44,
+            0.18,
+            29
+          ],
+          "hex": "#9E0102"
+        },
+        "accent": {
+          "oklch": [
+            0.9,
+            0.125,
+            200
+          ],
+          "hex": "#63F7FF"
+        },
+        "on-accent": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B"
+        },
+        "focus": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B",
+          "link": "fg"
+        }
+      },
+      "warm": 0.52,
+      "chromaScore": 1,
+      "structure": "complementary",
+      "chroma": "vivid",
+      "brandColorCount": 2,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 18.11,
+        "fg/surface": 16.07,
+        "fg-muted/bg": 8.41,
+        "fg-muted/surface": 7.47,
+        "fg-inverse/surface-inverse": 18.11,
+        "border-strong/bg": 18.11,
+        "primary/bg": 6.15,
+        "on-primary/primary": 6.68,
+        "on-primary/primary-hover": 8.53,
+        "on-accent/accent": 15.25,
+        "focus/bg": 18.11,
+        "focus/surface": 16.07
+      },
+      "contrastFailures": [],
+      "noteKo": "accent C 0.125"
+    },
+    {
+      "id": "PAL-T5-2",
+      "typeId": "T5",
+      "index": 2,
+      "theme": "light",
+      "tintHue": 100,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.97,
+            0.015,
+            100
+          ],
+          "hex": "#F7F6EA"
+        },
+        "surface": {
+          "oklch": [
+            0.93,
+            0.03,
+            100
+          ],
+          "hex": "#ECE9D2"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B"
+        },
+        "fg": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.4,
+            0,
+            0
+          ],
+          "hex": "#484848"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.97,
+            0.015,
+            100
+          ],
+          "hex": "#F7F6EA"
+        },
+        "border": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B"
+        },
+        "border-strong": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B"
+        },
+        "primary": {
+          "oklch": [
+            0.5,
+            0.155,
+            145
+          ],
+          "hex": "#06791F"
+        },
+        "on-primary": {
+          "oklch": [
+            1,
+            0,
+            0
+          ],
+          "hex": "#FFFFFF"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.44,
+            0.135,
+            145
+          ],
+          "hex": "#06641A"
+        },
+        "accent": {
+          "oklch": [
+            0.9,
+            0.075,
+            320
+          ],
+          "hex": "#F5CFFD"
+        },
+        "on-accent": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B"
+        },
+        "focus": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B",
+          "link": "fg"
+        }
+      },
+      "warm": 0.48,
+      "chromaScore": 0.72,
+      "structure": "complementary",
+      "chroma": "medium",
+      "brandColorCount": 2,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 18.11,
+        "fg/surface": 16.07,
+        "fg-muted/bg": 8.41,
+        "fg-muted/surface": 7.47,
+        "fg-inverse/surface-inverse": 18.11,
+        "border-strong/bg": 18.11,
+        "primary/bg": 5.13,
+        "on-primary/primary": 5.58,
+        "on-primary/primary-hover": 7.38,
+        "on-accent/accent": 14.27,
+        "focus/bg": 18.11,
+        "focus/surface": 16.07
+      },
+      "contrastFailures": [],
+      "noteKo": "accent C 0.075"
+    },
+    {
+      "id": "PAL-T5-3",
+      "typeId": "T5",
+      "index": 3,
+      "theme": "light",
+      "tintHue": 100,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.97,
+            0.015,
+            100
+          ],
+          "hex": "#F7F6EA"
+        },
+        "surface": {
+          "oklch": [
+            0.93,
+            0.03,
+            100
+          ],
+          "hex": "#ECE9D2"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B"
+        },
+        "fg": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.4,
+            0,
+            0
+          ],
+          "hex": "#484848"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.97,
+            0.015,
+            100
+          ],
+          "hex": "#F7F6EA"
+        },
+        "border": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B"
+        },
+        "border-strong": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B"
+        },
+        "primary": {
+          "oklch": [
+            0.5,
+            0.21,
+            300
+          ],
+          "hex": "#7935C6"
+        },
+        "on-primary": {
+          "oklch": [
+            1,
+            0,
+            0
+          ],
+          "hex": "#FFFFFF"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.44,
+            0.2,
+            300
+          ],
+          "hex": "#6724AD"
+        },
+        "accent": {
+          "oklch": [
+            0.9,
+            0.17,
+            120
+          ],
+          "hex": "#D0EE5F"
+        },
+        "on-accent": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B"
+        },
+        "focus": {
+          "oklch": [
+            0.15,
+            0,
+            0
+          ],
+          "hex": "#0B0B0B",
+          "link": "fg"
+        }
+      },
+      "warm": 0.5,
+      "chromaScore": 1,
+      "structure": "complementary",
+      "chroma": "vivid",
+      "brandColorCount": 2,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 18.11,
+        "fg/surface": 16.07,
+        "fg-muted/bg": 8.41,
+        "fg-muted/surface": 7.47,
+        "fg-inverse/surface-inverse": 18.11,
+        "border-strong/bg": 18.11,
+        "primary/bg": 6.15,
+        "on-primary/primary": 6.69,
+        "on-primary/primary-hover": 8.63,
+        "on-accent/accent": 15.06,
+        "focus/bg": 18.11,
+        "focus/surface": 16.07
+      },
+      "contrastFailures": []
+    },
+    {
+      "id": "PAL-T6-0",
+      "typeId": "T6",
+      "index": 0,
+      "theme": "light",
+      "tintHue": null,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.97,
+            0.02,
+            85
+          ],
+          "hex": "#FBF4E6"
+        },
+        "surface": {
+          "oklch": [
+            0.93,
+            0.04,
+            85
+          ],
+          "hex": "#F4E6CA"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.25,
+            0.03,
+            30
+          ],
+          "hex": "#2F1C19"
+        },
+        "fg": {
+          "oklch": [
+            0.22,
+            0.02,
+            30
+          ],
+          "hex": "#231715"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.45,
+            0.03,
+            40
+          ],
+          "hex": "#645049"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.97,
+            0.02,
+            85
+          ],
+          "hex": "#FBF4E6"
+        },
+        "border": {
+          "oklch": [
+            0.87,
+            0.04,
+            80
+          ],
+          "hex": "#E2D2B7"
+        },
+        "border-strong": {
+          "oklch": [
+            0.56,
+            0.05,
+            50
+          ],
+          "hex": "#8D6C5A"
+        },
+        "primary": {
+          "oklch": [
+            0.55,
+            0.19,
+            28
+          ],
+          "hex": "#C93029"
+        },
+        "on-primary": {
+          "oklch": [
+            1,
+            0,
+            0
+          ],
+          "hex": "#FFFFFF"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.49,
+            0.18,
+            28
+          ],
+          "hex": "#B01F1C"
+        },
+        "accent": {
+          "oklch": [
+            0.72,
+            0.11,
+            200
+          ],
+          "hex": "#35B9C0"
+        },
+        "on-accent": {
+          "oklch": [
+            0.22,
+            0.02,
+            30
+          ],
+          "hex": "#231715"
+        },
+        "focus": {
+          "oklch": [
+            0.22,
+            0.02,
+            30
+          ],
+          "hex": "#231715",
+          "link": "fg"
+        }
+      },
+      "warm": 0.52,
+      "chromaScore": 0.94,
+      "structure": "complementary",
+      "chroma": "vivid",
+      "brandColorCount": 2,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 15.92,
+        "fg/surface": 14.12,
+        "fg-muted/bg": 6.88,
+        "fg-muted/surface": 6.1,
+        "fg-inverse/surface-inverse": 14.74,
+        "border-strong/bg": 4.33,
+        "primary/bg": 4.87,
+        "on-primary/primary": 5.33,
+        "on-primary/primary-hover": 6.86,
+        "on-accent/accent": 7.34,
+        "focus/bg": 15.92,
+        "focus/surface": 14.12
+      },
+      "contrastFailures": []
+    },
+    {
+      "id": "PAL-T6-1",
+      "typeId": "T6",
+      "index": 1,
+      "theme": "light",
+      "tintHue": null,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.97,
+            0.02,
+            85
+          ],
+          "hex": "#FBF4E6"
+        },
+        "surface": {
+          "oklch": [
+            0.93,
+            0.04,
+            85
+          ],
+          "hex": "#F4E6CA"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.25,
+            0.03,
+            30
+          ],
+          "hex": "#2F1C19"
+        },
+        "fg": {
+          "oklch": [
+            0.22,
+            0.02,
+            30
+          ],
+          "hex": "#231715"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.45,
+            0.03,
+            40
+          ],
+          "hex": "#645049"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.97,
+            0.02,
+            85
+          ],
+          "hex": "#FBF4E6"
+        },
+        "border": {
+          "oklch": [
+            0.87,
+            0.04,
+            80
+          ],
+          "hex": "#E2D2B7"
+        },
+        "border-strong": {
+          "oklch": [
+            0.56,
+            0.05,
+            50
+          ],
+          "hex": "#8D6C5A"
+        },
+        "primary": {
+          "oklch": [
+            0.55,
+            0.19,
+            345
+          ],
+          "hex": "#B8338A"
+        },
+        "on-primary": {
+          "oklch": [
+            1,
+            0,
+            0
+          ],
+          "hex": "#FFFFFF"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.49,
+            0.18,
+            345
+          ],
+          "hex": "#A12377"
+        },
+        "accent": {
+          "oklch": [
+            0.72,
+            0.11,
+            165
+          ],
+          "hex": "#58BA93"
+        },
+        "on-accent": {
+          "oklch": [
+            0.22,
+            0.02,
+            30
+          ],
+          "hex": "#231715"
+        },
+        "focus": {
+          "oklch": [
+            0.22,
+            0.02,
+            30
+          ],
+          "hex": "#231715",
+          "link": "fg"
+        }
+      },
+      "warm": 0.5,
+      "chromaScore": 0.94,
+      "structure": "complementary",
+      "chroma": "vivid",
+      "brandColorCount": 2,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 15.92,
+        "fg/surface": 14.12,
+        "fg-muted/bg": 6.88,
+        "fg-muted/surface": 6.1,
+        "fg-inverse/surface-inverse": 14.74,
+        "border-strong/bg": 4.33,
+        "primary/bg": 4.94,
+        "on-primary/primary": 5.41,
+        "on-primary/primary-hover": 6.94,
+        "on-accent/accent": 7.35,
+        "focus/bg": 15.92,
+        "focus/surface": 14.12
+      },
+      "contrastFailures": [],
+      "noteKo": "핑크 + 민트"
+    },
+    {
+      "id": "PAL-T6-2",
+      "typeId": "T6",
+      "index": 2,
+      "theme": "light",
+      "tintHue": null,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.97,
+            0.02,
+            85
+          ],
+          "hex": "#FBF4E6"
+        },
+        "surface": {
+          "oklch": [
+            0.93,
+            0.04,
+            85
+          ],
+          "hex": "#F4E6CA"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.25,
+            0.03,
+            30
+          ],
+          "hex": "#2F1C19"
+        },
+        "fg": {
+          "oklch": [
+            0.22,
+            0.02,
+            30
+          ],
+          "hex": "#231715"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.45,
+            0.03,
+            40
+          ],
+          "hex": "#645049"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.97,
+            0.02,
+            85
+          ],
+          "hex": "#FBF4E6"
+        },
+        "border": {
+          "oklch": [
+            0.87,
+            0.04,
+            80
+          ],
+          "hex": "#E2D2B7"
+        },
+        "border-strong": {
+          "oklch": [
+            0.56,
+            0.05,
+            50
+          ],
+          "hex": "#8D6C5A"
+        },
+        "primary": {
+          "oklch": [
+            0.52,
+            0.15,
+            145
+          ],
+          "hex": "#1B7E2A"
+        },
+        "on-primary": {
+          "oklch": [
+            1,
+            0,
+            0
+          ],
+          "hex": "#FFFFFF"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.46,
+            0.14,
+            145
+          ],
+          "hex": "#0A6B1D"
+        },
+        "accent": {
+          "oklch": [
+            0.72,
+            0.11,
+            325
+          ],
+          "hex": "#C88CCB"
+        },
+        "on-accent": {
+          "oklch": [
+            0.22,
+            0.02,
+            30
+          ],
+          "hex": "#231715"
+        },
+        "focus": {
+          "oklch": [
+            0.22,
+            0.02,
+            30
+          ],
+          "hex": "#231715",
+          "link": "fg"
+        }
+      },
+      "warm": 0.5,
+      "chromaScore": 0.69,
+      "structure": "complementary",
+      "chroma": "medium",
+      "brandColorCount": 2,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 15.92,
+        "fg/surface": 14.12,
+        "fg-muted/bg": 6.88,
+        "fg-muted/surface": 6.1,
+        "fg-inverse/surface-inverse": 14.74,
+        "border-strong/bg": 4.33,
+        "primary/bg": 4.72,
+        "on-primary/primary": 5.16,
+        "on-primary/primary-hover": 6.7,
+        "on-accent/accent": 6.69,
+        "focus/bg": 15.92,
+        "focus/surface": 14.12
+      },
+      "contrastFailures": [],
+      "noteKo": "예외: primary `.52 .15 145`, hover `.46 .14 145` #0A6B1D (on-primary 5.2, 대 bg 4.7)"
+    },
+    {
+      "id": "PAL-T6-3",
+      "typeId": "T6",
+      "index": 3,
+      "theme": "light",
+      "tintHue": null,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.97,
+            0.02,
+            85
+          ],
+          "hex": "#FBF4E6"
+        },
+        "surface": {
+          "oklch": [
+            0.93,
+            0.04,
+            85
+          ],
+          "hex": "#F4E6CA"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.25,
+            0.03,
+            30
+          ],
+          "hex": "#2F1C19"
+        },
+        "fg": {
+          "oklch": [
+            0.22,
+            0.02,
+            30
+          ],
+          "hex": "#231715"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.45,
+            0.03,
+            40
+          ],
+          "hex": "#645049"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.97,
+            0.02,
+            85
+          ],
+          "hex": "#FBF4E6"
+        },
+        "border": {
+          "oklch": [
+            0.87,
+            0.04,
+            80
+          ],
+          "hex": "#E2D2B7"
+        },
+        "border-strong": {
+          "oklch": [
+            0.56,
+            0.05,
+            50
+          ],
+          "hex": "#8D6C5A"
+        },
+        "primary": {
+          "oklch": [
+            0.55,
+            0.135,
+            55
+          ],
+          "hex": "#AB5803"
+        },
+        "on-primary": {
+          "oklch": [
+            1,
+            0,
+            0
+          ],
+          "hex": "#FFFFFF"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.49,
+            0.12,
+            55
+          ],
+          "hex": "#924A03"
+        },
+        "accent": {
+          "oklch": [
+            0.72,
+            0.11,
+            235
+          ],
+          "hex": "#57AFE0"
+        },
+        "on-accent": {
+          "oklch": [
+            0.22,
+            0.02,
+            30
+          ],
+          "hex": "#231715"
+        },
+        "focus": {
+          "oklch": [
+            0.22,
+            0.02,
+            30
+          ],
+          "hex": "#231715",
+          "link": "fg"
+        }
+      },
+      "warm": 0.5,
+      "chromaScore": 0.59,
+      "structure": "complementary",
+      "chroma": "medium",
+      "brandColorCount": 2,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 15.92,
+        "fg/surface": 14.12,
+        "fg-muted/bg": 6.88,
+        "fg-muted/surface": 6.1,
+        "fg-inverse/surface-inverse": 14.74,
+        "border-strong/bg": 4.33,
+        "primary/bg": 4.64,
+        "on-primary/primary": 5.08,
+        "on-primary/primary-hover": 6.55,
+        "on-accent/accent": 7.14,
+        "focus/bg": 15.92,
+        "focus/surface": 14.12
+      },
+      "contrastFailures": [],
+      "noteKo": "오렌지 + 스카이"
+    },
+    {
+      "id": "PAL-T7-0",
+      "typeId": "T7",
+      "index": 0,
+      "theme": "dark",
+      "tintHue": 250,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.17,
+            0.012,
+            250
+          ],
+          "hex": "#0B1015"
+        },
+        "surface": {
+          "oklch": [
+            0.21,
+            0.014,
+            250
+          ],
+          "hex": "#13191F"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.93,
+            0.01,
+            250
+          ],
+          "hex": "#E3E8EE"
+        },
+        "fg": {
+          "oklch": [
+            0.93,
+            0.008,
+            250
+          ],
+          "hex": "#E4E8ED"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.72,
+            0.015,
+            250
+          ],
+          "hex": "#9EA6AE"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.17,
+            0.012,
+            250
+          ],
+          "hex": "#0B1015"
+        },
+        "border": {
+          "oklch": [
+            0.3,
+            0.015,
+            250
+          ],
+          "hex": "#282F35"
+        },
+        "border-strong": {
+          "oklch": [
+            0.52,
+            0.015,
+            250
+          ],
+          "hex": "#636A71"
+        },
+        "primary": {
+          "oklch": [
+            0.8,
+            0.14,
+            165
+          ],
+          "hex": "#51DAA7"
+        },
+        "on-primary": {
+          "oklch": [
+            0.17,
+            0.012,
+            250
+          ],
+          "hex": "#0B1015"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.86,
+            0.12,
+            165
+          ],
+          "hex": "#7DEABD"
+        },
+        "accent": null,
+        "on-accent": null,
+        "focus": {
+          "oklch": [
+            0.8,
+            0.14,
+            165
+          ],
+          "hex": "#51DAA7",
+          "link": "primary"
+        }
+      },
+      "warm": 0.29,
+      "chromaScore": 0.63,
+      "structure": "accent-on-neutral",
+      "chroma": "medium",
+      "brandColorCount": 1,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 15.52,
+        "fg/surface": 14.38,
+        "fg-muted/bg": 7.75,
+        "fg-muted/surface": 7.18,
+        "fg-inverse/surface-inverse": 15.5,
+        "border-strong/bg": 3.48,
+        "primary/bg": 10.85,
+        "on-primary/primary": 10.85,
+        "on-primary/primary-hover": 13.07,
+        "focus/bg": 10.85,
+        "focus/surface": 10.05
+      },
+      "contrastFailures": []
+    },
+    {
+      "id": "PAL-T7-1",
+      "typeId": "T7",
+      "index": 1,
+      "theme": "dark",
+      "tintHue": 250,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.17,
+            0.012,
+            250
+          ],
+          "hex": "#0B1015"
+        },
+        "surface": {
+          "oklch": [
+            0.21,
+            0.014,
+            250
+          ],
+          "hex": "#13191F"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.93,
+            0.01,
+            250
+          ],
+          "hex": "#E3E8EE"
+        },
+        "fg": {
+          "oklch": [
+            0.93,
+            0.008,
+            250
+          ],
+          "hex": "#E4E8ED"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.72,
+            0.015,
+            250
+          ],
+          "hex": "#9EA6AE"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.17,
+            0.012,
+            250
+          ],
+          "hex": "#0B1015"
+        },
+        "border": {
+          "oklch": [
+            0.3,
+            0.015,
+            250
+          ],
+          "hex": "#282F35"
+        },
+        "border-strong": {
+          "oklch": [
+            0.52,
+            0.015,
+            250
+          ],
+          "hex": "#636A71"
+        },
+        "primary": {
+          "oklch": [
+            0.8,
+            0.14,
+            75
+          ],
+          "hex": "#F2AF48"
+        },
+        "on-primary": {
+          "oklch": [
+            0.17,
+            0.012,
+            250
+          ],
+          "hex": "#0B1015"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.86,
+            0.115,
+            75
+          ],
+          "hex": "#FDC678"
+        },
+        "accent": null,
+        "on-accent": null,
+        "focus": {
+          "oklch": [
+            0.8,
+            0.14,
+            75
+          ],
+          "hex": "#F2AF48",
+          "link": "primary"
+        }
+      },
+      "warm": 0.95,
+      "chromaScore": 0.63,
+      "structure": "accent-on-neutral",
+      "chroma": "medium",
+      "brandColorCount": 1,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 15.52,
+        "fg/surface": 14.38,
+        "fg-muted/bg": 7.75,
+        "fg-muted/surface": 7.18,
+        "fg-inverse/surface-inverse": 15.5,
+        "border-strong/bg": 3.48,
+        "primary/bg": 10,
+        "on-primary/primary": 10,
+        "on-primary/primary-hover": 12.3,
+        "focus/bg": 10,
+        "focus/surface": 9.27
+      },
+      "contrastFailures": [],
+      "noteKo": "앰버"
+    },
+    {
+      "id": "PAL-T7-2",
+      "typeId": "T7",
+      "index": 2,
+      "theme": "dark",
+      "tintHue": 250,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.17,
+            0.012,
+            250
+          ],
+          "hex": "#0B1015"
+        },
+        "surface": {
+          "oklch": [
+            0.21,
+            0.014,
+            250
+          ],
+          "hex": "#13191F"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.93,
+            0.01,
+            250
+          ],
+          "hex": "#E3E8EE"
+        },
+        "fg": {
+          "oklch": [
+            0.93,
+            0.008,
+            250
+          ],
+          "hex": "#E4E8ED"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.72,
+            0.015,
+            250
+          ],
+          "hex": "#9EA6AE"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.17,
+            0.012,
+            250
+          ],
+          "hex": "#0B1015"
+        },
+        "border": {
+          "oklch": [
+            0.3,
+            0.015,
+            250
+          ],
+          "hex": "#282F35"
+        },
+        "border-strong": {
+          "oklch": [
+            0.52,
+            0.015,
+            250
+          ],
+          "hex": "#636A71"
+        },
+        "primary": {
+          "oklch": [
+            0.8,
+            0.125,
+            230
+          ],
+          "hex": "#59CCFE"
+        },
+        "on-primary": {
+          "oklch": [
+            0.17,
+            0.012,
+            250
+          ],
+          "hex": "#0B1015"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.86,
+            0.085,
+            230
+          ],
+          "hex": "#96DCFE"
+        },
+        "accent": null,
+        "on-accent": null,
+        "focus": {
+          "oklch": [
+            0.8,
+            0.125,
+            230
+          ],
+          "hex": "#59CCFE",
+          "link": "primary"
+        }
+      },
+      "warm": 0,
+      "chromaScore": 0.53,
+      "structure": "accent-on-neutral",
+      "chroma": "medium",
+      "brandColorCount": 1,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 15.52,
+        "fg/surface": 14.38,
+        "fg-muted/bg": 7.75,
+        "fg-muted/surface": 7.18,
+        "fg-inverse/surface-inverse": 15.5,
+        "border-strong/bg": 3.48,
+        "primary/bg": 10.45,
+        "on-primary/primary": 10.45,
+        "on-primary/primary-hover": 12.7,
+        "focus/bg": 10.45,
+        "focus/surface": 9.68
+      },
+      "contrastFailures": [],
+      "noteKo": "시안(C 0.125)"
+    },
+    {
+      "id": "PAL-T7-3",
+      "typeId": "T7",
+      "index": 3,
+      "theme": "dark",
+      "tintHue": 250,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.17,
+            0.012,
+            250
+          ],
+          "hex": "#0B1015"
+        },
+        "surface": {
+          "oklch": [
+            0.21,
+            0.014,
+            250
+          ],
+          "hex": "#13191F"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.93,
+            0.01,
+            250
+          ],
+          "hex": "#E3E8EE"
+        },
+        "fg": {
+          "oklch": [
+            0.93,
+            0.008,
+            250
+          ],
+          "hex": "#E4E8ED"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.72,
+            0.015,
+            250
+          ],
+          "hex": "#9EA6AE"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.17,
+            0.012,
+            250
+          ],
+          "hex": "#0B1015"
+        },
+        "border": {
+          "oklch": [
+            0.3,
+            0.015,
+            250
+          ],
+          "hex": "#282F35"
+        },
+        "border-strong": {
+          "oklch": [
+            0.52,
+            0.015,
+            250
+          ],
+          "hex": "#636A71"
+        },
+        "primary": {
+          "oklch": [
+            0.8,
+            0.11,
+            25
+          ],
+          "hex": "#FDA19A"
+        },
+        "on-primary": {
+          "oklch": [
+            0.17,
+            0.012,
+            250
+          ],
+          "hex": "#0B1015"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.86,
+            0.075,
+            25
+          ],
+          "hex": "#FFBFB8"
+        },
+        "accent": null,
+        "on-accent": null,
+        "focus": {
+          "oklch": [
+            0.8,
+            0.11,
+            25
+          ],
+          "hex": "#FDA19A",
+          "link": "primary"
+        }
+      },
+      "warm": 0.95,
+      "chromaScore": 0.44,
+      "structure": "accent-on-neutral",
+      "chroma": "medium",
+      "brandColorCount": 1,
+      "accentTextSafe": false,
+      "contrast": {
+        "fg/bg": 15.52,
+        "fg/surface": 14.38,
+        "fg-muted/bg": 7.75,
+        "fg-muted/surface": 7.18,
+        "fg-inverse/surface-inverse": 15.5,
+        "border-strong/bg": 3.48,
+        "primary/bg": 9.77,
+        "on-primary/primary": 9.77,
+        "on-primary/primary-hover": 12.18,
+        "focus/bg": 9.77,
+        "focus/surface": 9.05
+      },
+      "contrastFailures": [],
+      "noteKo": "코랄(C 0.11)"
+    },
+    {
+      "id": "PAL-T8-0",
+      "typeId": "T8",
+      "index": 0,
+      "theme": "light",
+      "tintHue": 80,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.97,
+            0.004,
+            80
+          ],
+          "hex": "#F6F5F2"
+        },
+        "surface": {
+          "oklch": [
+            0.935,
+            0.01,
+            80
+          ],
+          "hex": "#EDE9E2"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.18,
+            0.004,
+            80
+          ],
+          "hex": "#121110"
+        },
+        "fg": {
+          "oklch": [
+            0.18,
+            0.004,
+            80
+          ],
+          "hex": "#121110"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.46,
+            0.006,
+            80
+          ],
+          "hex": "#5A5854"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.97,
+            0.004,
+            80
+          ],
+          "hex": "#F6F5F2"
+        },
+        "border": {
+          "oklch": [
+            0.88,
+            0.01,
+            80
+          ],
+          "hex": "#DBD7D0"
+        },
+        "border-strong": {
+          "oklch": [
+            0.58,
+            0.008,
+            80
+          ],
+          "hex": "#7D7A75"
+        },
+        "primary": {
+          "oklch": [
+            0.18,
+            0.004,
+            80
+          ],
+          "hex": "#121110"
+        },
+        "on-primary": {
+          "oklch": [
+            0.97,
+            0.004,
+            80
+          ],
+          "hex": "#F6F5F2"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.28,
+            0.005,
+            80
+          ],
+          "hex": "#2A2926"
+        },
+        "accent": {
+          "oklch": [
+            0.48,
+            0.12,
+            15
+          ],
+          "hex": "#953C47"
+        },
+        "on-accent": {
+          "oklch": [
+            0.97,
+            0.004,
+            80
+          ],
+          "hex": "#F6F5F2"
+        },
+        "focus": {
+          "oklch": [
+            0.18,
+            0.004,
+            80
+          ],
+          "hex": "#121110",
+          "link": "fg"
+        }
+      },
+      "warm": 0.73,
+      "chromaScore": 0.5,
+      "structure": "accent-on-neutral",
+      "chroma": "medium",
+      "brandColorCount": 1,
+      "accentTextSafe": true,
+      "contrast": {
+        "fg/bg": 17.3,
+        "fg/surface": 15.58,
+        "fg-muted/bg": 6.51,
+        "fg-muted/surface": 5.86,
+        "fg-inverse/surface-inverse": 17.3,
+        "border-strong/bg": 3.92,
+        "primary/bg": 17.3,
+        "on-primary/primary": 17.3,
+        "on-primary/primary-hover": 13.34,
+        "on-accent/accent": 6.38,
+        "focus/bg": 17.3,
+        "focus/surface": 15.58
+      },
+      "contrastFailures": []
+    },
+    {
+      "id": "PAL-T8-1",
+      "typeId": "T8",
+      "index": 1,
+      "theme": "light",
+      "tintHue": 80,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.97,
+            0.004,
+            80
+          ],
+          "hex": "#F6F5F2"
+        },
+        "surface": {
+          "oklch": [
+            0.935,
+            0.01,
+            80
+          ],
+          "hex": "#EDE9E2"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.18,
+            0.004,
+            80
+          ],
+          "hex": "#121110"
+        },
+        "fg": {
+          "oklch": [
+            0.18,
+            0.004,
+            80
+          ],
+          "hex": "#121110"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.46,
+            0.006,
+            80
+          ],
+          "hex": "#5A5854"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.97,
+            0.004,
+            80
+          ],
+          "hex": "#F6F5F2"
+        },
+        "border": {
+          "oklch": [
+            0.88,
+            0.01,
+            80
+          ],
+          "hex": "#DBD7D0"
+        },
+        "border-strong": {
+          "oklch": [
+            0.58,
+            0.008,
+            80
+          ],
+          "hex": "#7D7A75"
+        },
+        "primary": {
+          "oklch": [
+            0.18,
+            0.004,
+            80
+          ],
+          "hex": "#121110"
+        },
+        "on-primary": {
+          "oklch": [
+            0.97,
+            0.004,
+            80
+          ],
+          "hex": "#F6F5F2"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.28,
+            0.005,
+            80
+          ],
+          "hex": "#2A2926"
+        },
+        "accent": {
+          "oklch": [
+            0.48,
+            0.12,
+            145
+          ],
+          "hex": "#286F2F"
+        },
+        "on-accent": {
+          "oklch": [
+            0.97,
+            0.004,
+            80
+          ],
+          "hex": "#F6F5F2"
+        },
+        "focus": {
+          "oklch": [
+            0.18,
+            0.004,
+            80
+          ],
+          "hex": "#121110",
+          "link": "fg"
+        }
+      },
+      "warm": 0.5,
+      "chromaScore": 0.5,
+      "structure": "accent-on-neutral",
+      "chroma": "medium",
+      "brandColorCount": 1,
+      "accentTextSafe": true,
+      "contrast": {
+        "fg/bg": 17.3,
+        "fg/surface": 15.58,
+        "fg-muted/bg": 6.51,
+        "fg-muted/surface": 5.86,
+        "fg-inverse/surface-inverse": 17.3,
+        "border-strong/bg": 3.92,
+        "primary/bg": 17.3,
+        "on-primary/primary": 17.3,
+        "on-primary/primary-hover": 13.34,
+        "on-accent/accent": 5.65,
+        "focus/bg": 17.3,
+        "focus/surface": 15.58
+      },
+      "contrastFailures": [],
+      "noteKo": "포레스트"
+    },
+    {
+      "id": "PAL-T8-2",
+      "typeId": "T8",
+      "index": 2,
+      "theme": "light",
+      "tintHue": 80,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.97,
+            0.004,
+            80
+          ],
+          "hex": "#F6F5F2"
+        },
+        "surface": {
+          "oklch": [
+            0.935,
+            0.01,
+            80
+          ],
+          "hex": "#EDE9E2"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.18,
+            0.004,
+            80
+          ],
+          "hex": "#121110"
+        },
+        "fg": {
+          "oklch": [
+            0.18,
+            0.004,
+            80
+          ],
+          "hex": "#121110"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.46,
+            0.006,
+            80
+          ],
+          "hex": "#5A5854"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.97,
+            0.004,
+            80
+          ],
+          "hex": "#F6F5F2"
+        },
+        "border": {
+          "oklch": [
+            0.88,
+            0.01,
+            80
+          ],
+          "hex": "#DBD7D0"
+        },
+        "border-strong": {
+          "oklch": [
+            0.58,
+            0.008,
+            80
+          ],
+          "hex": "#7D7A75"
+        },
+        "primary": {
+          "oklch": [
+            0.18,
+            0.004,
+            80
+          ],
+          "hex": "#121110"
+        },
+        "on-primary": {
+          "oklch": [
+            0.97,
+            0.004,
+            80
+          ],
+          "hex": "#F6F5F2"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.28,
+            0.005,
+            80
+          ],
+          "hex": "#2A2926"
+        },
+        "accent": {
+          "oklch": [
+            0.48,
+            0.12,
+            250
+          ],
+          "hex": "#1A609E"
+        },
+        "on-accent": {
+          "oklch": [
+            0.97,
+            0.004,
+            80
+          ],
+          "hex": "#F6F5F2"
+        },
+        "focus": {
+          "oklch": [
+            0.18,
+            0.004,
+            80
+          ],
+          "hex": "#121110",
+          "link": "fg"
+        }
+      },
+      "warm": 0.29,
+      "chromaScore": 0.5,
+      "structure": "accent-on-neutral",
+      "chroma": "medium",
+      "brandColorCount": 1,
+      "accentTextSafe": true,
+      "contrast": {
+        "fg/bg": 17.3,
+        "fg/surface": 15.58,
+        "fg-muted/bg": 6.51,
+        "fg-muted/surface": 5.86,
+        "fg-inverse/surface-inverse": 17.3,
+        "border-strong/bg": 3.92,
+        "primary/bg": 17.3,
+        "on-primary/primary": 17.3,
+        "on-primary/primary-hover": 13.34,
+        "on-accent/accent": 5.99,
+        "focus/bg": 17.3,
+        "focus/surface": 15.58
+      },
+      "contrastFailures": [],
+      "noteKo": "잉크 블루"
+    },
+    {
+      "id": "PAL-T8-3",
+      "typeId": "T8",
+      "index": 3,
+      "theme": "light",
+      "tintHue": 80,
+      "roles": {
+        "bg": {
+          "oklch": [
+            0.97,
+            0.004,
+            80
+          ],
+          "hex": "#F6F5F2"
+        },
+        "surface": {
+          "oklch": [
+            0.935,
+            0.01,
+            80
+          ],
+          "hex": "#EDE9E2"
+        },
+        "surface-inverse": {
+          "oklch": [
+            0.18,
+            0.004,
+            80
+          ],
+          "hex": "#121110"
+        },
+        "fg": {
+          "oklch": [
+            0.18,
+            0.004,
+            80
+          ],
+          "hex": "#121110"
+        },
+        "fg-muted": {
+          "oklch": [
+            0.46,
+            0.006,
+            80
+          ],
+          "hex": "#5A5854"
+        },
+        "fg-inverse": {
+          "oklch": [
+            0.97,
+            0.004,
+            80
+          ],
+          "hex": "#F6F5F2"
+        },
+        "border": {
+          "oklch": [
+            0.88,
+            0.01,
+            80
+          ],
+          "hex": "#DBD7D0"
+        },
+        "border-strong": {
+          "oklch": [
+            0.58,
+            0.008,
+            80
+          ],
+          "hex": "#7D7A75"
+        },
+        "primary": {
+          "oklch": [
+            0.18,
+            0.004,
+            80
+          ],
+          "hex": "#121110"
+        },
+        "on-primary": {
+          "oklch": [
+            0.97,
+            0.004,
+            80
+          ],
+          "hex": "#F6F5F2"
+        },
+        "primary-hover": {
+          "oklch": [
+            0.28,
+            0.005,
+            80
+          ],
+          "hex": "#2A2926"
+        },
+        "accent": {
+          "oklch": [
+            0.48,
+            0.105,
+            65
+          ],
+          "hex": "#854F06"
+        },
+        "on-accent": {
+          "oklch": [
+            0.97,
+            0.004,
+            80
+          ],
+          "hex": "#F6F5F2"
+        },
+        "focus": {
+          "oklch": [
+            0.18,
+            0.004,
+            80
+          ],
+          "hex": "#121110",
+          "link": "fg"
+        }
+      },
+      "warm": 0.76,
+      "chromaScore": 0.41,
+      "structure": "accent-on-neutral",
+      "chroma": "medium",
+      "brandColorCount": 1,
+      "accentTextSafe": true,
+      "contrast": {
+        "fg/bg": 17.3,
+        "fg/surface": 15.58,
+        "fg-muted/bg": 6.51,
+        "fg-muted/surface": 5.86,
+        "fg-inverse/surface-inverse": 17.3,
+        "border-strong/bg": 3.92,
+        "primary/bg": 17.3,
+        "on-primary/primary": 17.3,
+        "on-primary/primary-hover": 13.34,
+        "on-accent/accent": 6.17,
+        "focus/bg": 17.3,
+        "focus/surface": 15.58
+      },
+      "contrastFailures": [],
+      "noteKo": "브론즈"
+    }
+  ]
+}
