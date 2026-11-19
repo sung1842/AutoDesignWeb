@@ -1,10 +1,10 @@
 # 00. 개요·전략
 
-- 문서 버전: v2.1 (2026-11-17, decisions_v2.md R-01~R-38 반영) / 서비스 가칭: 취향핏(TasteFit) (D-01)
+- 문서 버전: v2.3 (2026-11-19, decisions_v4.md T-01~T-36 반영. v2.2 = decisions_v3, v2.1 = decisions_v2) / 서비스 가칭: 취향핏(TasteFit) (D-01)
 - 이 장의 역할: 문제·타깃·가치·경쟁·지표·범위·원가·로깅·운영·리스크·용어를 정의한다. 기능 상세는 01~09장이 정의하며, 이 장은 그 장들이 따라야 할 **제품 수준 기준값**을 확정한다.
 - 우선순위 규칙: decisions_v2.md(R-xx) > decisions.md(D-xx) > 이 장 > 개별 장. 이 장의 "추가 결정"(D-00x) 중 R-xx로 대체된 항목은 §13에 표시한다.
 - 단일 원천 위임(R-xx): 출시 게이트 합격선 → 07장 + `config/thresholds.json`(R-09) / 오류 코드 → 06장 6.4.2 + `@tastefit/api-contract`(R-13) / 레이트리밋 → 06장 6.10.1(R-31) / 화면 ID·route → 01장 S01~S15(R-19) / 유형 이름·설명 → 02장, 유형 중심 벡터 → 03장 3.4.7(R-04). 이 장의 KPI 목표값(§6)은 출시 후 관측용 제품 지표이며 잠금 대상이 아니다.
-- ID 체계: 이 장의 가드레일은 `GR-n`, 리스크는 `RK-nn`, 출시 단계는 07장 게이트 `G1~G7`(R-32)을 쓴다. 04장 하드 게이트 `G-01~G-12`, decisions_v2 `R-xx`와 구분한다.
+- ID 체계: 이 장의 가드레일은 `GR-n`, 리스크는 `RK-nn`, 출시 단계는 07장 게이트 `G1~G7`(R-32)을 쓴다. 04장 하드 게이트 `G-01~G-13`, decisions_v2 `R-xx`와 구분한다.
 - 표기: **[P0]** = MVP 포함, **[P2]** = Phase 2, **[P3]** = Phase 3, **MVP 제외** = MVP에서 구현하지 않음. 수치는 별도 표기가 없으면 **초기 가설값**이며 클로즈드 베타 종료 시 재조정한다(→ §6.6).
 
 ---
@@ -133,7 +133,7 @@ MVP 비목표: 호스팅·도메인 연결, CMS·자유 배치형 노코드 편�
 | A1 | 시각 선택 16문항 이하로 사용자가 공감하는 유형을 판정할 수 있다 | ① 결과 화면 5점 공감 평가 ② 6~14일 후 재진단 유형 일치율(경계 결과는 2순위 포함, 02장 2.16.3) | ① 결과 도달 n≥60 ② 재진단 n≥15 | ① 4~5점 비율 ≥ 70% 그리고 평균 ≥ 3.8 ② 일치 ≥ 60% | ① < 55% 또는 ② < 40% → 02장 문항·유형 재설계를 최우선, 생성 고도화 작업 중단 | 비공개 베타 |
 | A1b | 진단 결과가 시안 선호를 실제로 좌우한다(진단의 효용) | 07장 7.8.5 **P-4 개인화 선호율**: 참가자 프로필 V-TRUE vs 앵커 거리가 먼 유형 3개 중 무작위 1개의 V-TRUE, 라벨 없이 좌우 무작위 | 참가자 ≥15명 × 2쌍 = ≥30응답 | ≥ 70% 그리고 Wilson 95% 하한 ≥ 0.50 | 미달 → 공개 출시 보류(07장 G7b), 진단 단계 축소 또는 "유형 직접 선택" 대안 실험 | 공개 출시 전 |
 | A1c | 5축 연속 개인화(개인 오프셋)가 유형 앵커만 쓴 시안보다 낫다 | 07장 7.8.5 **P-4b**: 본인 프로필 `v_true` vs 본인 유형 앵커만 쓴 `v_true`(`g_k = 0`) | P-4 참가자 ≥15명 × 1쌍 | 선호율 > 0.55(기록 전용) | ≤ 0.55 → "개인 오프셋 효용 미확인"으로 기록, Phase 2 개인화 투자 우선순위 하향(S-36) | 비공개 베타 |
-| A2 | 진단 기반 시안이 일반 프롬프트 시안보다 선호된다 | 07장 7.8.3 **P-2 베이스라인 대비 선호율**: 골든 핵심 20케이스 V-TRUE vs 베이스라인(`eval/blind/baseline_prompt.md`), "실제로 쓰고 싶은 쪽" 강제 선택 | 평가자 ≥5명(비디자이너 ≥3) × 20쌍 = 100응답 | ≥ 70% 그리고 Wilson 95% 하한 ≥ 0.60 | Wilson 하한 < 0.60 → 공개 출시 보류(G7b), Phase 2 트렌드·자동 수집 투자 보류, 04장 생성 품질 개선만 진행 | 공개 출시 전 |
+| A2 | 진단 기반 시안이 일반 프롬프트 시안보다 선호된다 | 07장 7.8.3 **P-2 베이스라인 대비 선호율**: 골든 핵심 20케이스 `v_true` vs 베이스라인(`eval/blind/baseline_prompt.md`, 이미지 팩·웹폰트 부록과 같은 렌더러로 자산 조건을 맞춘 하네스, T-31), "실제로 쓰고 싶은 쪽" 강제 선택 | 평가자 ≥5명(비디자이너 ≥3) × 20쌍 = 100응답 | ≥ 70% 그리고 Wilson 95% 하한 ≥ 0.60 | Wilson 하한 < 0.60 → 공개 출시 보류(G7b), Phase 2 트렌드·자동 수집 투자 보류, 04장 생성 품질 개선만 진행 | 공개 출시 전 |
 | A2s | 파이프라인(프리셋·스냅·린터·게이트)이 "가이드 카드를 붙인 프롬프트"보다 낫다(DF-2) | 07장 7.8.3 **P-2s 강한 베이스라인**(`eval/blind/baseline_strong_prompt.md`, P-2 세션에 섞어 응답) | P-2와 같은 평가자 × 20쌍 | 선호율 ≥ 0.60 그리고 Wilson 하한 ≥ 0.45(기록 전용, 출시 비차단) | 미달 → §4.2 DF-2 붕괴 신호로 등록, 포지셔닝 재검토 안건(S-36) | 비공개 베타 |
 | A3 | 프리셋·린터가 "AI 티"를 줄인다 | 07장 7.8.2 **P-1 AI 느낌 판별률**: 생성 20 + 사람 제작 대조군 20, "사람/AI" 강제 선택 | 5명 × 40항목 = 200응답 | P-1a 판별 정확도 ≤ 0.65 (Phase 2 ≤ 0.55) 그리고 P-1b "AI 같다" 판정률 ≤ 25%·베이스라인의 ½ 이하(07장 7.8.2, S-19) | > 0.65 → 공개 출시 보류(G7b), 평가자 ≥80%가 "AI"로 고른 항목을 03·04장 린터 규칙 후보로 등록 | 공개 출시 전 |
 | A4 | 결과 도달자 일부가 결과를 공유한다(획득 채널 성립) | 결과 공유율 F5 | 결과 도달 n≥60 | ≥ 15% | < 5% → 공유 기능 고도화 [P2] 취소, 획득은 커뮤니티 게시로 대체 | 비공개 베타 |
@@ -243,7 +243,7 @@ MVP 비목표: 호스팅·도메인 연결, CMS·자유 배치형 노코드 편�
 | GR-3 | 월 지출 | `GEN_MONTHLY_BUDGET_USD` 도달 | 자동: KS-1을 월말까지 유지 |
 | GR-4 | 생성 지연(R-25) | 첫 시안 카드 노출 p50 ≤ 45초, 3안 전체 p50 ≤ 60초·p95 ≤ 90초, 1시간 이동창. 120초 초과 시 폴백 경로, 180초 강제 종료 | 수동: p95 > 90초 1시간 지속 시 알림(06장 A2) → 동시성·모델 점검 |
 | GR-5 | 생성 실패율 | `generate_complete.status=failed` 비율 ≤ 1%(06장 6.12.5), `fallback` 비율 ≤ 5% | 자동 알림(failed > 10% 또는 fallback > 30%, 06장 A2·A3). 수동: 원인 수정 전 신규 배포 중단 |
-| GR-6 | 노출 시안 품질 | 노출 시안의 하드 게이트(04장 G-01~G-12) 통과율 100%, WCAG AA 위반 0건, axe serious/critical 0건(R-28), 원본 유사도 위반 0건(R-20) | 위반 1건이라도 발견 시 수동: 해당 배포 롤백(→ 06장 6.13.5, 07장) |
+| GR-6 | 노출 시안 품질 | 노출 시안의 하드 게이트(04장 G-01~G-13) 통과율 100%, WCAG AA 위반 0건, axe serious/critical 0건(R-28), 원본 유사도 위반 0건(R-20) | 위반 1건이라도 발견 시 수동: 해당 배포 롤백(→ 06장 6.13.5, 07장) |
 | GR-7 | 신고율 | 신고 수 / 공개 공유 링크 수 ≤ 1% (주간) | 수동: 초과 시 공유 공개 기본값 재검토, KS-3 검토 |
 | GR-8 | 싫어요 비율 | `mockup_feedback.rating=down` ≤ 40% (주간) | 수동: 사유 상위 1개 원인 분석 |
 | GR-9 | 폴백 채택 비중 | 채택 시안 중 `is_fallback` 비율 ≤ 20% | 수동: 생성 품질 문제로 간주, 04장 점검 |
@@ -333,7 +333,7 @@ MVP 비목표: 호스팅·도메인 연결, CMS·자유 배치형 노코드 편�
 - 이벤트 이름의 단일 원천은 이 절 §8.3 레지스트리(R-23)이며, zod 원본은 `@tastefit/api-contract` 패키지에 둔다(06장 D-0601). 07장의 이벤트명(`result_viewed` 등)은 이 레지스트리 이름으로 읽는다.
 - 트렌드 집계에는 MVP 동안 이벤트(사용자 로그)를 쓰지 않는다(R-35).
 - **권위 이벤트는 서버에서 기록**한다(생성·선택·내보내기·공유·채택·로그인). 클라이언트 이벤트는 화면 노출·클릭에 한정한다.
-- 개인정보 최소화: 이벤트 `props`에 브랜드 입력 원문, 이메일, 자유 텍스트, IP 원문을 넣지 않는다. IP는 원문을 어디에도 저장하지 않고 레이트리밋·신고·동의 기록에서 `ip_hmac`(HMAC-SHA256)으로만 다루며, 이벤트에는 넣지 않는다(→ 06장 6.10.1, 08장).
+- 개인정보 최소화: 이벤트 `props`에 브랜드 입력 원문, 이메일, 자유 텍스트, IP 원문을 넣지 않는다. IP 원문은 앱 테이블(`public`)에 저장하지 않고 레이트리밋·신고·동의 기록에서 `ip_hmac`(HMAC-SHA256)으로만 다루며, 이벤트에는 넣지 않는다. 인증 서버 기록(Supabase `auth.*`)의 IP는 08장 P14(90일 보관)로 관리한다(→ 06장 6.10.1, 08장 8.7.2, T-13. 옛 "어디에도 저장하지 않는다" → T-13으로 대체).
 - 중복 제거: 클라이언트가 `event_id`(UUID v4)를 생성, 서버는 `ON CONFLICT (event_id) DO NOTHING`.
 - 알 수 없는 이벤트명·스키마 불일치 이벤트는 저장하지 않고 400을 반환하며 `event_rejects` 카운터만 증가시킨다.
 
@@ -500,6 +500,23 @@ from first_gen f where f.t0 < now() - interval '15 day';
 
 - Q4 재검사 일치율: 같은 actor의 `survey_complete` 2건 중 간격 6~14일 쌍에서 `diagnosis_results.type_id` 일치(경계 결과는 `type_id_second` 포함, 06장 DDL·02장 2.16.3, IF-05).
 
+```sql
+-- A5 실제 사용(T-22, PM3-01): 분모 = 응답 시안(dismissed 제외), 판정 최소 응답 n ≥ 15. 응답률을 함께 보고
+with adopted as (select id, adopted_at from mockups where adopted_at is not null and adopted_at < now() - interval '7 day'),
+     ans as (select props->>'mockup_id' as mockup_id, props->>'answer' as answer from ev where name='adoption_followup_answer')
+select count(*) filter (where answer in ('deployed','handed_off'))::float / nullif(count(*),0) as a5_used,   -- 응답 시안 기준
+       count(*) as a5_n,                                                                                       -- n ≥ 15일 때만 판정
+       count(*)::float / nullif((select count(*) from adopted),0) as a5_response_rate                         -- 응답 / 채택 7일 경과 시안
+from ans;
+
+-- A7 지불 의향(T-22): paywall_interest 주체 / paywall_view 주체
+select count(distinct actor) filter (where name='paywall_interest')::float
+       / nullif(count(distinct actor) filter (where name='paywall_view'),0) as a7_interest
+from ev where name in ('paywall_view','paywall_interest') and ts >= :from and ts < :to;
+```
+
+- A5는 `dismissed`를 응답에 넣지 않는다(이벤트가 없음, 06장 `POST /api/mockups/:id/adoption-followup`). 시트 노출 규칙(가장 오래된 1건·방문당 1개·1회)은 01장 1.11, 대상 선정은 06장 `MeView.adoptionFollowup`.
+
 ### 8.6 수용 기준
 
 - **AC-00-09**: E2E 핵심 경로 1회 실행 시 다음 12개 이벤트가 정확히 1회 이상 `events`에 저장된다: `landing_view`, `survey_start`, `survey_answer`, `survey_complete`, `result_view`, `login_prompt_view`, `login_success`, `generate_request`, `generate_complete`, `mockup_select`, `export_complete`, `mockup_adopted`.
@@ -533,19 +550,9 @@ from first_gen f where f.t0 < now() - interval '15 day';
 
 ### 9.2 잡 내 원가 가드(런타임)
 
-```ts
-// 각 LLM 호출 직전 (워커)
-const worst = estimateWorstCost(call.model, call.maxInputTokens, call.maxOutputTokens); // models.yaml 단가
-if (job.costUsd + worst > JOB_COST_CAP_USD /* 0.30 */) {
-  skipRemainingLlmSteps(job, 'COST_CAP');   // 이미 확보된 후보로 점수·노출 진행
-  // 노출 가능 후보 0개면 결정론적 폴백 시안(D-23)
-}
-// 호출 직후
-job.costUsd += actualCost(call.usage);
-recordLlmCall(...);                            // llm_calls.cost_usd (→ 06장)
-```
+잡 원가 가드(예약-정산 판정식·추정식·캐시 예열 순서·생략 기준·초과 청구 처리)의 원천은 06장 6.9.4이고 이 절은 참조만 한다(T-17). 요약: 매 LLM 호출 직전 `spent + reserved + est ≤ capEff`(= min(`JOB_COST_CAP_USD`, `generation.costGuard.capUsd`))이면 예약하고 아니면 `budget_skipped`(`COST_CAP`), 확보된 후보로 점수·노출을 진행하며 노출 가능 후보 0개면 결정론적 폴백 시안(D-23). 기본 경로 공식값은 약 US$0.234(06장 6.9.4 ②).
 
-- **AC-00-14**: MockProvider에 "호출당 원가 US$0.06" 설정으로 생성 시, 누적 US$0.30을 넘는 호출이 0건이고 잡은 `partial` 또는 `fallback`으로 완료된다.
+- **AC-00-14**(T-17로 개정): MockProvider `cost_spike`(단가 10배, 추정 반영, 06장 6.9.4 ⑦)로 생성하면 `sum(llm_calls.cost_usd) ≤ capEff`이고 넘는 호출은 `budget_skipped`이며, 잡은 `partial` 또는 `fallback`으로 완료된다. 옛 "호출당 US$0.06" 기준 → T-17로 대체.
 
 ### 9.3 사용량 한도(MVP 무료)
 
@@ -571,7 +578,7 @@ recordLlmCall(...);                            // llm_calls.cost_usd (→ 06장)
 | `succeeded`, `partial` (비폴백 시안 ≥ 1개 노출) | 차감 |
 | `fallback` (폴백 시안만 노출) | **복구**(차감 취소) |
 | `failed` | **복구** |
-| `canceled` | 취소 시점의 비폴백 노출 수가 ≥ 1이면 차감(노출된 시안은 계속 볼 수 있음), 0이면 **복구**. `queued`·`running`은 구분하지 않는다(S-16, 06장 6.2.3·04장 4.12·01장 1.6.5와 같은 문장). 노출 전 취소로 생긴 원가 남용은 레이트리밋(계정 2회/분)과 A4 경보로 감시한다 |
+| `canceled` | 취소 시점의 비폴백 노출 수가 ≥ 1이면 차감(노출된 시안은 계속 볼 수 있음), 0이면 **복구**하되 **노출 0 취소 복구는 계정당 KST 하루 2회까지**이고 3번째부터는 노출 0이어도 차감한다. `queued`·`running`은 구분하지 않는다(S-16·T-20, 06장 6.2.3·04장 4.12·01장 1.6.5와 같은 문장). 취소 즉시 진행 중 LLM 호출을 abort한다. 계정 원가 남용은 `USER_DAILY_COST_CAP_USD`(1.5) 초과 시 그 계정 신규 생성 429 `QUOTA_DAY`(`cost_cap`)로 자동 차단하고 A4가 차단 발동을 알린다 |
 | 킬 스위치·예산 초과로 접수 거부 | 차감 안 함(잡 미생성) |
 
 - 판정 기준은 R-15(비폴백 노출 수). 차감 시점: 잡 생성 시 예약 차감(`quota_ledger`, `unique(job_id, kind)`, DDL → 06장), 완료 시 위 표에 따라 `refund` 기록. 잔여 한도 = 한도 − (reserve − refund) 건수.
@@ -593,6 +600,9 @@ recordLlmCall(...);                            // llm_calls.cost_usd (→ 06장)
 | `BETA_INVITE_ONLY` | true (비공개 베타), false (공개 출시) | 초대 코드 보유자만 생성(미보유 403 `INVITE_REQUIRED`) |
 | `GEN_MAX_CONCURRENT_JOBS` | 5 | **전역** 동시 실행 잡 수(R-16, 06장 D-0604). 사용자당 1은 고정 규칙 |
 | `JUDGE_VISION_MODE` | `log` | `off`\|`log`\|`rank`. MVP는 `log`(기록 전용), `rank`는 Phase 2(R-12, 06장 D-0616) |
+| `USER_DAILY_COST_CAP_USD` | 1.5 | 계정 일 LLM 원가 상한(= 한도 3회 × 0.30 + 여유 0.6, T-20) |
+| `EVAL_RUN_BUDGET_USD` | 30 | 평가 실행 1회 상한(골든 96잡 × 0.25 = 24 + 여유, T-21) |
+| `EVAL_MONTHLY_BUDGET_USD` | 60 | 평가 월 상한(`purpose='eval'`, `GEN_*`와 별도 집계, T-21) |
 
 - 근거(가설): 비공개 베타 예상 생성 = 초대 사용자 ≤ 50명 × 평균 2.5회 ≈ 125회/4주, 일 피크 30회 × US$0.30 = US$9 → 일 상한 US$10. 월 상한 US$150 = 공개 출시 예상 월 생성 600회 × 평균 잡 원가 US$0.25(S-15).
 
@@ -607,7 +617,19 @@ recordLlmCall(...);                            // llm_calls.cost_usd (→ 06장)
 | F8 시안 선택률 · F9 채택률 | 0.6 · 0.4 | §6.2 목표 |
 | **WAM_max** | (600 / 4.35) × 0.6 × 0.4 ≈ **33** | — |
 | 목표 | 공개 출시 8주차 WAM ≥ 30 ≤ 33, O2 8주 누적 ≥ 150 ≤ 33 × 8 | §6.1, §1 O2 |
-- WAM 100은 "예산 상향 결정 후" 목표다. 예산을 바꾸지 않은 채 100을 목표로 두지 않는다. staging 환경 live 일 예산은 US$2(06장 D-0607).
+- WAM 100은 "예산 상향 결정 후" 목표다. 예산을 바꾸지 않은 채 100을 목표로 두지 않는다. staging 환경 live 일 예산 US$2(06장 D-0607)는 **사용자 경로 스모크 전용**이고 평가 실행은 `EVAL_*`로 집계한다(T-21).
+
+**비사용자 LLM 지출(T-21, PM3-03)** — `llm_calls.purpose ∈ {eval, ref_tag}`, 사용자 생성 예산(`GEN_*`)과 따로 집계(06장 6.10.3).
+
+| 항목 | 횟수 | 1회 비용(가정) | 합계 | 상한 키 |
+|---|---|---|---|---|
+| 출시 전 골든 live 실행(32×3) | 3회 | ≈ US$24 | ≈ US$72(1회성) | `EVAL_RUN_BUDGET_USD` 30/회 |
+| 출시 전 블라인드 시안·베이스라인 생성 | 1회 | ≈ US$15 | ≈ US$15(1회성) | 같은 키 |
+| 운영 중 모델·프롬프트 변경 평가(골든 + 40쌍) | 월 1회 가정 | ≈ US$30 | ≈ US$30/월 | `EVAL_MONTHLY_BUDGET_USD` 60/월 |
+| 시즌 레퍼런스 태깅(`ref_tagger`) | 분기 1회 | ≤ US$10 | ≤ US$10/분기 | `REF_TAGGING_BUDGET_USD` 10 |
+| **월 총 LLM 지출 상한** | | | **US$210** = `GEN_MONTHLY_BUDGET_USD` 150 + `EVAL_MONTHLY_BUDGET_USD` 60 | 출시 전 1회성은 월 상한 안에서 나눠 실행 |
+
+- 예산 중단으로 골든 실행이 미완료(`runsCompleted < 96`)면 G2는 fail이다(07장 7.11.2, 완화 아님). 증액은 사람 결정(HUMAN_TODO, S-15와 같은 항목).
 
 **킬 스위치 동작**
 
@@ -654,15 +676,15 @@ recordLlmCall(...);                            // llm_calls.cost_usd (→ 06장)
 
 ### 10.1 어드민 기능 목록 (`/admin`)
 
-- 접근: `users.role = 'admin'`인 로그인 계정만(API 경로 → 06장 6.4.3 관리자 표). 최초 admin은 환경변수 `ADMIN_EMAILS`(쉼표 구분)로 부여. 미들웨어에서 서버측 검사, 실패 시 404(존재 은닉).
-- 감사 로그: 모든 변경 작업은 `admin_audit_logs`(R-18, DDL → 06장 6.3.3: `id, admin_hash, action, target_type, target_id, before, after, ip_hmac, created_at`)에 기록. 삭제 불가(append-only, RLS로 update/delete 금지).
+- 접근(T-12·S-28, 원천 06장 6.5.4·6.11.2): 권한 = `users.role = 'admin'` ∧ 요청 시점 `ADMIN_EMAILS`(쉼표 구분)에 이메일 포함 ∧ 세션 `aal2`. 로그인 콜백마다 `provision_user`가 `role`을 현재 `ADMIN_EMAILS`에 맞춘다(수동 승격 없음). 미들웨어에서 서버측 검사, 실패 시 404(존재 은닉).
+- 감사 로그: 모든 변경 작업은 `admin_audit_logs`(R-18, DDL → 06장 6.3.3: `id, admin_hash, action, target_type, target_id, before, after, ip_hmac, created_at`)에 기록. UPDATE 항상 불가, DELETE는 1년 지난 행을 `purge_audit_logs`로만(T-14, 08장 8.7.7).
 - 대상 표기: 운영자. UI는 서비스 디자인 시스템을 쓰되 밀도 높은 표 레이아웃 허용(→ 01장).
 
 | ID | 메뉴 | 기능 | 입력/출력 | 단계 |
 |---|---|---|---|---|
 | ADM-01 | KPI 대시보드 | §6의 WAM·퍼널·품질·가드레일 지표 일/주 표, 기간 선택 | 출력: 지표 표 + CSV 다운로드 | [P0] |
 | ADM-02 | 비용·킬 스위치 | 오늘/이번 달 LLM 원가, 상한 대비 %, 계정별 원가 상위 20, `feature_flags` 편집 | 입력: 플래그 값 / 출력: 즉시 반영(≤60초) | [P0] |
-| ADM-03 | 생성 모니터 | 최근 잡 목록(상태 R-15, 대기 순번, 소요·첫 노출 시간, 원가, 잡 오류 코드, 모델·프롬프트 버전), 잡 상세(후보별 점수·하드 게이트 G-01~G-12 결과·비전 채점 기록값·스크린샷) | 필터: 상태·기간·오류 코드 | [P0] |
+| ADM-03 | 생성 모니터 | 최근 잡 목록(상태 R-15, 대기 순번, 소요·첫 노출 시간, 원가, 잡 오류 코드, 모델·프롬프트 버전), 잡 상세(후보별 점수·하드 게이트 G-01~G-13 결과·비전 채점 기록값·스크린샷) | 필터: 상태·기간·오류 코드 | [P0] |
 | ADM-04 | 신고 큐 | §10.3 신고 목록, 대상 미리보기, 조치(유지·비공개·삭제·계정 정지) | 출력: 처리 상태·처리 시각 | [P0] |
 | ADM-05 | 문의 큐 | §10.2 문의 목록, 상태 변경, 답장은 외부 메일로(답장 시각 수동 기록) | 출력: 첫 응답 경과 시간 | [P0] |
 | ADM-06 | 사용자 | 이메일 검색, 프로젝트·잡·한도 조회, 한도 상향(일·월, 사유 필수), 계정 정지/해제, 데이터 삭제 실행 | 삭제는 확인 문구 입력 필요 | [P0] |
@@ -677,7 +699,7 @@ recordLlmCall(...);                            // llm_calls.cost_usd (→ 06장)
 | — | 자체 헬프데스크(메일 연동) | | | [P2] |
 
 - **AC-00-19**: role이 admin이 아닌 계정으로 `/admin/*` 및 `/api/admin/*` 접근 시 404를 반환한다(통합 테스트, 모든 라우트 열거).
-- **AC-00-20**: ADM-02·ADM-04·ADM-06·ADM-07·ADM-10의 모든 변경 작업 1회당 `admin_audit_logs`가 정확히 1행 증가하며 before/after가 채워진다.
+- **AC-00-20**(T-14로 개정): ADM-02·ADM-04·ADM-06·ADM-07·ADM-10의 모든 변경 작업 1회당 `admin_audit_logs`가 정확히 1행 증가하며 before/after가 채워진다. 감사 행은 1년 동안 UPDATE·DELETE 불가이고 1년 보관 후 파기만 허용된다(06장 `purge_audit_logs`, 옛 "append-only" → T-14로 대체).
 
 ### 10.2 CS(문의) 처리
 
@@ -844,7 +866,7 @@ decisions_v2.md로 대체된 항목은 "→ R-xx로 대체"로 표시한다. 대
 | D-012 | 신고 자동 비공개: 사칭·피싱 1건 즉시, 그 외 서로 다른 신고자 3건. 운영자 판단 SLA 24시간 | LG-13, 1인 운영 | 01, 08 | 유효, 사유 enum·신고자 기준은 08장 8.9.5·06장 D-0612로 정정(`impersonation`·`phishing` 즉시, `ip_hmac` 3건). 비공개 응답 코드 `SHARE_HIDDEN` → R-13 |
 | D-013 | 비공개 베타는 초대 코드 기반(`BETA_INVITE_ONLY`)으로 생성만 제한하고 진단은 공개 | 비용 통제 + 퍼널 상단 측정 | 01, 06 | 단계 정의 → R-32로 대체(≤50명, G1~G6 + G7a). 생성만 제한·진단 공개 규칙은 유효(06장 `INVITE_REQUIRED`) |
 | D-014 | 결과 레코드에 2순위 유형 `type_id_second` 저장(경계 표기·재검사 일치 계산용) | Q4 계산 | 02, 06 | 유효(06장 `diagnosis_results` 반영) |
-| D-015 | 가드레일 ID를 `GR-n`, 리스크 ID를 `RK-nn`으로 바꾼다(07장 출시 게이트 `G1~G7`, 04장 하드 게이트 `G-01~G-12`, decisions_v2 `R-xx`와 충돌 방지) | ID 충돌 | 06, 07, 09 | 신규 |
+| D-015 | 가드레일 ID를 `GR-n`, 리스크 ID를 `RK-nn`으로 바꾼다(07장 출시 게이트 `G1~G7`, 04장 하드 게이트 `G-01~G-13`, decisions_v2 `R-xx`와 충돌 방지) | ID 충돌 | 06, 07, 09 | 신규 |
 | D-016 | `generate_complete` props에 `n_real`, `first_shown_ms`, `generate_request`에 `queue_position`을 추가하고, `generate_rejected`를 `{stage, code, reason?}`로 바꿔 프로젝트 생성 거부(`BLOCKED_BRAND` 등)까지 기록한다 | R-25 첫 카드 SLO 측정, R-13 코드 통일 | 01, 06 | 신규 |
 | D-017 | 비공개 베타 KPI 목표를 생성 사용자 ≤ 50명 규모로 재설정: WAM 4주 누적 ≥ 30·4주차 ≥ 10, 판정 최소 표본 진단 시작 ≥ 100·생성 사용자 ≥ 30 | R-32 인원 상한 | 07, 09 | 신규 |
 
@@ -852,7 +874,7 @@ decisions_v2.md로 대체된 항목은 "→ R-xx로 대체"로 표시한다. 대
 
 ## 14. 다른 장과 맞춰야 할 인터페이스
 
-| IF | 이름 | 내용 | 상대 장 | 현재 상태(2026-11-19, decisions_v3 반영 후) |
+| IF | 이름 | 내용 | 상대 장 | 현재 상태(2026-11-19, decisions_v4 반영 후) |
 |---|---|---|---|---|
 | IF-01 | 원가 계산표 | 선택 모델 단가 기준 잡당 최악 원가 ≤ US$0.30 증명, 단계별 토큰 상한, `judge_vision` 기록 비용 포함 | 04, 06 | 04장 4.17.2 비용표 + 06장 6.9.4 예약-정산(S-13) 반영 |
 | IF-02 | `llm_calls.cost_usd`, `generation_jobs.cost_usd` | 예산 집계·KS-1의 원천 | 06 | 06장 6.10.3 반영 |
@@ -955,3 +977,17 @@ decisions_v2.md로 대체된 항목은 "→ R-xx로 대체"로 표시한다. 대
 | S-31 | §7.1 언어·기기 |
 | S-32 | §7.1 편집 제외 목록 |
 | S-36 | §5.1 A2s·A1c |
+
+### 15.4 decisions_v4.md 반영 (2026-11-19)
+
+| T-ID | 반영 위치 |
+|---|---|
+| T-10 | G-01~G-12 → G-01~G-13(머리말·GR-6·D-015) |
+| T-12 | §10.1 접근(권한 원천·`provision_user`·aal2) |
+| T-13 | §8.1 IP 문장 범위(앱 테이블, P14) |
+| T-14 | §10.1 감사 로그·AC-00-20(1년 후 파기만) |
+| T-17 | §9.2 → 06장 6.9.4 참조, AC-00-14 `cost_spike` 기준 |
+| T-20 | §9.3 `canceled` 행(환불 2회/일·abort·`USER_DAILY_COST_CAP_USD`), §9.4 키 |
+| T-21 | §9.4 `EVAL_*` 키·비사용자 LLM 지출 표·월 총 상한 210·staging 용도 |
+| T-22 | §8.5 A5·A7 쿼리 |
+| T-31 | §5.1 A2 하네스 자산 동등화 |
