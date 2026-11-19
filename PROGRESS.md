@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T13:10Z, since: 2026-11-19T13:28Z}
+- lock: 
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-20 01:08
-- 마지막 갱신: 2026-11-19 22:25 KST (예약 세션: M0-03)
+- 마지막 갱신: 2026-11-19 23:25 KST (예약 세션: M0-03~08)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -68,7 +68,7 @@
 ### 상태(09장 9.7. 표는 덮어쓰고 아래 기록은 append)
 | M | 상태 | 시작 | 종료 | 태그 | verify | 미해결 BLOCKED | 가정 수 |
 |---|---|---|---|---|---|---|---|
-| M0 | in_progress | 2026-11-19T12:50Z | – | – | – | 1 | 4 |
+| M0 | in_progress | 2026-11-19T12:50Z | – | – | – | 2 | 4 |
 | M1 | todo | – | – | – | – | – | – |
 | M2 | todo | – | – | – | – | – | – |
 | M3 | todo | – | – | – | – | – | – |
@@ -90,7 +90,7 @@
   - [x] 05 spec:extract(--from FINAL/review-pass/--init-tuned) → config/thresholds.json·test-policy.json(lockedBy spec), diagnosis-tuned.json(자체 잠금)
   - [x] 06 native 스택: PG16(:54322, runuser postgres) + packages/db/shim, `pnpm dev:stack`·`db:native` (web·worker `dev` 스크립트·local 드라이버는 07·M1)
   - [x] 07 web `/api/health`(Next 16, tsconfig.next.json), worker `/health`(:8081, pg-boss migrate), 필수 env 누락 시 종료 1 — stack.test 8/8 녹색
-  - [ ] 08 guard 1~4단계(잠금 해시·금지 패턴·테스트 수·deps/라이선스)
+  - [x] 08 guard 1~4단계(잠금 해시·금지 패턴·테스트 수·deps/라이선스) — guard.test 15/24 녹색, 남은 8건은 09(spec 대조·6단계), 1건 BLK-002
   - [ ] 09 guard 5~7단계(spec 대조·baseRef·DECISIONS_LOG append-only·qa:trace --audit)
   - [ ] 10 tests/guard 메타 테스트(⑥⑦)
   - [ ] 11 verify:fast·verify:m0~m8 + reports/verify-mN.json
@@ -102,6 +102,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 23:25 | M0-08 guard 1~4단계(exit 3=BLK-001), BLK-002(자체잠금 테스트 정규식 오류) → 다음: M0-09 guard 5~7
 - 2026-11-19 23:15 | BLK-001 라이선스 규칙 locked-conflict 기록(HUMAN_TODO) → 다음: M0-08 guard 1~4
 - 2026-11-19 23:10 | M0-07 web·worker health, env 종료 1, m0 stack.test 8/8 녹색 → 다음: M0-08 guard 1~4
 - 2026-11-19 22:55 | M0-06 native PG+shim 기동 확인(tastefit_app 접속), dev:stack 골격 → 다음: M0-07 health
