@@ -1,0 +1,215 @@
+{
+  "bundle": "presets",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "PS-T4",
+      "typeId": "T4",
+      "slug": "cozy-lifestyle",
+      "version": "2026-S4",
+      "theme": "light",
+      "base": "tinted-light",
+      "l1": [
+        0.4,
+        0.96,
+        0.72,
+        0.5,
+        0.34
+      ],
+      "l2": {
+        "type.pairing_id": "FP04",
+        "type.scale_ratio": "1.25",
+        "type.display_boost": "1.25",
+        "type.headline_weight": "700",
+        "type.body_size": "17",
+        "type.body_leading": "1.7",
+        "color.palette_id": "PAL-T4-0",
+        "shape.radius_family": "round",
+        "shape.border": "none",
+        "depth.style": "subtle-shadow",
+        "depth.shadow_level": "1",
+        "space.density": "regular",
+        "space.container": "1200",
+        "layout.grid_mode": "symmetric",
+        "media.mode": "photo-led",
+        "media.treatment": "warm-tint",
+        "motion.level": "subtle",
+        "icon.set": "iconoir"
+      },
+      "allowed": {
+        "type.pairing_id": [
+          "FP04",
+          "FP05",
+          "FP06",
+          "FP03",
+          "FP10"
+        ],
+        "type.scale_ratio": [
+          "1.2",
+          "1.25"
+        ],
+        "type.display_boost": [
+          "1.0",
+          "1.25",
+          "1.5"
+        ],
+        "type.headline_weight": [
+          "300",
+          "400",
+          "500",
+          "600",
+          "700",
+          "800",
+          "900"
+        ],
+        "type.body_size": [
+          "18",
+          "17",
+          "16"
+        ],
+        "type.body_leading": [
+          "1.8",
+          "1.7",
+          "1.6"
+        ],
+        "color.palette_id": [
+          "PAL-T4-0",
+          "PAL-T4-1",
+          "PAL-T4-2",
+          "PAL-T4-3"
+        ],
+        "shape.radius_family": [
+          "soft",
+          "round"
+        ],
+        "shape.border": [
+          "hairline",
+          "none"
+        ],
+        "depth.style": [
+          "flat",
+          "subtle-shadow"
+        ],
+        "depth.shadow_level": [
+          "1",
+          "2"
+        ],
+        "space.density": [
+          "airy",
+          "regular"
+        ],
+        "space.container": [
+          "1120",
+          "1200"
+        ],
+        "layout.grid_mode": [
+          "symmetric",
+          "asymmetric"
+        ],
+        "media.mode": [
+          "photo-led"
+        ],
+        "media.treatment": [
+          "none",
+          "warm-tint"
+        ],
+        "motion.level": [
+          "none",
+          "subtle"
+        ],
+        "icon.set": [
+          "iconoir"
+        ]
+      },
+      "allowedByPairing": [
+        "type.headline_weight"
+      ],
+      "palettes": [
+        "PAL-T4-0",
+        "PAL-T4-1",
+        "PAL-T4-2",
+        "PAL-T4-3"
+      ],
+      "signatureIds": [
+        "SIG-12",
+        "SIG-07",
+        "SIG-10"
+      ],
+      "defaultSignatureId": "SIG-12",
+      "decorCountDefault": 0,
+      "preferredPatterns": {
+        "saas": [
+          "PS-3",
+          "PS-1"
+        ],
+        "local_business": [
+          "PL-2",
+          "PL-1"
+        ],
+        "portfolio": [
+          "PP-4",
+          "PP-2"
+        ]
+      },
+      "heroVariants": [
+        "split",
+        "full-bleed-image",
+        "offset"
+      ],
+      "excludedVariants": [
+        "value.bento"
+      ],
+      "buttonPill": false,
+      "allowSoftRoundShadow": true,
+      "tokens": {
+        "typeScale": {
+          "caption": [
+            12,
+            12
+          ],
+          "small": [
+            14,
+            14
+          ],
+          "body": [
+            17,
+            16
+          ],
+          "lead": [
+            21,
+            19
+          ],
+          "h4": [
+            27,
+            23
+          ],
+          "h3": [
+            33,
+            28
+          ],
+          "h2": [
+            42,
+            33
+          ],
+          "h1": [
+            65,
+            44
+          ],
+          "display": [
+            81,
+            52
+          ]
+        },
+        "displayToBody": 4.8
+      },
+      "provenance": {
+        "method": "operator",
+        "domains": []
+      }
+    }
+  ]
+}

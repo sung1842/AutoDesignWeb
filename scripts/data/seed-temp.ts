@@ -246,10 +246,10 @@ export function expandValues(cell: string): string[] {
 
 const CATEGORICAL_KEYS = ["type.pairing_id", "color.palette_id", "media.mode", "icon.set"];
 
-function genTaxonomy(ctx: Ctx): Out[] {
-  const rows = table(section(chapter(ctx.root, "03_design_system.md"), "### 3.2.1"));
+export function taxonomyItems(root: string): Obj[] {
+  const rows = table(section(chapter(root, "03_design_system.md"), "### 3.2.1"));
   let category = "";
-  const items = rows.map((r) => {
+  return rows.map((r) => {
     if ((r[1] ?? "") !== "〃") category = r[1] ?? "";
     const id = unquote(r[2] ?? "");
     const raw = r[3] ?? "";
@@ -272,6 +272,10 @@ function genTaxonomy(ctx: Ctx): Out[] {
     if (c) item.l1Contribution = c;
     return item;
   });
+}
+
+function genTaxonomy(ctx: Ctx): Out[] {
+  const items = taxonomyItems(ctx.root);
   return [{ path: "data/taxonomy/taxonomy.json", content: bundle(ctx, "taxonomy", items) }];
 }
 
@@ -318,6 +322,113 @@ function genMapping(ctx: Ctx): Out[] {
   return [{ path: "data/taxonomy/mapping.json", content: bundle(ctx, "mapping", items) }];
 }
 
+// ---------- B3 presets/<id>.json (03장 3.4.1·3.4.4·3.4.5·3.4.6·3.4.7·3.6.6) ----------
+const splitList = (c: string): string[] =>
+  c
+    .split(",")
+    .map((x) => x.replace(/\*\*/g, "").trim())
+    .filter((x) => x.length > 0);
+
+/** 3.4.5 표의 짧은 키 → L2 키. */
+const ALLOWED_KEY: Record<string, string> = {
+  pairing: "type.pairing_id",
+  scale_ratio: "type.scale_ratio",
+  display_boost: "type.display_boost",
+  body_size: "type.body_size",
+  body_leading: "type.body_leading",
+  radius_family: "shape.radius_family",
+  border: "shape.border",
+  "depth.style": "depth.style",
+  shadow_level: "depth.shadow_level",
+  density: "space.density",
+  container: "space.container",
+  grid_mode: "layout.grid_mode",
+  "media.mode": "media.mode",
+  "media.treatment": "media.treatment",
+  "motion.level": "motion.level",
+  headline_weight: "type.headline_weight",
+};
+
+function genPresets(ctx: Ctx): Out[] {
+  const md = chapter(ctx.root, "03_design_system.md");
+  const tax = new Map(taxonomyItems(ctx.root).map((t) => [String(t.id), t]));
+  const meta = table(section(md, "### 3.4.1"));
+  const l2rows = table(section(md, "### 3.4.4"));
+  const allowRows = table(section(md, "### 3.4.5"));
+  const scaleRows = new Map(table(section(md, "### 3.4.6")).map((r) => [r[0] ?? "", r]));
+  const scaleHead = ["caption", "small", "body", "lead", "h4", "h3", "h2", "h1", "display"];
+  const blockRows = new Map(table(section(md, "### 3.6.6")).map((r) => [r[0] ?? "", r]));
+  const cents = specCentroids(ctx.root);
+  const row4 = (label: string): string[] => l2rows.find((r) => unquote(r[0] ?? "") === label) ?? [];
+  const sortOrd = (key: string, vals: string[]): string[] => {
+    const t = tax.get(key);
+    if (!t || !t.ordinal) return vals;
+    const order = t.values as string[];
+    return [...vals].sort((a, b) => order.indexOf(a) - order.indexOf(b));
+  };
+  return meta.map((m, i) => {
+    const typeId = m[0] ?? "";
+    const n = i + 1;
+    const id = m[2] ?? "";
+    const col = 1 + i;
+    const l2: Record<string, string> = {};
+    for (const k of tax.keys()) l2[k] = row4(k)[col] ?? "";
+    const allowed: Record<string, string[]> = {};
+    for (const r of allowRows) {
+      const key = ALLOWED_KEY[r[0] ?? ""];
+      if (!key) throw new Error(`3.4.5 알 수 없는 키 ${String(r[0])}`);
+      // headline_weight "페어링 허용값 전체": 택소노미 전체 값을 두고 pairing이 좁힌다(allowedByPairing).
+      allowed[key] =
+        key === "type.headline_weight"
+          ? [...(tax.get(key)?.values as string[])]
+          : sortOrd(key, splitList(r[col] ?? ""));
+    }
+    allowed["color.palette_id"] = [0, 1, 2, 3].map((q) => `PAL-T${n}-${q}`);
+    allowed["icon.set"] = [l2["icon.set"] ?? ""];
+    const ordered: Record<string, string[]> = {};
+    for (const k of tax.keys()) ordered[k] = allowed[k] ?? [];
+    const sc = scaleRows.get(typeId) ?? [];
+    const typeScale: Record<string, number[]> = {};
+    scaleHead.forEach((h, j) => {
+      typeScale[h] = (sc[2 + j] ?? "").split("/").map(Number);
+    });
+    const br = blockRows.get(typeId) ?? [];
+    const pair = (c: string): string[] => splitList(c);
+    const theme = m[3] ?? "";
+    const item: Obj = {
+      id,
+      typeId,
+      slug: m[1] ?? "",
+      version: TAXONOMY_VERSION,
+      theme: theme.startsWith("dark") ? "dark" : "light",
+      base: theme.startsWith("dark") ? "dark" : theme.includes("tinted") ? "tinted-light" : "light",
+      l1: cents.get(typeId) ?? [],
+      l2,
+      allowed: ordered,
+      allowedByPairing: ["type.headline_weight"],
+      palettes: allowed["color.palette_id"],
+      signatureIds: splitList(m[5] ?? ""),
+      defaultSignatureId: row4("기본 시그니처")[col] ?? "",
+      decorCountDefault: Number.parseInt(row4("장식 효과 수(기본)")[col] ?? "0", 10),
+      preferredPatterns: {
+        saas: pair(br[2] ?? ""),
+        local_business: pair(br[3] ?? ""),
+        portfolio: pair(br[4] ?? ""),
+      },
+      heroVariants: pair(br[1] ?? ""),
+      excludedVariants: pair(br[5] ?? ""),
+      buttonPill: (row4("buttonPill")[col] ?? "") === "true",
+      allowSoftRoundShadow: (m[7] ?? "") === "true",
+      tokens: { typeScale, displayToBody: Number(sc[11] ?? "") },
+      provenance: { method: m[6] ?? "operator", domains: [] },
+    };
+    return {
+      path: `data/taxonomy/presets/${id}.json`,
+      content: bundle(ctx, "presets", [item]),
+    };
+  });
+}
+
 /** 생성기 목록(의존 순서). 나머지 묶음은 M1-04b 이후 단위에서 추가한다. */
 export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genAxes,
@@ -325,6 +436,7 @@ export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genPurposes,
   genTaxonomy,
   genMapping,
+  genPresets,
 ];
 
 function isHuman(abs: string): boolean {

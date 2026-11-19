@@ -1,0 +1,211 @@
+{
+  "bundle": "presets",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "PS-T8",
+      "typeId": "T8",
+      "slug": "elegant-magazine",
+      "version": "2026-S4",
+      "theme": "light",
+      "base": "light",
+      "l1": [
+        0.7,
+        0.65,
+        0.25,
+        0.25,
+        0
+      ],
+      "l2": {
+        "type.pairing_id": "FP20",
+        "type.scale_ratio": "1.333",
+        "type.display_boost": "2.0",
+        "type.headline_weight": "300",
+        "type.body_size": "16",
+        "type.body_leading": "1.7",
+        "color.palette_id": "PAL-T8-0",
+        "shape.radius_family": "sharp",
+        "shape.border": "none",
+        "depth.style": "flat",
+        "depth.shadow_level": "0",
+        "space.density": "airy",
+        "space.container": "1280",
+        "layout.grid_mode": "asymmetric",
+        "media.mode": "photo-led",
+        "media.treatment": "grayscale",
+        "motion.level": "none",
+        "icon.set": "phosphor"
+      },
+      "allowed": {
+        "type.pairing_id": [
+          "FP20",
+          "FP02",
+          "FP06",
+          "FP19"
+        ],
+        "type.scale_ratio": [
+          "1.25",
+          "1.333"
+        ],
+        "type.display_boost": [
+          "1.5",
+          "2.0"
+        ],
+        "type.headline_weight": [
+          "300",
+          "400",
+          "500",
+          "600",
+          "700",
+          "800",
+          "900"
+        ],
+        "type.body_size": [
+          "17",
+          "16"
+        ],
+        "type.body_leading": [
+          "1.8",
+          "1.7"
+        ],
+        "color.palette_id": [
+          "PAL-T8-0",
+          "PAL-T8-1",
+          "PAL-T8-2",
+          "PAL-T8-3"
+        ],
+        "shape.radius_family": [
+          "sharp"
+        ],
+        "shape.border": [
+          "hairline",
+          "none"
+        ],
+        "depth.style": [
+          "flat"
+        ],
+        "depth.shadow_level": [
+          "0"
+        ],
+        "space.density": [
+          "airy",
+          "regular"
+        ],
+        "space.container": [
+          "1200",
+          "1280"
+        ],
+        "layout.grid_mode": [
+          "symmetric",
+          "asymmetric"
+        ],
+        "media.mode": [
+          "photo-led",
+          "type-led"
+        ],
+        "media.treatment": [
+          "grayscale",
+          "none"
+        ],
+        "motion.level": [
+          "none",
+          "subtle"
+        ],
+        "icon.set": [
+          "phosphor"
+        ]
+      },
+      "allowedByPairing": [
+        "type.headline_weight"
+      ],
+      "palettes": [
+        "PAL-T8-0",
+        "PAL-T8-1",
+        "PAL-T8-2",
+        "PAL-T8-3"
+      ],
+      "signatureIds": [
+        "SIG-11",
+        "SIG-09",
+        "SIG-12"
+      ],
+      "defaultSignatureId": "SIG-11",
+      "decorCountDefault": 1,
+      "preferredPatterns": {
+        "saas": [
+          "PS-3",
+          "PS-1"
+        ],
+        "local_business": [
+          "PL-3",
+          "PL-2"
+        ],
+        "portfolio": [
+          "PP-4",
+          "PP-1"
+        ]
+      },
+      "heroVariants": [
+        "full-bleed-image",
+        "type-only",
+        "offset"
+      ],
+      "excludedVariants": [
+        "value.icon-grid",
+        "value.bento",
+        "stats.row"
+      ],
+      "buttonPill": false,
+      "allowSoftRoundShadow": false,
+      "tokens": {
+        "typeScale": {
+          "caption": [
+            12,
+            12
+          ],
+          "small": [
+            12,
+            12
+          ],
+          "body": [
+            16,
+            16
+          ],
+          "lead": [
+            21,
+            20
+          ],
+          "h4": [
+            28,
+            25
+          ],
+          "h3": [
+            38,
+            31
+          ],
+          "h2": [
+            51,
+            39
+          ],
+          "h1": [
+            96,
+            44
+          ],
+          "display": [
+            128,
+            52
+          ]
+        },
+        "displayToBody": 8
+      },
+      "provenance": {
+        "method": "operator",
+        "domains": []
+      }
+    }
+  ]
+}

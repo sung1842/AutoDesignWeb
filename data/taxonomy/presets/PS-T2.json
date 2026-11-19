@@ -1,0 +1,215 @@
+{
+  "bundle": "presets",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "PS-T2",
+      "typeId": "T2",
+      "slug": "precise-system",
+      "version": "2026-S4",
+      "theme": "light",
+      "base": "light",
+      "l1": [
+        0.3,
+        0.23,
+        0.12,
+        0.62,
+        0
+      ],
+      "l2": {
+        "type.pairing_id": "FP09",
+        "type.scale_ratio": "1.2",
+        "type.display_boost": "1.25",
+        "type.headline_weight": "700",
+        "type.body_size": "16",
+        "type.body_leading": "1.6",
+        "color.palette_id": "PAL-T2-0",
+        "shape.radius_family": "sharp",
+        "shape.border": "hairline",
+        "depth.style": "flat",
+        "depth.shadow_level": "0",
+        "space.density": "regular",
+        "space.container": "1280",
+        "layout.grid_mode": "symmetric",
+        "media.mode": "type-led",
+        "media.treatment": "grayscale",
+        "motion.level": "none",
+        "icon.set": "tabler"
+      },
+      "allowed": {
+        "type.pairing_id": [
+          "FP09",
+          "FP07",
+          "FP08",
+          "FP17",
+          "FP18"
+        ],
+        "type.scale_ratio": [
+          "1.2",
+          "1.25"
+        ],
+        "type.display_boost": [
+          "1.0",
+          "1.25",
+          "1.5"
+        ],
+        "type.headline_weight": [
+          "300",
+          "400",
+          "500",
+          "600",
+          "700",
+          "800",
+          "900"
+        ],
+        "type.body_size": [
+          "17",
+          "16"
+        ],
+        "type.body_leading": [
+          "1.7",
+          "1.6"
+        ],
+        "color.palette_id": [
+          "PAL-T2-0",
+          "PAL-T2-1",
+          "PAL-T2-2",
+          "PAL-T2-3"
+        ],
+        "shape.radius_family": [
+          "sharp",
+          "soft"
+        ],
+        "shape.border": [
+          "bold",
+          "hairline"
+        ],
+        "depth.style": [
+          "flat",
+          "subtle-shadow"
+        ],
+        "depth.shadow_level": [
+          "0",
+          "1"
+        ],
+        "space.density": [
+          "regular",
+          "compact"
+        ],
+        "space.container": [
+          "1200",
+          "1280"
+        ],
+        "layout.grid_mode": [
+          "symmetric",
+          "bento"
+        ],
+        "media.mode": [
+          "type-led",
+          "photo-led"
+        ],
+        "media.treatment": [
+          "grayscale",
+          "none"
+        ],
+        "motion.level": [
+          "none",
+          "subtle"
+        ],
+        "icon.set": [
+          "tabler"
+        ]
+      },
+      "allowedByPairing": [
+        "type.headline_weight"
+      ],
+      "palettes": [
+        "PAL-T2-0",
+        "PAL-T2-1",
+        "PAL-T2-2",
+        "PAL-T2-3"
+      ],
+      "signatureIds": [
+        "SIG-02",
+        "SIG-03",
+        "SIG-04",
+        "SIG-08"
+      ],
+      "defaultSignatureId": "SIG-02",
+      "decorCountDefault": 0,
+      "preferredPatterns": {
+        "saas": [
+          "PS-2",
+          "PS-4"
+        ],
+        "local_business": [
+          "PL-1",
+          "PL-4"
+        ],
+        "portfolio": [
+          "PP-1",
+          "PP-3"
+        ]
+      },
+      "heroVariants": [
+        "left-aligned",
+        "type-only",
+        "split"
+      ],
+      "excludedVariants": [
+        "gallery.masonry"
+      ],
+      "buttonPill": false,
+      "allowSoftRoundShadow": false,
+      "tokens": {
+        "typeScale": {
+          "caption": [
+            12,
+            12
+          ],
+          "small": [
+            13,
+            13
+          ],
+          "body": [
+            16,
+            16
+          ],
+          "lead": [
+            19,
+            18
+          ],
+          "h4": [
+            23,
+            21
+          ],
+          "h3": [
+            28,
+            24
+          ],
+          "h2": [
+            33,
+            28
+          ],
+          "h1": [
+            50,
+            36
+          ],
+          "display": [
+            60,
+            42
+          ]
+        },
+        "displayToBody": 3.7
+      },
+      "provenance": {
+        "method": "operator",
+        "domains": []
+      }
+    }
+  ]
+}
