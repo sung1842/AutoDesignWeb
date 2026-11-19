@@ -711,7 +711,7 @@ function replay(log, purpose, items, cfg): EngineState {
 
 - **목적함수(사전식)**: ① dev 풀링 결과에서 합격선 미달 지표 수가 적을수록 좋다 ② 같으면 정규화 부족분 합 Σ max(0, (합격선 − 값)/합격선)이 작을수록(상한형 지표는 (값 − 합격선)/합격선, 포함률은 [0.85, 0.95]까지의 거리) ③ 같으면 현재 값 유지 ④ 그래도 같으면 값 집합의 사전순 첫 값.
 - **좌표별 평가 지표**: ①④⑥ = 위 표의 전 지표, ② = κ 2행만, ③ = 포함률만, ⑤ = 사전 영향 행 + 전 지표 미달 수. 다른 지표를 새로 미달시키는 값은 채택하지 않는다.
-- **시도 계수**: 현재 값의 dev 실행도 1회로 센다. 한 바퀴 = 시작점 1 + 비현재 값(3 + 2 + 2 + 1 + 1 + 1) = 11회 ≤ `maxTuningTrials`(15). 같은 구성의 dev 결과는 캐시하고 다시 세지 않는다(결정론). 그래서 2바퀴 시작점(1바퀴 최종값)은 0회다(U-08).
+- **시도 계수**: 현재 값의 dev 실행도 1회로 센다. 한 바퀴 = 시작점 1 + 비현재 값(3 + 2 + 2 + 1 + 1 + 1) = 11회 ≤ `maxTuningTrials`(15). 같은 구성의 dev 결과는 캐시하고 다시 세지 않는다(결정론). 그래서 2바퀴 시작점(1바퀴 최종값)은 0회다(U-08). 캐시에서 읽은 항목은 tuning-log에 `cached: true`로 남기고, guard 8c는 `cached=false`만 센다(V-03, 07장 7.12.1·7.12.2).
 - **gate 시점**: gate는 ①~⑥ 한 바퀴를 다 돈 뒤에만 1회 실행하고 결과는 PASS/FAIL만 기록한다. 선택 함수는 dev 리포트만 입력으로 받는다(gate 지표값을 다음 선택에 넘기지 않음). 두 번째 바퀴는 dev만으로 다시 돈다. dev 시도가 `maxTuningTrials`에 닿으면 남은 좌표는 현재 값으로 고정하고 그 구성으로 gate를 1회 실행한다. `maxGateRuns`(3)는 **gate 실행 수 상한**이다(바퀴 수가 아니다, U-08). `config/diagnosis-tuned.json`에 커밋하는 구성은 항상 마지막 gate 대상 구성이다(gate를 거치지 않은 구성은 커밋하지 않는다). 옛 "`maxGateRuns` = 바퀴 3회"·"시도 상한에서 그 시점에 멈춘다" → U-08로 대체.
 - 기록: `sim/reports/tuning-log.json` `{trials: [{round, coordinate, value, devMetrics, objective, chosen, gateRun}]}`.
 ① `typeDiscWeight` ∈ {2, 3, 5, 8} ② (llChance, llRef) ∈ {(−0.15, 0.25), (−0.20, 0.25), (−0.15, 0.30)} ③ calibKappa ∈ {1.2, 1.3, 1.4} ④ 1단계 R(`candidateSamples`) ∈ {200, 400} ⑤ priorWeight ∈ {0.2, 0.3} ⑥ `bridgeRelocated` ∈ {false, true}(브리지 SV 재배치 1회, 2.4.2 규칙).
@@ -784,7 +784,7 @@ function replay(log, purpose, items, cfg): EngineState {
 | AC-02-31 | 이벤트 `survey_answer`(00장 §8.3 + 01장 D-0106 확장 필드)의 `answer` 값과 `survey_answers.answer` 값 집합이 같다(`option`/`none_of_these`/`cant_tell`), `sigma_max_after` = 응답 후 max_k σ_k, `chosen_position` = `shown`에서 선택 항목의 slot. |
 | AC-02-34 | (T-25, UX3-03) 픽스처 5종(GS-25 low_signal, GS-28 conflict, κ < 0.50, boundary, 해당 없음)에서 `pickNotice`가 각각 `low_signal`·`conflict`·`low_consistency`·`boundary`·null이고, 둘 이상 해당하는 픽스처는 2.13.1 순서의 첫 값이다. 01·02장에 S03 ② 문구 원문이 두 벌로 있는 경우 0건. |
 | AC-02-35 | (T-07, AI3-03) `sim:survey --gate`는 `stimulus.source = x_card`일 때만 PASS/FAIL을 내고(스키마 검사) `--synthetic --gate`는 종료 코드 1이다. 같은 커밋에서 x_card를 한 축 +0.1 이동시킨 픽스처를 주면 gate 리포트의 RMSE가 바뀐다. 리포트에 V-MEAS·V-LAMBDA·V-POS·V-MIX 행이 있고 2.16.2 표에 "비차단"으로 표시된다. |
-| AC-02-36 | (T-03, AI3-05·QA3-02) ① 같은 커밋에서 튜닝을 2회 실행하면 `tuning-log.json` 바이트가 같다 ② 정적 검사: 선택 함수 시그니처가 dev 리포트만 받는다(gate 지표 입력 0) ③ 가짜 실패 주입 시 gate 실행 수가 3에서 멈추고 BLK(`sim-limit`)가 1건 생긴다 ④ 한 바퀴 시도 수가 11이다 ⑤ `config/diagnosis-tuned.json`의 값이 `tunable.*.values` 밖이면 guard FAIL. (U-08, RB4-03) ⑥ 1바퀴 gate FAIL 뒤 2바퀴 4회째(누적 dev 15)에 상한에 닿으면 gate가 2번째로 실행되고, tuned 파일은 그 구성이며, `tuning-log`의 dev 시도 수 ≤ 15이고 2바퀴 시작점 항목은 캐시 표시로 세지 않는다 ⑦ ⑥의 시나리오를 같은 커밋에서 2회 실행하면 `tuning-log.json`이 바이트 단위로 같다. |
+| AC-02-36 | (T-03, AI3-05·QA3-02) ① 같은 커밋에서 튜닝을 2회 실행하면 `tuning-log.json` 바이트가 같다 ② 정적 검사: 선택 함수 시그니처가 dev 리포트만 받는다(gate 지표 입력 0) ③ 픽스처 "모든 좌표 dev 동률(목적함수로 현재 값 유지) + gate 항상 FAIL"에서 gate 실행 수가 3에서 멈추고(같은 구성에 gate를 다시 돌려도 1회로 센다) dev 시도(`cached=false`) 11, BLK(`sim-limit`)가 1건 생긴다(V-03) ④ 한 바퀴 시도 수가 11이다 ⑤ `config/diagnosis-tuned.json`의 값이 `tunable.*.values` 밖이면 guard FAIL. (U-08, RB4-03) ⑥ 1바퀴 gate FAIL 뒤 2바퀴 4회째(누적 dev 15)에 상한에 닿으면 gate가 2번째로 실행되고, tuned 파일은 그 구성이며, `tuning-log`의 dev 시도 수 ≤ 15이고 2바퀴 시작점 항목은 `cached=true`로 기록되어 세지 않는다(gate 2, `cached=true` ≥ 1, V-03) ⑦ ⑥의 시나리오를 같은 커밋에서 2회 실행하면 `tuning-log.json`이 바이트 단위로 같다. |
 | AC-02-37 | (T-06, AI3-01) 활성 카드를 한 템플릿에서 3장만 남긴 픽스처로 `survey:build --check`를 돌리면 종료 코드 1과 부족한 (템플릿, 문항 순번)을 출력하고, 같은 픽스처로 진단을 시작하면 503 `SURVEY_ITEMS_INSUFFICIENT{stage:1, itemKey}`이다. |
 
 ---
@@ -905,3 +905,4 @@ function replay(log, purpose, items, cfg): EngineState {
 | T-08(QA3-05) | AC-02-24 perf 키, AC-02-30 감사 예외 참조 |
 | T-25(UX3-03) | 2.13.1 `pickNotice`·`ResultView.notice`·`seasonAdjusted`, 2.9.1·2.12.2·2.15 문구 원문 → 키, AC-02-34 |
 | U-08(RB4-03) | 2.16.2 dev 캐시·상한 도달 시 gate·`maxGateRuns` = gate 실행 수·커밋 구성, AC-02-36 ⑥⑦ |
+| V-03(RB5-03) | 2.16.2 `cached` 기록·8c 계수, AC-02-36 ③ 픽스처·⑥ 기대값 |

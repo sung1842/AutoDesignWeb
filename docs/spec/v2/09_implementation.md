@@ -669,7 +669,7 @@ BLOCKED.md 항목 형식:
 - usage(T-17, 원천 06장 6.9.4 ⑦): 실제 프롬프트·출력 길이가 아니라 `fixtures/llm/mock-prompt-sizes.json`의 블록별 고정 문자 수로 `tokens = ceil(문자 수 / 3)`을 보고한다. 정적 프리픽스는 06장 6.9.4 ③ `cacheState`가 `cache_write`인 `gen_layout`에서 `cacheWriteTokens`, `cached`인 `gen_layout`·수정 호출에서 `cachedTokens`로 보고한다. Mock은 응답 완료 시 사건 t1을 내고, `gen_copy` 지연은 후보 0 `gen_layout` 지연 + 1ms로 고정한다(U-01: 카피 정산이 후보 0 정산 뒤). 단가는 06장 6.9.2 `pricing["mock/mock-page"]`·`["mock/mock-vision"]` 고정값(S-13)이다. 기본 경로 기대 원가는 이 픽스처로 계산한 공식값(06장 AC-06-56, ± 1%)이다.
 - 수리 규칙(T-18, 결정론): `repair_schema`는 zod 오류 경로의 필드를 스키마 유효값(열거형 첫 값, 길이 하한 문자열은 덱 참조)으로 채운다. `repair_quality`·`diversity`는 `violations[].where` 섹션의 variant를 허용 목록의 다음 값으로 바꾸고, `axis_gaps`가 있으면 효과표에서 부호가 맞는 variant를 고른다. 재호출 결과도 위반이면 그 후보는 `eligible=false`(사유 `DIVERSITY`)이고 같은 변형의 다른 후보가 없으면 폴백(04장 4.8).
 - 효과표 `fixtures/llm/mock-variant-effects.json`: `seed:temp`(또는 `pnpm mock:effects`)가 각 (block, variant)를 `standardTree` 문맥에서 1회 렌더하고 B18 정규화기로 Δ(A1, A4)를 측정해 만든다(결정론, 2회 생성 바이트 동일, 제품 결정 아님). `low_score@*`는 효과표와 무관하게 `fixtures/llm/low-score-trees/`의 고정 트리를 쓰고, CI가 72개 명세 조합 모두 H < 80인지 확인한다.
-- 지연: `MOCK_LLM_LATENCY_MS`(기본 200).
+- 지연: `MOCK_LLM_LATENCY_MS`(기본 200). 4000으로 두면 사건 t1이 t0 + 3s보다 늦어 비스트리밍 실서비스 순서를 재현한다(06장 AC-06-61 ④, V-01).
 - `ok` 시나리오 출력은 렌더 시 하드 게이트를 통과하도록 합성기가 보장한다(M5 ① 근거).
 
 **장애 적용 범위(T-18)**: 장애 시나리오는 기본적으로 `callKind='initial'` 호출에만 적용한다. 끝에 `!`를 붙인 형식(예: `schema_violation!@2`)만 재호출에도 유지한다. `copy_schema_fail@gen_copy`는 정의상 `!` 동작이다.
@@ -895,7 +895,8 @@ pnpm seed:temp | pnpm db:seed | pnpm survey:build | pnpm eval:golden --mode mock
 | AC-09-14 | CLAUDE.md가 300줄 이하이고 9.8.2의 8개 절을 모두 포함한다. |
 | AC-09-17 | (T-04, QA3-03) Given M1 종료 커밋 / When `pnpm data:validate` / Then 골든 32행이 `answers`·`expected.muRef` = null로 유효하다. Given M4 종료 직전 / When `pnpm eval:golden:build-answers`를 2회 실행 / Then 출력 바이트가 같고 32행 모두 채워지며, `m4-done` 커밋 이후 `data/golden/**` 1바이트 변경은 guard FAIL이다. tuned 파일 변경 커밋에 새 muRef가 없으면(또는 그 반대면) guard FAIL이다. |
 | AC-09-18 | (T-18, AI3-04) 계약 테스트 ① 같은 후보의 `initial`과 `repair_quality` mock 출력 SHA-256이 다르고, `!`가 없는 시나리오에서 재호출 출력은 스키마 유효다 ② `mixed` 단일 잡(골든 GS-01)에서 `llm_calls` 개수가 07장 TC-R-15에 적힌 값(initial 7, repair_schema 1, repair_quality 1, diversity 1)과 같고 노출 시안 전부 04장 AC-04-20 충족, `budget_skipped` 0 ③ `mock-variant-effects.json` 2회 생성 바이트 동일, `low-score-trees` 72조합 전부 H < 80 ④ `judge_position_bias@judge_vision`에서 A/B를 바꿔 2회 심사한 결과가 불일치하면 `tie`로 기록되고, 일반 `judge_vision`은 A/B를 바꿔도 승자 ID가 같다. |
-| AC-09-19 | (U-09, RB4-04) 메타 테스트: 활성 카드 47장 픽스처와 open `survey-items` BLK(재현 명령 있음)에서 `verify:m4`의 `result = pass_blocked`이고 `survey-items-count` 단계 status `blocked`·`blockedBy` 기록, `m4-done` 태그 절차가 통과하며 `release:check`는 3이다. 같은 픽스처에서 BLK를 닫으면 `verify:m4`는 `fail`이다. BLK가 재현 명령 없이 열려 있어도 `fail`이다. |
+| AC-09-19 | (U-09, RB4-04) 메타 테스트: 활성 카드 47장 픽스처와 open `survey-items` BLK(재현 명령 있음)에서 `verify:m4`의 `result = pass_blocked`이고 `survey-items-count` 단계 status `blocked`·`blockedBy` 기록, `m4-done` 태그 절차가 통과한다. 같은 픽스처에서 BLK를 닫으면 `verify:m4`는 `fail`이다. BLK가 재현 명령 없이 열려 있어도 `fail`이다. `release-check.ts` 없이 판정한다(M4, V-04). |
+| AC-09-19b | (V-04, RB5-04, M8) AC-09-19와 같은 픽스처(open `survey-items` BLK)에서 `release:check` 종료 코드가 3이다. |
 
 ---
 
@@ -994,4 +995,5 @@ pnpm seed:temp | pnpm db:seed | pnpm survey:build | pnpm eval:golden --mode mock
 | T-17(TL3-03·04) | 9.6.2 Mock usage 픽스처·캐시 토큰 규칙, `cost_spike` 정의 고정(단가 10배), `cost_ramp`·`usage_overrun` 행 | 원천 06장 6.9.4 ⑦ |
 | T-18(AI3-04·TL3-05·AI3-09) | 9.6.2 시드에 `callKind`·`attempt`, 인덱스 매핑, 장애 `initial` 한정·`!`, 수리 규칙, 효과표·low-score-trees, `judge_vision` ID 기반·`judge_position_bias`, `mixed` 인덱스 표기, AC-09-18 | |
 | U-01·U-08·U-09·U-10(r4 RB4-01·03·04·05) | 9.4.1 `blocked`·`pass_blocked`·AC-09-19, 9.5.3 `survey-items` 행·튜닝 상한 문구, 9.9.2 BLK 유형·녹색, M4 ④ dev 캐시·상한 도달 gate·커밋 구성, 9.6.2 Mock t1·카피 지연, 9.8.1 `SPEC_SOURCE` 맵 | |
+| V-01·V-04(r5 RB5-01·04) | 9.6.2 지연 4000 재현 문장, AC-09-19 verify 부분만(M4)·AC-09-19b(M8) | |
 | T-29·T-34 | B25 확장 역할·`pricing.price`, B24 `industryTags` 연결·교차 참조 | |

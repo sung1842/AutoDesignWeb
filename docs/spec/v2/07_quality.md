@@ -505,7 +505,7 @@ ID 체계: TC-E(진단 입력) / TC-B(브랜드 입력) / TC-R(장애·복원력
 | TC-R-08 | `slow` | 120초 시점 폴백 경로 진입, 180초 이전 종료(R-25), 비폴백 노출 수에 따라 `partial` 또는 `fallback` |
 | TC-R-09 | `cost_spike`(단가 10배, 추정 반영. 정의 원천 06장 6.9.4 ⑦) | 06장 6.9.4 ⑦ 표의 기대 결과: 첫 판정에서 넘는 호출 `budget_skipped`(`COST_CAP`), `sum(llm_calls.cost_usd) ≤ capEff`, 상태 ∈ {partial, fallback}, DB 예외·`WORKER_LOST` 0(06장 AC-06-21) |
 | TC-R-19 | `cost_ramp`(단가 1.20배, 변형 B·C 수정 대상) | 06장 6.9.4 ⑦ 표: `judge_vision` 6건 `skip_vision` → 변형 B 수정 1건 `ok` → 변형 C 수정 `skip_repair` 순서, 상태 `partial`(06장 AC-06-61) |
-| TC-R-20 | `usage_overrun`(usage 3배, 추정 미반영) | 06장 6.9.4 ⑦ 표: DB 예외 0, `WORKER_LOST` 0, A11 정확히 1건, 초과 시점 이후 출발한 `ok` 호출 0, 합계 ≤ `capEff × 3`(06장 AC-06-61) |
+| TC-R-20 | `usage_overrun`(usage 3배, 추정 미반영) | 06장 6.9.4 ⑦ 표: DB 예외 0, `WORKER_LOST` 0, A11 정확히 1건, 초과 시점 이후 출발한 `ok` 호출 0, 합계 ≤ `capEff × 3`, 잡 상태 `succeeded`(n_real 3, V-02)(06장 AC-06-61) |
 | TC-R-10 | 생성 중 탭 닫기 → 2분 후 S12 또는 `/g/[jobId]` 재방문 | 잡은 서버에서 계속, 완료면 S08, 진행 중이면 S07 |
 | TC-R-11 | 같은 사용자 동시 생성 요청 2개 | 1개만 실행, 2번째는 409 `JOB_IN_PROGRESS` + 진행 중 잡 화면으로 이동 |
 | TC-R-12 | 워커 프로세스 강제 종료(생성 중) | heartbeat 만료 후 pg-boss 재시도로 1회 재개 또는 `failed` + 재시도 화면, 중복 노출 시안 0 |
@@ -963,7 +963,7 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
 - **진단 튜닝 상수(T-03, QA3-02·AI3-05)**: 02장 2.16.2 조정 공간 6좌표만 `diagnosis.tunable`에 둔다. 각 좌표는 `{values: 닫힌 값 집합, initial: 초기값}`이고 키 순서가 탐색 순서 ①~⑥이다(① `typeDiscWeight` ② `llChanceRef` = [`llChance`, `llRef`] 쌍 ③ `calibKappa` ④ `candidateSamples`(1단계 R) ⑤ `priorWeight` ⑥ `bridgeRelocated`(브리지 SV 재배치 1회, 2.4.2)). 합격선(`release.surveySim`)·β·σ0·sigmaStop·문항 수·λ·시드·`maxTuningTrials`·`maxGateRuns`(gate 실행 수 상한, U-08)와 나머지 `diagnosis` 키는 spec 잠금 그대로다. `tunable` 자체(값 집합·초기값)도 이 블록의 일부라 spec 잠금이다.
   - 런타임 값은 `config/diagnosis-tuned.json`에서 읽는다. 스키마(zod strict): `{ "typeDiscWeight": number, "llChance": number, "llRef": number, "calibKappa": number, "candidateSamples": integer, "priorWeight": number, "bridgeRelocated": boolean }`. 파일이 없을 때만 `pnpm spec:extract --init-tuned`가 `tunable.*.initial`로 초기 파일을 만든다(`llChanceRef.initial`은 `llChance`·`llRef`로 펼친다. 이미 있으면 아무것도 쓰지 않는다). 이 파일은 guard 5단계 spec 대조 대상이 아니다. 이후 변경은 2.16.2 탐색 결과만, `chore(sim-tune):` 단독 커밋(이 파일과 `tuning-log.json` 외 변경 0)으로 한다.
   - 엔진은 `getTuned()`로만 읽는다. `config_snapshot`·`engine_version`에 tuned 파일 SHA-256을 남긴다. 판정 코드에 tuned 값·`tunable.values` 원소와 같은 숫자 리터럴이 있으면 guard 3단계가 FAIL한다.
-  - `sim/reports/tuning-log.json` 스키마: `{ "trials": [{ "round", "coordinate", "value", "devMetrics", "objective", "chosen", "gateRun" }] }`(AI3-05 ⑤). `gateRun` 항목은 PASS/FAIL만 담고 지표값을 담지 않는다. 목적함수(사전식)·좌표별 평가 지표·시도 계수(시작점 포함 1바퀴 11회)·gate 시점(①~⑥ 한 바퀴 뒤 또는 `maxTuningTrials` 도달 시, U-08)·dev 결과 캐시(같은 구성은 다시 세지 않음)·커밋 구성(마지막 gate 대상)의 원천은 02장 2.16.2(AC-02-36)다.
+  - `sim/reports/tuning-log.json` 스키마: `{ "trials": [{ "round", "coordinate", "value", "devMetrics", "objective", "chosen", "gateRun", "cached" }] }`(AI3-05 ⑤, `cached: boolean`은 V-03: 같은 구성의 dev 결과를 캐시에서 읽은 항목이면 true). `gateRun` 항목은 PASS/FAIL만 담고 지표값을 담지 않는다. 목적함수(사전식)·좌표별 평가 지표·시도 계수(시작점 포함 1바퀴 11회)·gate 시점(①~⑥ 한 바퀴 뒤 또는 `maxTuningTrials` 도달 시, U-08)·dev 결과 캐시(같은 구성은 다시 세지 않음)·커밋 구성(마지막 gate 대상)의 원천은 02장 2.16.2(AC-02-36)다.
 
 <!-- spec:thresholds -->
 ```json
@@ -1147,7 +1147,7 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
     "M5": ["AC-00-14~17", "AC-01-01", "AC-01-02", "AC-01-22~34", "AC-01-51", "AC-01-58", "AC-04-01", "AC-04-02", "AC-04-14~16", "AC-04-22~25", "AC-04-37", "AC-04-38", "AC-04-44", "AC-04-46", "AC-04-47", "AC-06-09", "AC-06-10", "AC-06-13", "AC-06-15~18", "AC-06-20~23", "AC-06-38~40", "AC-06-45", "AC-06-47", "AC-06-52", "AC-06-55", "AC-06-56", "AC-06-59~63", "AC-06-07b", "AC-07-02", "AC-07-13", "AC-08-24~26", "AC-08-38~42", "AC-09-07", "AC-09-13", "AC-09-18"],
     "M6": ["AC-00-09", "AC-00-10", "AC-01-35~43", "AC-01-50", "AC-01-52~54", "AC-01-56", "AC-01-59", "AC-04-31~35", "AC-06-27", "AC-06-41", "AC-06-42", "AC-06-48", "AC-06-65", "AC-08-17~23", "AC-08-27", "AC-08-28"],
     "M7": ["AC-00-04", "AC-00-06", "AC-00-13", "AC-00-18~23", "AC-01-49", "AC-04-36", "AC-04-39", "AC-05-01", "AC-05-05~09", "AC-05-11", "AC-05-12a", "AC-05-13", "AC-05-16~18", "AC-06-14", "AC-06-19", "AC-06-29~31", "AC-06-33~36", "AC-06-43", "AC-06-44", "AC-06-49", "AC-06-53", "AC-06-54", "AC-06-57", "AC-06-58", "AC-06-64", "AC-06-66", "AC-06-07c", "AC-01-60", "AC-07-03", "AC-07-09", "AC-07-15", "AC-07-26", "AC-08-01~10", "AC-08-29~37", "AC-08-43", "AC-08-43b", "AC-08-46~48", "AC-08-55~59"],
-    "M8": ["AC-00-05", "AC-00-08", "AC-00-24", "AC-01-03", "AC-01-44~48", "AC-02-32", "AC-03-40", "AC-04-27~29", "AC-04-40~42", "AC-05-19~21", "AC-05-26~32", "AC-06-37", "AC-07-10~12", "AC-07-14", "AC-07-19", "AC-07-21", "AC-08-44", "AC-08-45", "AC-08-49~54", "AC-09-06", "AC-09-10", "AC-09-12", "AC-09-16"]
+    "M8": ["AC-00-05", "AC-00-08", "AC-00-24", "AC-01-03", "AC-01-44~48", "AC-02-32", "AC-03-40", "AC-04-27~29", "AC-04-40~42", "AC-05-19~21", "AC-05-26~32", "AC-06-37", "AC-07-10~12", "AC-07-14", "AC-07-19", "AC-07-21", "AC-08-44", "AC-08-45", "AC-08-49~54", "AC-09-06", "AC-09-10", "AC-09-12", "AC-09-16", "AC-09-19b"]
   },
   "steps": [
     ["ci-green-3x", "G1"],
@@ -1242,7 +1242,7 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
 8. 진단 튜닝 자체 잠금(T-03): config/diagnosis-tuned.json이 있으면
    a. zod strict 스키마(7.12.1) 위반 → FAIL
    b. 각 값 ∈ diagnosis.tunable의 해당 values(llChance·llRef는 쌍으로 llChanceRef.values) → 아니면 FAIL
-   c. sim/reports/tuning-log.json의 dev 시도 수(시작점 포함) ≤ release.surveySim.maxTuningTrials,
+   c. sim/reports/tuning-log.json의 dev 시도 수(시작점 포함, cached=false 항목만, V-03) ≤ release.surveySim.maxTuningTrials,
       gateRun 수 ≤ release.surveySim.maxGateRuns, gateRun 항목에 지표값 필드 있음 → 앞 둘 초과나 셋째는 FAIL
    d. 이 파일을 바꾼 커밋의 제목이 `chore(sim-tune):`이 아니거나 이 파일·tuning-log.json 외 변경이 있으면 FAIL
    e. 최신 sim 리포트의 engine_version·config_snapshot에 기록된 tuned 해시 ≠ 현재 파일 SHA-256 → FAIL
@@ -1424,6 +1424,7 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
 | T-31(PD3-01) | 베이스라인 자산 동등화·적합성·재요청 | 7.8.3, AC-07-26 |
 | T-35(PD3-05) | S-32~S-34 규칙 TC 등록: TC-B-20(AC-04-44), TC-D-08(AC-01-54), TC-D-09(AC-03-43), 배정표 반영 | 7.4 카탈로그, 7.12.1 배정표 |
 | U-02·U-08·U-09·U-10·U-12(r4 RB4-02~05·RA4-02) | `acMilestones` M1 `AC-06-01~06`+`07`, 07b → M5, 07c·AC-01-60·AC-08-58·59 → M7, AC-09-19 → M4, AC-07-23 ③, `maxGateRuns` 의미, 종료 코드 3 ↔ `pass_blocked`, `SPEC_SOURCE` 맵·AC-07-24, TC-B-20 폴백 | 7.4, 7.11.2, 7.12.1, AC-07-23·24 |
+| V-02·V-03·V-04(r5 RB5-02~04) | TC-R-20 기대 상태 `succeeded`, tuning-log `cached` 필드·guard 8c 계수, `acMilestones` M8 += AC-09-19b | 7.4.3, 7.12.1, 7.12.2 |
 | T-09(QA3-06·PM3-04) | AC → 마일스톤 배정표(00~09장 425개 ID, 신규 T-36 ID 포함), `acMilestones`, `qa:trace` 배정 위치 강제·접미사 정규식, 06 6.17 표는 참조로 | 7.1.7, 7.12.1 배정표·블록, AC-07-23 |
 | T-05(QA3-04) | 단계 카탈로그 57단계·`spec:test-policy.steps`·`blockable`·`exitCodes`, 허용표 추가(temp `data-provenance`·`extractor-roundtrip`, manual 5종, needs_ci `ci-green-3x`·`supabase-rest-rls`·`gotrue-auth-tables`), 종료 코드 3, temp 묶음 대응, "9.8" → "9.2" | 7.11.2, 7.12.1 블록, AC-07-21 |
 | T-06(AI3-01) | `extractor-roundtrip` temp 상태 분류(실패 축만 temp, reliable < 3 fail), `survey-items-count` blockable | 7.11.2 카탈로그 |
