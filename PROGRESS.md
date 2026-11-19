@@ -3,8 +3,8 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P2
-- lock: {owner: 2026-11-18T21:07Z, since: 2026-11-18T21:07Z}
-- limit.next_reset_kst: 2026-11-19 07:42
+- lock: {owner: 2026-11-19T00:08Z, since: 2026-11-19T00:08Z}
+- limit.next_reset_kst: 2026-11-19 14:08
 - 마지막 갱신: 2026-11-19 06:35 KST (예약 세션: 라운드 2 반영 20단위 완료)
 
 ## 실행 환경 사실(2026-11-18 점검)
