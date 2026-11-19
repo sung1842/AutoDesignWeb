@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T16:09Z, since: 2026-11-19T16:22Z}
+- lock: {owner: 2026-11-19T16:09Z, since: 2026-11-19T16:23Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
@@ -115,6 +115,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-20 01:23 | 폰트·이미지 temp에 9.2.4 S-10 표기(verified_by temp-agent·LicenseRef-TasteFit-Generated) → 다음: 04b mapL1toL2+카드
 - 2026-11-20 01:22 | M1-04a3b images manifest 192+무늬 SVG(실제 sha256), 톤 기준 모순 ASM-014 → 다음: 04b 카드·A/B·승인·레퍼런스·골든
 - 2026-11-20 01:21 | M1-04a3a fonts 26·pairings 20(tmp_ id+code), validate 프리셋 페어링 code·허용 유형 검사 → 다음: a3b 이미지
 - 2026-11-20 01:19 | M1-04a2c3c tokens/schema.json(DTCG 2020-12, 12그룹·10타입). 03장 C03 8종 검증 통과 → 다음: a3 폰트

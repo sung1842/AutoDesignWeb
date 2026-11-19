@@ -91,13 +91,13 @@
 ## ASM-013 · M1 · conflict · 2026-11-19T16:24Z
 - 질문: 03장 3.7.2·3.7.3이 폰트(`kr-pretendard`…)·페어링(`FP01`~`FP20`) ID를 정했는데, 잠긴 M1 수용 테스트(ASM-008)는 B6·B7 temp id 전부에 `tmp_` 접두를 요구. 프리셋 l2 `type.pairing_id`는 03장 값(`FP01`)이어야 함(AC-03-09). 폰트 원본 파일은 사람 묶음
 - 근거 탐색: 03장 3.2.1·3.4.4·3.7.2·3.7.3, 09장 9.2.2·9.2.4, tests/acceptance/m1/data.test.ts FREE_ID_BUNDLES
-- 선택: B6·B7 `id = tmp_<장 ID>`, 장 ID는 `code`에 둔다. 프리셋·매핑·편집은 `code`로 참조하고 data:validate가 프리셋 페어링 code의 존재·허용 유형을 검사. 폰트 `files: []` + `filesPending: true`(파일·sha256·RFN 확인은 HUMAN_TODO B6). 사람 데이터 투입 시 id = 장 ID로 바꿔도 code 참조라 영향 없음
+- 선택: B6·B7 `id = tmp_<장 ID>`, 장 ID는 `code`에 둔다. 프리셋·매핑·편집은 `code`로 참조하고 data:validate가 프리셋 페어링 code의 존재·허용 유형을 검사. 폰트 `files: []` + `filesPending: true` + `verified_by: temp-agent`(9.2.4 S-10, 파일·sha256·RFN 확인은 HUMAN_TODO B6). 9.2.4의 "Noto CJK temp 전용 레지스트리 항목"은 B6 수량(한글 12) 검사와 겹치므로 M2 렌더러 폴백 설정에 둔다. 사람 데이터 투입 시 id = 장 ID로 바꿔도 code 참조라 영향 없음
 - 영향 범위: scripts/data/seed-temp.ts·validate.ts, packages/design-spec 컴파일러(M2: 폰트 파일 없으면 시스템 폴백 스택)
 - 되돌리기 비용: 낮음
 
 ## ASM-014 · M1 · conflict · 2026-11-19T16:27Z
 - 질문: 03장 3.10.2 "카테고리 내 톤 태그 각 ≥ 30%"는 8장 카테고리(saas.hands-device·portfolio.nature·local_business.flower)에서 성립 불가(3톤 × ⌈2.4⌉ = 9 > 8). 사진 원본·id 형식(`img:<tag>-<nnn>`)과 tmp_ 접두 요구도 겹침
 - 근거 탐색: 03장 3.10.2·3.10.3·3.10.5, 09장 9.2.2 B8, ASM-008
-- 선택: temp는 톤 순환(warm·neutral·cool)으로 8장 카테고리는 3/3/2, 방향은 교대(50/50). id `tmp_img:<tag>-<nnn>`. 파일은 에이전트가 만든 무늬 SVG(`source: placeholder`, `license: CC0-1.0`, sha256은 실제 파일 값). 톤 기준 정정은 HUMAN_TODO
+- 선택: temp는 톤 순환(warm·neutral·cool)으로 8장 카테고리는 3/3/2, 방향은 교대(50/50). id `tmp_img:<tag>-<nnn>`. 파일은 에이전트가 만든 무늬 SVG(`source: placeholder`, `license: LicenseRef-TasteFit-Generated`·`verified_by: temp-agent`(9.2.4 S-10), sha256은 실제 파일 값). 수량은 9.2.4 B8의 "태그×비율 조합마다 1장 PNG" 대신 03장 3.10.2 표 192건(AC-03-30 수량과 일치)을 따르고 sharp 없이 SVG로 만든다. 톤 기준 정정은 HUMAN_TODO
 - 영향 범위: data/images/**, 04장 이미지 선택(M2)
 - 되돌리기 비용: 낮음

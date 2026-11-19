@@ -1380,7 +1380,8 @@ function genFonts(ctx: Ctx): Out[] {
       files: [],
       filesPending: true,
       reservedFontName: false,
-      verifiedAt: null,
+      verified_by: "temp-agent", // 9.2.4 S-10
+      verified_at: null,
       subsetFamily: `tf-${r[0] ?? ""}`,
     };
     if (r[6]) item.noteKo = r[6];
@@ -1441,7 +1442,7 @@ function genPairings(ctx: Ctx): Out[] {
 }
 
 // ---------- B8 images/manifest.json (03장 3.10.2·3.10.3) + 플레이스홀더 SVG ----------
-// 사진 원본은 사람 묶음(HUMAN_TODO B8). temp는 에이전트가 만든 무늬 SVG(source placeholder, CC0-1.0)를 파일로 두고
+// 사진 원본은 사람 묶음(HUMAN_TODO B8). temp는 에이전트가 만든 무늬 SVG(source placeholder, LicenseRef-TasteFit-Generated)를 파일로 두고
 // sha256을 실제 파일에서 계산한다. id는 `tmp_img:<tag>-<nnn>`(3.10.3 형식 + tmp_ 접두, ASM-008).
 const TONE_HEX: Record<string, [number, number, number]> = {
   "tone.warm": [200, 162, 122],
@@ -1504,7 +1505,9 @@ function genImages(ctx: Ctx): Out[] {
           altKo: `${scene} 장면 임시 자리 ${i + 1}번`,
           source: "placeholder",
           author: "seed:temp",
-          license: "CC0-1.0",
+          license: "LicenseRef-TasteFit-Generated", // 9.2.4 S-10
+          verified_by: "temp-agent",
+          verified_at: null,
           downloadedAt: null,
           hasPeople: false,
           hasRecognizableFace: false,
