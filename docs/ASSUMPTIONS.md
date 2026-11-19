@@ -235,3 +235,10 @@
 - 선택: ① α_TRUE = 0, α_FIT = min(0.8, α_p + 0.4)를 사양 상수로 둔다(`config/calibration.json` 부재, ASM-028 ⑤와 같음) ② e_p = PURPOSE_CALIB.emphasis ③ 정방향·반대 방향 모두 미달이면 D가 더 큰 쪽(같으면 정방향), distance_enforced = 강제 시도 여부(세 변형 모두 같은 값) ④ v_bal trace = v_fit trace에 alpha = α_FIT/2(소수 3자리)·v2 = t_BAL ⑤ 강제로 값이 바뀐 축은 moved_axes 사유 `distance` ⑥ target_vector는 강제 후 소수 3자리 반올림(범위 경계가 소수 1자리라 범위를 벗어나지 않음)
 - 영향 범위: packages/design-spec/src/variants.ts
 - 되돌리기 비용: 낮음
+
+## ASM-034 · M2 · gap · 2026-11-19T22:35Z
+- 질문: 04장 4.14 pickSignature의 용도 순위표 부재, 03·04장 카탈로그 차이, apply_to
+- 근거 탐색: 04장 4.14, 03장 3.2.4 표(우선), data/taxonomy/signatures.json(temp, purpose_rank 없음), signature.ts(AC-03-08)
+- 선택: ① 후보 = 프리셋 signatureIds ∩ signatureEligible(3.2.4 요구 조건·충돌). 시안당 1개라 시그니처 사이 충돌은 해당 없음 ② `purpose_rank`는 사양 상수 PURPOSE_RANK(SIG-05 제외 11종, 임시, HUMAN_TODO) ③ V-FIT = 순위 최상위(동률이면 후보 순서), V-BAL = 둘과 다른 첫 후보, 없으면 V-TRUE와 같은 값(BAL 후보에 없으면 BAL 첫 후보) ④ 후보가 비면 SIG-01, 03장 기준 SIG-01 조건(border ≠ bold)도 불가하면 SIG-09(조건 없음) ⑤ intensity: V-TRUE는 t_TRUE.expression ≥ 0.6이면 2, 나머지 1 ⑥ apply_to(블록 ID)는 layoutConstraints와 함께 M2-03d3에서 정한다
+- 영향 범위: packages/design-spec/src/pick-signature.ts
+- 되돌리기 비용: 낮음
