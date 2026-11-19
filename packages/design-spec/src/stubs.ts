@@ -3,6 +3,7 @@ import type { L1, L2 } from "@tastefit/taxonomy";
 import type { DesignData } from "./data.js";
 import { todo } from "./todo.js";
 import { predictL1Vec } from "./predict.js";
+import { exportTokensImpl } from "./export.js";
 import { deriveTokensImpl, expectedSizeImpl } from "./tokens.js";
 import { letterSpacingEmImpl, signatureEligibleImpl } from "./signature.js";
 import type {
@@ -26,11 +27,10 @@ export function deriveTokens(input: DeriveInput, data: DesignData): DerivedToken
   return deriveTokensImpl(input, data);
 }
 export function exportTokens(
-  _d: DerivedTokens,
-  _meta: { presetId: string; l2: L2; taxonomyVersion: string },
+  d: DerivedTokens,
+  meta: { presetId: string; l2: L2; taxonomyVersion: string },
 ): Record<string, string> {
-  void [_d, _meta];
-  return todo("M2-03", "exportTokens");
+  return exportTokensImpl(d, meta);
 }
 /** 03장 3.2.2(ASM-032). */
 export function predictL1(l2: L2, data: DesignData): Vec5 {

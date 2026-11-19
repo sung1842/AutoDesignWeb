@@ -16,6 +16,7 @@ export {
   ratio2,
   type TokenSet,
 } from "./tokens.js";
+export { tokenLeaves } from "./export.js";
 export { SIG_SPEC, TRACKING_TABLE, type TrackingClass } from "./signature.js";
 export {
   AXIS_KEYS,

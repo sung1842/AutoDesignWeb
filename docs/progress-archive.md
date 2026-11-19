@@ -150,3 +150,4 @@
 - 2026-11-20 02:26 | M1-07 RLS·DbPort·픽스처, shim에 auth 테이블 service_role 권한, db.test 13/17 → 다음: M1-08 db:seed
 - 2026-11-20 02:28 | M1-08 db:seed(8테이블 upsert, temp 라벨 유도 ASM-022), ⑥·AC-05-02 녹색 → 다음: M1-09 db:types
 - 2026-11-20 02:29 | M1-09 db:types(kysely-codegen)·types.gen.ts 51테이블, ⑧ 녹색, guard deps ok → 다음: M1-10 schema-parity
+- 2026-11-20 02:32 | M1-10 db:schema-parity 차이 0·db:grants-snapshot 일치, BLK-006 → 다음: M1-11 verify:m1·m1-done
