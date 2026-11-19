@@ -1,0 +1,9 @@
+{
+  "typeDiscWeight": 5,
+  "llChance": -0.15,
+  "llRef": 0.25,
+  "calibKappa": 1.3,
+  "candidateSamples": 200,
+  "priorWeight": 0.3,
+  "bridgeRelocated": false
+}
