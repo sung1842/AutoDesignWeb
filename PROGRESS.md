@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T18:08:02Z, since: 2026-11-19T18:18:44Z}
+- lock: {owner: 2026-11-19T18:08:02Z, since: 2026-11-19T18:21:52Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
@@ -110,7 +110,7 @@
   - [x] 10 `db:schema-parity`(⑨ 차이 0, 이름 잠금 충돌 BLK-006) + `db:grants-snapshot`(6.3.5, 허용 6항목 일치·위반 검출 확인)
   - [x] 11 verify:m1 pass_blocked(BLK-001~006) → m1-done. AC-06-32(m0 stack) 1회 간헐 실패 후 재실행 통과
 - M2 계획(9.4.4, AC: 03-02~11·15~38·41·42·44~46, 04-03~11·17·18·18a·30, 06-24~26·28. 읽을 장은 CLAUDE.md 구현 규칙 3절):
-  - [ ] 01 M2 수용 테스트(acMilestones M2 + 9.4.4 ①~⑧) `test(acc)` 커밋 → qa:trace --audit → 자체 잠금, traceability M2 행: [x] a 토큰·택소노미·시그니처(03-02~11·44, tokens.test, ASM-023) [x] b 04장 명세서·보정·변형·트리(04-03~10·30, spec.test, ASM-024·BLK-007; 04-11은 e로) [ ] c 컴포넌트·블록·서체·조판·텍스트 역할(03-15~27·42·45·46) [ ] d 아이콘·이미지·반응형·다크·브랜드(03-28~37·41) [ ] e 컴파일·렌더·미리보기(04-11·17·18·18a, 04-08 렌더 D, 03-44 accent 렌더, 06-24~26·28, ①~⑧) [ ] f qa:trace --audit·자체 잠금
+  - [ ] 01 M2 수용 테스트(acMilestones M2 + 9.4.4 ①~⑧) `test(acc)` 커밋 → qa:trace --audit → 자체 잠금, traceability M2 행: [x] a 토큰·택소노미·시그니처(03-02~11·44, tokens.test, ASM-023) [x] b 04장 명세서·보정·변형·트리(04-03~10·30, spec.test, ASM-024·BLK-007; 04-11은 e로) [x] c 컴포넌트·블록·서체·조판·텍스트 역할(03-15~27·42·45·46, blocks.test, ASM-025·BLK-008) [ ] d 아이콘·이미지·반응형·다크·브랜드(03-28~37·41) [ ] e 컴파일·렌더·미리보기(04-11·17·18·18a, 04-08 렌더 D, 03-44 accent 렌더, 06-24~26·28, ①~⑧) [ ] f qa:trace --audit·자체 잠금
   - [ ] 02 design-spec a: mapL1toL2 용도 경로·snapToFeasible(03장 3.3) → L2
   - [ ] 03 design-spec b: L2 → DesignTokens(03장 토큰·매핑·폰트) → DesignSpec(04장 4.2.1 zod)
   - [ ] 04 layout-schema: PageSchema zod·블록 슬롯·폴백 + JSON Schema 정적 검사(⑥)
@@ -131,8 +131,9 @@
 - [ ] release:check 요약
 
 ## 로그
-- 2026-11-20 04:05 | M2-01b spec.test(AC-04-03~10·30)·ASM-024·BLK-007(감사 리터럴 겹침) → 다음: 01c 블록·서체
-- 2026-11-20 03:41 | M2-01a tokens.test(AC-03-02~11·44)·ASM-023 API 계약 → 다음: 01b 04장 명세서
+- 2026-11-20 03:21 | M2-01c blocks.test(AC-03-15~27·42·45·46)·ASM-025·BLK-008(axe) → 다음: 01d 아이콘·이미지·반응형·브랜드
+- 2026-11-20 03:18 | M2-01b spec.test(AC-04-03~10·30)·ASM-024·BLK-007(감사 리터럴 겹침) → 다음: 01c 블록·서체
+- 2026-11-20 03:12 | M2-01a tokens.test(AC-03-02~11·44)·ASM-023 API 계약 → 다음: 01b 04장 명세서
 - 2026-11-20 02:54 | M2 계획 14단위 작성 → 다음: M2-01 수용 테스트
 - 2026-11-20 02:53 | M1 완료: verify:m1 pass_blocked(BLK-001~006), m1-done → 다음: M2 계획(09장 9.4.4)
 - 2026-11-20 02:32 | M1-10 db:schema-parity 차이 0·db:grants-snapshot 일치, BLK-006 → 다음: M1-11 verify:m1·m1-done
@@ -145,4 +146,3 @@
 - 2026-11-20 02:14 | M1-04c2b B18 2026-S0 부트스트랩(5.5.4 initial, 분위 자리표시, M3 재생성 ASM-020) → 다음: c3 B15
 - 2026-11-20 02:13 | M1-04c2a B20 copy_templates 44·axis_hints 10·B21 87·B22 6·B24 62, validate 교차 참조 → 다음: c2b B18
 - 2026-11-20 01:31 | M1-04c1 cliche ko48·en28·legal md 3·processors/data-flows(스텁 3, ASM-017) → 다음: c2 B18·B20·B21·B22·B24
-- 2026-11-20 01:29 | M1-04b3 references 60(쿼터·[임시])·golden 32 골격(7.2.3 θ*·브랜드 경계값) → 다음: c1 B14·B17·B23

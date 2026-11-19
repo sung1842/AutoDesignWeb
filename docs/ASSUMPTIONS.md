@@ -158,16 +158,23 @@
 - 영향 범위: scripts/data/db-seed.ts, M4 닮은 사이트·survey:build
 - 되돌리기 비용: 낮음
 
-## ASM-023 · M2 · gap · 2026-11-19T18:40Z
+## ASM-023 · M2 · gap · 2026-11-19T18:12Z
 - 질문: M2 수용 테스트를 쓰려면 design-spec·renderer·data-contracts의 공개 API 계약과 AC-03-02·03·04·08의 측정 대상이 정해져야 하는데 장에 함수 이름만 있음
 - 근거 탐색: 03장 3.1.2~3.1.7·3.1.12·3.2.2·3.2.4·3.4.7, 04장 4.2.1·4.9.2 CM-02·4.14
 - 선택: ① `@tastefit/design-spec`: `loadDesignData(root)`(MapData 호환 + `presets`·`palettes[].roles`·`signatures`·`harmony`(items)·`taxonomyVersion`), `deriveTokens({presetId,l2,brand?}, data) → {tokenSet, accentTextSafe, inverseButtonMode}`(TokenSet은 schema.json 그대로, 두 플래그는 바깥), `exportTokens(derived,{presetId,l2,taxonomyVersion}) → {경로: 문자열}` 3파일, `predictL1(l2,data) → {expression..depth}`(기본 L2만, 시그니처 인자 없음), `signatureEligible(id, SigCtx)`(SigCtx = 3.2.4 요구·충돌 열을 그대로 필드로), `DesignSpecSchema`(zod, `.shape.l2`가 18키 enum 객체) ② `@tastefit/data-contracts`: `validateTokenSet(x) → {ok, errors}`(schema.json, zod fromJSONSchema 허용) ③ `@tastefit/renderer`: `rendererCssSources() → {path, css}[]`(base·blocks·signatures 층), `cssLiteralViolations(css)`(CM-02 허용 목록) ④ AC-03-02 13쌍 = 3.1.3 "하드" 표기 쌍(fg·fg-muted 각 2, fg-inverse, border-strong, primary, on-primary 3, on-accent, focus 2), accent 없으면 on-accent 쌍 생략, 리포트 `reports/m2/contrast-pairs.json` ⑤ AC-03-04 크기 = `type.display`·`type.body` typography 토큰의 데스크톱 fontSize, 범위(2.5~8.0)·웨이트 상한(3)은 thresholds 키가 아니고 감사 리터럴과 값이 겹쳐 harmony.json H7 range·H5 만점 tier max에서 읽는다(같은 03장 원천) ⑥ AC-03-08 SIG-05는 예약이라 항상 불가, SIG-09는 조건·충돌이 없어 음성 픽스처 대신 "모든 음성 문맥에서도 가능"을 검사 ⑦ AC-03-09~11은 taxonomy `mapL1toL2`(purpose=null)에 design-spec 데이터를 넣어 검사, 단조성은 ASM-015 해석
 - 영향 범위: tests/acceptance/m2/**, packages/design-spec·renderer·data-contracts
 - 되돌리기 비용: 중간(잠긴 테스트라 바꾸려면 사람 relock)
 
-## ASM-024 · M2 · gap · 2026-11-19T19:00Z
+## ASM-024 · M2 · gap · 2026-11-19T18:18Z
 - 질문: 04장 AC-04-03~10·30 수용 테스트를 쓰려면 compileSpec·calibrate·LayoutTreeRaw·정적 린트의 공개 API와 "대표 벡터"·골든 입력이 정해져야 함
 - 근거 탐색: 04장 4.2.1·4.2.2·4.3·4.4·4.5.2·4.14, 02장 2.3.1 TasteResult, 09장 9.4.4, data/golden(GS-01~32, persona.thetaStar)
 - 선택: ① `compileSpecs({taste: TasteResult, purpose, brand: {brand_color} | null, jobSeed}, data) → {v_true, v_fit, v_bal}`(변형 간 거리·L2 차이 강제가 서로 의존하므로 3개를 함께 만든다. compileSpec 1개 = 그 원소) ② `calibrate({taste, purpose, alpha}, data) → {v1, v2, g, ...}`(Vec5는 R-01 키 객체), 용도 표는 04장 4.3 값, 유형 범위 = 앵커 ± 0.20을 [0,1]로 자른 값 ③ 대표 벡터 = μ: 앵커, σ: 0.08 전 축, κ: 0.8, 둔감 축 없음 ④ AC-04-08 L2 층은 골든 θ*를 μ로 넣어 7키(depth는 style|level 묶음, hero는 hero_variants 목록) 차이 ≥ l2DiffMin. 렌더 D ≥ 0.15 충족률은 render.test(01e) ⑤ `@tastefit/linter`의 `staticLint(spec) → {rule, severity}[]`(M2는 단계 S 최소 구현) ⑥ `@tastefit/layout-schema`의 `LayoutTreeRawSchema`(zod)·`layoutTreeRawJsonSchema()`, 퍼징 기준 트리 = fixtures/layouts 첫 파일(`raw` 필드가 있으면 그것) ⑦ 기준 구현의 κ 구간 상수는 표(KAPPA_BANDS)로 둔다(기대값 계산식이며 판정 기준이 아님) ⑧ 무채 브랜드 입력의 hue 비교·±5°·0.20 대조는 BLK-007로 단위 테스트 ⑨ 브랜드가 accent로 강등되면 on-accent 쌍 생략(3.13.2 S-37)
 - 영향 범위: tests/acceptance/m2/spec.test.ts, packages/design-spec·layout-schema·linter
+- 되돌리기 비용: 중간(잠긴 테스트)
+
+## ASM-025 · M2 · gap · 2026-11-19T18:21Z
+- 질문: 03장 AC-03-15~27·42·45·46 수용 테스트를 쓰려면 렌더 하네스·렌더러·표준 트리·게이트 API와 "골든 세트 시안"(M5 전)의 대체가 정해져야 함
+- 근거 탐색: 03장 3.1.5·3.1.5a·3.5·3.6·3.7·3.8, 04장 4.9·4.10.2, 09장 9.4.4(하드 게이트 4종 선구현), dependency-allowlist(playwright는 worker·e2e)
+- 선택: ① `apps/worker/src/render/harness.ts`: `openHarness() → Harness{measure(html, vw, {spec}?), withPage(html, vw, fn(page)), platformFontsForHangul(html, vw) → {selector,family}[], firstViewFontBytes(html, vw), headlineLines(html, vw) → {role,lines,lastLineChars}[], close()}` ② `@tastefit/scoring`: `evaluateGates(measure, ids) → {id, pass, violations}[]`(M2: G-02·03·04·05·06·07·12, AIL-17), `harmonyScore(spec, tree).total` ③ `@tastefit/renderer`: `compilePage(spec, tree, data) → {html}`, `renderBlockSample({presetId,block,variant,purpose,copy:'max'|'typical'}, data) → html|null`(프리셋 제외 variant면 null), `renderComponentGallery(presetId, data, {copy}) → {html, cases}`(각 케이스 `data-case`), `renderStepProbe(spec, data)`(단계 9개 `data-step-probe`) ④ `@tastefit/design-spec`: `standardTree(typeId, purpose, data, {pairingId?}) → {spec, tree}`, `expectedSize(tokens, step, vw)`, `letterSpacingEm(px, 'sans'|'serif'|'latin-heading')` ⑤ `@tastefit/layout-schema`: `copyDeckLimits() → {덱키: 수 | {필드: 수}}`(04장 4.6.2) ⑥ `@tastefit/linter`: `treeLint(spec, tree) → {rule, message}[]` ⑦ `@tastefit/data-contracts`: `validateBundle(경로, json) → {ok, errors}` ⑧ blocks.json 비미디어 슬롯에 `textRoles`(배열) 필드를 둔다(AC-03-46 ①), fallback 체인 끝 = image null variant 또는 `"remove"` ⑨ AC-03-22: verified_at은 provenance temp일 때만 null 허용(사람 검증 전), human이면 빌드 실패 ⑩ AC-03-24·26 "골든 세트 시안"은 M5 파이프라인 전이라 표준 트리 24개 렌더로 대신하고 M5·M8에서 골든 렌더로 다시 잰다 ⑪ 허용 오차 0.5px·자간 표 범위·페어링 상한은 harmony.json(H6 tolerancePx·H4 tier)에서 읽는다 ⑫ axe(AC-03-15)·CLS 0.05(AC-03-24)는 BLK-008·BLK-007
+- 영향 범위: tests/acceptance/m2/blocks.test.ts, apps/worker, packages/renderer·design-spec·scoring·linter·layout-schema·data-contracts, data/taxonomy/blocks.json
 - 되돌리기 비용: 중간(잠긴 테스트)

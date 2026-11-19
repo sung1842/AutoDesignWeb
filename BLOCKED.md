@@ -69,5 +69,14 @@
 - 재현: tests/acceptance/m2/spec.test.ts에 `toBeLessThanOrEqual(5)` 또는 `>= 0.2`를 넣고 pnpm -s qa:trace --audit
 - 시도: (1) 의미가 같은 thresholds 키 탐색 → 없음 (2) spec-constants.ts → SC 행이 없어 예외 불가 (3) 우회 표기(계산식으로 숨기기) → 감사 우회라 하지 않음
 - 처리: 수용 테스트(잠금)에서는 이 두 비교를 빼고(AC-04-03 대비 게이트·notice, AC-04-06 범위·moved_axes 형식만), packages/design-spec 단위 테스트에서 ±5°·0.20 대조를 한다(감사 범위 밖)
-- 제안 수정안(사람): 7.12.1 사양 상수 표에 "브랜드 hue 고정 허용 5°(04장 4.2.2·AC-04-03)", "보정 사유 기록 기준 0.20(04장 4.3·AC-04-07)" 행 추가 → spec-constants.ts에 SC 상수 → 수용 테스트에 대조 추가 후 relock
+- 제안 수정안(사람): 7.12.1 사양 상수 표에 "브랜드 hue 고정 허용 5°(04장 4.2.2·AC-04-03)", "보정 사유 기록 기준 0.20(04장 4.3·AC-04-07)", "CLS ≤ 0.05(03장 AC-03-24, generation.taste.tau와 값 겹침)" 행 추가 → spec-constants.ts에 SC 상수 → 수용 테스트에 대조 추가 후 relock
+- 상태: open
+
+## BLK-008 · M2 · locked-conflict · 2026-11-19T18:21Z
+- 대상: 03장 AC-03-15(axe-core serious/critical 0)·04장 G-08 ↔ docs/dependency-allowlist.md(사람 잠금, axe-core 없음)
+- 증상: axe-core를 설치하면 guard:deps가 허용 목록 위반으로 실패
+- 재현: pnpm add -D axe-core 후 pnpm guard
+- 시도: (1) 허용 목록 패키지로 대체 → 같은 규칙 세트 없음 (2) 자체 구현 → G-08 정의(axe 규칙)와 달라 판정이 바뀜
+- 처리: M2 수용 테스트는 AC-03-15의 렌더·케이스 수·G-02·G-07만 검사. axe 검사는 허용 목록에 추가된 뒤 수용 테스트에 넣는다(relock)
+- 제안 수정안(사람): dependency-allowlist에 `axe-core`(MPL-2.0, apps/worker·e2e) 추가 → guard 라이선스 허용 목록에 MPL-2.0 → relock
 - 상태: open
