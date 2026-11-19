@@ -113,8 +113,8 @@ flowchart LR
 
 | 기능 | 방식 | 위치 | 지연 목표 | 근거 |
 |---|---|---|---|---|
-| 진단 세션 시작·응답·뒤로가기 | 동기(클라이언트 낙관 계산 + 서버 확정) | web | 서버 처리 p95 ≤ 200ms, 다음 문항 표시 p95 ≤ 150ms | 순수 함수 + 사전 렌더 이미지(D-14). 런타임 렌더·LLM 0건 |
-| 진단 결과 조회 | 동기 | web | 서버 처리 p95 ≤ 200ms, 화면 표시 ≤ 1s | 유형 판정·닮은 사이트는 메모리 계산(레퍼런스 ≤ 60행) |
+| 진단 세션 시작·응답·뒤로가기 | 동기(클라이언트 낙관 계산 + 서버 확정) | web | 서버 처리 p95 ≤ `perf.surveyServerP95Ms`(200ms), API 관측 p95 ≤ `perf.surveyApiP95Ms`(300ms), 다음 문항 표시 p95 ≤ 150ms | 순수 함수 + 사전 렌더 이미지(D-14). 런타임 렌더·LLM 0건 |
+| 진단 결과 조회 | 동기 | web | 서버 처리 p95 ≤ `perf.resultServerMs`(200ms), 화면 표시 ≤ 1s | 유형 판정·닮은 사이트는 메모리 계산(레퍼런스 ≤ 60행) |
 | 프로젝트(브랜드 입력) 저장 | 동기 | web | p95 ≤ 300ms | 정규화·차단 목록 검사 포함 |
 | 시안 생성 | **비동기**: `202 Accepted` + 폴링 | web → `generate` 큐 → worker | 처리 p50 ≤ 60s, p95 ≤ 90s, 120s 폴백, 180s 강제 종료(D-24) | 서버리스 실행 시간·Chromium 크기 제약 회피 |
 | 편집 미리보기 | 클라이언트 컴파일 → `srcdoc` 교체(R-17) | 브라우저 | 스타일 조작 p95 ≤ 200ms, 구조 변경 p95 ≤ 500ms(01장 1.8.5) | 서버 왕복 0, Chromium 미사용 |
@@ -205,7 +205,7 @@ queued ──claim──▶ running ──▶ 종료 상태 판정(노출 확정
 |---|---|---|
 | succeeded, partial | 예약 확정 | 동일 값 |
 | fallback, failed | 환불(`quota_ledger.kind='refund'`) | 동일 값 |
-| canceled | 취소 시점의 비폴백 노출 수(`n_real`)가 ≥ 1이면 차감(노출된 시안은 계속 볼 수 있음), 0이면 환불. `queued`·`running`은 구분하지 않는다(S-16, 00장 §9.3·04장 4.12·01장 1.6.5와 같은 문장). 노출 전 취소로 생긴 원가 남용은 레이트리밋(계정 2회/분)과 A4 경보로 감시한다 | 이벤트 미발생 |
+| canceled | 취소 시점의 비폴백 노출 수(`n_real`)가 ≥ 1이면 차감(노출된 시안은 계속 볼 수 있음), 0이면 환불하되 **노출 0 취소 환불은 계정당 KST 하루 2회까지**이고 3번째부터는 노출 0이어도 차감한다. `queued`·`running`은 구분하지 않는다(S-16·T-20, 00장 §9.3·04장 4.12·01장 1.6.5와 같은 문장). 취소 즉시 진행 중 LLM 호출을 abort하고 `llm_calls.status='aborted'`로 남긴다. 계정 원가 남용은 `USER_DAILY_COST_CAP_USD`(6.10.3·6.10.4)가 자동 차단하고 A4가 차단 발동을 알린다 | 이벤트 미발생 |
 
 | phase | 의미 | progressPct |
 |---|---|---|
@@ -219,7 +219,25 @@ queued ──claim──▶ running ──▶ 종료 상태 판정(노출 확정
 | `selecting` | 노출 선택·저장 | 95 |
 | `done` | 종료 | 100 |
 
-- 수용 기준 AC-06-55(S-16 통합 테스트 3건): ① `queued` 취소 → 잔여 한도 불변 ② `running`·노출 0에서 취소 → 불변 ③ `running`·비폴백 1개 노출 후 취소 → 1 감소.
+- 수용 기준 AC-06-55(S-16 통합 테스트 3건): ① `queued` 취소 → 잔여 한도 불변 ② `running`·노출 0에서 취소 → 불변 ③ `running`·비폴백 1개 노출 후 취소 → 1 감소. (①②는 그날 그 계정의 첫 두 번 안의 환불 취소로 실행한다. 3번째부터는 AC-06-63.)
+
+**취소 처리 규칙(T-20, PM3-02)** — 원천은 이 절이고 00장 §9.3 `canceled` 행·01장 1.6.5 시트 문구가 같은 규칙을 쓴다.
+
+```
+refundable_cancels_today(u) = count(quota_ledger q join generation_jobs j on q.job_id = j.id
+                                    where q.user_id = u and q.kind = 'refund' and j.status = 'canceled'
+                                      and kst_day(q.created_at) = kst_day(now()))
+취소 시(cancel_generation_job, 사용자 잠금 pg_advisory_xact_lock(hashtext(u)) 안):
+  n_real ≥ 1                                   → 예약 확정(차감)
+  n_real = 0 ∧ refundable_cancels_today(u) < 2 → refund 1행
+  n_real = 0 ∧ refundable_cancels_today(u) ≥ 2 → 예약 확정(차감), 응답 meta.refunded=false
+워커: 취소 신호(generation_jobs.status='canceled' 감지, 폴링 ≤ 1s 또는 pg NOTIFY) → job AbortController.abort()
+      → 진행 중 callLlm은 AbortSignal로 끊고 llm_calls 1행(status='aborted', 이미 받은 usage가 있으면 그만큼 정산)
+      → 남은 예약 release, 대기 중 렌더 취소
+```
+
+- 시트 문구 분기: 확인 시트를 열 때 `GET /api/me`의 `quota.refundableCancelsLeft`(= 2 − `refundable_cancels_today`, 하한 0)가 0이면 01장 `gen.cancel.noRefund` 문구를 쓴다(필드 정의는 6.4, 06-d).
+- **AC-06-63**(T-20): 통합 테스트(Mock) ① 같은 계정이 노출 0 취소를 같은 KST 날짜에 3회 하면 1·2번째는 잔여 한도 불변, 3번째는 1 감소하고 `quota_ledger` refund 행은 2개다. ② Mock 호출당 원가를 US$0.30으로 둔 픽스처에서 계정 누적 `sum(llm_calls.cost_usd where owner_id=A, purpose='user_job', 오늘)`이 `USER_DAILY_COST_CAP_USD`(1.5)를 넘은 뒤 A의 생성 요청은 429 `QUOTA_DAY`(`details.reason='cost_cap'`)이고, 같은 시각 계정 B의 요청은 202이며, A4 알림 1건에 `blocked=true`가 실린다. ③ `MOCK_LLM_LATENCY_MS=20000`으로 호출 중 취소하면 5초 안에 그 잡의 미종료 `llm_calls`가 0개이고 그 행들의 `status='aborted'`다.
 
 `phase` 값과 라벨 문구의 매핑은 →01장 생성 대기 화면이 정한다.
 
@@ -1173,7 +1191,8 @@ create table dev_mail_outbox (                        -- AuthPort·MailPort loca
 |---|---|---|---|
 | `rl_hit(p_key, p_window_s, p_limit)` | 키·윈도·한도 | `insert … on conflict do update set count = count+1 returning count` | `{allowed:false, retry_after_s}` |
 | `create_project(p_user_id, p_result_id, p_purpose, p_brand, p_brand_hash, p_title)` | | 프로젝트 수 < 10 확인 → INSERT | `PROJECT_LIMIT` |
-| `create_generation_job(p_user_id, p_project_id, p_kind, p_idem_key, p_request_id, p_config)` | | ①`pg_advisory_xact_lock(hashtext(p_user_id::text))` ② 소유 확인 ③ `GEN_ENABLED` ④ 일·월 예산(6.10.3) ⑤ 초대 코드(`BETA_INVITE_ONLY`) ⑥ 일·월 한도(`quota_ledger`) ⑦ 진행 중 잡 ⑧ INSERT job + `quota_ledger(reserve)` | `GEN_DISABLED`, `GEN_BUDGET_EXCEEDED`, `INVITE_REQUIRED`, `QUOTA_DAY`, `QUOTA_MONTH`, `JOB_IN_PROGRESS(job_id)` |
+| `create_generation_job(p_user_id, p_project_id, p_kind, p_idem_key, p_request_id, p_config)` | | ①`pg_advisory_xact_lock(hashtext(p_user_id::text))` ② 소유 확인 ③ `GEN_ENABLED` ④ 일·월 예산(6.10.3) ⑤ 초대 코드(`BETA_INVITE_ONLY`) ⑥ 일·월 한도(`quota_ledger`) ⑥b 계정 일 원가(`sum(llm_calls.cost_usd) where owner_id=p_user_id ∧ purpose='user_job' ∧ 오늘(KST)` ≥ `USER_DAILY_COST_CAP_USD`이면 거부, T-20) ⑦ 진행 중 잡 ⑧ INSERT job + `quota_ledger(reserve)` | `GEN_DISABLED`, `GEN_BUDGET_EXCEEDED`, `INVITE_REQUIRED`, `QUOTA_DAY`(⑥b는 `reason='cost_cap'`), `QUOTA_MONTH`, `JOB_IN_PROGRESS(job_id)` |
+| `cancel_generation_job(p_user_id, p_job_id)` | | ① 사용자 잠금(위와 같은 키) ② 소유·비종료 상태 확인 ③ `status='canceled'`, `finished_at=now()` ④ 6.2.3 취소 처리 규칙으로 차감/환불(`refundable_cancels_today < 2`일 때만 refund) ⑤ `pg_notify('job_cancel', job_id)` (T-20) | `NOT_FOUND`, `JOB_ALREADY_FINISHED` |
 | `claim_generation_job(p_job_id, p_worker_id)` | | 전역 슬롯 확인 → `queued→running`, `started_at`, `heartbeat_at` | `NO_SLOT`(재투입), `NOT_QUEUED`(무시) |
 | `finish_generation_job(p_job_id)` | | `n_real`·`n_fallback`으로 종료 상태 판정(6.2.3) → `quota_ledger(refund)` 필요 시 INSERT → `finished_at` | — |
 | `attach_anon(p_user_id, p_anon_id)` | | 6.5.3 귀속 규칙(진단 세션·공유 링크·브리프 임시본) | — |
@@ -1296,6 +1315,7 @@ ErrorBody = { error: { code: ErrorCode, message: string /* 개발자용 영문 *
 | `NOT_FOUND` | 404 | 아니오 | 없음·남의 리소스·비관리자의 관리자 경로 | — |
 | `SHARE_HIDDEN` | 410 | 아니오 | 신고·관리자로 비공개된 공유 링크(00장 10.3) | — |
 | `JOB_IN_PROGRESS` | 409 | 아니오 | 진행 중 잡 존재 | `{jobId}` |
+| `JOB_ALREADY_FINISHED` | 409 | 아니오 | 종료 상태 잡의 취소(T-20) | `{status}` |
 | `PROJECT_LIMIT` | 409 | 아니오 | 프로젝트 10개 | `{limit:10}` |
 | `VERSION_CONFLICT` | 409 | 재조회 후 | `baseVersionId`가 최신 아님 | `{currentVersionId}` |
 | `SEQ_CONFLICT` | 409 | 재조회 후 | 진단 응답 `seq`가 기대값과 다르고 멱등 재전송도 아님 | `{expectedSeq}` |
@@ -1309,7 +1329,7 @@ ErrorBody = { error: { code: ErrorCode, message: string /* 개발자용 영문 *
 | `EDIT_GATE_FAILED` | 422 | 아니오 | 저장 시 서버 재컴파일 후 동기 게이트 실패(R-17, 07장 TC-D-06). 편집 텍스트 슬롯의 남용 판정 실패는 `GATE_FAILED:G-13`(S-24) | `{failed: ['GATE_FAILED:G-01', …], violations:[{gateId, nodeId?, slotId?, value?, required?, reason?: 'high_risk'|'phishing_term'|'prohibited_category'}]}` |
 | `DRAFT_EXPIRED` | 410 | 아니오 | 24시간 지난 브리프 임시본(R-26) | — |
 | `RATE_LIMITED` | 429 | `Retry-After` | 6.10.1 빈도 한도 | `{retryAfterS}` |
-| `QUOTA_DAY` / `QUOTA_MONTH` | 429 | 리셋 후 | 00장 9.3 한도 | `{limit, resetAt}` |
+| `QUOTA_DAY` / `QUOTA_MONTH` | 429 | 리셋 후 | 00장 9.3 한도, 계정 일 원가 상한(T-20, `QUOTA_DAY`만) | `{limit, resetAt, reason: 'quota'\|'cost_cap'}` |
 | `GEN_BUDGET_EXCEEDED` | 503 | 리셋 후 | KS-1 | `{resetAt}` |
 | `GEN_DISABLED` | 503 | 아니오 | KS-2 | — |
 | `SHARE_DISABLED` | 503 | 아니오 | KS-3 | — |
@@ -1385,7 +1405,7 @@ ResultView = { resultId, surveyId, type: {id, nameKo, descriptionKo}, typeSecond
 | `DELETE /api/projects/:id` | user 소유 | — | `204`(Storage 객체 삭제는 `retention` 다음 실행 전 즉시 잡) | 404 |
 | `POST /api/projects/:id/generations` | consent + 헤더 `Idempotency-Key` | `{kind:'initial'|'regenerate'}` | `202 GenerationView` | 409 `JOB_IN_PROGRESS`, 429 `RATE_LIMITED`/`QUOTA_*`, 403 `INVITE_REQUIRED`, 503 `GEN_*` |
 | `GET /api/generations/:jobId` | user 소유 | `If-None-Match` | `200 GenerationView` / `304` | 404 |
-| `POST /api/generations/:jobId/cancel` | user 소유 | — | `202` | 409(종료 상태) |
+| `POST /api/generations/:jobId/cancel` | user 소유 | — | `202 {refunded}` | 409 `JOB_ALREADY_FINISHED` |
 
 ```ts
 GenerationView = { jobId, status: JobStatus, phase: JobPhase, progressPct, queuePosition: number | null,
@@ -1862,9 +1882,13 @@ async function callLlm(req) {
 | 잡 상한 | 매 LLM 호출 직전 | 예약-정산 `spent + reserved + est ≤ generation.costGuard.capUsd`(= `JOB_COST_CAP_USD` 0.30, 6.9.4) | 호출 생략(`budget_skipped`, `COST_CAP`), 확보된 후보로 진행(00장 9.2) |
 | 일 상한(KS-1) | 잡 생성 시 + 매 LLM 호출 직전 | `spend_today() + 0.30 ≤ GEN_DAILY_BUDGET_USD`(생성 시), `spend_today() + est ≤ 상한`(호출 시) | 생성 시: 503 `GEN_BUDGET_EXCEEDED`. 진행 중 잡: 00장 KS-1에 따라 **끝까지 수행** — 단 호출 시 판정이 실패하면 남은 호출 생략 후 폴백(일 상한 초과 원가 ≤ 진행 중 잡 수 × US$0.30) |
 | 월 상한(KS-1) | 잡 생성 시 | `spend_month() + 0.30 ≤ GEN_MONTHLY_BUDGET_USD` | 503 `GEN_BUDGET_EXCEEDED` |
+| 계정 일 원가(T-20) | 잡 생성 시 | `spend_today_user(u) < USER_DAILY_COST_CAP_USD`(`purpose='user_job'`, KST) | 429 `QUOTA_DAY`(`reason='cost_cap'`), A4에 `blocked=true`. 진행 중 잡은 잡 상한으로만 제한 |
+| 평가 실행(T-21) | eval CLI 시작 시 + 매 LLM 호출 직전 | `spend_eval_run() + est ≤ EVAL_RUN_BUDGET_USD` ∧ `spend_eval_month() + est ≤ EVAL_MONTHLY_BUDGET_USD`(`purpose='eval'`) | 호출 생략(`budget_skipped`, `EVAL_BUDGET_EXCEEDED`) 후 실행 중단, 리포트 `runsCompleted < 96`(07장 G2 → release:check fail) |
+| 레퍼런스 태깅 | ingest CLI 호출 직전 | `spend_reftag_month() + est ≤ REF_TAGGING_BUDGET_USD`(`purpose='ref_tag'`) | 호출 생략, CLI 종료 코드 1(05장 D-05C) |
 | 수동 중단(KS-2) | 잡 생성 시 + 워커 claim 시 | `GEN_ENABLED` | 신규 503 `GEN_DISABLED`, `queued` 잡은 `failed(GEN_DISABLED)` + 한도 환불, `running` 잡은 완료 |
 | 공급자 콘솔 | 상시 | 공급자 대시보드 월 지출 상한·50/80/100% 메일 | 사람이 출시 전 설정(09장 9.9.3) |
 
+- **집계 분리(T-21)**: `spend_today()`·`spend_month()`(KS-1)는 `purpose='user_job'` 행만 센다. `eval`·`ref_tag`는 위 두 행의 키로 따로 센다. 그래서 평가 실행은 사용자 생성 예산 잔액을 바꾸지 않는다. eval CLI는 `GEN_*` 키를 읽지 않는다.
 - `spend_today()`는 `llm_calls`를 집계하고 결과를 프로세스 메모리에 최대 30초 캐시한다(00장 "캐시 허용 지연 ≤ 60초").
 - 원가 원천은 `llm_calls.cost_usd`, `generation_jobs.cost_usd`는 그 합의 비정규화 사본이다(IF-02). 둘의 차이는 매일 `alerts` 잡이 검사(> US$0.001이면 경고).
 
@@ -1883,7 +1907,12 @@ async function callLlm(req) {
 | `BETA_INVITE_ONLY` | boolean | true(비공개 베타) | web |
 | `GEN_MAX_CONCURRENT_JOBS` | int, 1~20 | 5(R-16) | worker |
 | `JUDGE_VISION_MODE` | `off`\|`log`(MVP). `rank`는 Phase 2 편입 조건 충족 후 enum에 추가 | `log`(R-12) | worker |
-| `REF_TAGGING_BUDGET_USD` | number, 0~100 | 10(05장 D-05C) | ingest CLI만(생성 예산과 별도 집계, `llm_calls.role='ref_tagger'`) |
+| `REF_TAGGING_BUDGET_USD` | number, 0~100 | 10(05장 D-05C) | ingest CLI만(생성 예산과 별도 집계, `llm_calls.purpose='ref_tag'`) |
+| `USER_DAILY_COST_CAP_USD` | number, 0.30~10 | 1.5(= 한도 3회 × 0.30 + 여유 0.6, T-20) | web(`create_generation_job` ⑥b) |
+| `EVAL_RUN_BUDGET_USD` | number, 0~200 | 30(골든 96잡 × 평균 상한 0.25 = 24 + 여유, T-21) | eval CLI(`eval:golden`, `eval:blind`) |
+| `EVAL_MONTHLY_BUDGET_USD` | number, 0~500 | 60(T-21) | eval CLI |
+
+- 환경별 값: staging의 `GEN_DAILY_BUDGET_USD=2`는 **사용자 경로 스모크 전용**(`e2e:smoke`)이다. 골든 live 실행은 staging 키로 돌되 `EVAL_*` 키로만 집계한다(6.14 환경 표 staging 행, T-21). 월 총 LLM 지출 상한 = `GEN_MONTHLY_BUDGET_USD` 150 + `EVAL_MONTHLY_BUDGET_USD` 60 = **US$210**(00장 §9.4 "비사용자 LLM 지출" 표). `REF_TAGGING_BUDGET_USD`는 분기당 실행이며 월 평가 상한 안에서 운영한다(00장 §9.4). 증액은 사람 결정(HUMAN_TODO, S-15·T-21).
 
 ### 6.10.5 수용 기준(남용·비용)
 
@@ -1891,7 +1920,8 @@ async function callLlm(req) {
 - **AC-06-20**: `feature_flags.GEN_ENABLED=false` 변경 후 60초 안에 신규 생성 503 `GEN_DISABLED`, 기존 `queued` 잡 `failed` + `quota_ledger` refund 1행.
 - **AC-06-21**: MockProvider `cost_spike` 시나리오에서 `generation_jobs.cost_usd ≤ 0.30`, `budget_skipped` 행 ≥ 1, 잡 종료 상태 ∈ {partial, fallback}.
 - **AC-06-22**: `processors.yaml`에서 `approved:false`인 공급자를 primary로 둔 models.yaml로 live 모드 기동 → 종료 코드 1, 외부 요청 0.
-- **AC-06-23**: `GEN_DAILY_BUDGET_USD=0.5`에서 00장 AC-00-17 시나리오 통과, 당일 `sum(llm_calls.cost_usd) ≤ 0.5 + 0.30 × (상한 도달 시점의 running 잡 수)`.
+- **AC-06-23**: `GEN_DAILY_BUDGET_USD=0.5`에서 00장 AC-00-17 시나리오 통과, 당일 `sum(llm_calls.cost_usd where purpose='user_job') ≤ 0.5 + 0.30 × (상한 도달 시점의 running 잡 수)`.
+- **AC-06-64**(T-21): ① `eval:golden --mode mock` 시뮬레이션(Mock 호출 원가를 잡당 US$0.25가 되게 둔 픽스처, 96잡)이 `EVAL_RUN_BUDGET_USD=30`에서 끝까지 돌고 리포트 `runsCompleted = 96`이며, 시작 전후 `spend_today()`(user_job)가 같다. ② 같은 픽스처를 `EVAL_RUN_BUDGET_USD=10`으로 돌리면 실행이 중단되고 리포트 `runsCompleted < 96`, `abortReason='EVAL_BUDGET_EXCEEDED'`이며 `release:check`의 G2 단계가 fail(종료 코드 1)이다. ③ `purpose='eval'` 행은 모두 `job_id`가 null이어도 CHECK를 통과하고, `purpose='user_job' ∧ job_id null ∧ owner_id not null`은 CHECK 위반이다. ④ 06·07·09장의 `EVAL_RUN_BUDGET_USD`·`EVAL_MONTHLY_BUDGET_USD` 기본값이 같다(`qa:trace` 문서 대조).
 
 ## 6.11 보안
 
@@ -2101,7 +2131,7 @@ KPI(WAM·퍼널)는 →00장 8.5 쿼리를 뷰로 만든다.
 | 웹 가용성 | 월 99.5%(`/api/health` 성공률) | 업타임 서비스 |
 | 생성 성공(노출 ≥ 1) | 잡의 ≥ 99%(failed ≤ 1%) | v_gen_hourly |
 | 생성 지연 | 첫 카드 노출 p50 ≤ 45s, 3번째 노출 p50 ≤ 60s, p95 ≤ 90s(R-25) | v_gen_hourly |
-| 진단 API | 서버 처리 p95 ≤ 200ms, 오류율 < 0.1% | 로그 `durationMs` |
+| 진단 API | 서버 처리 p95 ≤ `perf.surveyServerP95Ms`(200ms, 로그 `durationMs`), API 관측 p95 ≤ `perf.surveyApiP95Ms`(300ms), 오류율 < 0.1% | 로그 `durationMs` |
 | 원가 | 잡 최대 ≤ US$0.30, 평균 ≤ US$0.25 | v_llm_daily |
 
 **AC-06-29**: 로그·Sentry 샘플(통합 테스트에서 모든 로그 라인 수집)에서 이메일·전화·IPv4 패턴 0건. **AC-06-30**: 임의의 생성 잡 1건을 `requestId`로 web 로그 → `generation_jobs` → worker 로그 → `llm_calls`까지 조회할 수 있다(통합 테스트). **AC-06-31**: 시계를 조작해 워커 하트비트를 3분 멈추면 A5 웹훅이 1회 호출되고 1시간 안에 재호출되지 않는다.
@@ -2113,7 +2143,7 @@ KPI(WAM·퍼널)는 →00장 8.5 쿼리를 뷰로 만든다.
 | 환경 | web | worker | DB·Auth·Storage | LLM | 용도 |
 |---|---|---|---|---|---|
 | local | `next dev`(:3000) | `STACK_PROFILE`에 따름(아래) | `STACK_PROFILE`에 따름(아래) | `mock`(기본) | 개발·CI·에이전트 자율 구현 |
-| staging | Vercel Preview(브랜치 `main` 자동) | Fly 앱 `tastefit-worker-stg`(머신 1, `shared-cpu-2x`) | Supabase 별도 프로젝트(서울) | `live`, `GEN_DAILY_BUDGET_USD=2` | 출시 전 스모크·골든 live 실행 |
+| staging | Vercel Preview(브랜치 `main` 자동) | Fly 앱 `tastefit-worker-stg`(머신 1, `shared-cpu-2x`) | Supabase 별도 프로젝트(서울) | `live`, `GEN_DAILY_BUDGET_USD=2`(사용자 경로 스모크 전용), `EVAL_RUN_BUDGET_USD=30`·`EVAL_MONTHLY_BUDGET_USD=60`(T-21) | 출시 전 스모크(`GEN_*` 집계)·골든 live 실행(`purpose='eval'`, `EVAL_*` 집계) |
 | prod | Vercel Production(`icn1` 함수 리전) | Fly 앱 `tastefit-worker`(`nrt`) | Supabase 운영 프로젝트(`ap-northeast-2`) | `live` | 운영 |
 
 리전 가용성·가격은 출시 전 원문 확인(D-0607). 원격 배포·원격 마이그레이션은 **사람이 수동 트리거하는 CI 잡**으로만 실행한다(09장 D-0912).
@@ -2267,7 +2297,7 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 | 0 컴플라이언스 | 새 공급자면 L1~L5 확인 → `legal/processors.yaml` 등록(`effective_from` = 공지일 + 7일) → 처리방침 갱신·공지. 기존 승인 공급자의 다른 모델이면 생략 | processors.yaml PR | 진행 불가 |
 | 1 후보 등록 | 브랜치에서 models.yaml 한 역할만 변경(07장 7.2.8 ④), 프롬프트 변경이면 새 `@vN` 파일 + prompts.lock 갱신 | PR 초안 | — |
 | 2 Mock 회귀 | `pnpm verify` 녹색(스키마·파이프라인이 새 설정에서 동작) | CI | 수정 |
-| 3 골든 실행 | `pnpm eval:golden --mode live`(staging 키, 평가 전용 예산) | `eval/reports/<id>.json`(07장 7.2.7) | 거절 |
+| 3 골든 실행 | `pnpm eval:golden --mode live`(staging 키, `EVAL_RUN_BUDGET_USD`·`EVAL_MONTHLY_BUDGET_USD` 집계, 6.10.3) | `eval/reports/<id>.json`(07장 7.2.7) | 거절 |
 | 4 비교 | `pnpm eval:compare --baseline <운영 리포트> --candidate <id>` → 07장 7.2.8 ①~③ 자동 판정, 블라인드 쌍비교 세트 생성(ADM-09) | 비교 리포트 + `eval_sets` 행 | 거절 |
 | 5 블라인드 평가 | 07장 7.8.4 P-3 실행, 결과 `eval_judgments` → `eval:compare --finalize`가 Wilson 하한 판정 | 최종 판정 `PROMOTE`/`REJECT` + 사유 목록 | 거절 |
 | 6 승격 | 사람이 models.yaml `revision+1` 커밋(리포트 ID를 프롬프트 프런트매터 `approved_report`에 기록) → deploy-staging → deploy-prod | 커밋·배포 | — |
@@ -2347,7 +2377,7 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 | D-0605 | 미리보기 = 다른 등록 도메인 `sandbox=""`, 편집 미리보기는 preview 호스트 재컴파일 | D-43 | 01, 04, 07, 08 | → R-17로 대체(편집은 `srcdoc` + `slotRects`, 6.11.4 b) |
 | D-0606 | 202 + 폴링(2s→5s), 점진 노출은 폴링 `mockups[]` 증가, SSE Phase 2 | 1인 운영 | 01, 04 | → R-14로 대체 |
 | D-0607 | 리전 Supabase `ap-northeast-2`, Vercel `icn1`, Fly `nrt`, 환경 3단, staging 일 예산 US$2(출시 전 원문 확인) | 지연·국외 이전 최소화 | 08, 09 | 유효 |
-| D-0608 | 진단 다음 문항은 클라이언트 낙관 계산 + 서버 권위, 서버 p95 ≤ 200ms | 07장 150ms·서버 권위 동시 충족 | 02, 07, 09 | 유효 |
+| D-0608 | 진단 다음 문항은 클라이언트 낙관 계산 + 서버 권위, 서버 처리 p95 ≤ `perf.surveyServerP95Ms`(200), API 관측 p95 ≤ `perf.surveyApiP95Ms`(300), 결과 서버 처리 ≤ `perf.resultServerMs`(200)(T-08 키화) | 07장 150ms·서버 권위 동시 충족 | 02, 07, 09 | 유효 |
 | D-0609 | 모델 승격 블라인드 40쌍·Wilson 하한 ≥ 0.35 | 30쌍·0.40은 동등 모델 항상 거절 | 07 | → R-24로 대체(채택) |
 | D-0610 | `anon_id` 쿠키 30일, 진단 활동 시 연장, 로그아웃 시 재발급 | 08장 익명 보관 30일 | 01, 02, 08 | 유효(무활동 `abandoned` 기준은 02장 30분을 따름) |
 | D-0611 | 브라우저는 Supabase DB·Storage 직접 호출 금지(인증만) | 계약 일원화 | 01, 09 | → T-11로 대체(인증도 서버 `AuthPort` 경유, 브라우저 `supabase-js` 0) |
