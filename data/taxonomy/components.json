@@ -1,0 +1,363 @@
+{
+  "bundle": "components",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "C01",
+      "name": "Button",
+      "variants": [
+        "primary",
+        "secondary",
+        "ghost"
+      ],
+      "sizeKo": "sm 36 / md 44 / lg 52 (높이 px), 좌우 패딩 12 / 20 / 24",
+      "rulesKo": "페이지당 primary ≤ 2개 노출(뷰포트당 ≤ 1). 아이콘 위치 none / trailing(arrow-right만). 라벨 2~10자. 모양 = 3.1.7",
+      "states": {
+        "default": true,
+        "hover": true,
+        "active": true,
+        "focus-visible": true,
+        "disabled": true
+      },
+      "textRoles": [
+        "button.label"
+      ]
+    },
+    {
+      "id": "C02",
+      "name": "TextLink",
+      "variants": [
+        "inline",
+        "standalone"
+      ],
+      "sizeKo": "—",
+      "rulesKo": "밑줄 기본(inline), hover 시 밑줄 두께 1→2px",
+      "states": {
+        "default": true,
+        "hover": true,
+        "active": true,
+        "focus-visible": true
+      },
+      "textRoles": [
+        "body"
+      ]
+    },
+    {
+      "id": "C03",
+      "name": "Tag",
+      "variants": [
+        "outline",
+        "subtle"
+      ],
+      "sizeKo": "sm 24 / md 28",
+      "rulesKo": "\"New\", \"신규\", \"출시\", \"✨\" 단독 금지(AIL-04)",
+      "states": {
+        "default": true
+      },
+      "textRoles": [
+        "tag.label"
+      ]
+    },
+    {
+      "id": "C04",
+      "name": "Input",
+      "variants": [
+        "default"
+      ],
+      "sizeKo": "md 44 / lg 52",
+      "rulesKo": "글자 크기 ≥ 16px, 라벨 필수(placeholder 대체 금지)",
+      "states": {
+        "default": true,
+        "hover": true,
+        "focus-visible": true,
+        "disabled": true,
+        "error": true
+      },
+      "textRoles": [
+        "form.label",
+        "form.input",
+        "form.help",
+        "form.error"
+      ]
+    },
+    {
+      "id": "C05",
+      "name": "Textarea",
+      "variants": [
+        "default"
+      ],
+      "sizeKo": "4~6행",
+      "rulesKo": "〃",
+      "states": {
+        "default": true,
+        "hover": true,
+        "focus-visible": true,
+        "disabled": true,
+        "error": true
+      },
+      "textRoles": [
+        "form.label",
+        "form.input",
+        "form.help",
+        "form.error"
+      ]
+    },
+    {
+      "id": "C06",
+      "name": "Select",
+      "variants": [
+        "native 래핑"
+      ],
+      "sizeKo": "md 44",
+      "rulesKo": "화살표 = 아이콘 세트 caret-down",
+      "states": {
+        "default": true,
+        "hover": true,
+        "focus-visible": true,
+        "disabled": true,
+        "error": true
+      },
+      "textRoles": [
+        "form.label",
+        "form.input",
+        "form.help",
+        "form.error"
+      ]
+    },
+    {
+      "id": "C07",
+      "name": "Checkbox",
+      "variants": [
+        "default"
+      ],
+      "sizeKo": "20",
+      "rulesKo": "개인정보 수집 동의 1개용",
+      "states": {
+        "default": true,
+        "hover": true,
+        "focus-visible": true,
+        "disabled": true,
+        "error": true,
+        "checked/selected": true
+      },
+      "textRoles": [
+        "form.label",
+        "form.error"
+      ]
+    },
+    {
+      "id": "C08",
+      "name": "NavBar",
+      "variants": [
+        "split",
+        "center",
+        "minimal"
+      ],
+      "sizeKo": "높이 64(모바일 56)",
+      "rulesKo": "768 미만 모두 drawer. 링크 ≤ 5(04장 nav 자동 생성). sticky = 프리셋 T2·T7만, 스크롤 시 bg 불투명 + level 3",
+      "states": {
+        "default": true,
+        "hover": "링크",
+        "focus-visible": true,
+        "checked/selected": "현재 섹션"
+      },
+      "textRoles": [
+        "nav.wordmark",
+        "nav.link",
+        "button.label"
+      ]
+    },
+    {
+      "id": "C09",
+      "name": "Drawer",
+      "variants": [
+        "right"
+      ],
+      "sizeKo": "폭 min(360, 100vw)",
+      "rulesKo": "열림 시 focus trap, Esc 닫기, 배경 overlay α 0.4. JS 없는 정적 내보내기에서는 `<details>` 기반",
+      "states": {
+        "focus-visible": true,
+        "open": true
+      },
+      "textRoles": [
+        "nav.link",
+        "button.label"
+      ]
+    },
+    {
+      "id": "C10",
+      "name": "Footer",
+      "variants": [
+        "minimal",
+        "columns",
+        "big-type"
+      ],
+      "sizeKo": "—",
+      "rulesKo": "사업자 정보 슬롯(상호·대표자·사업자등록번호·주소·연락처, 미입력 시 04장 CP-10 가상값)",
+      "states": {
+        "default": true,
+        "hover": "링크만",
+        "focus-visible": "링크만"
+      },
+      "textRoles": [
+        "footer.wordmark",
+        "footer.link",
+        "footer.legal"
+      ]
+    },
+    {
+      "id": "C11",
+      "name": "Card",
+      "variants": [
+        "plain",
+        "media-top",
+        "media-left"
+      ],
+      "sizeKo": "—",
+      "rulesKo": "링크 카드만 hover 변화 1종(3.5.3)",
+      "states": {
+        "default": true,
+        "hover": true,
+        "focus-visible": true
+      },
+      "textRoles": [
+        "card.title",
+        "body"
+      ]
+    },
+    {
+      "id": "C12",
+      "name": "MediaFrame",
+      "variants": [
+        "1:1",
+        "4:5",
+        "3:2",
+        "16:9",
+        "21:9"
+      ],
+      "sizeKo": "—",
+      "rulesKo": "`object-fit: cover` + focal point. 이미지 없으면 3.10.5 플레이스홀더",
+      "states": {
+        "default": true,
+        "placeholder": true
+      },
+      "textRoles": [
+        "caption"
+      ]
+    },
+    {
+      "id": "C13",
+      "name": "Avatar",
+      "variants": [
+        "initials"
+      ],
+      "sizeKo": "sm 32 / md 48",
+      "rulesKo": "사진 아바타 MVP 제외(얼굴 금지, 08장). 이니셜 = 성 1자 + \"○○\"의 첫 글자",
+      "states": {
+        "default": true,
+        "hover": "링크만",
+        "focus-visible": "링크만"
+      },
+      "textRoles": [
+        "avatar.initials"
+      ]
+    },
+    {
+      "id": "C14",
+      "name": "PriceTag",
+      "variants": [
+        "default",
+        "per-period"
+      ],
+      "sizeKo": "—",
+      "rulesKo": "형식 `12,000원` / `월 9,900원`(천 단위 쉼표, `tabular-nums`). \"시가\" 등 텍스트 허용(≤ 6자)",
+      "states": {
+        "default": true,
+        "hover": "링크만",
+        "focus-visible": "링크만"
+      },
+      "textRoles": [
+        "pricing.price"
+      ]
+    },
+    {
+      "id": "C15",
+      "name": "Stat",
+      "variants": [
+        "value+label",
+        "value+label+note"
+      ],
+      "sizeKo": "—",
+      "rulesKo": "값은 브랜드 입력 숫자만(04장 CP-03). `tabular-nums`",
+      "states": {
+        "default": true,
+        "hover": "링크만",
+        "focus-visible": "링크만"
+      },
+      "textRoles": [
+        "stat.value",
+        "stat.label",
+        "caption"
+      ]
+    },
+    {
+      "id": "C16",
+      "name": "Accordion",
+      "variants": [
+        "bordered",
+        "plain"
+      ],
+      "sizeKo": "—",
+      "rulesKo": "`<details><summary>`, 키보드 Enter/Space, 아이콘 회전 fast",
+      "states": {
+        "default": true,
+        "hover": true,
+        "focus-visible": true,
+        "expanded": true
+      },
+      "textRoles": [
+        "accordion.question",
+        "body"
+      ]
+    },
+    {
+      "id": "C17",
+      "name": "Divider",
+      "variants": [
+        "line",
+        "space",
+        "ornament"
+      ],
+      "sizeKo": "—",
+      "rulesKo": "",
+      "states": {
+        "default": true,
+        "hover": "링크만",
+        "focus-visible": "링크만"
+      },
+      "textRoles": []
+    },
+    {
+      "id": "C18",
+      "name": "Wordmark",
+      "variants": [
+        "text"
+      ],
+      "sizeKo": "nav `t-lead`(3.1.5a) / footer `t-3` / big-type = `t-display`(T-28)",
+      "rulesKo": "브랜드명을 `font.heading`으로 조판. 로고 업로드 MVP 제외(D-0803). 심볼 생성 금지",
+      "states": {
+        "default": true,
+        "hover": "링크만",
+        "focus-visible": "링크만"
+      },
+      "textRoles": [
+        "nav.wordmark",
+        "footer.wordmark"
+      ]
+    }
+  ]
+}

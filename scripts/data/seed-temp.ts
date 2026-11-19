@@ -878,6 +878,75 @@ function genHarmony(ctx: Ctx): Out[] {
   ];
 }
 
+// ---------- C03 components.json (03장 3.5.1 목록 + 3.5.2 state 매트릭스) ----------
+/** 컴포넌트 텍스트 요소 → 3.1.5a 역할(AC-03-46 ①). 3.5.1 규칙 열·3.1.5a 비고에서 대응을 읽어 고정. */
+const COMPONENT_TEXT_ROLES: Record<string, string[]> = {
+  Button: ["button.label"],
+  TextLink: ["body"],
+  Tag: ["tag.label"],
+  Input: ["form.label", "form.input", "form.help", "form.error"],
+  Textarea: ["form.label", "form.input", "form.help", "form.error"],
+  Select: ["form.label", "form.input", "form.help", "form.error"],
+  Checkbox: ["form.label", "form.error"],
+  NavBar: ["nav.wordmark", "nav.link", "button.label"],
+  Drawer: ["nav.link", "button.label"],
+  Footer: ["footer.wordmark", "footer.link", "footer.legal"],
+  Card: ["card.title", "body"],
+  MediaFrame: ["caption"],
+  Avatar: ["avatar.initials"],
+  PriceTag: ["pricing.price"],
+  Stat: ["stat.value", "stat.label", "caption"],
+  Accordion: ["accordion.question", "body"],
+  Divider: [],
+  Wordmark: ["nav.wordmark", "footer.wordmark"],
+};
+
+function genComponents(ctx: Ctx): Out[] {
+  const md = chapter(ctx.root, "03_design_system.md");
+  const list = table(section(md, "### 3.5.1")).filter((r) => /^C\d\d$/.test(r[0] ?? ""));
+  const matSec = section(md, "### 3.5.2");
+  const head = (matSec.split("\n").find((l) => l.startsWith("| 컴포넌트")) ?? "")
+    .split("|")
+    .slice(2, -1)
+    .map((c) => c.trim());
+  const mat = table(matSec);
+  const statesFor = (name: string): Obj => {
+    const row =
+      mat.find((r) =>
+        (r[0] ?? "")
+          .split(/[(/]/)
+          .map((x) => x.trim())
+          .includes(name),
+      ) ?? mat.find((r) => (r[0] ?? "").startsWith("기타") && (r[0] ?? "").includes(name));
+    if (!row) throw new Error(`3.5.2에 ${name} 행 없음`);
+    const out: Obj = {};
+    head.forEach((h, i) => {
+      const c = row[i + 1] ?? "—";
+      if (c.includes("●") && !c.includes("placeholder"))
+        out[h] = c === "●" ? true : c.replace("●", "").trim();
+    });
+    if ((row[head.length] ?? "").includes("placeholder 상태 ●")) out.placeholder = true;
+    return out;
+  };
+  const items: Obj[] = list.map((r) => {
+    const name = r[1] ?? "";
+    return {
+      id: r[0] ?? "",
+      name,
+      variants: (r[2] ?? "")
+        .split(" / ")
+        .map((v) => v.replace(/\(.*\)/, "").trim())
+        .filter((v) => v.length > 0),
+      sizeKo: r[3] ?? "",
+      rulesKo: r[4] ?? "",
+      states: statesFor(name),
+      textRoles: COMPONENT_TEXT_ROLES[name] ?? [],
+    };
+  });
+  if (items.length !== 18) throw new Error(`3.5.1 컴포넌트 ${items.length} ≠ 18`);
+  return [{ path: "data/taxonomy/components.json", content: bundle(ctx, "components", items) }];
+}
+
 /** 생성기 목록(의존 순서). 나머지 묶음은 M1-04b 이후 단위에서 추가한다. */
 export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genAxes,
@@ -891,6 +960,7 @@ export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genIcons,
   genSignatures,
   genHarmony,
+  genComponents,
 ];
 
 function isHuman(abs: string): boolean {
