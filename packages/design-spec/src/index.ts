@@ -5,6 +5,7 @@ export * from "./stubs.js";
 export * from "./calibrate.js";
 export * from "./snap.js";
 export * from "./brand.js";
+export * from "./variants.js";
 export {
   TYPE_STEPS,
   TYPE_SPEC,

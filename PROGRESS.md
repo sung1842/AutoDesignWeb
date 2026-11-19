@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T22:10Z, since: 2026-11-19T22:20Z}
+- lock: {owner: 2026-11-19T22:10Z, since: 2026-11-19T22:27Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-20 12:10
-- 마지막 갱신: 2026-11-20 07:20 KST (예약 세션: M2-03c applyBrandColor 완료, 다음 M2-03d compileSpecs)
+- 마지막 갱신: 2026-11-20 07:27 KST (예약 세션: M2-03c·03d1 완료, 다음 M2-03d2 enforceVariantL2Diff·pickSignature)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -112,7 +112,7 @@
 - M2 계획(9.4.4, AC: 03-02~11·15~38·41·42·44~46, 04-03~11·17·18·18a·30, 06-24~26·28. 읽을 장은 CLAUDE.md 구현 규칙 3절):
   - [x] 01 M2 수용 테스트(acMilestones M2 + 9.4.4 ①~⑧) `test(acc)` 커밋 → qa:trace --audit → 자체 잠금, traceability M2 행: [x] a 토큰·택소노미·시그니처(03-02~11·44, tokens.test, ASM-023) [x] b 04장 명세서·보정·변형·트리(04-03~10·30, spec.test, ASM-024·BLK-007; 04-11은 e로) [x] c 컴포넌트·블록·서체·조판·텍스트 역할(03-15~27·42·45·46, blocks.test, ASM-025·BLK-008) [x] d 아이콘·이미지·반응형·다크·브랜드(03-28~37·41, assets.test, ASM-026) [x] e 컴파일·렌더·미리보기(render.test, ASM-027, AC-03-38 tokens.test 추가, traceability M2 56행; 04-11·17·18·18a, 04-08 렌더 D, 03-44 accent 렌더, 06-24~26·28, ①~⑧) [x] f qa:trace --audit 리터럴 0·단일 test(acc) eded1cd(AD-031)·자체 잠금
   - [x] 02 design-spec a: [x] a1 predictL1(AC-03-07 8/8)·calibrate 1·2단계(AC-04-05 31/31, ASM-028) [x] a2 mapL1toL2ForPurpose·snapToFeasible(F·J, snap.test 4/4, ASM-029)
-  - [ ] 03 design-spec b: [x] a signatureEligible(AC-03-08 12/12)·letterSpacingEm(단위 8/8) [x] b0 validateTokenSet(최소 JSON Schema 검증기, ASM-030) [x] b1 deriveTokens·expectedSize(AC-03-02~04·44 8/8, ASM-031; expectedSize 브라우저 대조는 M2-09) [x] b2 exportTokens(AC-03-05 ① 녹색, CSS 리터럴 ②③은 renderer M2-05) [x] c applyBrandColor(3.13, brand.test 4/4·192건 대비 통과, ASM-032) [ ] d compileSpecs(4.2.1·4.4 변형·거리)
+  - [ ] 03 design-spec b: [x] a signatureEligible(AC-03-08 12/12)·letterSpacingEm(단위 8/8) [x] b0 validateTokenSet(최소 JSON Schema 검증기, ASM-030) [x] b1 deriveTokens·expectedSize(AC-03-02~04·44 8/8, ASM-031; expectedSize 브라우저 대조는 M2-09) [x] b2 exportTokens(AC-03-05 ① 녹색, CSS 리터럴 ②③은 renderer M2-05) [x] c applyBrandColor(3.13, brand.test 4/4·192건 대비 통과, ASM-032) [ ] d compileSpecs: [x] d1 variantTargets(4.4 α·거리 강제, variants.test 2/2, ASM-033) [ ] d2 enforceVariantL2Diff(4.4 L2 7키 ≥3)·pickSignature(4.14) [ ] d3 layoutConstraints·copyTone(4.6.1)·decor·spec_id 조립 [ ] d4 staticLint(S) 연결·spec.test AC-04-03·04·06·08·30 확인
   - [ ] 04 layout-schema: PageSchema zod·블록 슬롯·폴백 + JSON Schema 정적 검사(⑥)
   - [ ] 05 renderer a: CSS Modules+CSS 변수, renderToStaticMarkup, 토큰→변수, 블록 일부
   - [ ] 06 renderer b: 나머지 블록·variant 전부(blocks.json 20블록·53 variant)
@@ -131,6 +131,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-20 07:27 | M2-03d1 variantTargets(t_TRUE·t_FIT·t_BAL, D≥0.50 강제), ASM-033 → 다음: 03d2
 - 2026-11-20 07:20 | M2-03c applyBrandColor(primary→accent→tint→ignored, 무채 반전)·hexToOklch, ASM-032 → 다음: 03d
 - 2026-11-20 04:32 | M2-03b2 exportTokens(tokens.json 별칭·css :root 1블록·@theme), 잠금 해제 → 다음: 03c 브랜드 색
 - 2026-11-20 04:29 | M2-03b1 deriveTokens(AC-03-02~04·44 녹색)·expectedSize, palettes null 역할 생략(ASM-031) → 다음: 03b2
@@ -145,4 +146,3 @@
 - 2026-11-20 03:21 | M2-01c blocks.test(AC-03-15~27·42·45·46)·ASM-025·BLK-008(axe) → 다음: 01d 아이콘·이미지·반응형·브랜드
 - 2026-11-20 03:18 | M2-01b spec.test(AC-04-03~10·30)·ASM-024·BLK-007(감사 리터럴 겹침) → 다음: 01c 블록·서체
 - 2026-11-20 03:12 | M2-01a tokens.test(AC-03-02~11·44)·ASM-023 API 계약 → 다음: 01b 04장 명세서
-- 2026-11-20 02:54 | M2 계획 14단위 작성 → 다음: M2-01 수용 테스트

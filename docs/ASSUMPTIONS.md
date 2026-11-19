@@ -228,3 +228,10 @@
 - 선택: ① 입력은 1색(01장 R-21), 두 번째 색 규칙(3.13.3 첫 줄)은 강등된 색에만 적용 ② L 탐색은 "대비가 커지는 방향" 대신 가까운 순(0, ±0.01 … ±0.25)으로 양방향, 이어서 C −0.01×≤15마다 다시 L 탐색. 상한이 있어 반드시 끝난다(반복 수는 사양 74보다 많지만 결과는 가장 가까운 해) ③ on-primary 후보 = 팔레트 값과 반대 극(L ≥ 0.5면 L 0.145 무채, 아니면 흰색), 두 후보 중 시작점에서 덜 움직인 해 ④ 판정 대상은 on 대 primary·hover·active ≥ 본문, primary 대 bg ≥ 대형(3.1.3 하드) ⑤ hover/active는 브랜드 primary에서 3.1.3 공식으로 다시 파생(팔레트 방향 무시) ⑥ accent는 hue 차가 3.14.1 범위일 때만, C ≤ 팔레트 primary C × 1.3, 대 bg·surface ≥ 대형, on-accent는 후보 중 대비 최대(쓰임 금지는 컴파일러 몫) ⑦ 틴트 = surface의 C·h만 교체(C ≤ 0.035), fg·fg-muted 대 surface ≥ 본문·focus ≥ 대형일 때만 ⑧ 무채 반전 적용은 notice `used_as_tint`·role `tint`·reason `brand_neutral_inverse`, 무시는 `ignored`·`brand_neutral_ignored` ⑨ 형식 오류는 예외 대신 `ignored`·`brand_invalid_format` ⑩ 반환에 `overrides`(색 역할 → 값)·`record`(04장 brand_color) 추가, deriveTokens가 overrides를 팔레트 위에 얹는다(source `brand`)
 - 영향 범위: packages/design-spec/src/brand.ts·tokens.ts·stubs.ts, packages/taxonomy/src/color.ts(hexToOklch·deltaEOk)
 - 되돌리기 비용: 낮음
+
+## ASM-033 · M2 · gap · 2026-11-19T22:25Z
+- 질문: 04장 4.4 최소 거리 강제의 세부(반대 방향도 미달일 때, v_bal 기록값, moved_axes 사유)
+- 근거 탐색: 04장 4.3·4.4, thresholds generation.variant.targetDistTf, calibrate.ts(ASM-028)
+- 선택: ① α_TRUE = 0, α_FIT = min(0.8, α_p + 0.4)를 사양 상수로 둔다(`config/calibration.json` 부재, ASM-028 ⑤와 같음) ② e_p = PURPOSE_CALIB.emphasis ③ 정방향·반대 방향 모두 미달이면 D가 더 큰 쪽(같으면 정방향), distance_enforced = 강제 시도 여부(세 변형 모두 같은 값) ④ v_bal trace = v_fit trace에 alpha = α_FIT/2(소수 3자리)·v2 = t_BAL ⑤ 강제로 값이 바뀐 축은 moved_axes 사유 `distance` ⑥ target_vector는 강제 후 소수 3자리 반올림(범위 경계가 소수 1자리라 범위를 벗어나지 않음)
+- 영향 범위: packages/design-spec/src/variants.ts
+- 되돌리기 비용: 낮음

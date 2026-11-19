@@ -152,3 +152,4 @@
 - 2026-11-20 02:29 | M1-09 db:types(kysely-codegen)·types.gen.ts 51테이블, ⑧ 녹색, guard deps ok → 다음: M1-10 schema-parity
 - 2026-11-20 02:32 | M1-10 db:schema-parity 차이 0·db:grants-snapshot 일치, BLK-006 → 다음: M1-11 verify:m1·m1-done
 - 2026-11-20 02:53 | M1 완료: verify:m1 pass_blocked(BLK-001~006), m1-done → 다음: M2 계획(09장 9.4.4)
+- 2026-11-20 02:54 | M2 계획 14단위 작성 → 다음: M2-01 수용 테스트
