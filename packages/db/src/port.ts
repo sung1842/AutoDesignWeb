@@ -1,4 +1,10 @@
-// DbPort(06장 R-5) 자리. 실제 구현은 M1-07(RLS·DbPort). 지금은 M1 수용 테스트 수집용 계약만 둔다(ASM-008).
+// DbPort(06장 6.1.2 R-5, 6.3.5): 앱 쿼리는 withUser·withAnon·withService 트랜잭션 안에서만 실행한다.
+//   withUser   → SET LOCAL ROLE authenticated + request.jwt.claims {sub, role, aal}
+//   withAnon   → SET LOCAL ROLE anon + claims {role: anon}
+//   withService→ SET LOCAL ROLE service_role (BYPASSRLS)
+// native·supabase 공통으로 접속 사용자(tastefit_app 등)는 세 역할의 멤버여야 한다(shim, 6.13.1).
+import pg from "pg";
+
 export type Row = Record<string, unknown>;
 export interface QueryResult {
   rows: Row[];
@@ -16,16 +22,56 @@ export interface DbPort {
   close(): Promise<void>;
 }
 
-const todo = (what: string): Error => new Error(`미구현: ${what} (M1-07)`);
+const clients = new WeakMap<Tx, pg.PoolClient>();
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+type Role = "authenticated" | "anon" | "service_role";
 
 export function createDbPort(connectionString: string): DbPort {
-  void connectionString;
-  throw todo("createDbPort");
+  const pool = new pg.Pool({ connectionString, max: 5 });
+
+  async function run<T>(role: Role, claims: Row, fn: (tx: Tx) => Promise<T>): Promise<T> {
+    const client = await pool.connect();
+    const tx = Object.freeze({}) as Tx;
+    clients.set(tx, client);
+    try {
+      await client.query("begin");
+      await client.query(`set local role ${role}`);
+      await client.query("select set_config('request.jwt.claims', $1, true)", [
+        JSON.stringify(claims),
+      ]);
+      const out = await fn(tx);
+      await client.query("commit");
+      return out;
+    } catch (e) {
+      await client.query("rollback").catch(() => undefined);
+      throw e;
+    } finally {
+      clients.delete(tx);
+      client.release();
+    }
+  }
+
+  return {
+    withUser(uid, aal, fn) {
+      if (!UUID.test(uid)) return Promise.reject(new Error(`withUser: uid 형식 아님 ${uid}`));
+      return run("authenticated", { sub: uid, role: "authenticated", aal }, fn);
+    },
+    withAnon(fn) {
+      return run("anon", { role: "anon" }, fn);
+    },
+    withService(fn) {
+      return run("service_role", { role: "service_role" }, fn);
+    },
+    close() {
+      return pool.end();
+    },
+  };
 }
 
-export function q(tx: Tx, text: string, params: unknown[] = []): Promise<QueryResult> {
-  void tx;
-  void text;
-  void params;
-  return Promise.reject(todo("q"));
+export async function q(tx: Tx, text: string, params: unknown[] = []): Promise<QueryResult> {
+  const client = clients.get(tx);
+  if (!client) throw new Error("q: 트랜잭션 밖에서 쓸 수 없음(DbPort.with* 안에서만)");
+  const r = await client.query(text, params);
+  return { rows: r.rows as Row[], rowCount: r.rowCount ?? 0 };
 }

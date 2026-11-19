@@ -132,3 +132,4 @@
 - 2026-11-20 01:15 | M1-04a2c1 text-roles.json 33역할(기본 단계·행간·자간 분류)·icons/map.json 40개 → 다음: a2c2 signatures·harmony
 - 2026-11-20 01:16 | M1-04a2c2 signatures.json(장식 8+시그니처 12)·harmony.json(상수·H1~H12 합 100·CF 12) → 다음: a2c3
 - 2026-11-20 01:17 | M1-04a2c3a components.json 18종(variant·state 매트릭스·텍스트 역할) → 다음: a2c3b blocks
+- 2026-11-20 01:18 | M1-04a2c3b blocks.json(슬롯·덱 상한·text_cols·모바일·decor_slots), ASM-012 → 다음: a2c3c tokens/schema

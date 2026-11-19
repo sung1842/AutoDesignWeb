@@ -56,6 +56,9 @@ BEGIN
     $f$ SELECT auth.jwt() ->> 'role' $f$;
   GRANT EXECUTE ON FUNCTION auth.jwt(), auth.uid(), auth.role() TO anon, authenticated, service_role;
 
+  -- service_role은 auth 사용자 관리 가능(GoTrue admin API 대응, local AuthPort·테스트 픽스처)
+  GRANT ALL ON ALL TABLES IN SCHEMA auth TO service_role;
+
   -- Supabase 기본 권한 재현: public 객체는 세 역할에 기본 GRANT(행 접근은 RLS·마이그레이션 revoke가 좁힌다)
   GRANT USAGE ON SCHEMA public TO anon, authenticated, service_role;
   ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO anon, authenticated, service_role;

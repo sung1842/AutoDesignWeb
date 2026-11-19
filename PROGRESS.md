@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T17:08Z, since: 2026-11-19T17:23Z}
+- lock: {owner: 2026-11-19T17:08Z, since: 2026-11-19T17:26Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-20 07:08
-- 마지막 갱신: 2026-11-20 02:23 KST (예약 세션: M1-06 완료, 다음 M1-07)
+- 마지막 갱신: 2026-11-20 02:26 KST (예약 세션: M1-07 완료, 다음 M1-08)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -104,10 +104,10 @@
   - [x] 04 `seed:temp` 결정적 PRNG(provenance temp, tmp_ 접두사, 2회 바이트 동일): [x] a1 골격·B1 축·B2 유형·B4 용도(장 표 파싱) [x] a2a taxonomy·mapping [x] a2b presets 8종 [x] a2b2 palettes 32벌(OKLCH→hex·색역·대비 재검사, ASM-011) [x] a2c1 text-roles(B25)·icons [x] a2c2 signatures·harmony [x] a2c3a components [x] a2c3b blocks(20블록·53 variant, ASM-012) [x] a2c3c tokens/schema [x] a3a 폰트 26·페어링 20(code 참조, ASM-013) [x] a3b 이미지 192(무늬 SVG placeholder, ASM-014) [x] b0 taxonomy mapL1toL2(purpose=null, AC-03-09~11 단위, ASM-015) [x] b1 템플릿(B9)·카드 48(B10, mapL1toL2 오버라이드, ASM-016) [x] b2 A/B 120·승인 168(전부 rejected: 게이트 미실행) [x] b3 레퍼런스 60·골든 32 골격(muRef·answers null, T-04) [x] c1 B14 금지어 48·28·B17 법무 골격·B23 처리위탁(ASM-017) [x] c2a B20 카피·축 힌트·B21 87·B22 6×≥10·B24 62(ASM-018·019) [x] c2b B18 부트스트랩 2026-S0(mapping.initial·자리표시 분위, M3에서 재생성, ASM-020) [x] c3 B15 골격 AIL 24×2(ASM-021) → data:validate 33묶음 녹색, data.test 9/11(남은 2 = M1-05)
   - [x] 05 packages/taxonomy 로더·nearestType(2.12.1)·브리지 규칙 1~3 — data.test 11/11
   - [x] 06 마이그레이션 6+local 1(6.3.3 그대로, AD-028)·`pnpm db:reset`, 빈 DB 2회 적용 녹색(public 50)
-  - [ ] 07 RLS 정책·DbPort(withAnon) + RLS 테스트(⑦, AC-06-03b)
+  - [x] 07 RLS(0007·0006_grants·local 9001)·DbPort(pg, SET LOCAL ROLE+claims)·픽스처 — db.test RLS 12/12
   - [ ] 08 `db:seed` 멱등(⑥)
   - [ ] 09 `db:types`(allowlist 확인 후 kysely-codegen) + web·worker 컴파일(⑧)
-  - [ ] 10 `verify:schema-parity`(⑨, 06장 DDL ↔ information_schema)
+  - [ ] 10 `verify:schema-parity`(⑨, 06장 DDL ↔ information_schema) + `db:grants-snapshot`(6.3.5 권한 스냅샷)
   - [ ] 11 verify:m1 녹색 → m1-done(tags 맵)
 - M3 이월: B18 정규화기를 추출기로 재생성(9.2.4 코퍼스 200 렌더, ASM-020), B15 골격을 실제 예시로 교체 후 자체 잠금(ASM-021)
 - [x] M0 [ ] M1 [ ] M2 [ ] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
@@ -116,6 +116,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-20 02:26 | M1-07 RLS·DbPort·픽스처, shim에 auth 테이블 service_role 권한, db.test 13/17 → 다음: M1-08 db:seed
 - 2026-11-20 02:23 | M1-06 마이그레이션 0001~0006+9000 local·db:reset, AC-06-01 녹색 → 다음: M1-07 RLS·DbPort
 - 2026-11-20 02:22 | M1-05 loadTaxonomy·nearestType·checkBridgeRules(+단위 5), data.test 11/11, verify:fast pass_blocked → 다음: M1-06 마이그레이션
 - 2026-11-20 02:15 | M1-04c3 B15 골격, M1-04 완료: data:validate 33묶음 녹색, data.test 9/11 → 다음: M1-05 taxonomy 로더
@@ -130,4 +131,3 @@
 - 2026-11-20 01:22 | M1-04a3b images manifest 192+무늬 SVG(실제 sha256), 톤 기준 모순 ASM-014 → 다음: 04b 카드·A/B·승인·레퍼런스·골든
 - 2026-11-20 01:21 | M1-04a3a fonts 26·pairings 20(tmp_ id+code), validate 프리셋 페어링 code·허용 유형 검사 → 다음: a3b 이미지
 - 2026-11-20 01:19 | M1-04a2c3c tokens/schema.json(DTCG 2020-12, 12그룹·10타입). 03장 C03 8종 검증 통과 → 다음: a3 폰트
-- 2026-11-20 01:18 | M1-04a2c3b blocks.json(슬롯·덱 상한·text_cols·모바일·decor_slots), ASM-012 → 다음: a2c3c tokens/schema
