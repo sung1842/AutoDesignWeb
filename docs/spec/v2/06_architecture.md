@@ -167,7 +167,7 @@ sequenceDiagram
   W-->>C: 202 {jobId, queuePosition, pollAfterMs}
   K->>D: fetch 'generate' → claim(status=running, deadline=started+180s)
   K->>K: compileDesignSpec (→04장)
-  par 카피 1 + 후보 0 먼저, 후보 0 첫 토큰(≤3s) 뒤 후보 1~5(캐시 예열, 6.9.4 ①, T-17)
+  par 카피 1 + 후보 0 먼저, 후보 0 사건 t1(≤3s, 첫 토큰 또는 완료) 뒤 후보 1~5(캐시 예열, 6.9.4 ①, T-17·U-01)
     K->>L: layout_generate (예산 가드 통과 시)
     L-->>K: PageSchema JSON
   end
@@ -246,7 +246,7 @@ refundable_cancels_today(u) = count(quota_ledger q join generation_jobs j on q.j
 | 단계 | p50 목표 | 개별 상한 | 비고 |
 |---|---|---|---|
 | 명세 컴파일 | 0.2s | 1s | 결정론적 코드 |
-| LLM 카피 덱 1 + 레이아웃 6(카피·후보 0 먼저, 첫 토큰 뒤 후보 1~5) | 25s(예열 TTFT ≈ 1~2s 포함) | 호출당 40s(04장 4.7.1), 예열 대기 ≤ 3s | 스키마 무효 시 같은 모델로 수선 호출 1회 포함. 순서 원천 6.9.4 ① |
+| LLM 카피 덱 1 + 레이아웃 6(카피·후보 0 먼저, 사건 t1 뒤 후보 1~5, U-01) | 25s(예열 TTFT ≈ 1~2s 포함) | 호출당 40s(04장 4.7.1), 예열 대기 ≤ 3s | 스키마 무효 시 같은 모델로 수선 호출 1회 포함. 순서 원천 6.9.4 ① |
 | 렌더 + 게이트(6개, 머신당 컨텍스트 3개) | 10s | 후보당 p95 5s, 하드 15s | 뷰포트 5종(D-25), 04장 4.10.1 |
 | 점수 + 비전 심사 | 6s | 30s | `judge_vision`은 플래그 `JUDGE_VISION_MODE`·예산 의존(→04장, 07장 D-0714) |
 | 재생성(필요 시) | 0s(미발생) / 35s | 호출 40s + 렌더 5s | **시작 조건: 경과 ≤ 70s** |
@@ -958,6 +958,8 @@ create table llm_calls (                              -- 00장 IF-02, 08장 P7(P
   cache_write_tokens_in int not null default 0,      -- T-17: 프롬프트 캐시 쓰기 입력(6.9.4 비용식 cacheWrite)
   cost_usd        numeric(10,5) not null default 0,
   latency_ms      int null,
+  started_at      timestamptz not null default now(),  -- U-01: 예약 성공 후 공급자 호출 출발 시각
+  first_token_at  timestamptz null,                     -- U-01: 사건 t1(스트리밍 첫 토큰, 비스트리밍·Mock은 응답 완료). budget_skipped는 null
   status          text not null check (status in ('ok','schema_invalid','timeout','rate_limited','provider_error','budget_skipped','aborted','output_rejected','unapproved')),
   error_code      text null,
   request_hash    text not null,
@@ -1276,7 +1278,9 @@ create trigger share_links_hidden_service_only before update on share_links
 - **AC-06-04**: `is_l1` CHECK — 키가 4개이거나 `A1` 키를 쓰거나 값이 1.01인 벡터를 `survey_items.x_card`에 넣으면 INSERT가 실패한다. 데스크톱 자산 `bytes=143361`인 자극물 INSERT도 실패한다(R-07).
 - **AC-06-05**: 같은 사용자가 `queued` 잡이 있는 상태에서 두 번째 잡을 INSERT하면 `gen_one_active_per_user` 위반으로 실패한다.
 - **AC-06-06**(T-14로 개정): `admin_audit_logs` UPDATE는 service role에서도 항상 실패한다. `created_at`이 1년 이내인 행의 DELETE는 service role에서도 실패하고(직접 DELETE·`purge_audit_logs(now())` 둘 다), `created_at = now() − 400 days`로 넣은 행은 `purge_audit_logs(now() − interval '1 year')`로만 삭제된다(직접 DELETE는 실패).
-- **AC-06-07**(T-17로 개정): `generation_jobs.cost_usd`에 0.30 초과 값(예: 0.9)을 저장해도 DB 예외는 0건이고 행이 그대로 남는다. 그 잡에 대해 A11 알림 1건이 뜨고(6.12.4, 워커 정산 경로에서는 즉시, 직접 UPDATE 픽스처에서는 다음 `alerts` 실행 시) 그 잡의 이후 `reserve`는 전부 실패한다(6.9.4 ⑥ `usage_overrun`). 계정의 다음 생성은 이 행만으로 막지 않는다(계정 차단은 `USER_DAILY_COST_CAP_USD`, 6.10.3). 음수는 CHECK 위반이다. 옛 "0.36001 CHECK 위반"(S-13) → T-17로 대체.
+- **AC-06-07**(T-17로 개정, U-02로 분할, M1): `generation_jobs.cost_usd` CHECK는 `≥ 0`뿐이다. 0.30 초과 값(예: 0.9)을 저장해도 DB 예외는 0건이고 행이 그대로 남는다. 음수는 CHECK 위반이다. 옛 "0.36001 CHECK 위반"(S-13) → T-17로 대체.
+- **AC-06-07b**(U-02, M5): 워커 정산 경로에서 잡 합계가 0.30을 넘으면 그 즉시 A11 알림 1건이 뜨고(6.12.4) 그 잡의 이후 `reserve`는 전부 실패한다(6.9.4 ⑥ `usage_overrun`). DB 예외 0. 계정의 다음 생성은 이 행만으로 막지 않는다(계정 차단은 `USER_DAILY_COST_CAP_USD`, 6.10.3).
+- **AC-06-07c**(U-02, M7): 직접 UPDATE 픽스처로 `cost_usd`를 0.30 초과로 바꾸면 다음 `alerts` 실행에서 그 잡에 A11 1건이 뜬다(`dedupe_key` 중복 0).
 
 ## 6.4 API 명세
 
@@ -1881,12 +1885,13 @@ async function callLlm(req) {
 ```
 t0: gen_copy 1회 + gen_layout 후보 0(변형 A·seed 0)을 동시에 출발
     (후보 0은 정적 프리픽스 = 시스템 + 카탈로그 + few-shot을 cacheWrite로 낸다)
-t1 = 후보 0의 첫 토큰 수신(스트리밍) 또는 t0 + 3s 중 이른 시각:
-    gen_layout 후보 1~5를 동시에 출발(정적 프리픽스는 cached로 적중)
+t1 = 후보 0의 사건 t1 또는 t0 + 3s 중 이른 시각:
+    사건 t1 = 스트리밍 공급자는 첫 토큰 수신, 비스트리밍(generateObject)·Mock은 응답 완료(U-01)
+    처리 순서 = 그 호출 정산(완료인 경우) → gen_layout 후보 1~5를 순서대로 예약·출발(정적 프리픽스는 cached)
 ```
 
 - 지연 영향: 후보 1~5가 TTFT(≈ 1~2s, 상한 3s)만큼 늦게 출발한다. 04장 4.17.1 지연 분해와 6.2.4 "LLM 카피 덱 1 + 레이아웃 6" 행은 이 증가분을 포함한다(p50 목표 25s 유지, 개별 상한 불변).
-- 후보 0이 첫 토큰 전에 실패하면 t0 + 3s에 후보 1~5를 그대로 출발시킨다(이때 후보 1이 cacheWrite를 낸다. 추정식의 `cacheState`는 "잡의 첫 성공 cacheWrite 전이면 cache_write"로 판정).
+- 후보 0이 첫 토큰 전에 실패하면 t0 + 3s에 후보 1~5를 그대로 출발시킨다(이때 후보 1이 cacheWrite를 낸다). 추정식의 `cacheState`는 "같은 잡에서 앞선 `gen_layout`이 사건 t1에 도달했으면 `cached`, 아니면 `cache_write`"로 판정한다(U-01, 옛 "첫 cacheWrite 성공" → 대체). 후보 0이 t1 전에 실패해 후보 1~5가 t0 + 3s에 출발하면 다섯 모두 `cache_write`로 추정한다.
 - 수정 루프·다양성 재호출은 생성 단계 뒤라 정적 프리픽스가 cached다. 잡 사이에는 few-shot이 바뀌므로(04장 4.18) 잡마다 cacheWrite 1회를 전제한다.
 
 **② 기본 경로 원가(공식, 04장 4.17.2 단가 가정 = mock 고정 단가)**
@@ -1913,12 +1918,13 @@ C_base = C_copy + C_layout(cacheWrite) + 5·C_layout(cached) + 6·C_vision
 
 ```
 est = Σ_블록 (실측 토큰 × 1.1) × 블록 단가 + maxOutputTokens × 출력 단가 + 이미지 수 × per_image
-  블록 단가: 정적 프리픽스 = cache_write(잡의 첫 cacheWrite 성공 전) | cached(이후), 가변 입력 = input
+  블록 단가: 정적 프리픽스 = cache_write(앞선 gen_layout이 사건 t1 전) | cached(t1 도달 후, U-01), 가변 입력 = input
+  est는 호출마다 소수 5자리 반올림(half-up, 비용식과 같음) 후 합산한다(U-01 ⑤)
   실측 토큰: 프롬프트 조립 후 토크나이저(없으면 ceil(문자 수 / 3)). max_input_tokens를 넘으면 호출 전 실패
 reserve(est) 성공 ⇔ spent + reserved + est ≤ capEff        (잡 단위 뮤텍스)
 ```
 
-- 기본 경로 예약 합계 상한(mock 단가, `maxOutputTokens` 6.9.2): `gen_copy` 0.05325 + 후보 0 0.04481 + 후보 1~5 0.02774 × 5 = 0.23674 ≤ 0.30이므로 `ok`에서 `budget_skipped` 0건이다. `worstCost`는 폐지(S-13).
+- 기본 경로 est 합계(mock 단가, `maxOutputTokens` 6.9.2, 반올림 후 합산): `gen_copy` 0.05325 + 후보 0 0.04481 + 후보 1~5 0.02774 × 5 = 0.23676 ≤ 0.30이므로(옛 0.23674는 반올림 전 합, U-01 ⑤로 대체) `ok`에서 `budget_skipped` 0건이다. `worstCost`는 폐지(S-13).
 - 같은 단계 안의 여러 호출은 정해진 순서(후보 인덱스 0→5, 변형 A→C)로 뮤텍스 아래 차례로 예약한 뒤 출발한다. 그래서 생략·거부되는 호출이 실행마다 같다(결정론).
 
 **④ 예약 수명(TL3-10)**: attempt마다 `reserve → 호출 → settle(실비) | release(usage 없음)`. 재시도 직전에도 판정식이 다시 적용된다. abort된 호출은 공급자가 돌려준 부분 usage가 있으면 그만큼 settle하고 없으면 release한다.
@@ -1956,21 +1962,21 @@ stageSkip(role, callKind):
     "judge_vision": { "input": 10500, "output": 900, "images": 2 } }
   ```
 
-- 정적 프리픽스는 잡의 첫 `gen_layout` 성공 호출에서 `cache_write_tokens_in`, 나머지 `gen_layout`·수정 호출에서 `cached_tokens_in`으로 보고한다.
+- 정적 프리픽스는 `cacheState`(③, U-01)가 `cache_write`인 `gen_layout` 호출에서 `cache_write_tokens_in`, `cached`인 `gen_layout`·수정 호출에서 `cached_tokens_in`으로 보고한다. Mock은 응답 완료 시 사건 t1을 내고, 지연은 `gen_copy` = 후보 0 `gen_layout` + 1ms로 고정한다(카피 정산이 후보 0 정산 뒤, 09장 9.6.2).
 - 시나리오별 원가 변형(시나리오 정의 원천은 이 절, 09장 9.6.2·07장 TC-R-09·04장 AC-04-37은 참조만):
 
 | 시나리오 | Mock 동작 | 기대 결과 |
 |---|---|---|
 | `cost_spike` | 단가 10배, **추정에도 반영**(Mock 공급자의 pricing 항목을 10배로 교체) | 첫 판정에서 넘는 호출은 `budget_skipped`(`COST_CAP`), `sum(llm_calls.cost_usd) ≤ capEff`, 상태 ∈ {partial, fallback}, DB 예외·`WORKER_LOST` 0 |
 | `cost_ramp` | 단가 1.20배(추정 반영), 후보 2~5(변형 B·C) 출력은 조화 < 80(`low_score`와 같은 합성)이라 B·C가 수정 루프 대상 | `judge_vision` 6건 모두 `budget_skipped`(`skip_vision`) → 변형 B 수정 1건 `ok` → 변형 C 수정 `budget_skipped`(`skip_repair`) 순서, C는 폴백, 상태 `partial`, 합계 ≤ `capEff` |
-| `usage_overrun` | usage 3배 보고, **추정에는 미반영** | 진행 중 호출 정산, DB 예외 0, `WORKER_LOST` 0, A11 정확히 1건, `spent > capEff` 시점 이후 출발한 `status='ok'` 호출 0, 합계 ≤ `capEff × 3`, 상태 ∈ {partial, fallback} |
+| `usage_overrun` | usage 3배 보고, **추정에는 미반영** | 진행 중 호출 정산, DB 예외 0, `WORKER_LOST` 0, A11 정확히 1건, `spent > capEff` 시점 이후 출발한 `status='ok'` 호출 0, 합계 ≤ `capEff × 3`, 상태 ∈ {partial, fallback}. **거부 호출 집합(U-01 계산, 결정론)**: 후보 0 정산(0.11813) 뒤 예약 시 카피 예약 0.05325가 남아 후보 1~4만 출발(누적 0.28234)하고 후보 5는 `budget_skipped`. 카피 정산 0.25313, 후보 1 정산에서 0.32468 > 0.30 → A11. 이후 `judge_vision`·수정 예약 전부 `budget_skipped`. 출발한 호출 = 카피 1 + 레이아웃 5(후보 0~4), 합계 0.53933 |
 
-  `cost_ramp`의 1.20배 근거(AD 기록): 생성 단계 실청구 0.20363 × 1.20 = 0.24435 ≥ 0.24(비전 전부 생략), 예약 합계 0.23674 × 1.20 = 0.28409 ≤ 0.30(생성 호출 거부 없음), 수정 1회 후 0.24435 + 0.03042 = 0.27477 ≥ 0.27(두 번째 수정 생략). 1.15배는 비전 6건 중 일부만 생략돼 순서 관찰이 실행 타이밍에 따라 달라진다.
+  `cost_ramp`의 1.20배 근거(AD 기록): 생성 단계 실청구 0.20363 × 1.20 = 0.24435 ≥ 0.24(비전 전부 생략), est 합계 0.23676 × 1.20 = 0.28411 ≤ 0.30(생성 호출 거부 없음), 수정 1회 후 0.24435 + 0.03042 = 0.27477 ≥ 0.27(두 번째 수정 생략). 1.15배는 비전 6건 중 일부만 생략돼 순서 관찰이 실행 타이밍에 따라 달라진다.
 
 **수용 기준**
 
-- **AC-06-56**(T-17로 개정): Mock `ok`에서 ① 기본 경로 `llm_calls` 13행(`gen_copy` 1, `gen_layout` 6, `judge_vision` 6) 중 `budget_skipped` 0건 ② `gen_layout` 행 중 `cache_write_tokens_in > 0`이 정확히 1개(후보 0), `cached_tokens_in > 0`이 정확히 5개 ③ 잡 비용이 `mock-prompt-sizes.json`과 `pricing["mock/*"]`로 ②의 식을 계산한 값 ± 1% 안(테스트는 값을 리터럴로 쓰지 않고 픽스처에서 계산한다. temp 픽스처의 공식값 $0.23363) ④ 후보 1~5의 출발 시각(`llm_calls.created_at`)이 후보 0의 첫 토큰 시각 이후이고 t0 + 3s 이내. 옛 "$0.23 ± 10%" → T-17로 대체(공식값 ± 1%, 더 엄격).
-- **AC-06-61**(T-17): 위 표의 `cost_ramp`·`usage_overrun` 기대 결과를 통합 테스트가 그대로 확인한다. `cost_ramp`는 `llm_calls`의 `budget_skipped` 행 순서(생성 시각)가 `judge_vision` 6건 → `repair_quality` 1건이고 그 사이에 `repair_quality` `ok` 1건이 있다. `usage_overrun`은 `alerts`에서 `rule='A11'`이 그 잡에 1건이고, `generation_jobs.cost_usd = sum(llm_calls.cost_usd)`(차이 ≤ 0.00001)다.
+- **AC-06-56**(T-17로 개정): Mock `ok`에서 ① 기본 경로 `llm_calls` 13행(`gen_copy` 1, `gen_layout` 6, `judge_vision` 6) 중 `budget_skipped` 0건 ② `gen_layout` 행 중 `cache_write_tokens_in > 0`이 정확히 1개(후보 0), `cached_tokens_in > 0`이 정확히 5개 ③ 잡 비용이 `mock-prompt-sizes.json`과 `pricing["mock/*"]`로 ②의 식을 계산한 값 ± 1% 안(테스트는 값을 리터럴로 쓰지 않고 픽스처에서 계산한다. temp 픽스처의 공식값 $0.23363) ④ 후보 1~5의 `llm_calls.started_at`이 후보 0의 `first_token_at` 이후이고 t0 + 3s 이내(U-01: 시각 기준은 `started_at`·`first_token_at`) ⑤ 후보 1~5의 est가 cached 값(0.02774)으로 기록되고 est 합계가 0.23676 ± 0.00002. 옛 "$0.23 ± 10%" → T-17로 대체(공식값 ± 1%, 더 엄격).
+- **AC-06-61**(T-17): 위 표의 `cost_ramp`·`usage_overrun` 기대 결과를 통합 테스트가 그대로 확인한다. `cost_ramp`는 `llm_calls`의 `budget_skipped` 행 순서(`started_at`, U-01)가 `judge_vision` 6건 → `repair_quality` 1건이고 그 사이에 `repair_quality` `ok` 1건이 있다. `usage_overrun`은 `alerts`에서 `rule='A11'`이 그 잡에 1건이고, `generation_jobs.cost_usd = sum(llm_calls.cost_usd)`(차이 ≤ 0.00001)이며, 위 표의 거부 호출 집합과 같고 같은 시드 2회 실행에서 거부 호출 집합이 같다(U-01).
 - **AC-06-62**(T-17·TL3-10): 단위 테스트 ① 동시 `reserve` 20회에서 `spent + reserved`가 `capEff`를 넘는 순간 0회 ② 7개 병렬 호출 중 3개가 `server_error` 후 재시도할 때 모든 시점에서 `spent + reserved ≤ capEff`이고 재시도 attempt마다 새 예약 1개(`llm_calls.attempt=2` 행 3개) ③ `JOB_COST_CAP_USD=0.25`이면 `skipVisionEff = 0.20`, `skipRepairEff = 0.225`이고, Mock `ok`에서 생성 예약 합계 0.23674 ≤ 0.25라 `gen_*` 거부 0건, 비전 단계 시작 시 `spent = 0.20363 ≥ 0.20`이라 `judge_vision` 6건이 모두 `skip_vision`으로 생략되며 상태는 `succeeded`다(같은 설정에서 기본값 0.30이면 생략 0건) ④ `pnpm cost:model`이 temp 단가로 통과하고, `gen_layout` 출력 단가를 2배로 바꾼 픽스처에서는 실패한다.
 
 ### 6.9.5 폴백·장애 처리 요약(04장 4.7.1과 동일 규칙)
@@ -2494,7 +2500,9 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 
 | AC 범위 | 내용 | 계층 | 마일스톤(→09장) |
 |---|---|---|---|
-| AC-06-01~07, 03b | 스키마·RLS·쓰기 화이트리스트·권한 스냅샷·제약 | 통합(현재 `STACK_PROFILE`, 6.13.1) | M1 |
+| AC-06-01~07, 03b | 스키마·RLS·쓰기 화이트리스트·권한 스냅샷·제약(07은 CHECK만, U-02) | 통합(현재 `STACK_PROFILE`, 6.13.1) | M1 |
+| AC-06-07b | 정산 경로 A11·이후 reserve 거부(U-02) | 통합(Mock `usage_overrun`) | M5 |
+| AC-06-07c | 직접 UPDATE 뒤 `alerts` 실행 A11(U-02) | 통합 | M7 |
 | AC-06-08~14, 45~49, 65, 66 | API 계약·멱등·CSRF·소유·임시본·앵커·내보내기·내 데이터·후속 응답·익명 창구 | 계약·통합·E2E | M4(08·11·12·46), M5(09·10·13·45·47), M6(48·65), M7(14·49·66) |
 | AC-06-15~18, 60, 57 | 인증·귀속·쿠키·`provision_user`·관리자 권한 원천·관리자 MFA(57은 M7) | E2E(supabase: Mailpit, native: `dev_mail_outbox` 픽스처) | M5 |
 | AC-06-50~52, 59 | 스택 프로파일(native) 기동·DDL·E2E·`DbPort` 단일 경로·`db:types`·`publicUrl`·`/api/_storage` | 통합·E2E(native) | M0(50), M1(51), M5(52·59) |
@@ -2665,3 +2673,4 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 | 06-d API(T-16·T-22·T-25·T-26·T-32·T-06·T-36) | Major | 6.4.2 `TURNSTILE_FAILED`·`SURVEY_ITEMS_INSUFFICIENT`·`FOLLOWUP_ALREADY_ANSWERED`·`REQUEST_NOT_VERIFIED`·`VERIFY_LINK_INVALID`·`JOB_ALREADY_FINISHED`, 6.4.3 익명 창구 `turnstileToken`·verify 엔드포인트·메일 템플릿 표·`shareStatus`, `MeView`(`refundableCancelsLeft`·`retest`·`adoptionFollowup`), `adoption-followup`, `ResultView.notice`·`seasonAdjusted`(옛 `consistency` 삭제), `GenerationView.copySource`, `MockupCard.labelKey`·`photoSubstituted`, `guide` = `formatGuide`, `styleguide.html`(스토리지 표·내보내기), AC-06-65·66, 6.19 정리 | 오류 코드 이름 3개는 AD-013 |
 | TL3-09(06) | Minor | AC-06-02 `pg_class.relforcerowsecurity` | |
 | S-32·S-37(06) | Major | 6.4.3 MockupCard `movedAxes`·`diffFromTrue`·brandColorNotice 5값 | |
+| U-01·U-02(06-a, r4 RB4-01·02) | Major | 6.9.4 ① 사건 t1·처리 순서, ③ `cacheState`·est 반올림·합계 0.23676, ⑦ Mock 지연·`usage_overrun` 거부 집합, `llm_calls.started_at`·`first_token_at`, AC-06-56 ④⑤·AC-06-61, AC-06-07/07b/07c·6.17 행 | 09 9.6.2·07 배정표는 각 단위 |
