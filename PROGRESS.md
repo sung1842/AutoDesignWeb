@@ -5,7 +5,7 @@
 - phase: P2
 - lock: {owner: 2026-11-19T05:57Z, since: 2026-11-19T05:57Z}
 - limit.next_reset_kst: 2026-11-19 19:57
-- 마지막 갱신: 2026-11-19 15:40 KST (예약 세션: 06-c~07-d·09-a·09-b 반영)
+- 마지막 갱신: 2026-11-19 15:40 KST (예약 세션: 06-c~09-c 반영)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -28,7 +28,7 @@
 - 라운드 2: [x] PM [x] 프로덕트 디자이너 [x] UX [x] UI [x] 테크 리드 [x] AI/ML [x] QA [x] 법무 → [x] decisions_v3(S-01~S-41) [x] 반영(아래 20단위)
 - 라운드 2 반영 단위(decisions_v3.md "반영 순서" 참고): [x] 07-a [x] 07-b [x] 07-c [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 09-a [x] 09-b [x] 09-c [x] 04-a [x] 04-b [x] 04-c [x] 03 [x] 02 [x] 05 [x] 01 [x] 08 [x] 00 [x] 잔여 표기 grep
 - 라운드 3: [x] PM [x] 프로덕트 디자이너 [x] UX [x] UI [x] 테크 리드 [x] AI/ML [x] QA [x] 법무 → [x] decisions_v4(T-01~T-36) [ ] 반영(아래 22단위)
-- 라운드 3 반영 단위(decisions_v4.md "반영 순서" 참고): [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 07-a [x] 07-b [x] 07-c [x] 07-d [x] 09-a [x] 09-b [ ] 09-c [ ] 01-a [ ] 01-b [ ] 04-a [ ] 04-b [ ] 03-a [ ] 03-b [ ] 08-a [ ] 02-a [ ] 05-a [ ] 00-a [ ] 잔여 표기 grep
+- 라운드 3 반영 단위(decisions_v4.md "반영 순서" 참고): [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 07-a [x] 07-b [x] 07-c [x] 07-d [x] 09-a [x] 09-b [x] 09-c [ ] 01-a [ ] 01-b [ ] 04-a [ ] 04-b [ ] 03-a [ ] 03-b [ ] 08-a [ ] 02-a [ ] 05-a [ ] 00-a [ ] 잔여 표기 grep
 - 판정 기록(라운드별 C1/C2/C3):
   - R2 PM: FAIL/FAIL/FAIL (Blocker 0, Major 5: 예산-목표 불일치, 취소 시 한도 규칙 충돌, KPI 쿼리 분모, 검증 표본 확보, 00↔07·09 불일치)
   - R2 UX: FAIL/FAIL/FAIL (1라운드 19/19 해결, Blocker 0, Major 3: 결과 신뢰 문구 01↔02 불일치, 진단 카드 크기 규칙이 실제 화면에서 불성립, 편집 가능 판정을 화면 폭으로 해 200% 확대 시 편집 소실)
@@ -57,6 +57,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 16:00 | 09-c 반영: 9.6.2 시드(callKind·attempt)·인덱스 매핑·장애 initial 한정·수리 규칙·효과표·low-score-trees·judge ID 기반·judge_position_bias, Mock usage 픽스처·캐시 토큰, cost_spike 정의·cost_ramp·usage_overrun, B24·B25 연결, AC-09-18(T-17·18·29·34)
 - 2026-11-19 15:55 | 09-b 반영: 9.1.2 트리·9.1.3 의존(DbPort·api-contract·compliance·auth/storage/mail), M0 native, M1 db:types·골격 32·키화, M3 temp 분류·키화·v_true, M4 이벤트 API·build-answers·SURVEY_ITEMS 미달 BLK·⑪⑫, M5 한도·초대·T-20·키화·⑩, M6 채택·페이크 도어·T-22·⑨, M7 ADM·KPI·익명 창구·⑫, M8 종료 코드 3, AC-09-04·07 수량 제거, AC-09-17(T-04·06·08·09·10·11)
 - 2026-11-19 15:45 | 09-a 반영: F01 baseRef·DECISIONS_LOG append-only 예외, 9.5.6 spec 잠금·lockedBy spec, M0 산출물 spec:extract·guard 5~7, AC-09-03 사례 추가, 9.8.1 FINAL, M4 ④ 튜닝(tunable 참조·바퀴별 gate)·F20, 9.9.1 종료 코드 3·9.9.2·9.5.3 sim-limit(T-01·02·03·05)
 - 2026-11-19 15:40 | 07-d 반영: 7.2.2 muRef 생성 시점·재생성 조건(T-04), TC-R-09 정의·TC-R-19/20 신설(T-17), TC-R-15 인덱스·개수(T-18), M8 S_free null(T-19), TC-R-16 기대 상태(T-26), 7.8.3 베이스라인 자산 동등화·AC-07-26(T-31), 7.6.2 S02 뷰포트·편집 판정 참조(T-23·24), 7.3.1 비차단 V-MEAS 등(T-07), 수량·G-13 잔재(T-10)

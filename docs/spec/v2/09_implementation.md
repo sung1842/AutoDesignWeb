@@ -171,8 +171,8 @@ interface Bundle<T> {
 | B21 | 고위험 브랜드 | `config/high_risk_brands.json` | ≥80(temp) | 08(8.9.2) | M5 | 예 |
 | B22 | 금지 업종 | `config/prohibited_categories.json` | 범주 6 × 키워드 ≥10 | 08(8.9.2, S-24) | M5 | 예 |
 | B23 | 처리위탁·데이터 흐름 | `legal/processors.yaml`, `legal/data-flows.yaml` | → 08장 8.7.6, 06장 6.1.3 | 08·06 | M5, M7 | 예(`approved:false`) |
-| B24 | 이미지 태그 키워드 | `config/image_tag_keywords.json` | 약 50항목 | 04(4.9.4, S-29) | M5 | 예 |
-| B25 | 텍스트 역할 | `data/taxonomy/text-roles.json` | → 03장 3.1.5a | 03(S-38) | M2 | 예 |
+| B24 | 이미지 태그 키워드 | `config/image_tag_keywords.json` | 약 50항목 | 04(4.2.1 `industryTags(BrandInput)` → `image_tags_allowed`, 4.9.4, T-34) | M5 | 예 |
+| B25 | 텍스트 역할 | `data/taxonomy/text-roles.json` | → 03장 3.1.5a(버튼·내비·폼·메뉴 역할 포함, `price` → `pricing.price`, T-29) | 03(S-38) | M2 | 예 |
 
 아이콘(Phosphor/Tabler/Iconoir, D-27)은 npm 패키지로 설치하므로 사람 준비 대상이 아니다. 단 renderer는 아이콘을 빌드 시 SVG로 인라인하고 런타임 외부 요청을 만들지 않는다.
 
@@ -317,8 +317,8 @@ interface LinterExample {
 | B21 | 08장 8.9.2 범주별로 일반적으로 알려진 기관·기업명 ≥80개, `domains: []`(도메인 판정은 temp에서 건너뜀), `provenance:"temp"`. 결과는 `high-risk-domains=temp`. |
 | B22 | 범주 `gambling\|adult\|illegal_loan\|drugs\|weapons\|counterfeit` 각 한국어 키워드 ≥10개, `provenance:"temp"`. 적정성은 사람 확인(08장 8.14 Q13). |
 | B23 | processors.yaml 전 항목 `approved:false`(mock에서는 승인 검사 생략, 08장 8.8.2), data-flows.yaml은 06장 6.1.3 표 그대로. 결과는 `processor-approval=manual`. |
-| B24 | 04장 4.9.4 태그별 키워드 약 50항목을 `[임시]` 표시 없이 일반 명사로 작성, `provenance:"temp"`. |
-| B25 | 03장 3.1.5a 표를 그대로 JSON화한다. |
+| B24 | 04장 4.9.4 태그별 키워드 약 50항목을 `[임시]` 표시 없이 일반 명사로 작성, `provenance:"temp"`. 각 태그는 04장 4.2.1 `industryTags`의 출력 태그(= 03장 3.6.4 `slot.tag` 어휘)여야 한다(T-34, `data:validate` 교차 참조) |
+| B25 | 03장 3.1.5a 표를 그대로 JSON화한다(T-29 확장 역할 포함, 역할 커버리지 교차 검사는 03장 AC-03-46). |
 
 **자산·법무 temp 공통 규칙(S-10)**:
 - 자산 레지스트리(폰트·이미지) temp 항목은 `verified_by:'temp-agent'`, `verified_at:null`을 허용한다. temp 항목이 1건이라도 있으면 `asset-license-verify=temp`이고 종료 코드 0은 나올 수 없다(2는 가능). `verified_by≠'temp-agent'`인데 `verified_at=null`이면 fail이다.
@@ -654,26 +654,30 @@ BLOCKED.md 항목 형식:
 
 ### 9.6.2 MockProvider 명세
 
-역할은 R-12의 4개(`gen_layout`, `gen_copy`, `judge_vision`, `ref_tagger`)이고, 역할마다 결정적 응답을 낸다(S-11, AI2-05). 공통 시드 = `hash(designSpec.hash + candidateIndex + role)`의 하위 32비트. 프롬프트 파일 경로는 `packages/llm/prompts/<role>@v<N>.md`다(06장 6.9.3).
+역할은 R-12의 4개(`gen_layout`, `gen_copy`, `judge_vision`, `ref_tagger`)이고, 역할마다 결정적 응답을 낸다(S-11, AI2-05). 공통 시드 = `hash(designSpec.hash, candidateIndex, role, callKind, attempt)`의 하위 32비트(T-18). 그래서 `initial`·`repair_schema`·`repair_quality`·`diversity` 출력은 서로 다르다. 후보 인덱스는 `candidateIndex = variantIndex × 2 + slotIndex`(변형 순서 `[v_true, v_fit, v_bal]`, 슬롯 0 = 패턴 슬롯 1)이고 재생성은 같은 인덱스를 쓴다(04장 4.8·06장 `candidates`와 같은 규칙). 프롬프트 파일 경로는 `packages/llm/prompts/<role>@v<N>.md`다(06장 6.9.3).
 
 | 역할 | Mock 합성 규칙(시나리오 `ok`) |
 |---|---|
 | `gen_copy` | 04장 4.6.2 키 표의 개수·길이 하한·`kind`를 지키는 CopyDeck을 BrandInput 필드로 결정적으로 합성한다. 슬롯 길이 상한을 넘으면 문장 경계에서 자른다. 일반론 금지어(B14) 미사용 |
-| `gen_layout` | 입력 `[PATTERN].section_order_hint`와 `[DESIGN_SPEC].allowed_variants`로 LayoutTreeRaw를 만든다. 텍스트는 CopyDeck **덱 참조만** 쓰고 텍스트 리터럴은 0이다. variant = 허용 variant 중 `(candidateIndex + 섹션 순번) mod 개수` |
-| `judge_vision` | `hash(candidateIds)`로 정한 `JudgeResult`(04장 형식, 항목 5개 winner). 고정 점수는 쓰지 않는다 |
+| `gen_layout` | 입력 `[PATTERN].section_order_hint`와 `[DESIGN_SPEC].allowed_variants`로 LayoutTreeRaw를 만든다. 텍스트는 CopyDeck **덱 참조만** 쓰고 텍스트 리터럴은 0이다. variant = 허용 variant 중 변형 목표 t의 A1·A4 방향에 맞는 것(`fixtures/llm/mock-variant-effects.json`의 Δ 부호 일치 → 동률이면 `(candidateIndex + 섹션 순번) mod 개수`) |
+| `judge_vision` | `hash(sorted(candidateIds))`로 승자 **후보 ID**를 정한 뒤 제시 위치(A/B)로 변환한 `JudgeResult`(04장 형식, 항목 5개 winner). 그래서 A/B 순서를 바꿔도 승자 ID가 같다. 고정 점수는 쓰지 않는다(T-18) |
 | `ref_tagger` | 05장 5.6.2 스키마(score 1~5, 입력 해시 기반) |
 
 - 이미지 선택은 mock이 하지 않는다(컴파일러 몫, 04장 4.9.4).
-- usage: `inputTokens = ceil(프롬프트 문자 수 / 3)`, `outputTokens = ceil(출력 JSON 문자 수 / 3)`. 단가는 06장 6.9.2 `pricing["mock/mock-page"]`·`["mock/mock-vision"]` 고정값(S-13)이다.
+- usage(T-17, 원천 06장 6.9.4 ⑦): 실제 프롬프트·출력 길이가 아니라 `fixtures/llm/mock-prompt-sizes.json`의 블록별 고정 문자 수로 `tokens = ceil(문자 수 / 3)`을 보고한다. 정적 프리픽스는 잡의 첫 성공 `gen_layout`에서 `cacheWriteTokens`, 나머지 `gen_layout`·수정 호출에서 `cachedTokens`로 보고한다. 단가는 06장 6.9.2 `pricing["mock/mock-page"]`·`["mock/mock-vision"]` 고정값(S-13)이다. 기본 경로 기대 원가는 이 픽스처로 계산한 공식값(06장 AC-06-56, ± 1%)이다.
+- 수리 규칙(T-18, 결정론): `repair_schema`는 zod 오류 경로의 필드를 스키마 유효값(열거형 첫 값, 길이 하한 문자열은 덱 참조)으로 채운다. `repair_quality`·`diversity`는 `violations[].where` 섹션의 variant를 허용 목록의 다음 값으로 바꾸고, `axis_gaps`가 있으면 효과표에서 부호가 맞는 variant를 고른다. 재호출 결과도 위반이면 그 후보는 `eligible=false`(사유 `DIVERSITY`)이고 같은 변형의 다른 후보가 없으면 폴백(04장 4.8).
+- 효과표 `fixtures/llm/mock-variant-effects.json`: `seed:temp`(또는 `pnpm mock:effects`)가 각 (block, variant)를 `standardTree` 문맥에서 1회 렌더하고 B18 정규화기로 Δ(A1, A4)를 측정해 만든다(결정론, 2회 생성 바이트 동일, 제품 결정 아님). `low_score@*`는 효과표와 무관하게 `fixtures/llm/low-score-trees/`의 고정 트리를 쓰고, CI가 72개 명세 조합 모두 H < 80인지 확인한다.
 - 지연: `MOCK_LLM_LATENCY_MS`(기본 200).
 - `ok` 시나리오 출력은 렌더 시 하드 게이트를 통과하도록 합성기가 보장한다(M5 ① 근거).
+
+**장애 적용 범위(T-18)**: 장애 시나리오는 기본적으로 `callKind='initial'` 호출에만 적용한다. 끝에 `!`를 붙인 형식(예: `schema_violation!@2`)만 재호출에도 유지한다. `copy_schema_fail@gen_copy`는 정의상 `!` 동작이다.
 
 **장애 주입 시나리오**: `MOCK_LLM_SCENARIO` env 또는 요청 헤더 `x-mock-scenario`(`LLM_MODE=mock`이고 `NODE_ENV≠production`일 때만 허용, 잡의 `config_snapshot`에 기록). 적용 범위는 `scenario`(전 호출), `scenario@candidateIndex`(특정 후보), `scenario@role`(특정 역할) 세 형식이다. 이 장은 **Mock 동작만** 정한다. 시스템 기대 결과(상태·한도·노출)의 원천은 07장 7.4.3 TC-R·7.1.4 매핑이다(S-06 d·e).
 
 | 시나리오 | Mock 동작 | 기대 결과 |
 |---|---|---|
 | `ok` | 유효 출력 | → 07 E2E-02 |
-| `mixed` | 후보 인덱스별 결정적 할당. 0: ok / 1: 이웃 후보와 같은 block 시퀀스 / 2: expression을 낮추는 variant 선택(TM·S_free 미달) / 3: 범위 밖 덱 index / 4: warn 3개 / 5: ok. `eval:golden --mode mock`의 기본값 | → 07 TC-R-15 |
+| `mixed` | 후보 인덱스별 결정적 할당(인덱스 = `variantIndex × 2 + slotIndex`, 0·1 = `v_true`, 2·3 = `v_fit`, 4·5 = `v_bal`). 0: ok / 1: 이웃 후보와 같은 block 시퀀스 / 2: expression을 낮추는 variant 선택(TM·S_free 미달) / 3: 범위 밖 덱 index / 4: warn 3개 / 5: ok. `eval:golden --mode mock`의 기본값 | → 07 TC-R-15 |
 | `invalid_json` | JSON 아님 | → 07 TC-R-04 |
 | `schema_violation` | 필드 누락·길이 초과 | → 07 TC-R-05 |
 | `forbidden_field` | `style`, `className`, `<script>` 포함 | → 07 TC-S-02 |
@@ -684,11 +688,14 @@ BLOCKED.md 항목 형식:
 | `rate_limit` | 429 | → 07 TC-R-03 |
 | `server_error` | 500 | → 07 TC-R-02 |
 | `injection_echo` | 카피·href에 `https://evil.example`, 전화번호 위조 삽입 | → 07 TC-S-11 |
-| `cost_spike` | usage를 10배 보고 | → 07 TC-R-09, 06 AC-06-56 |
+| `cost_spike` | 단가 10배, **추정에도 반영**(정의 원천 06장 6.9.4 ⑦, T-17) | → 07 TC-R-09, 06 AC-06-21 |
+| `cost_ramp` | 단가 1.20배(추정 반영), 후보 2~5(변형 `v_fit`·`v_bal`) 출력이 조화 < 80(`low-score-trees` 사용) | → 07 TC-R-19, 06 AC-06-61 |
+| `usage_overrun` | usage 3배 보고, 추정에는 미반영 | → 07 TC-R-20, 06 AC-06-61 |
 | `budget_exhausted` | (사전 조건: 일일 지출을 상한까지 채움) | → 07 TC-C-01 |
-| `copy_schema_fail@gen_copy` | `gen_copy`가 스키마 위반을 반복(수리·fallback 모델 포함) | → 07 TC-R-16 |
+| `copy_schema_fail@gen_copy` | `gen_copy`가 스키마 위반을 반복(수리·fallback 모델 포함, `!` 동작) | → 07 TC-R-16 |
 | `copy_timeout@gen_copy` | `gen_copy` 응답 없음(가짜 시계) | → 07 TC-R-17 |
 | `copy_refusal@gen_copy` | 공급자 안전 거부 응답 | → 07 TC-R-18 |
+| `judge_position_bias@judge_vision` | 위치 A를 항상 승자로 내는 편향 심사기(위치 기반, ID 무관) | 04장 4.10.5 편향 보정이 A/B 교차 2회 불일치를 `tie`로 처리, → 09 AC-09-18 |
 
 - 수용 기준(계약 테스트): mock `gen_layout` 응답 JSON의 텍스트 슬롯 리터럴 0건(덱 참조만). 시나리오 키 파서가 세 형식을 모두 받고, 모르는 시나리오는 기동 오류다.
 
@@ -885,6 +892,7 @@ pnpm seed:temp | pnpm db:seed | pnpm survey:build | pnpm eval:golden --mode mock
 | AC-09-13 | `NODE_ENV=production`이고 `LLM_MODE≠live`이면 web·worker 기동이 종료 코드 1로 거부된다. |
 | AC-09-14 | CLAUDE.md가 300줄 이하이고 9.8.2의 8개 절을 모두 포함한다. |
 | AC-09-17 | (T-04, QA3-03) Given M1 종료 커밋 / When `pnpm data:validate` / Then 골든 32행이 `answers`·`expected.muRef` = null로 유효하다. Given M4 종료 직전 / When `pnpm eval:golden:build-answers`를 2회 실행 / Then 출력 바이트가 같고 32행 모두 채워지며, `m4-done` 커밋 이후 `data/golden/**` 1바이트 변경은 guard FAIL이다. tuned 파일 변경 커밋에 새 muRef가 없으면(또는 그 반대면) guard FAIL이다. |
+| AC-09-18 | (T-18, AI3-04) 계약 테스트 ① 같은 후보의 `initial`과 `repair_quality` mock 출력 SHA-256이 다르고, `!`가 없는 시나리오에서 재호출 출력은 스키마 유효다 ② `mixed` 단일 잡(골든 GS-01)에서 `llm_calls` 개수가 07장 TC-R-15에 적힌 값(initial 7, repair_schema 1, repair_quality 1, diversity 1)과 같고 노출 시안 전부 04장 AC-04-20 충족, `budget_skipped` 0 ③ `mock-variant-effects.json` 2회 생성 바이트 동일, `low-score-trees` 72조합 전부 H < 80 ④ `judge_position_bias@judge_vision`에서 A/B를 바꿔 2회 심사한 결과가 불일치하면 `tie`로 기록되고, 일반 `judge_vision`은 A/B를 바꿔도 승자 ID가 같다. |
 
 ---
 
@@ -980,3 +988,6 @@ pnpm seed:temp | pnpm db:seed | pnpm survey:build | pnpm eval:golden --mode mock
 | T-10(QA3-07) | AC-09-04 "9.2.2 전 묶음", AC-09-07·M5 ② "9.6.2 전 행, 기대 결과 07 TC-R" | |
 | T-11(TL3-01·TL3-06) | 9.1.2 트리(`db` DbPort·`api-contract`·`compliance`·`auth/storage/mail`·`config/lock`·`diagnosis-tuned.json`·`docs/spec/FINAL`), 9.1.3 db 의존 Kysely+pg·신규 패키지 행·web DB 규칙, M0 native 기동, M1 `db:types`·`DbPort.withAnon`·AC-06-03b | |
 | 6.19 잔여 | M3 `v_true` 코드값, M5 `prompts/<role>@v<N>.md` | V-TRUE·`{role}.v{N}` 0건 |
+| T-17(TL3-03·04) | 9.6.2 Mock usage 픽스처·캐시 토큰 규칙, `cost_spike` 정의 고정(단가 10배), `cost_ramp`·`usage_overrun` 행 | 원천 06장 6.9.4 ⑦ |
+| T-18(AI3-04·TL3-05·AI3-09) | 9.6.2 시드에 `callKind`·`attempt`, 인덱스 매핑, 장애 `initial` 한정·`!`, 수리 규칙, 효과표·low-score-trees, `judge_vision` ID 기반·`judge_position_bias`, `mixed` 인덱스 표기, AC-09-18 | |
+| T-29·T-34 | B25 확장 역할·`pricing.price`, B24 `industryTags` 연결·교차 참조 | |
