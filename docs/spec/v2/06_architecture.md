@@ -1313,10 +1313,13 @@ ErrorBody = { error: { code: ErrorCode, message: string /* 개발자용 영문 *
 | `INVITE_REQUIRED` | 403 | 아니오 | `BETA_INVITE_ONLY=true`이고 초대 코드 사용 기록 없음 | — |
 | `ACCOUNT_SUSPENDED` | 403 | 아니오 | `users.status` ≠ active(생성 계열은 `gen_suspended`도) | — |
 | `FORBIDDEN_ORIGIN` | 403 | 아니오 | CSRF 검사 실패 | — |
+| `TURNSTILE_FAILED` | 403 | 새 토큰으로 | 익명 창구 3종(신고·문의·권리 요청)의 `turnstileToken` 누락·검증 실패(T-16, 08장 8.9.5). DB 변경·메일 발송 0 | — |
 | `NOT_FOUND` | 404 | 아니오 | 없음·남의 리소스·비관리자의 관리자 경로 | — |
 | `SHARE_HIDDEN` | 410 | 아니오 | 신고·관리자로 비공개된 공유 링크(00장 10.3) | — |
 | `JOB_IN_PROGRESS` | 409 | 아니오 | 진행 중 잡 존재 | `{jobId}` |
 | `JOB_ALREADY_FINISHED` | 409 | 아니오 | 종료 상태 잡의 취소(T-20) | `{status}` |
+| `FOLLOWUP_ALREADY_ANSWERED` | 409 | 아니오 | 이미 응답·닫힘 처리된 시안의 후속 응답(T-22) | — |
+| `REQUEST_NOT_VERIFIED` | 409 | 아니오 | `privacy_request`가 `verified_at is null`인데 관리자 처리 PATCH(T-16) | — |
 | `PROJECT_LIMIT` | 409 | 아니오 | 프로젝트 10개 | `{limit:10}` |
 | `VERSION_CONFLICT` | 409 | 재조회 후 | `baseVersionId`가 최신 아님 | `{currentVersionId}` |
 | `SEQ_CONFLICT` | 409 | 재조회 후 | 진단 응답 `seq`가 기대값과 다르고 멱등 재전송도 아님 | `{expectedSeq}` |
@@ -1329,10 +1332,12 @@ ErrorBody = { error: { code: ErrorCode, message: string /* 개발자용 영문 *
 | `BRAND_ATTESTATION_REQUIRED` | 422 | 체크 후 | 레퍼런스 사이트명 일치(08장 8.9.2) | — |
 | `EDIT_GATE_FAILED` | 422 | 아니오 | 저장 시 서버 재컴파일 후 동기 게이트 실패(R-17, 07장 TC-D-06). 편집 텍스트 슬롯의 남용 판정 실패는 `GATE_FAILED:G-13`(S-24) | `{failed: ['GATE_FAILED:G-01', …], violations:[{gateId, nodeId?, slotId?, value?, required?, reason?: 'high_risk'|'phishing_term'|'prohibited_category'}]}` |
 | `DRAFT_EXPIRED` | 410 | 아니오 | 24시간 지난 브리프 임시본(R-26) | — |
+| `VERIFY_LINK_INVALID` | 410 | 아니오 | 권리 요청 확인 링크 재사용·만료(24시간)·불일치(T-16) | — |
 | `RATE_LIMITED` | 429 | `Retry-After` | 6.10.1 빈도 한도 | `{retryAfterS}` |
 | `QUOTA_DAY` / `QUOTA_MONTH` | 429 | 리셋 후 | 00장 9.3 한도, 계정 일 원가 상한(T-20, `QUOTA_DAY`만) | `{limit, resetAt, reason: 'quota'\|'cost_cap'}` |
 | `GEN_BUDGET_EXCEEDED` | 503 | 리셋 후 | KS-1 | `{resetAt}` |
 | `GEN_DISABLED` | 503 | 아니오 | KS-2 | — |
+| `SURVEY_ITEMS_INSUFFICIENT` | 503 | 아니오 | 02장 2.6.1 다음 문항 후보 0(활성 자극물 부족). `survey:build`가 빌드 시 사전 검출하므로 운영에서는 0건이 정상(T-06) | `{stage, itemKey}` |
 | `SHARE_DISABLED` | 503 | 아니오 | KS-3 | — |
 | `SIGNUP_DISABLED` | 503 | 아니오 | KS-4(신규 가입 콜백에서) | — |
 | `INTERNAL` | 500 | 1회 | 처리 안 된 예외(Sentry 보고) | — |
@@ -1350,10 +1355,10 @@ ErrorBody = { error: { code: ErrorCode, message: string /* 개발자용 영문 *
 | 메서드·경로 | 인증 | 요청 | 응답 | 오류 |
 |---|---|---|---|---|
 | `GET /api/survey-items?taxonomyVersion=` | 없음 | — | `200 {taxonomyVersion, engineVersion, items: SurveyItemView[]}` | 404 |
-| `POST /api/surveys` | anon(쿠키 없으면 발급) | `{entry, purposeHint?: 'saas'|'portfolio'|'local_business', restart?: boolean}` | 같은 시즌의 `in_progress`·`abandoned` 세션 있음 + `restart≠true` → `200 SurveyView`(재개, 상태 `in_progress`로 복귀), 아니면 `201 SurveyView`(기존 미완료 세션은 결과 없이 종료) | 429 |
-| `GET /api/surveys?mine=1` | user | cursor | `200 {items: [{resultId, surveyId, typeId, nameKo, taxonomyVersion, shareId, completedAt}], nextCursor}`(01장 D-0113 ③) | 401 |
+| `POST /api/surveys` | anon(쿠키 없으면 발급. 첫 문항 후보 0이면 503 `SURVEY_ITEMS_INSUFFICIENT`) | `{entry, purposeHint?: 'saas'|'portfolio'|'local_business', restart?: boolean}` | 같은 시즌의 `in_progress`·`abandoned` 세션 있음 + `restart≠true` → `200 SurveyView`(재개, 상태 `in_progress`로 복귀), 아니면 `201 SurveyView`(기존 미완료 세션은 결과 없이 종료) | 429 |
+| `GET /api/surveys?mine=1` | user | cursor | `200 {items: [{resultId, surveyId, typeId, nameKo, taxonomyVersion, shareId, shareStatus, completedAt}], nextCursor}`(01장 D-0113 ③, `shareStatus`는 아래 익명 창구 규칙) | 401 |
 | `GET /api/surveys/current` | anon | — | `200 SurveyView` | 404 |
-| `POST /api/surveys/:id/responses` | anon 소유 | `{seq, itemKey, shownItemIds /* 화면 위치 순 */, answer:'option'|'none_of_these'|'cant_tell', chosenItemId?, latencyMs, clientTs, ux?: SurveyAnswerUx /* 01장 1.4.12, D-0106 */}` | `200 SurveyView` | 400, 404, 409 `SEQ_CONFLICT`, 429 |
+| `POST /api/surveys/:id/responses` | anon 소유(오류에 503 `SURVEY_ITEMS_INSUFFICIENT` 포함, T-06) | `{seq, itemKey, shownItemIds /* 화면 위치 순 */, answer:'option'|'none_of_these'|'cant_tell', chosenItemId?, latencyMs, clientTs, ux?: SurveyAnswerUx /* 01장 1.4.12, D-0106 */}` | `200 SurveyView` | 400, 404, 409 `SEQ_CONFLICT`, 429 |
 | `POST /api/surveys/:id/undo` | anon 소유 | `{fromSeq}` | `200 SurveyView` | 409 `UNDO_NOT_ALLOWED` |
 | `GET /api/surveys/:id/result` | anon 소유 또는 user 소유 | — | `200 ResultView` | 404, 409 `SURVEY_NOT_COMPLETED` |
 | `POST /api/surveys/:id/rating` | anon 소유 | `{score:1..5}` | `200 {suggestedTypes: [{id, nameKo, descriptionKo}] /* score ≤ 2면 2·3순위 2개, 아니면 [] (R-36) */}` | |
@@ -1373,13 +1378,16 @@ ResultView = { resultId, surveyId, type: {id, nameKo, descriptionKo}, typeSecond
   adjacentTypes: [{id, nameKo, descriptionKo}, {id, nameKo, descriptionKo}] /* 2·3순위, D-0113 ② */,
   confidence: 'high'|'medium'|'low', flags: string[] /* 02장 type.flags */,
   axes: [{key: 'expression'|'temperature'|'shape'|'density'|'depth' /* R-01 */, mu, sigmaDisplay,
-          state: 'open'|'confirmed'|'insensitive'}], consistency: {C, level},
+          state: 'open'|'confirmed'|'insensitive'}],
+  notice: 'low_signal'|'conflict'|'low_consistency'|'boundary'|null /* 02장 2.13.1 pickNotice(profile), 서버가 고름. T-25 */,
+  seasonAdjusted: boolean /* 시즌 재생으로 유형이 바뀜(02장 2.15). 첫 방문 1회 표시는 localStorage tf_season_seen_{resultId} */,
   anchorOverrideTypeId: string | null /* R-36 */, rating: number | null,
-  guide: {pairingName, paletteHex: string[], radiusFamily}   /* D-001, 앵커(또는 override) 프리셋에서 */,
+  guide: {pairingName, paletteHex: string[], radiusFamily}   /* D-001. formatGuide(tokens) 결과(T-32): 입력 = 앵커(또는 override) 프리셋 토큰. 내보내기 styleguide.html은 같은 함수에 그 버전 tokens·l2를 넣는다 */,
   similarSites: [{title /* = title_ko */, blurb, url, domain}] /* ≤3개(link_allowed 재확인), 02장 2.14 */,
   taxonomyVersion, shareId: string | null }
 ```
 
+- `ResultView.notice`(T-25): 클라이언트는 σ·κ·경계 여부로 안내를 고르지 않는다(임계 비교 0). `notice ∈ {low_signal, low_consistency}`이면 01장 S03은 신뢰도 줄을 생략한다. 옛 `consistency: {C, level}` 필드 → T-25로 삭제(κ 원값은 `diagnosis_results`에만).
 - 응답 멱등: 같은 `seq`로 이미 저장된 응답과 본문이 같으면 저장 없이 현재 `SurveyView`를 200으로 반환한다. 본문이 다르면 409 `SEQ_CONFLICT`. 0.3초 간격 연속 클릭 10회(07장 TC-E-07)에서 저장 1건.
 - `similarSites`는 `similar_site_candidates` 뷰에서만 계산한다(스크린샷 경로 노출 0, 08장 AC-08-10).
 
@@ -1388,11 +1396,23 @@ ResultView = { resultId, surveyId, type: {id, nameKo, descriptionKo}, typeSecond
 | 메서드·경로 | 인증 | 요청 | 응답 | 오류 |
 |---|---|---|---|---|
 | `GET /auth/callback?code=` | — | Supabase PKCE 코드 | 세션 쿠키 설정 → `attach_anon()` → `next` 파라미터 경로로 302(동일 오리진 경로만 허용) | |
-| `GET /api/me` | user | — | `200 {id, email, role, consentsOk, inviteOk, quota:{dayLimit, dayUsed, monthLimit, monthUsed, resetDayAt, resetMonthAt}}` | 401 |
+| `GET /api/me` | user | — | `200 MeView`(아래) | 401 |
 | `POST /api/consents` | user | `{items:[{docType, docVersion, agreed}]}` | `204` | 400 |
 | `POST /api/invites/redeem` | user | `{code}` | `204` | 404, 409 |
 | `GET /api/me/export` | user | — | `200 application/zip`(동기 ≤ 60s, 08장 8.7.9·D-0814): `account.json`, `diagnosis_results.json`, `projects.json`(마스킹 브리프), `mockups.json`(시안·버전 메타, 렌더 이미지 제외), `consents.json`, `README.md`. 레이트리밋 3회/일 | 401, 429 |
 | `DELETE /api/me` | user | `{confirm:'탈퇴'}` | `202`(로그인 차단·공유 비공개 즉시, `account-delete` 잡) | |
+
+```ts
+MeView = { id, email, role, consentsOk, inviteOk,
+  quota: { dayLimit, dayUsed, monthLimit, monthUsed, resetDayAt, resetMonthAt,
+           refundableCancelsLeft: 0|1|2 /* 6.2.3 취소 처리 규칙, T-20 */ },
+  retest: { resultId, completedAt, eligible: boolean } | null
+    /* 최신 diagnosis_results 1건. eligible ⇔ completedAt ∈ [now − 14d, now − 6d] ∧ 그 뒤 결과 없음(T-22 ②).
+       닫기는 서버 상태가 아니라 localStorage tf_retest_dismissed_{resultId}(01장 S12 배너 me.retestBanner) */,
+  adoptionFollowup: { mockupId, projectId, adoptedAt, variant } | null
+    /* 서버 상태(T-22 ③): mockups 중 adopted_at ≤ now − 7d ∧ followup_answered_at is null ∧ followup_dismissed_at is null인
+       가장 오래된 1건. 01장 S12·S09 진입 시 방문당 최대 1개 */ }
+```
 
 **프로젝트·생성**
 
@@ -1411,9 +1431,12 @@ ResultView = { resultId, surveyId, type: {id, nameKo, descriptionKo}, typeSecond
 ```ts
 GenerationView = { jobId, status: JobStatus, phase: JobPhase, progressPct, queuePosition: number | null,
   queuedAt, startedAt: string | null, finishedAt: string | null,
-  mockups: MockupCard[] /* 노출 확정분, 0~3 */, errorCode: string | null, pollAfterMs: number | null /* 종료 시 null */ }
+  mockups: MockupCard[] /* 노출 확정분, 0~3 */, errorCode: string | null, pollAfterMs: number | null /* 종료 시 null */,
+  copySource: 'llm'|'template' | null /* 카피 덱 확정 전 null. 'template' = COPY_FALLBACK(S-12). 01장 S08 drafts.templateCopy 안내 원천(T-26) */ }
 MockupCard = { mockupId, variant: 'v_true'|'v_fit'|'v_bal', isFallback, harmonyScore, tasteScore,
-  previewUrl /* PREVIEW_ORIGIN 서명 URL, 15분 */, screenshotUrl /* 1280 첫 화면, 서명 5분 */, labelKey,
+  previewUrl /* PREVIEW_ORIGIN 서명 URL, 15분 */, screenshotUrl /* 1280 첫 화면, 서명 5분 */,
+  labelKey: 'variant.v_true'|'variant.v_fit'|'variant.v_bal' /* 01장이 variant.<v>.label/desc 6키로 표시(T-26) */,
+  photoSubstituted: boolean /* 04장 4.9.4 결정론 결과: 슬롯 태그에 맞는 사진이 없어 대체 사진을 씀(T-26) */,
   brandColorNotice: null | 'adjusted' | 'demoted_to_accent' | 'used_as_tint' | 'ignored' /* 해당 변형 DesignSpec, 04장·03장 보정 종료 순서, S-37 */,
   useSampleContent: boolean /* 프로젝트, D-0114 */,
   movedAxes: { axis: AxisId; direction: 'up'|'down'; reason: 'type'|'purpose'|'distance' }[] /* |Δ| 큰 순 최대 2, calibration_trace에서 결정론, S-32 */,
@@ -1421,6 +1444,7 @@ MockupCard = { mockupId, variant: 'v_true'|'v_fit'|'v_bal', isFallback, harmonyS
 // 화면 문구 키(calib.purpose·calib.type·calib.distance)와 L2 쉬운 말 사전은 01장 1.7.1. LLM 호출 없음.
 ```
 
+- S08 안내(T-26, 원천은 이 필드들, 문구는 01장 1.7): 노출된 비폴백 시안 < 3이면 `drafts.partial`, `copySource='template'`이면 `drafts.templateCopy`(동시 최대 2줄). 템플릿 덱이면 비폴백 3이어도 머리 상태는 `partial`(S-12).
 - `queuePosition` = `status='queued'`이면서 `queued_at`이 더 이른 잡 수 + 1.
 - `ETag` = `"<status>:<phase>:<progressPct>:<mockups.length>"`의 SHA-1.
 
@@ -1433,22 +1457,44 @@ MockupCard = { mockupId, variant: 'v_true'|'v_fit'|'v_bal', isFallback, harmonyS
 | `POST /api/mockups/:id/versions` | user 소유 + `Idempotency-Key` | `{baseVersionId, editState: EditState, trigger: 'autosave'|'manual'|'pre_export'|'pre_share'}` | `201 {versionId, versionNo, gateStatus:'pending'}` | 409 `VERSION_CONFLICT`, 422 `EDIT_GATE_FAILED`, 400 |
 | `POST /api/mockups/:id/restore` | user 소유 | `{versionId}` | `201 {versionId, versionNo}`(새 버전으로 복사) | 404 |
 | `POST /api/mockups/:id/feedback` | user 소유 | `{rating:'up'|'down', reason?}` | `204` | |
+| `POST /api/mockups/:id/adoption-followup` | user 소유 | `{answer: 'deployed'|'handed_off'|'reference_only'|'unused'|'dismissed'}` | `204`(`dismissed`는 `followup_dismissed_at`만 기록·이벤트 없음, 그 밖은 `followup_answered_at` 기록 + 서버 이벤트 `adoption_followup_answer{answer}`, T-22) | 404(남의·미채택 시안), 409 `FOLLOWUP_ALREADY_ANSWERED` |
 | `POST /api/mockup-versions/:id/exports` | user 소유 + `Idempotency-Key` | `{format:'html_zip'|'react_zip'|'dtcg_json'}` | `202 {exportId}` | 409 `VERSION_GATE_NOT_PASSED`, 429 |
 | `GET /api/exports/:id` | user 소유 | — | `200 {status, format, bytes?, downloadUrl? /* 서명 5분 */, errorCode?}` | 404 |
 | `POST /api/share` | result: anon/user 소유, mockup: user 소유 | `{targetType:'result'|'mockup', targetId, versionId?}` | `201 {shareId, url, isPublic}`(이미 있으면 200 + 기존) | 409 `VERSION_GATE_NOT_PASSED`, 503 `SHARE_DISABLED` |
 | `PATCH /api/share/:shareId` | 소유 | `{isPublic}` | `200 {shareId, isPublic}`(공개 전환 시 `mark_adopted(...,'share')`) | 404 |
 | `DELETE /api/share/:shareId` | 소유 | — | `204`(이후 `/r`·`/p` 404) | |
 | `GET /api/share/:shareId` | 없음(쿠키 있으면 소유 판정) | — | `200 ShareView = {targetType, isOwner: boolean, surveyId?: string /* isOwner일 때만 */, result?: 공개용 ResultView 부분집합(유형·축·가이드·닮은 사이트), mockup?: {previewUrl, variant, banner}}`(01장 D-0113 ④) | 404, 410 `SHARE_HIDDEN`, 503 |
-| `POST /api/share/:shareId/report` | anon | `{reason, details?, email?}` | `202` | 429 |
-| `POST /api/support` | anon | `{category, email, body}` | `201 {ticketId, dueBy}` | 429 |
-| `POST /api/rights-requests` | anon | `RightsRequest` 입력 필드(08장 8.1.6) | `201 {requestId, dueAt}` | 429 |
+| `POST /api/share/:shareId/report` | anon | `{reason, details?, email?, turnstileToken}` | `202` | 403 `TURNSTILE_FAILED`, 429 |
+| `POST /api/support` | anon | `{category, email, body, turnstileToken}` | `201 {ticketId, dueBy}` | 403 `TURNSTILE_FAILED`, 429 |
+| `POST /api/rights-requests` | anon | `RightsRequest` 입력 필드(08장 8.1.6) + `turnstileToken` | `201 {requestId, dueAt}`(`privacy_request`는 아래 본인 확인 흐름, 응답 모양은 이메일 일치 여부와 무관하게 같다) | 403 `TURNSTILE_FAILED`, 429 |
+| `GET /api/rights-requests/:id/verify?token=` | 없음 | — | `200`(확인 완료 화면으로 302, `verified_at` 기록, status `awaiting_verification` → `received`) | 410 `VERIFY_LINK_INVALID`(재사용·만료·토큰 불일치) |
 | `POST /api/events` | anon | `{events: Event[1..20]}` | `204` | 400(미등록 이벤트), 429 |
 
 - 편집 미리보기(R-17): 서버 호출 없음. 클라이언트가 `currentVersion`과 로컬 `EditState`로 isomorphic 컴파일러를 실행해 HTML을 만들고 `sandbox=""` iframe의 `srcdoc`을 통째로 교체한다(6.11.4).
 - 버전 저장 시점(01장 D-0115): ① 마지막 편집 op 후 5초 무입력(`autosave`) ② [저장](`manual`) ③ 내보내기·공유 직전(`pre_export`·`pre_share`). op마다 `localStorage`에 백업하고 `EditState.ops`에 최근 50개 op를 담는다. 변경이 없으면(직전 버전과 `render_hash` 동일) 요청하지 않는다.
 - 버전 저장 처리: web이 `EditState`를 04장 4.15 규칙으로 `tokens`·`layout_tree`에 적용 → **서버에서 다시 컴파일** → 렌더 없이 가능한 게이트(G-01 스키마, G-02·G-03 토큰 대비, G-09 린터, G-10 브랜드명, G-12 명세 무결성) 실패 시 422 `EDIT_GATE_FAILED` → 통과 시 INSERT(`gate_status='pending'`) → `render` 잡 → 워커가 5개 뷰포트 렌더 게이트(G-04~G-08, R-28 axe) 후 `passed|failed`와 썸네일 기록. 실패 버전은 내보내기·공유 불가(409 `VERSION_GATE_NOT_PASSED`)이며 `gate_report.failed`를 01장 문구로 표시한다.
-- 내보내기 잡(형식 1개 = 1건, 04장 4.16): `@tastefit/exporter`가 zip을 조립하기 전에 사용 자산 전부를 08장 자산 레지스트리와 대조한다. 미등록·`license_text_path` 없음·`redistribution_in_export=false`가 하나라도 있으면 zip을 만들지 않고 `failed/EXPORT_LICENSE_MISSING`(재시도 없음). 모든 zip 루트에 `README.md`, `LICENSES.md`, `CREDITS.md`, `AI_NOTICE.md`(08장 8.6 문구), `licenses/`를 넣고 HTML `<head>` 첫 줄에 `<!-- Generated with TasteFit (AI). See AI_NOTICE.md -->`를 넣는다. 파일명 `<brand-slug>-<variant>-v<version_no>-<format>.zip`. 객체는 7일 보관(6.6), 다운로드 URL은 요청마다 5분 서명.
+- 내보내기 잡(형식 1개 = 1건, 04장 4.16): `@tastefit/exporter`가 zip을 조립하기 전에 사용 자산 전부를 08장 자산 레지스트리와 대조한다. 미등록·`license_text_path` 없음·`redistribution_in_export=false`가 하나라도 있으면 zip을 만들지 않고 `failed/EXPORT_LICENSE_MISSING`(재시도 없음). 모든 zip 루트에 `README.md`, `LICENSES.md`, `CREDITS.md`, `AI_NOTICE.md`(08장 8.6 문구), `styleguide.html`(T-32), `licenses/`를 넣고 HTML `<head>` 첫 줄에 `<!-- Generated with TasteFit (AI). See AI_NOTICE.md -->`를 넣는다. 파일명 `<brand-slug>-<variant>-v<version_no>-<format>.zip`. 객체는 7일 보관(6.6), 다운로드 URL은 요청마다 5분 서명.
 - 내보내기 성공 시 워커가 `mark_adopted(mockupId,'export')`를 호출하고 true면 `mockup_adopted` 서버 이벤트를 기록한다.
+- 내보내기 공통 파일(T-32): 세 형식 모두 zip 루트에 `styleguide.html`을 넣는다. 내용은 `formatGuide(tokens)`(ResultView.guide와 같은 포맷터)에 **그 버전**의 `tokens`·`l2`를 넣은 결과이고 앵커 프리셋 값은 "유형 기본값" 참고 행으로만 붙인다(04장 E-14, 스토리지 표 `exports`).
+
+**익명 창구·본인 확인(T-16, 08장 8.9.5·8.7.9 원천의 구현값)**
+
+- Turnstile: 세 창구(`report`·`support`·`rights-requests`)의 `turnstileToken`은 필수다. `TurnstilePort.verify(token, ip)`가 실패하면 403 `TURNSTILE_FAILED`이고 DB 쓰기·메일 발송은 0이다. local 프로파일은 local 드라이버(형식만 검사, 빈 문자열은 실패)를 쓴다(6.13.1).
+- `privacy_request` 접수: 행을 `status='awaiting_verification'`으로 넣는다. `requester_email`(정규화 소문자)이 `auth.users.email`과 일치할 때만 32바이트 무작위 토큰을 만들어 `verify_token_hash = sha256(token)`, `verify_expires_at = now() + 24h`를 저장하고 메일 `privacy_verify`를 보낸다. 일치하지 않으면 토큰·메일 없이 같은 201을 돌려준다(계정 존재 은닉). 확인 링크는 1회용이다: 성공 시 `verified_at = now()`, `verify_token_hash = null`, `verify_expires_at = null`(CHECK 짝 유지), status `received`. 재사용·만료·불일치는 410 `VERIFY_LINK_INVALID`. 미확인 행은 08장 기한 계산(`due_at`)에서 확인 시각부터 센다.
+- 신고 자동 비공개: `share_links.hidden_reason='report_auto'`가 되면 로그인 소유자(`owner_user_id` not null)에게 메일 `share_hidden_notice`를 1통 보낸다(신고 내용·신고자 정보 미포함). S12 목록 항목의 `shareStatus` = `hidden_reason ∈ {report_auto}` ∧ 미검토 → `under_review`, 그 밖에 숨김 → `private`, `is_public` → `public`, 공유 없음 → `null`. 01장 S12는 `under_review`에 `me.share.underReview`를 표시한다.
+
+**메일 템플릿**(`MailPort.send(template, to, vars)`, 고정 문구는 `packages/mail/templates/<id>.ko.md`, 사용자 입력 본문 삽입 0, 08장 8.9.5)
+
+| id | 보내는 때 | 변수 |
+|---|---|---|
+| `magic_link` | 로그인(AuthPort local·supabase 공통 문구) | `link` |
+| `support_received` | 문의 접수 | `ticketId`, `dueBy` |
+| `report_received` | 신고 접수(이메일 입력 시) | `reportId` |
+| `rights_received` | 권리 요청 접수(`privacy_request` 외) | `requestId`, `dueAt` |
+| `privacy_verify` | `privacy_request` 접수 ∧ 계정 이메일 일치(T-16) | `verifyUrl`, `expiresAt` |
+| `share_hidden_notice` | 신고로 자동 비공개(T-16) | `shareKind`, `myPageUrl` |
+
+같은 수신 주소에는 템플릿마다 하루 1통(08장 8.9.5, `magic_link` 제외). local 드라이버는 `dev_mail_outbox`에 `subject`에 템플릿 id를 접두로 넣어 기록한다(E2E가 id로 찾는다).
 
 **관리자**(`admin`, 비관리자 404, 모든 변경은 `admin_audit_logs` 1행)
 
@@ -1464,7 +1510,7 @@ MockupCard = { mockupId, variant: 'v_true'|'v_fit'|'v_bal', isFallback, harmonyS
 | `GET /api/admin/survey-items`, `PATCH /api/admin/survey-items/:id` | ADM-08(활성 토글) |
 | `POST /api/admin/eval-sets`, `GET /api/admin/eval-sets/:id` | ADM-09 |
 | `GET/POST/DELETE /api/admin/blocked-brands` | ADM-10 |
-| `GET/PATCH /api/admin/rights-requests` | ADM-11(opt-out 처리 시 05장 5.13.3 절차 실행) |
+| `GET/PATCH /api/admin/rights-requests` | ADM-11(opt-out 처리 시 05장 5.13.3 절차 실행). `privacy_request`이고 `verified_at is null`이면 처리 PATCH는 409 `REQUEST_NOT_VERIFIED`(T-16) |
 | `GET/POST /api/admin/invites` | ADM-12 |
 | `GET /api/admin/audit-logs` | ADM-13 |
 | `GET /api/health`(공개) · `GET /api/health/deep`(admin) | `{status, version}` · `{db, queueDepth, oldestQueuedS, workers:[{id, lastBeatS}], spendTodayUsd}` |
@@ -1508,6 +1554,8 @@ MockupCard = { mockupId, variant: 'v_true'|'v_fit'|'v_bal', isFallback, harmonyS
 - **AC-06-47**: `GenerationView.mockups[*]`에 `brandColorNotice`·`useSampleContent`가 있고, `ShareView.isOwner`는 소유 쿠키/세션일 때만 true이며 그때만 `surveyId`가 포함된다.
 - **AC-06-48**: 레지스트리 미등록 이미지를 주입한 버전의 내보내기 → `exports.status='failed'`, `error_code='EXPORT_LICENSE_MISSING'`, `exports` 버킷 객체 0(08장 AC-08-19). 정상 내보내기 3형식 zip 모두에 `AI_NOTICE.md`·`LICENSES.md`·`CREDITS.md`가 있다.
 - **AC-06-49**: `GET /api/me/export`가 60초 안에 zip을 반환하고, 그 안의 JSON에 다른 사용자 ID 0건, 브리프 원문(마스킹 전 값) 0건, `ref-screenshots`·`llm-payloads` 경로 0건.
+- **AC-06-65**(T-22): 통합 테스트 ① `adopted_at = now − 8d`인 시안 2개(A가 더 오래됨)와 `now − 3d`인 시안 1개가 있으면 `GET /api/me.adoptionFollowup.mockupId = A` ② `POST /api/mockups/A/adoption-followup {answer:'deployed'}` → 204, `events`에 `adoption_followup_answer{mockup_id:A, answer:'deployed'}` 1행, 이어서 같은 요청 → 409 `FOLLOWUP_ALREADY_ANSWERED` ③ 다음 `GET /api/me`는 두 번째로 오래된 8일 시안을 돌려주고, 그 시안에 `dismissed` → 204·이벤트 0행이며 이후 `adoptionFollowup`은 null(3일 시안은 대상 아님) ④ 남의 시안·미채택 시안 → 404 ⑤ `retest.eligible`은 최신 결과 `completedAt = now − 6d`·`now − 14d`에서 true, `now − 5d`·`now − 15d`에서 false, 그 뒤 결과가 있으면 false.
+- **AC-06-66**(T-16): ① 세 익명 창구를 `turnstileToken` 없이·검증 실패 토큰으로 호출하면 403 `TURNSTILE_FAILED`이고 `reports`·`support_tickets`·`rights_requests` 행 변화 0, `dev_mail_outbox` 변화 0 ② 계정 이메일과 다른 주소의 `privacy_request`는 201(응답 키 집합이 일치 주소와 같음)이고 메일 0통·`verify_token_hash` null ③ 일치 주소는 메일 `privacy_verify` 1통, 확인 전 관리자 처리 PATCH → 409 `REQUEST_NOT_VERIFIED`, 링크 1회 → 302·`verified_at` not null, 같은 링크 2회째 → 410, 새 요청의 링크를 25시간 뒤(가짜 시계) 열면 410 `VERIFY_LINK_INVALID` ④ `impersonation` 신고로 자동 비공개되면 소유자 메일 `share_hidden_notice` 1통(본문에 신고 `details` 문자열 0건)이고 `GET /api/surveys?mine=1`의 해당 항목 `shareStatus='under_review'`.
 
 ## 6.5 인증·세션 귀속
 
@@ -1577,7 +1625,7 @@ MockupCard = { mockupId, variant: 'v_true'|'v_fit'|'v_bal', isFallback, harmonyS
 |---|---|---|---|---|---|---|---|
 | `survey-assets` | **public** | 설문 자극물 WebP 2벌(R-07: desktop 1280×800 ≤140KB, mobile 780×1560 ≤160KB) | `<taxonomyVersion>/{id}.{desktop|mobile}.{sha256 앞 12자}.webp`(02장 2.4.5) | `survey:build`(service role) | 누구나 | — | 시즌 `retired` 후 90일 |
 | `renders` | private | 후보·버전 스크린샷, 썸네일, 렌더 캐시 | `<owner_id>/<render_hash>/<vp>.webp` | worker | 소유자(API 경유), 관리자 | 5분(08장 S-10) | 미선택 후보 30일, 시안·버전은 계정 존속 기간 |
-| `exports` | private | zip 3형식(`dtcg_json`도 zip: 공통 파일 README·LICENSES·CREDITS·AI_NOTICE + `tokens/tokens.json`, 08장 8.4.4) | `<owner_id>/<export_id>.zip` | worker | 소유자 | 5분(다운로드 직전 재발급) | 생성 후 7일 |
+| `exports` | private | zip 3형식(`dtcg_json`도 zip: 공통 파일 README·LICENSES·CREDITS·AI_NOTICE·`styleguide.html`(T-32) + `tokens/tokens.json`, 08장 8.4.4) | `<owner_id>/<export_id>.zip` | worker | 소유자 | 5분(다운로드 직전 재발급) | 생성 후 7일 |
 | `ref-screenshots` | private | 레퍼런스 스크린샷 | `<reference_id>/<capture_id>/{first,full}.webp` | ingest CLI | 관리자 라우트만 | 5분 | 수집 후 90일(D-31) |
 | `llm-payloads` | private | LLM 요청·응답 원문(gzip JSON) | `<yyyy-mm-dd>/<llm_call_id>.json.gz` | worker | 관리자 | 5분 | 30일 |
 | `eval-artifacts` | private | 골든·블라인드 평가 스크린샷 | `<eval_set_id>/<item_id>.webp` | eval 스크립트 | 관리자·평가자 링크(서버 경유) | 5분 | 평가 종료 후 180일 |
@@ -2504,12 +2552,12 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 
 | 이름 | 이 장의 정의 위치 | 상대 장 | 맞출 내용 |
 |---|---|---|---|
-| 축 키 | `is_l1`, API `axes[].key` | 02 | R-01 키(`expression`…`depth`). 02장 2.3.1 `TasteProfile.axes`가 아직 `A1`~`A5` 키라 R-01에 맞춰야 함(저장 시 변환 금지 대상) |
+| 축 키 | `is_l1`, API `axes[].key` | 02 | R-01 키(`expression`…`depth`). 반영 완료(02장 `A1`~`A5` JSON 키 0건, 2026-11-19 확인) |
 | 진단 테이블 | 6.3.3 | 02, 08 | `diagnosis_sessions`(abandoned 30분), `survey_answers`(+`ux`), `impressions`, `diagnosis_results`(+`anchor_override_type_id`). 08장 8.7.2 `responses` 표기 → `survey_answers` |
-| 자극물 | `survey_items`, `SurveyItemView` | 02, 09 | R-07 2벌 규격·용량 CHECK, `alt_text`(D-0625), `dominant_colors`(01장 D-0111, 02장 미반영), 파일명 02장 2.4.5 |
+| 자극물 | `survey_items`, `SurveyItemView` | 02, 09 | R-07 2벌 규격·용량 CHECK, `alt_text`(D-0625), `dominant_colors`(01장 D-0111, 02장 2.4.5 반영 완료), 파일명 02장 2.4.5 |
 | 시즌 | `taxonomy_releases`, `normalizers` | 03, 05 | R-30: `YYYY-S{1..4}`(+`.n`), release = 분기 첫 월요일, freeze = −14일 |
 | 레퍼런스 | 6.3.3 0003 | 05, 08 | 05장 5.17 반영 완료(`sources.kind`·`robots_checked_at`·`tdm_reserved`·`excluded`·`extract`, `title_ko`·`blurb_ko`·`type_primary`, 뷰 컬럼, reject_reason 확장). 08장 `sources` 표기(`kind='stats'` tier) 정정은 05장 요청대로 |
-| 편집 미리보기 | 6.11.4 (b) | 01, 04, 08 | R-17·04장 D-0413. 01장 1.8.4 "iframe → 부모 `slot.click`" 문구는 오버레이 클릭으로 바꿔야 함 |
+| 편집 미리보기 | 6.11.4 (b) | 01, 04, 08 | R-17·04장 D-0413. 01장 오버레이 클릭 반영 완료(`slot.click` 0건) |
 | `EditState`·`EditOp` | `mockup_versions.edit_state` | 01, 04 | ops 최근 50개, 저장 시점 D-0115/D-0622 |
 | 오류 코드 | 6.4.2 | 00, 01, 07, 08 | R-13 + `DRAFT_EXPIRED`, `EXPORT_LICENSE_MISSING`, `GATE_FAILED:<id>` 형식. 화면 문구 01장 |
 | API 추가분 | 6.4.3 | 01, 08 | D-0620·D-0621·D-0622·D-0624 |
@@ -2524,7 +2572,10 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 | `processors.yaml` | 6.9.2 | 08 | `email-sender` = Resend(R-29) 확정, `effective_from` |
 | `DbPort`·`AuthPort`·`StoragePort`(T-11) | 6.1.2 R-3·R-5, 6.3.5, 6.13.1, 6.13.2 | 07, 08, 09 | 09장 9.1.2·9.1.3 db 패키지 의존(`supabase-js` → Kysely + `pg`), M1 `supabase gen types` → `pnpm db:types`, M0 native 기동, guard(R-3·R-5·`db:grants-snapshot`). 07장 needs_ci `supabase-rest-rls`. 08장 8.7.5 "서버 경유" 참조 |
 | 관리자 권한 원천·`provision_user`(T-12) | 6.5.4, 6.11.2 | 00, 08 | ADM-06 수동 승격 삭제, 08장 8.15 참조 문구 |
-| 09장 마일스톤 표기 | — | 09 | `V-TRUE` 라벨·`prompts/{role}.v{N}.md`·응답 API p95 300ms 기본값을 R-03·R-12·D-0608에 맞춰야 함 |
+| 09장 마일스톤 표기 | — | 09 | 미해결: 09 M3 범위 `V-TRUE/V-FIT/V-BAL`·M5 범위 `prompts/{role}.v{N}.md`가 남음 → R-03(`v_true` 코드값)·R-12(`<role>@v<N>.md`)로, 진단 p95는 `perf.surveyServerP95Ms`·`perf.surveyApiP95Ms` 키(D-0608·T-08)로. 09-b 단위에서 정리 |
+| 원가·Mock 시나리오(T-17) | 6.9.4 ①~⑦ | 04, 07, 09, 00 | 04 4.17.2 표·AC-04-37, 07 TC-R-09, 09 9.6.2 `cost_spike` 정의·Mock usage 규칙·`cost_ramp`·`usage_overrun`, 00 §9.2·AC-00-14가 6.9.4를 참조하도록(각 장 단위) |
+| 취소·계정 원가(T-20)·평가 예산(T-21) | 6.2.3, 6.10.3, 6.10.4 | 00, 01, 07, 09 | 00 §9.3 `canceled` 행·§9.4 비사용자 지출 표, 01 1.6.5 `gen.cancel.noRefund`, 07 G2 `runsCompleted`, 09 M5 |
+| 화면 데이터(T-22·T-25·T-26·T-16) | 6.4.3 `MeView`·`ResultView.notice`·`MockupCard.photoSubstituted`·`GenerationView.copySource`·`shareStatus` | 01, 02, 04 | 01 S03·S08·S12 표시 규칙, 02 2.13.1 `pickNotice`, 04 4.9.4 `photoSubstituted` 산출 |
 
 ## 6.20 반영 추적
 
@@ -2611,5 +2662,6 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 | T-20 (PM3-02) | Major | 6.2.3 `canceled` 행·취소 처리 규칙, 6.3.4 `create_generation_job` ⑥b·`cancel_generation_job`, 6.4 cancel 응답·`JOB_ALREADY_FINISHED`·`QUOTA_DAY.reason`, 6.10.3 계정 일 원가 행, 6.10.4 `USER_DAILY_COST_CAP_USD`, 6.12.4 A4, AC-06-55 주석·AC-06-63 | `GET /api/me` `quota.refundableCancelsLeft` 필드 정의는 06-d |
 | T-21 (PM3-03) | Major | 6.10.3 평가·태깅 행·집계 분리, 6.10.4 `EVAL_*` 키·환경별 값·월 총 210, 6.14 staging 행, 6.15 단계 3, AC-06-23 개정·AC-06-64 | 00 §9.4 표는 00-a |
 | T-08 D-0608 (QA3-05) | Major | 6.2.1 진단 행, 6.12.5 SLO 진단 행, D-0608 행을 `perf.surveyServerP95Ms`·`surveyApiP95Ms`·`resultServerMs` 키로 | 키 정의 원천 07 7.12.1 |
+| 06-d API(T-16·T-22·T-25·T-26·T-32·T-06·T-36) | Major | 6.4.2 `TURNSTILE_FAILED`·`SURVEY_ITEMS_INSUFFICIENT`·`FOLLOWUP_ALREADY_ANSWERED`·`REQUEST_NOT_VERIFIED`·`VERIFY_LINK_INVALID`·`JOB_ALREADY_FINISHED`, 6.4.3 익명 창구 `turnstileToken`·verify 엔드포인트·메일 템플릿 표·`shareStatus`, `MeView`(`refundableCancelsLeft`·`retest`·`adoptionFollowup`), `adoption-followup`, `ResultView.notice`·`seasonAdjusted`(옛 `consistency` 삭제), `GenerationView.copySource`, `MockupCard.labelKey`·`photoSubstituted`, `guide` = `formatGuide`, `styleguide.html`(스토리지 표·내보내기), AC-06-65·66, 6.19 정리 | 오류 코드 이름 3개는 AD-013 |
 | TL3-09(06) | Minor | AC-06-02 `pg_class.relforcerowsecurity` | |
 | S-32·S-37(06) | Major | 6.4.3 MockupCard `movedAxes`·`diffFromTrue`·brandColorNotice 5값 | |
