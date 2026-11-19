@@ -62,3 +62,12 @@
 - 제안 수정안(사람): package.json과 `.guard/verify-scripts.json` 양쪽에 `"verify:schema-parity": "tsx scripts/data/schema-parity.ts"`를 추가하고 `pnpm guard:relock --human`(또는 테스트 쪽 명령을 db:schema-parity로)
 - 처리: 수용 테스트 ⑨ 1건만 미충족, verify:m1 결과에 blockedBy BLK-006
 - 상태: open
+
+## BLK-007 · M2 · locked-conflict · 2026-11-19T18:18Z
+- 대상: 07장 7.12.2 리터럴 감사(비교 피연산자 값 ∈ thresholds 잎 값이면 FAIL) ↔ 04장 AC-04-03 "primary hue 오차 ≤ 5°"·AC-04-07 "|v2_k − μ_k| ≥ 0.20"
+- 증상: 두 비교 기준은 thresholds 키도 사양 상수 표(7.12.1) 행도 아닌데 값(5, 0.2)이 다른 잎 값(diagnosis.tunable.typeDiscWeight.initial 등, generation.variant.candidatePairDistMin 등)과 같아 수용 테스트에 쓰면 qa:trace --audit FAIL
+- 재현: tests/acceptance/m2/spec.test.ts에 `toBeLessThanOrEqual(5)` 또는 `>= 0.2`를 넣고 pnpm -s qa:trace --audit
+- 시도: (1) 의미가 같은 thresholds 키 탐색 → 없음 (2) spec-constants.ts → SC 행이 없어 예외 불가 (3) 우회 표기(계산식으로 숨기기) → 감사 우회라 하지 않음
+- 처리: 수용 테스트(잠금)에서는 이 두 비교를 빼고(AC-04-03 대비 게이트·notice, AC-04-06 범위·moved_axes 형식만), packages/design-spec 단위 테스트에서 ±5°·0.20 대조를 한다(감사 범위 밖)
+- 제안 수정안(사람): 7.12.1 사양 상수 표에 "브랜드 hue 고정 허용 5°(04장 4.2.2·AC-04-03)", "보정 사유 기록 기준 0.20(04장 4.3·AC-04-07)" 행 추가 → spec-constants.ts에 SC 상수 → 수용 테스트에 대조 추가 후 relock
+- 상태: open

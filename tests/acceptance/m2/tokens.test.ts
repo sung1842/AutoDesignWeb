@@ -166,8 +166,9 @@ describe("AC-03-03 deriveTokens 순수·결정적, spacing·radius 집합", () =
   it("같은 입력 1,000회 → SHA-256 1종", () => {
     const p = presets[0]!;
     const hashes = new Set<string>();
-    for (const _ of Array.from({ length: 1000 }, (_v, i) => i))
-      hashes.add(sha(deriveTokens({ presetId: p.id, l2: { ...p.l2 } }, data)));
+    Array.from({ length: 1000 }).forEach(() =>
+      hashes.add(sha(deriveTokens({ presetId: p.id, l2: { ...p.l2 } }, data))),
+    );
     expect(hashes.size).toBe(1);
   });
 

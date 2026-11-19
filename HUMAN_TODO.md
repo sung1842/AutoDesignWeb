@@ -30,3 +30,4 @@
 - [ ] (B17, seed:temp 자동) 법무 문안 확정(변호사 검토 권장): legal/terms.md·privacy.md·sources.md
 - [ ] (ASM-017) processors.yaml(08장 8.7.6)과 흐름표(06장 6.1.3)의 processor_id·items 불일치 정리(llm-judge·llm-secondary 항목 추가, turnstile/cloudflare-turnstile 통일, vercel items)
 - [ ] (BLK-006) package.json·`.guard/verify-scripts.json`에 `verify:schema-parity` 추가 후 relock해 주세요(구현은 `pnpm db:schema-parity`로 완료, BLOCKED.md BLK-006)
+- [ ] (BLK-007) 사양 상수 표(07장 7.12.1)에 브랜드 hue 허용 5°·보정 사유 기준 0.20 행을 추가하고 M2 수용 테스트에 두 대조를 넣어 relock해 주세요(BLOCKED.md BLK-007)
