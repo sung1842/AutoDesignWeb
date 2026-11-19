@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P2
-- lock: {owner: 2026-11-19T05:57Z, since: 2026-11-19T06:29Z}
+- lock: {owner: 2026-11-19T05:57Z, since: 2026-11-19T06:31Z}
 - limit.next_reset_kst: 2026-11-19 19:57
 - 마지막 갱신: 2026-11-19 15:40 KST (예약 세션: 06-c~01-b 반영)
 
@@ -28,7 +28,7 @@
 - 라운드 2: [x] PM [x] 프로덕트 디자이너 [x] UX [x] UI [x] 테크 리드 [x] AI/ML [x] QA [x] 법무 → [x] decisions_v3(S-01~S-41) [x] 반영(아래 20단위)
 - 라운드 2 반영 단위(decisions_v3.md "반영 순서" 참고): [x] 07-a [x] 07-b [x] 07-c [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 09-a [x] 09-b [x] 09-c [x] 04-a [x] 04-b [x] 04-c [x] 03 [x] 02 [x] 05 [x] 01 [x] 08 [x] 00 [x] 잔여 표기 grep
 - 라운드 3: [x] PM [x] 프로덕트 디자이너 [x] UX [x] UI [x] 테크 리드 [x] AI/ML [x] QA [x] 법무 → [x] decisions_v4(T-01~T-36) [ ] 반영(아래 22단위)
-- 라운드 3 반영 단위(decisions_v4.md "반영 순서" 참고): [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 07-a [x] 07-b [x] 07-c [x] 07-d [x] 09-a [x] 09-b [x] 09-c [x] 01-a [x] 01-b [x] 04-a [x] 04-b [x] 03-a [x] 03-b [ ] 08-a [ ] 02-a [ ] 05-a [ ] 00-a [ ] 잔여 표기 grep
+- 라운드 3 반영 단위(decisions_v4.md "반영 순서" 참고): [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 07-a [x] 07-b [x] 07-c [x] 07-d [x] 09-a [x] 09-b [x] 09-c [x] 01-a [x] 01-b [x] 04-a [x] 04-b [x] 03-a [x] 03-b [x] 08-a [ ] 02-a [ ] 05-a [ ] 00-a [ ] 잔여 표기 grep
 - 판정 기록(라운드별 C1/C2/C3):
   - R2 PM: FAIL/FAIL/FAIL (Blocker 0, Major 5: 예산-목표 불일치, 취소 시 한도 규칙 충돌, KPI 쿼리 분모, 검증 표본 확보, 00↔07·09 불일치)
   - R2 UX: FAIL/FAIL/FAIL (1라운드 19/19 해결, Blocker 0, Major 3: 결과 신뢰 문구 01↔02 불일치, 진단 카드 크기 규칙이 실제 화면에서 불성립, 편집 가능 판정을 화면 폭으로 해 200% 확대 시 편집 소실)
@@ -57,6 +57,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 16:45 | 08-a: P14·auth 90일, 감사 1년 파기, 신고 증거·abuse_holds, 본인 확인, AC-08-55~57
 - 2026-11-19 16:40 | 03-b: text_cols hero 6종·토큰 판정, FP15 body, lint-matrix AC-03-43, styleguide 입력, 3.15 요약
 - 2026-11-19 16:35 | 03-a: 반전 면 매핑·accentTextSafe, expectedSize·nav.wordmark, 텍스트 역할 17행, AC-03-42·44·45·46
 - 2026-11-19 16:30 | 04-b: maxChars_job·role_overrides·AIL-24, G-12·AIL-17 expectedSize, styleguide 입력, AC-04-46

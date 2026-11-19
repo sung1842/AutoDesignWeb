@@ -482,7 +482,8 @@ UsedAssets = {
 | P10 | 보안 기록 | IP의 HMAC 값, UA 해시, 레이트 리밋 카운터, Turnstile 검증 결과, 관리자 작업 로그 | 요청 시 | 부정 이용 방지·보안 | 필수 | `rate_limits`, `admin_audit_logs` |
 | P11 | 호스팅 접속 기록 | IP, UA, 요청 경로, 시각 | 요청 시 | 호스팅 운영 | 필수 | 호스팅 공급자 로그(Vercel·Fly.io)와 앱 로그(pino) |
 | P12 | 오류 추적 | 스택 트레이스, 요청 경로, 릴리스(이메일·IP·브리프 미포함) | 오류 발생 시 | 장애 대응 | 필수 | Sentry |
-| P13 | 문의·신고·권리 요청 | 회신 이메일, 요청 내용, 대상 URL | 접수 시 | 요청 처리 | 해당 시 | `rights_requests`, `reports`, `support_tickets` |
+| P13 | 문의·신고·권리 요청 | 회신 이메일, 요청 내용, 대상 URL, 신고 증거(`reports.evidence`: 신고 시점 공유 대상 버전·객체 경로) | 접수 시 | 요청 처리 | 해당 시 | `rights_requests`, `reports`, `support_tickets`, Storage `abuse-evidence`(T-15) |
+| P14 | 인증 서버 기록 | 인증 이벤트(로그인·로그아웃·토큰 갱신·MFA), IP, UA, 이메일, 세션 | 로그인·세션 갱신 시 | 인증 보안·부정 접속 대응 | 필수 | Supabase Auth `auth.audit_log_entries`·`auth.sessions`(native는 shim 같은 이름, 06장 6.13.1). 앱 테이블(`public`)에는 저장하지 않음(T-13) |
 
 ### 8.7.3 법적 근거 [원문 확인]
 
@@ -490,7 +491,7 @@ UsedAssets = {
 |---|---|
 | P1~P7, P9, P13 | 정보주체와의 계약 체결·이행을 위해 필요한 처리(개인정보보호법 제15조 제1항 제4호) |
 | P8 | 계약 이행 범위의 서비스 개선으로 보되, 1년 후 `user_id`를 제거한 집계만 남긴다. 근거 적정성 [원문 확인] |
-| P10~P12 | 개인정보처리자의 정당한 이익(같은 항 제6호) — 보안·장애 대응, 최소 항목 |
+| P10~P12, P14 | 개인정보처리자의 정당한 이익(같은 항 제6호) — 보안·장애 대응·인증 보안, 최소 항목(P14 추가, T-13) |
 | 결과물 쇼케이스·few-shot 활용 | 선택 동의(제1호) — **MVP 제외**(수집하지 않음) |
 | 마케팅 수신 | **MVP 제외**(마케팅 메일을 보내지 않음) |
 | 국외 이전 | 계약 이행에 필요한 처리위탁·보관으로서 처리방침에 공개(제28조의8 제1항 제3호) |
@@ -538,7 +539,7 @@ Consent = {
 
 - 브리프 입력 화면 안내(필드 위 고정 문구): "대표자 이름, 개인 휴대전화, 집 주소 같은 개인정보는 입력하지 마세요. 연락처·주소는 시안에 예시값으로 채워져요."
 - 시안의 연락처·주소·사업자정보 슬롯은 **항상 예시값**: 전화 `02-000-0000`, 이메일 `hello@example.com`, 주소 `서울시 ○○구 ○○로 00`, 사업자등록번호 `000-00-00000`. LLM 출력에 이 슬롯의 다른 값이 들어오면 컴파일러가 예시값으로 덮어쓴다(→ 04장).
-- **서버 마스킹**: 브리프는 저장 전(`brief_drafts`·`projects` 모두)과 LLM 전송 전에 `maskPII()`를 거친다. `POST /api/projects` 응답의 `maskedFields`로 건수를 돌려준다. 저장도 마스킹된 값으로 한다(원문 미보관). 마스킹이 1건 이상 일어나면 입력 화면에 "개인정보로 보이는 값을 가렸어요: 전화번호 1건" 안내를 띄운다.
+- **서버 마스킹**: 브리프는 저장 전(`brief_drafts`·`projects` 모두)과 LLM 전송 전에 `maskPII()`를 거친다. 모든 쓰기는 서버 Route Handler(`DbPort`, 06장 6.1.2 R-5)를 경유하며 브라우저가 DB·PostgREST에 직접 쓰는 경로는 없다(06장 6.3.5 쓰기 화이트리스트, T-11). 그래서 마스킹을 건너뛰는 저장 경로가 없다. `POST /api/projects` 응답의 `maskedFields`로 건수를 돌려준다. 저장도 마스킹된 값으로 한다(원문 미보관). 마스킹이 1건 이상 일어나면 입력 화면에 "개인정보로 보이는 값을 가렸어요: 전화번호 1건" 안내를 띄운다.
 
 | 패턴 ID | 대상 | 정규식(정규화 후: NFKC, 전각→반각) | 치환 |
 |---|---|---|---|
@@ -634,7 +635,10 @@ Consent = {
 | 동의 기록(P9) | 계정 존속 기간 + 탈퇴 후 1년. 탈퇴 시 `consents_archive`로 옮기고 `user_hash = HMAC-SHA256(user_id, CONSENT_HASH_KEY)`로 대체(S-21) | 삭제 | `consents_archive.archived_at` [원문 확인] |
 | 이용 정지 이력(`sanctions`) | 정지 종료(`until`)까지, 최대 1년. 정지된 계정이 탈퇴 후 같은 이메일로 재가입해 제재를 피하는 것을 막기 위해 이메일 해시만 보관(S-21) | 삭제 | `sanctions.until`. 보관 근거(정당한 이익)는 사람 확인(Q6) |
 | 레이트 리밋 카운터 | 48시간 | 삭제 | `rate_limits.window_start` |
-| `admin_audit_logs`(관리자 작업, `admin_hash`, ip_hmac, `pii_view` 열람 기록) | 1년(접속기록 기본값, 월 1회 점검, S-28. 1년/2년 적정성은 Q16) | 삭제 | `admin_audit_logs.created_at` |
+| `admin_audit_logs`(관리자 작업, `admin_hash`, ip_hmac, `pii_view` 열람 기록) | 1년(접속기록 기본값, 월 1회 점검, S-28. 1년/2년 적정성은 Q16). 1년 동안 UPDATE·DELETE 불가(append-only), 1년 지난 행만 파기 | 삭제(`purge_audit_logs(p_before ≤ now − 1 year)`만, 규칙 `admin_audit_1y`, T-14) | `admin_audit_logs.created_at` |
+| 인증 서버 기록(P14, `auth.audit_log_entries`·`auth.sessions`) | 90일(기본값, 적정성은 Q16 사람 확인). 탈퇴 시 그 사용자 행은 즉시 삭제(06장 6.2.5 ⑥b) | 삭제(규칙 `auth_audit_90d`) | `auth.audit_log_entries.created_at`, `auth.sessions.updated_at`(T-13) |
+| 신고 증거(`impersonation`·`phishing` 신고가 `open`/`hidden`/`actioned`인 버전의 객체, `abuse-evidence/<report_id>/`) | 검토 종료(`reports.handled_at`) 후 90일(기본값, 적정성은 Q6 사람 확인) | 객체 삭제(규칙 `abuse_evidence_90d`) | `reports.handled_at`(T-15) |
+| 탈퇴 보류(`abuse_holds`: 이메일 해시·신고 ID) | `until` = 검토 종료 후 90일 | 삭제 | `abuse_holds.until`(T-15) |
 | 멱등 키(`idempotency_keys`) | 24시간 | 삭제 | `created_at` |
 | 호스팅 접속 기록(P11) | 공급자 기본값(목표 ≤ 90일) | 공급자 자동 삭제 | [원문 확인] |
 | 오류 추적(P12) | 30일 | 공급자 자동 삭제 | Sentry 설정 |
@@ -645,7 +649,7 @@ Consent = {
 | DB 백업 | 공급자 백업 주기, 최대 30일 순환 | 자동 만료 | [원문 확인: 플랜별 보관 일수] |
 
 - 이 표의 "구현 기준" 열에 나온 테이블·컬럼은 06장 DDL에 모두 있어야 한다(`verify:schema-parity`가 검사, S-20).
-- IP 원문은 앱 DB에 저장하지 않는다. `ip_hmac = HMAC-SHA256(ip, IP_HMAC_KEY)`이며 키는 90일마다 교체한다.
+- IP 원문은 **앱 테이블(`public` 스키마)**에 저장하지 않는다. `ip_hmac = HMAC-SHA256(ip, IP_HMAC_KEY)`이며 키는 90일마다 교체한다. 인증 서버 기록(P14, `auth` 스키마)의 IP는 인증 공급자가 저장하며 위 보관 행으로 관리한다(옛 "IP 원문을 어디에도 저장하지 않는다" → T-13으로 대체). GoTrue 내부 테이블 실측 컬럼은 `docs/compliance/auth-metadata.md`(needs_ci `gotrue-auth-tables`)에 기록한다.
 
 ### 8.7.8 파기 절차 [MVP]
 
@@ -663,8 +667,8 @@ Consent = {
 | 익명 결과 삭제 | 결과 화면 S03 `/r/[shareId]`(소유자 뷰)의 "이 결과 삭제" 버튼(`anon_id` 쿠키 소유자만, `DELETE /api/surveys/:id`) | 즉시 |
 | 처리정지·기타 | `privacy@<서비스도메인>` 이메일, `/support`(`category = 'privacy'`) 또는 `/sources` 양식 `privacy_request` | 10일 안에 회신 [원문 확인] |
 
-- 계정 삭제 시 함께 삭제: P3, P4, P5, 귀속 P2, P6(해당 사용자 job), P8의 식별자(집계로 전환), 공유 링크. 남는 것: `consents_archive`(해시, 1년), 정지 이력이 있으면 `sanctions`(이메일 해시, 최대 1년), `admin_audit_logs`(FK 없음), P7(사용자 연결 없음). 순서·멱등 규칙은 06장 6.2.5 `account-delete` ①~⑦(S-21): P6 객체는 `users` 삭제 전에 지운다.
-- **`privacy_request`(처리정지·기타) 본인 확인(S-27)**: 익명 양식으로 받은 요청은 바로 처리하지 않는다. "로그인한 상태에서 S12 셀프 서비스를 쓰거나, 계정 이메일에서 보낸 메일로 요청하세요"로 안내하고, 계정 이메일로 받은 요청만 그 주소로 확인 링크(1회용, 24시간)를 보내 클릭된 뒤 처리한다.
+- 계정 삭제 시 함께 삭제: P3, P4, P5, 귀속 P2, P6(해당 사용자 job), P8의 식별자(집계로 전환), 공유 링크. 남는 것: `consents_archive`(해시, 1년), 정지 이력이 있으면 `sanctions`(이메일 해시, 최대 1년), 미검토·확정 사칭·피싱 신고가 걸려 있으면 `abuse_holds`(이메일 해시, 검토 종료 후 90일)와 `abuse-evidence` 객체(T-15), `admin_audit_logs`(FK 없음, 1년), P7(사용자 연결 없음). P14 중 그 사용자 행은 삭제한다(⑥b, T-13). 순서·멱등 규칙은 06장 6.2.5 `account-delete`(S-21·T-15: **⑤ 공유 비공개·신고 보류 → ①** 순서, ③b 증거 이동): P6 객체는 `users` 삭제 전에 지운다.
+- **`privacy_request`(처리정지·기타) 본인 확인(S-27)**: 익명 양식으로 받은 요청은 바로 처리하지 않는다. "로그인한 상태에서 S12 셀프 서비스를 쓰거나, 계정 이메일에서 보낸 메일로 요청하세요"로 안내하고, 계정 이메일로 받은 요청만 그 주소로 확인 링크(1회용, 24시간)를 보내 클릭된 뒤 처리한다. 구현값(T-16, 원천 06장 6.4.3 "익명 창구·본인 확인"): 접수 행은 `status='awaiting_verification'`, 요청 이메일이 `auth.users.email`과 일치할 때만 메일 `privacy_verify`(토큰 SHA-256만 저장, 24시간·1회용)를 보내며 응답은 일치 여부와 무관하게 같다. 확인 전 관리자 처리는 409 `REQUEST_NOT_VERIFIED`, 재사용·만료 링크는 410 `VERIFY_LINK_INVALID`.
 
 ### 8.7.10 쿠키·자동 수집 장치 [MVP]
 
@@ -694,7 +698,10 @@ Consent = {
 - **AC-08-34a**: 빌드 산출물·라우트 목록에 테스트 전용 로그인·세션 발급 라우트가 0건이다(R-10, 라우트 매니페스트 검사).
 - **AC-08-34b**: `brief_drafts` 생성 후 24시간이 지난 시계로 `retention`을 실행하면 해당 행 0건(R-26).
 - **AC-08-35**: "내 데이터 내려받기" zip에 8.7.9 표의 항목이 모두 있고 다른 사용자 데이터가 0건이다.
-- **AC-08-36**: 처리방침의 국외 이전 표 행 집합 = `processors.yaml`의 `approved: true` 집합(빌드 테스트). 앱 DB 어디에도 IP 원문(IPv4/IPv6 정규식) 저장 0건(샘플 덤프 검사).
+- **AC-08-36**(T-13으로 범위 개정): 처리방침의 국외 이전 표 행 집합 = `processors.yaml`의 `approved: true` 집합(빌드 테스트). 앱 테이블(`public` 스키마) 어디에도 IP 원문(IPv4/IPv6 정규식) 저장 0건, 그리고 `auth` 스키마에서 보관 기간(`auth_audit_90d`) 밖의 행 0건(샘플 덤프 검사).
+- **AC-08-55**(T-13, LG3-02): ① 처리방침 수집 항목표에 P14 행이 있고 법적 근거 표에 P14가 있다 ② native shim의 `auth.audit_log_entries`·`auth.sessions`에 `created_at = now − 91d` 행을 넣고 `retention:sweep`을 돌리면 0건, `now − 89d`는 유지 ③ 계정 삭제 E2E 후 그 사용자의 `auth.audit_log_entries`(`payload->>'actor_id'`)·`auth.sessions` 행 0건(06장 6.2.5 ⑥b) ④ `docs/compliance/auth-metadata.md`가 있고 needs_ci `gotrue-auth-tables` 결과 칸이 있다.
+- **AC-08-56**(T-14, LG3-03): ① `admin_audit_logs` UPDATE는 service role에서도 실패 ② `created_at = now − 400d` 행은 `retention:sweep`(규칙 `admin_audit_1y` → `purge_audit_logs`) 후 0건, `now − 300d` 행은 남는다 ③ 직접 DELETE는 기간과 무관하게 실패한다(06장 AC-06-06) ④ 처리방침의 감사 기록 보관 기간 문구가 "1년"이고 8.7.7 표와 같다.
+- **AC-08-57**(T-15, LG3-04): ① 사칭 신고(`open`)가 걸린 공유 시안의 소유자가 탈퇴하면 `reports` 행이 남고 `evidence.objectPaths`가 `abuse-evidence/<report_id>/`를 가리키며 그 객체가 존재한다 ② `abuse_holds`에 그 이메일 해시 1행 ③ 같은 이메일로 재가입하면 `users.status = 'gen_suspended'`, 생성 API 403 `ACCOUNT_SUSPENDED` ④ 신고를 `dismissed`로 처리하고 90일 뒤 `retention:sweep`을 돌리면 증거 객체·`abuse_holds` 행 0건 ⑤ 탈퇴 잡 단계 순서가 ⑤ → ①(로그 순서)이다.
 - **AC-08-37**: 클라이언트 번들·응답 헤더에 제3자 분석·광고 스크립트 도메인 0건(→ 07장 E2E).
 
 ---
@@ -786,9 +793,10 @@ HighRiskBrand = {
 - 비공개 처리 = `share_links.hidden_reason ∈ {report_auto, admin, rights}` + `hidden_at` 설정. 숨김 링크 접근은 410 `SHARE_HIDDEN`(R-13), 화면은 01장 S15.
 - `impersonation`·`phishing` 신고: 접수 즉시 공유 링크 자동 비공개, 24시간 안에 운영자 검토(삭제 또는 복구). 그 밖의 사유: 24시간 안에 검토, 검토 중 공개 유지.
 - 같은 공유 링크에 서로 다른 `ip_hmac` 3건 이상 신고가 쌓이면 사유와 관계없이 자동 비공개.
-- **익명 창구 방어(S-27)**: 신고·문의·권리 요청 세 창구 모두 Turnstile 토큰이 필수다. 레이트리밋은 `rep:hour:a:<anon>` 5회/시간 + `rep:day:ip:<hmac>` 10회/일(06장 6.10.1). 자동 확인 메일은 "접수 번호·기한" 고정 템플릿으로만 보내고 사용자 입력(`details`)을 넣지 않으며, 같은 수신 주소에는 하루 1통만 보낸다.
-- **자동 비공개 남용 방지(S-27)**: 자동 비공개된 공유 링크는 소유자에게 이메일로 통지하고(로그인 사용자만) S12에 "검토 중" 상태를 보여 준다. 같은 `ip_hmac`이 7일 안에 낸 신고가 3건 넘게 `dismissed`되면 그 `ip_hmac`의 신고는 자동 비공개를 일으키지 않고 검토 대기만 한다.
+- **익명 창구 방어(S-27)**: 신고·문의·권리 요청 세 창구 모두 Turnstile 토큰(`turnstileToken`)이 필수이고 실패는 403 `TURNSTILE_FAILED`, DB·메일 변경 0(T-16, 06장 6.4.2). 레이트리밋은 `rep:hour:a:<anon>` 5회/시간 + `rep:day:ip:<hmac>` 10회/일(06장 6.10.1). 자동 확인 메일은 "접수 번호·기한" 고정 템플릿으로만 보내고 사용자 입력(`details`)을 넣지 않으며, 같은 수신 주소에는 하루 1통만 보낸다.
+- **자동 비공개 남용 방지(S-27)**: 자동 비공개된 공유 링크는 소유자에게 메일 `share_hidden_notice`(고정 문구, 신고 내용 미포함)로 통지하고(로그인 사용자만) S12에 "검토 중"(`shareStatus='under_review'`, 01장 `me.share.underReview`) 상태를 보여 준다(T-16). 같은 `ip_hmac`이 7일 안에 낸 신고가 3건 넘게 `dismissed`되면 그 `ip_hmac`의 신고는 자동 비공개를 일으키지 않고 검토 대기만 한다.
 - 위반 확정 시 해당 계정 생성 기능 정지(`users.status = 'gen_suspended'`), 동일 위반 2회면 계정 이용 정지(`suspended`). 이후 요청은 403 `ACCOUNT_SUSPENDED`. 정지 상태에서 탈퇴하면 `sanctions`에 이메일 해시가 남아 재가입 시 상태를 이어받는다(S-21, 06장 6.2.5).
+- **신고 증거 보존·탈퇴 회피 방지(T-15, LG3-04)**: `reports.share_id`는 FK 없는 text이고 `evidence jsonb`(신고 시점 대상 버전 ID·객체 경로)를 둔다. 그래서 공유 링크·시안이 지워져도 신고 행은 남는다. 대상 계정이 검토 전에 탈퇴하면 `account-delete`가 공유 비공개·`abuse_holds(email_hash, report_ids, until)` 기록을 **먼저** 하고(⑤ → ① 순서), 증거 객체를 `abuse-evidence/<report_id>/`로 옮긴다(③b). 신고가 `actioned`로 처리되면 `sanctions`를 upsert하고, 같은 이메일로 재가입하면 로그인 콜백 `provision_user`(06장 6.3.3, T-12)가 `abuse_holds`·`sanctions`를 승계해 `gen_suspended`로 시작한다.
 
 ### 8.9.6 수용 기준
 
@@ -936,7 +944,7 @@ HighRiskBrand = {
 | Q3 | 시안의 트레이드 드레스·편집 저작물 침해 판단 기준에 비추어 8.3 임계값(7속성 중 4개, pHash ≤ 8)이 합리적인가? | 8.3 기준 + 보정 절차 | 8.3 |
 | Q4 | 인공지능 기본법상 1인 개인 프로젝트가 고지·표시 의무 대상인가? 시행령·고시의 표시 방법과 계도 기간은? | 8.6 전부 적용 | 8.6 |
 | Q5 | 계약 이행 근거로 처리하면서 별도 "개인정보 수집·이용 동의" 체크 없이 고지만 하는 8.7.4 B안이 적정한가? 국외 이전을 제28조의8 제1항 제3호로 처리하는 것이 적정한가? 국내 리전에서 실행하는 미국 법인 호스팅(Vercel·Fly.io·Supabase)을 국외 이전으로 보아야 하는가(S-26)? | B안 + 처리방침 공개 | 8.7.3, 8.7.4, 8.7.6 |
-| Q6 | 이용 이벤트(P8)의 1년 보관 후 집계 전환이 가명정보 처리 규정과 충돌하지 않는가? 동의 기록의 탈퇴 후 1년 보관(`consents_archive`)과 정지 이력 이메일 해시 최대 1년 보관(`sanctions`, 정당한 이익)은 적정한가(S-21)? | 8.7.7 기본값 | 8.7.7 |
+| Q6 | 이용 이벤트(P8)의 1년 보관 후 집계 전환이 가명정보 처리 규정과 충돌하지 않는가? 동의 기록의 탈퇴 후 1년 보관(`consents_archive`)과 정지 이력 이메일 해시 최대 1년 보관(`sanctions`, 정당한 이익)은 적정한가(S-21)? 신고 증거(`abuse-evidence`)·탈퇴 보류(`abuse_holds`)의 검토 종료 후 90일 보관은 적정한가(T-15)? | 8.7.7 기본값 | 8.7.7 |
 | Q7 | 사용 예정 LLM·비전 API, Supabase, Vercel, Fly.io, Sentry, Cloudflare의 학습 이용·보관 기간·처리 국가·DPA 제공 여부(티어별)는? | 미확인 공급자는 `approved: false` | 8.7.6, 8.8 |
 | Q8 | OFL 폰트의 RFN 여부(폰트별), 서브셋 배포 방식, Unsplash License의 "유사·경쟁 서비스" 조항과 이미지 팩·zip 동봉의 관계는? | 공식 서브셋 우선, 이미지 수동 다운로드 + 자체 저장 + 작가 표기 | 8.4 |
 | Q9 | 8.5.1 ④ 책임 제한 조항의 약관규제법상 유효 범위는? 결과물 이용 허락 구조(권리 불행사 + 이용 허락)가 적정한가? | 8.5.1 초안 | 8.5 |
@@ -946,7 +954,7 @@ HighRiskBrand = {
 | Q13 | 고위험 브랜드 차단·피싱 문구 필터·금지 업종 범주(도박·성인·불법 대부·마약·무기·위조품)와 키워드가 정당한 이용자 차별 문제를 일으키지 않는가? 범위가 적정한가(S-24)? AUP 제재 절차가 적정한가? | 8.9 + 문의로 해제 | 8.9 |
 | Q14 | 유료화 시점의 사업자등록·통신판매업 신고·전자상거래법 표시 사항·환불 정책 요건은? | MVP 무료, 해당 없음 | — |
 | Q15 | 장기 미접속 계정 1년 후 삭제 정책이 필요한가(2023년 개정 이후 유효기간제 폐지)? | 1년 후 안내·삭제 | 8.7.7 |
-| Q16 | 개인정보의 안전성 확보조치 기준(고시)이 1인 운영자에게 어디까지 적용되는가(내부 관리계획 수립 면제 여부)? 관리자 접속기록 보관 기간은 1년인가 2년인가(S-28)? | 1년 보관 + 월 1회 점검, 관리자 aal2·pii_view 기록 | 8.7.7, 06장 6.11.2 |
+| Q16 | 개인정보의 안전성 확보조치 기준(고시)이 1인 운영자에게 어디까지 적용되는가(내부 관리계획 수립 면제 여부)? 관리자 접속기록 보관 기간은 1년인가 2년인가(S-28)? 인증 서버 기록(P14) 90일 보관은 적정한가(T-13)? | 1년 보관 + 월 1회 점검, 관리자 aal2·pii_view 기록 | 8.7.7, 06장 6.11.2 |
 
 - **AC-08-54**: `docs/compliance/expert-review.md`에 Q1~Q16 각각의 답변 또는 "기본 정책 유지" 결정과 확인일이 기록되어 있다(출시 게이트 항목).
 
@@ -965,7 +973,7 @@ HighRiskBrand = {
 | 자동 | 자산 레지스트리·LICENSES.md·외부 URL 0·RFN | AC-08-17~23 |
 | 자동 | few-shot 출처 제약·브랜드 교차 유출 0·약관 조항 | AC-08-24~26 |
 | 자동 | AI 고지·허위 수치 0 | AC-08-27~28 |
-| 자동 | 개인정보 스키마·마스킹·동의·파기·삭제·내려받기·국외 이전 표 일치·테스트 로그인 우회 0·`brief_drafts` 24시간 | AC-08-29~37, 34a, 34b |
+| 자동 | 개인정보 스키마·마스킹·동의·파기·삭제·내려받기·국외 이전 표 일치·테스트 로그인 우회 0·`brief_drafts` 24시간 | AC-08-29~37, 34a, 34b(AC-08-36은 T-13 범위) |
 | 자동 | 승인 공급자·학습 미사용 합격선·라우터 0 | AC-08-38~40 |
 | 자동 | 고위험 브랜드·금지 업종·편집 G-13·구조 제한·공유 페이지 보호·익명 창구 방어 | AC-08-41~43, 41b~d, 43b |
 | 자동 | MBTI 0건·닮은 사이트 표기 | AC-08-44~45 |
@@ -975,7 +983,8 @@ HighRiskBrand = {
 | 수동 | 전문가 확인 기록, `processors.yaml` 공급자 원문 확인일 채움, 각 [원문 확인] 항목 처리 | AC-08-54 |
 | 수동 | 콘솔 MFA 활성화(Supabase·Vercel·Fly·LLM 공급자·GitHub·Resend·Cloudflare), service role 키는 로컬 비밀 관리자(OS 키체인)에만 보관(S-28) | — |
 | 수동 | 법무 원문 `legal/{terms,privacy,sources}.md` 확정(변호사 검토 권장). temp 문안이면 `legal-text=temp`(S-10) | AC-08-46~48 |
-| 자동 | 관리자 aal2 전용·ADMIN_EMAILS 매 요청 재확인·`pii_view` 기록·리댁션(S-28) | 06장 AC-06-57 |
+| 자동 | 관리자 권한 원천(`users.role='admin'` ∧ 요청 시점 `ADMIN_EMAILS` ∧ `aal2`, 로그인 콜백 `provision_user`가 role 동기화, T-12)·aal2 전용·`pii_view` 기록·리댁션(S-28) | 06장 AC-06-57·60 |
+| 자동 | 인증 서버 기록 보관·감사 로그 1년 파기·신고 증거 보존(T-13~15) | AC-08-55~57 |
 | 자동 | 데이터 흐름표 ↔ processors.yaml 대조(`compliance:flows`, S-26) | 06장 AC-06-58 |
 
 ---
@@ -1078,3 +1087,9 @@ HighRiskBrand = {
 | S-26(08) | N1·거부 방법 문구, 데이터 흐름 원천, Q5 |
 | S-27(08) | 8.7.9 privacy_request 확인, 8.9.5 익명 창구·자동 비공개 남용, AC-08-43b |
 | S-28(08) | 8.7.7 접속기록, 8.14 Q16, 8.15 콘솔 MFA |
+| T-11(08) | 8.7.5 모든 쓰기 서버 경유(`DbPort`, 쓰기 화이트리스트) |
+| T-12(08) | 8.15 관리자 권한 원천 행(AC-06-60) |
+| T-13(08) | 8.7.2 P14·8.7.3 근거, 8.7.7 `auth_audit_90d`·IP 문장 범위, AC-08-36 범위, AC-08-55, Q16 |
+| T-14(08) | 8.7.7 `admin_audit_1y`(1년 append-only 후 파기), AC-08-56 |
+| T-15(08) | 8.7.2 P13 증거, 8.7.7 신고 증거·`abuse_holds`, 8.7.9 남는 것·⑤→①, 8.9.5 증거 보존·재가입 승계, AC-08-57, Q6 |
+| T-16(08) | 8.7.9 본인 확인 구현값, 8.9.5 `TURNSTILE_FAILED`·`share_hidden_notice`·`under_review` |
