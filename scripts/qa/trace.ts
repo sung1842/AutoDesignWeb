@@ -3,9 +3,11 @@
 //   --json               결과를 JSON으로 출력({results, tc, unassigned, duplicated, warnings})
 //   --upto M<k>          종료 코드 판정을 M0..M<k> 배정 AC로 한정(진행 중 마일스톤용. 출력은 전체)
 //   --spec-dir <dir>     추출 원천 디렉터리(기본 docs/spec/FINAL)
-//   --audit·--docs·--key-coverage는 이후 단위(M0-09c·d)에서 추가한다.
+//   --audit              AC 배정(중복 0) + 리터럴 감사(audit.ts). 매핑 완전성은 보지 않는다(7.11.2 qa-trace 단계)
+//   --docs·--key-coverage는 이후 단위에서 추가한다.
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { audit } from "./audit.js";
 
 export const AC_RE = /AC-\d{2}-\d{2,3}[a-z]?/g;
 export const TC_RE = /TC-[A-Z]+-\d{2}/g;
@@ -155,6 +157,7 @@ function main(argv: string[]): number {
   const root = process.cwd();
   const specDir = arg(argv, "--spec-dir") ?? join(root, "docs/spec/FINAL");
   const r = trace(root, specDir);
+  if (argv.includes("--audit")) return auditMain(root, specDir, r);
   const upto = arg(argv, "--upto");
   const k = upto ? Number(upto.replace(/^M/, "")) : 8;
   const gated = Object.entries(r.results).filter(([, v]) => Number(v.milestone.slice(1)) <= k);
@@ -171,6 +174,18 @@ function main(argv: string[]): number {
     );
   }
   return fails.length || tcFails.length || r.duplicated.length || r.unassigned.length ? 1 : 0;
+}
+
+function auditMain(root: string, specDir: string, r: TraceReport): number {
+  const hits = audit(root, specDir);
+  for (const id of r.duplicated) process.stdout.write(`FAIL ${id}: 중복 배정\n`);
+  for (const w of r.warnings) process.stdout.write(`WARN ${w}\n`);
+  for (const h of hits) {
+    const via = h.decl === h.use ? "" : ` (리터럴 위치 ${h.decl})`;
+    process.stdout.write(`FAIL audit ${h.use}: thresholds 잎 값 리터럴 ${h.value}${via}\n`);
+  }
+  process.stdout.write(`qa:trace --audit: 중복 배정 ${r.duplicated.length}, 리터럴 ${hits.length}\n`);
+  return hits.length || r.duplicated.length ? 1 : 0;
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) process.exitCode = main(process.argv.slice(2));
