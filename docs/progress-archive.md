@@ -134,3 +134,4 @@
 - 2026-11-20 01:17 | M1-04a2c3a components.json 18종(variant·state 매트릭스·텍스트 역할) → 다음: a2c3b blocks
 - 2026-11-20 01:18 | M1-04a2c3b blocks.json(슬롯·덱 상한·text_cols·모바일·decor_slots), ASM-012 → 다음: a2c3c tokens/schema
 - 2026-11-20 01:19 | M1-04a2c3c tokens/schema.json(DTCG 2020-12, 12그룹·10타입). 03장 C03 8종 검증 통과 → 다음: a3 폰트
+- 2026-11-20 01:21 | M1-04a3a fonts 26·pairings 20(tmp_ id+code), validate 프리셋 페어링 code·허용 유형 검사 → 다음: a3b 이미지
