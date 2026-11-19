@@ -200,3 +200,10 @@
 - 영향 범위: packages/design-spec(predict.ts·calibrate.ts)
 - 되돌리기 비용: 낮음
 - 추가 ⑦: κ 구간(0.75)·moved 0.20은 04장 사양 상수인데 값이 thresholds 잎(tmValidityMin·candidatePairDistMin)과 우연히 같아 감사(qa:trace --audit)가 걸림. thresholds 키가 아니므로 테스트 기준 구현(ASM-024 ⑦)과 같이 표 객체(KAPPA_BANDS·CALIB_SPEC)로 둠. 사람 확인 권장(HUMAN_TODO)
+
+## ASM-029 · M2 · gap · 2026-11-19T19:20Z
+- 질문: 04장 4.3 3단계 snapToFeasible의 F 집합 중 "conflict 규칙 0건"을 L2만으로 어디까지 판정하는지, 용도 경로 mapL1toL2의 API, 앵커가 용도 금지값일 때 시작점
+- 근거 탐색: 03장 3.3.1·3.3.2·3.6.5, 04장 4.3·4.10.3 CF 목록, purposes.json forbiddenL2, 프리셋 buttonPill·theme·defaultSignatureId
+- 선택: ① L2로 판정 가능한 CF-03·04·05·08·09·10·11만 F에서 검사(CF-01·02·06·07·12는 토큰·트리·렌더 수준이라 컴파일러·린터 몫) ② `mapL1toL2ForPurpose(t, typeId, purpose, data)` = taxonomy mapL1toL2 + 용도 금지값 대체(purpose=null이면 그대로) ③ `snapToFeasible(l2_0, t, σ, {typeId, purpose, signatureId?}, data)`: 시작점이 F 밖이고 앵커도 F 밖이면 앵커에 용도 대체값 적용 ④ J의 predictL1은 반올림값(3.2.2 정의), 동률 비교 1e-12 ⑤ 사양 상수(σ 바닥 0.05·벌점 0.02·반복 3·CF-09 3종)는 감사 리터럴과 겹치지 않게 표 객체(SNAP_SPEC·CF_SPEC)
+- 영향 범위: packages/design-spec(snap.ts)
+- 되돌리기 비용: 낮음

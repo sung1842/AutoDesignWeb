@@ -146,3 +146,4 @@
 - 2026-11-20 02:14 | M1-04c2b B18 2026-S0 부트스트랩(5.5.4 initial, 분위 자리표시, M3 재생성 ASM-020) → 다음: c3 B15
 - 2026-11-20 02:15 | M1-04c3 B15 골격, M1-04 완료: data:validate 33묶음 녹색, data.test 9/11 → 다음: M1-05 taxonomy 로더
 - 2026-11-20 02:22 | M1-05 loadTaxonomy·nearestType·checkBridgeRules(+단위 5), data.test 11/11, verify:fast pass_blocked → 다음: M1-06 마이그레이션
+- 2026-11-20 02:23 | M1-06 마이그레이션 0001~0006+9000 local·db:reset, AC-06-01 녹색 → 다음: M1-07 RLS·DbPort
