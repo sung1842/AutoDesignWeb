@@ -102,6 +102,53 @@ export function up(root = process.cwd()): void {
   );
 }
 
+export const MIGRATIONS_DIR = "packages/db/supabase/migrations";
+export const LOCAL_DIR = "packages/db/supabase/local";
+
+/** 적용 순서: shim → migrations(파일명 순) → (APP_ENV=local이면) local 전용(S-01). */
+export function migrationFiles(root: string, local: boolean): string[] {
+  const list = (d: string): string[] =>
+    existsSync(join(root, d))
+      ? readdirSync(join(root, d))
+          .filter((f) => f.endsWith(".sql"))
+          .sort()
+          .map((f) => join(root, d, f))
+      : [];
+  return [join(root, SHIM), ...list(MIGRATIONS_DIR), ...(local ? list(LOCAL_DIR) : [])];
+}
+
+/** 빈 DB(drop/create) 위에 shim+마이그레이션을 ON_ERROR_STOP으로 적용(06장 AC-06-01, 9.4.3 ⑤). */
+export function resetDb(root: string, db: string, local: boolean): void {
+  if (!/^[a-z_][a-z0-9_]*$/.test(db)) throw new Error(`DB 이름 형식 아님: ${db}`);
+  up(root);
+  psql(`DROP DATABASE IF EXISTS ${db} WITH (FORCE)`);
+  psql(`CREATE DATABASE ${db}`);
+  const files = migrationFiles(root, local).flatMap((f) => ["-f", f]);
+  asPg(pgBin("psql"), [
+    "-h",
+    PG_DIR,
+    "-p",
+    PG_PORT,
+    "-d",
+    db,
+    "-v",
+    "ON_ERROR_STOP=1",
+    "-q",
+    ...files,
+  ]);
+  psql(
+    `GRANT CONNECT, CREATE ON DATABASE ${db} TO tastefit_app; GRANT USAGE ON SCHEMA public TO tastefit_app`,
+    db,
+  );
+}
+
+/** DATABASE_URL_DIRECT의 DB 이름(없으면 기본 tastefit). */
+export function dbNameFromEnv(env: NodeJS.ProcessEnv = process.env): string {
+  const url = env.DATABASE_URL_DIRECT;
+  if (!url) return PG_DB;
+  return decodeURIComponent(new URL(url).pathname.replace(/^\//, "")) || PG_DB;
+}
+
 export function down(): void {
   if (isRunning()) asPg(pgBin("pg_ctl"), ["-D", PG_DIR, "-m", "fast", "-w", "stop"]);
 }
@@ -117,6 +164,11 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   if (cmd === "up") up();
   else if (cmd === "down") down();
   else if (cmd === "reset") reset();
+  else if (cmd === "db-reset") {
+    const db = dbNameFromEnv();
+    resetDb(process.cwd(), db, (process.env.APP_ENV ?? "local") === "local");
+    process.stdout.write(`db:reset: ${db} 적용 완료\n`);
+  }
   process.stdout.write(
     `native-pg: ${isRunning() ? "running" : "stopped"} (${PG_DIR}:${PG_PORT}/${PG_DB})\n`,
   );
