@@ -37,6 +37,18 @@
       "lockedBy": "agent",
       "lockedAt": "2026-11-19T13:17:13Z",
       "commit": "c54ffda"
+    },
+    "config/thresholds.json": {
+      "sha256": "29969b337a8b97d83236b54ba44874bf4c0dc11253ac69669382cae728e0aa3a",
+      "lockedBy": "spec",
+      "lockedAt": "2026-11-19T13:20:55Z",
+      "commit": "acd413d"
+    },
+    "config/test-policy.json": {
+      "sha256": "0258553a9d6afff0e8378700a82699cbb0e0c603f44ed7541ad501a4be82cc73",
+      "lockedBy": "spec",
+      "lockedAt": "2026-11-19T13:20:55Z",
+      "commit": "acd413d"
     }
   }
 }
