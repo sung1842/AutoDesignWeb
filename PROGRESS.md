@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T19:07Z, since: 2026-11-19T19:16Z}
+- lock: {owner: 2026-11-19T19:07Z, since: 2026-11-19T19:18Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-20 07:08
-- 마지막 갱신: 2026-11-20 04:16 KST (예약 세션: M2-03a 시그니처·자간, 다음 M2-03b deriveTokens)
+- 마지막 갱신: 2026-11-20 04:18 KST (예약 세션: M2-03b0 validateTokenSet, 다음 M2-03b1 deriveTokens)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -112,7 +112,7 @@
 - M2 계획(9.4.4, AC: 03-02~11·15~38·41·42·44~46, 04-03~11·17·18·18a·30, 06-24~26·28. 읽을 장은 CLAUDE.md 구현 규칙 3절):
   - [x] 01 M2 수용 테스트(acMilestones M2 + 9.4.4 ①~⑧) `test(acc)` 커밋 → qa:trace --audit → 자체 잠금, traceability M2 행: [x] a 토큰·택소노미·시그니처(03-02~11·44, tokens.test, ASM-023) [x] b 04장 명세서·보정·변형·트리(04-03~10·30, spec.test, ASM-024·BLK-007; 04-11은 e로) [x] c 컴포넌트·블록·서체·조판·텍스트 역할(03-15~27·42·45·46, blocks.test, ASM-025·BLK-008) [x] d 아이콘·이미지·반응형·다크·브랜드(03-28~37·41, assets.test, ASM-026) [x] e 컴파일·렌더·미리보기(render.test, ASM-027, AC-03-38 tokens.test 추가, traceability M2 56행; 04-11·17·18·18a, 04-08 렌더 D, 03-44 accent 렌더, 06-24~26·28, ①~⑧) [x] f qa:trace --audit 리터럴 0·단일 test(acc) eded1cd(AD-031)·자체 잠금
   - [x] 02 design-spec a: [x] a1 predictL1(AC-03-07 8/8)·calibrate 1·2단계(AC-04-05 31/31, ASM-028) [x] a2 mapL1toL2ForPurpose·snapToFeasible(F·J, snap.test 4/4, ASM-029)
-  - [ ] 03 design-spec b: [x] a signatureEligible(AC-03-08 12/12)·letterSpacingEm(단위 8/8) [ ] b deriveTokens·exportTokens·expectedSize(03장 3.1 DTCG) [ ] c applyBrandColor(3.13) [ ] d compileSpecs(4.2.1·4.4 변형·거리)
+  - [ ] 03 design-spec b: [x] a signatureEligible(AC-03-08 12/12)·letterSpacingEm(단위 8/8) [x] b0 validateTokenSet(최소 JSON Schema 검증기, ASM-030) [ ] b1 deriveTokens(3.1.3~3.1.11) [ ] b2 exportTokens·expectedSize [ ] c applyBrandColor(3.13) [ ] d compileSpecs(4.2.1·4.4 변형·거리)
   - [ ] 04 layout-schema: PageSchema zod·블록 슬롯·폴백 + JSON Schema 정적 검사(⑥)
   - [ ] 05 renderer a: CSS Modules+CSS 변수, renderToStaticMarkup, 토큰→변수, 블록 일부
   - [ ] 06 renderer b: 나머지 블록·variant 전부(blocks.json 20블록·53 variant)
@@ -131,6 +131,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-20 04:18 | M2-03b0 validateTokenSet(MiniValidator, ajv 없음 ASM-030) → 다음: 03b1 deriveTokens
 - 2026-11-20 04:16 | M2-03a signatureEligible(AC-03-08)·letterSpacingEm(3.8.2) → 다음: 03b deriveTokens·expectedSize
 - 2026-11-20 04:15 | M2-02a2 mapL1toL2ForPurpose·snapToFeasible(F 상충 7종·J), ASM-029 → 다음: M2-03
 - 2026-11-20 04:13 | M2-02a1 predictL1(8/8)·calibrate(31/31), ASM-028(감사 리터럴→사양 표) → 다음: 02a2 snap
@@ -145,4 +146,3 @@
 - 2026-11-20 02:53 | M1 완료: verify:m1 pass_blocked(BLK-001~006), m1-done → 다음: M2 계획(09장 9.4.4)
 - 2026-11-20 02:32 | M1-10 db:schema-parity 차이 0·db:grants-snapshot 일치, BLK-006 → 다음: M1-11 verify:m1·m1-done
 - 2026-11-20 02:29 | M1-09 db:types(kysely-codegen)·types.gen.ts 51테이블, ⑧ 녹색, guard deps ok → 다음: M1-10 schema-parity
-- 2026-11-20 02:28 | M1-08 db:seed(8테이블 upsert, temp 라벨 유도 ASM-022), ⑥·AC-05-02 녹색 → 다음: M1-09 db:types

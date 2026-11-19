@@ -207,3 +207,10 @@
 - 선택: ① L2로 판정 가능한 CF-03·04·05·08·09·10·11만 F에서 검사(CF-01·02·06·07·12는 토큰·트리·렌더 수준이라 컴파일러·린터 몫) ② `mapL1toL2ForPurpose(t, typeId, purpose, data)` = taxonomy mapL1toL2 + 용도 금지값 대체(purpose=null이면 그대로) ③ `snapToFeasible(l2_0, t, σ, {typeId, purpose, signatureId?}, data)`: 시작점이 F 밖이고 앵커도 F 밖이면 앵커에 용도 대체값 적용 ④ J의 predictL1은 반올림값(3.2.2 정의), 동률 비교 1e-12 ⑤ 사양 상수(σ 바닥 0.05·벌점 0.02·반복 3·CF-09 3종)는 감사 리터럴과 겹치지 않게 표 객체(SNAP_SPEC·CF_SPEC)
 - 영향 범위: packages/design-spec(snap.ts)
 - 되돌리기 비용: 낮음
+
+## ASM-030 · M2 · gap · 2026-11-19T19:25Z
+- 질문: AC-03-02 `validateTokenSet`이 data/tokens/schema.json(JSON Schema 2020-12)으로 검증해야 하나 dependency-allowlist에 JSON Schema 검증기(ajv 등)가 없음
+- 근거 탐색: dependency-allowlist(zod만), 03장 3.1.2, schema.json 사용 키워드 22종
+- 선택: data-contracts에 사용 키워드만 지원하는 최소 검증기(MiniValidator)를 둔다. 스키마 원본은 그대로 읽는다(zod로 옮겨 쓰지 않음 → 이중 원천 방지). ajv 추가는 사람 결정(HUMAN_TODO)
+- 영향 범위: packages/data-contracts(json-schema.ts·m2.ts)
+- 되돌리기 비용: 낮음

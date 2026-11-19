@@ -33,3 +33,4 @@
 - [ ] (BLK-007) 사양 상수 표(07장 7.12.1)에 브랜드 hue 허용 5°·보정 사유 기준 0.20 행을 추가하고 M2 수용 테스트에 두 대조를 넣어 relock해 주세요(BLOCKED.md BLK-007)
 - [ ] (BLK-008) dependency-allowlist에 axe-core(MPL-2.0) 추가 여부를 결정하고, 추가하면 AC-03-15·G-08 axe 검사를 수용 테스트에 넣어 relock해 주세요(BLOCKED.md BLK-008)
 - [ ] (ASM-028) design-spec calibrate의 κ 구간 경계 0.75·moved_axes 0.20을 감사 회피용이 아닌 사양 상수 표 객체(KAPPA_BANDS·CALIB_SPEC)로 둔 것이 괜찮은지 확인해 주세요. BLK-007의 SC 행 추가 시 함께 정리 가능
+- [ ] (ASM-030) JSON Schema 검증기(ajv 등)를 dependency-allowlist에 넣을지 결정해 주세요. 지금은 data-contracts의 최소 검증기로 data/tokens/schema.json을 검증합니다
