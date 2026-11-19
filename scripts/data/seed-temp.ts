@@ -2,6 +2,7 @@
 //   결정성: 난수는 mulberry32(20261116)만, 시각·작성자 표기는 고정값 → 2회 실행 결과 바이트 동일.
 //   다른 장에 값이 있으면 FINAL 장에서 그대로 옮긴다(spec-md.ts).
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import type { Json, Obj } from "./load.js";
@@ -1439,6 +1440,84 @@ function genPairings(ctx: Ctx): Out[] {
   return [{ path: "data/fonts/pairings.json", content: bundle(ctx, "pairings", items) }];
 }
 
+// ---------- B8 images/manifest.json (03장 3.10.2·3.10.3) + 플레이스홀더 SVG ----------
+// 사진 원본은 사람 묶음(HUMAN_TODO B8). temp는 에이전트가 만든 무늬 SVG(source placeholder, CC0-1.0)를 파일로 두고
+// sha256을 실제 파일에서 계산한다. id는 `tmp_img:<tag>-<nnn>`(3.10.3 형식 + tmp_ 접두, ASM-008).
+const TONE_HEX: Record<string, [number, number, number]> = {
+  "tone.warm": [200, 162, 122],
+  "tone.neutral": [184, 184, 180],
+  "tone.cool": [143, 166, 184],
+};
+
+function placeholderSvg(w: number, h: number, fill: string, tag: string): string {
+  return (
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="${tag} 이미지 자리">` +
+    `<defs><pattern id="p" width="48" height="48" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">` +
+    `<line x1="0" y1="0" x2="0" y2="48" stroke="#000" stroke-opacity="0.12" stroke-width="4"/></pattern></defs>` +
+    `<rect width="100%" height="100%" fill="${fill}"/><rect width="100%" height="100%" fill="url(#p)"/></svg>\n`
+  );
+}
+
+function genImages(ctx: Ctx): Out[] {
+  const rows = table(section(chapter(ctx.root, "03_design_system.md"), "### 3.10.2"));
+  const out: Out[] = [];
+  const items: Obj[] = [];
+  const hex2 = (n: number): string =>
+    Math.max(0, Math.min(255, Math.round(n)))
+      .toString(16)
+      .padStart(2, "0")
+      .toUpperCase();
+  for (const r of rows) {
+    const tagCell = r[0] ?? "";
+    const counts = (r[1] ?? "").split("/").map((x) => Number(x.trim()));
+    // "common.texture-paper / -concrete / -fabric" 펼치기
+    const base = tagCell.split(" / ")[0] ?? "";
+    const prefix = base.slice(0, base.lastIndexOf("-"));
+    const tags = tagCell.split(" / ").map((t) => (t.startsWith("-") ? `${prefix}${t}` : t.trim()));
+    const scene = (r[2] ?? "").replace(/\(.*\)/, "").trim();
+    tags.forEach((tag, ti) => {
+      const n = counts[ti] ?? 0;
+      const texture = tag.startsWith("common.texture");
+      for (let i = 0; i < n; i++) {
+        const tone = texture
+          ? "tone.neutral"
+          : (["tone.warm", "tone.neutral", "tone.cool"][i % 3] ?? "");
+        const landscape = texture || i % 2 === 0; // 3.10.2 landscape ≥ 40%·portrait ≥ 30%
+        const [w, h] = landscape ? [2400, 1600] : [1600, 2000];
+        const [cr, cg, cb] = TONE_HEX[tone] ?? [180, 180, 180];
+        const j = (): number => (ctx.rand() - 0.5) * 24;
+        const fill = `#${hex2(cr + j())}${hex2(cg + j())}${hex2(cb + j())}`;
+        const nnn = String(i + 1).padStart(3, "0");
+        const path = `data/images/placeholder/${tag}-${nnn}.svg`;
+        const svg = placeholderSvg(w, h, fill, tag);
+        out.push({ path, content: svg });
+        const fp = (): number => Math.round((0.35 + ctx.rand() * 0.3) * 100) / 100;
+        items.push({
+          id: `tmp_img:${tag}-${nnn}`,
+          path,
+          sha256: createHash("sha256").update(svg).digest("hex"),
+          width: w,
+          height: h,
+          tags: [tag, tone, landscape ? "orient.landscape" : "orient.portrait"],
+          focalPoint: [fp(), fp()],
+          dominantColor: fill,
+          altKo: `${scene} 장면 임시 자리 ${i + 1}번`,
+          source: "placeholder",
+          author: "seed:temp",
+          license: "CC0-1.0",
+          downloadedAt: null,
+          hasPeople: false,
+          hasRecognizableFace: false,
+          hasLogoOrTrademark: false,
+        });
+      }
+    });
+  }
+  if (items.length !== 192) throw new Error(`3.10.2 이미지 ${items.length} ≠ 192`);
+  out.push({ path: "data/images/manifest.json", content: bundle(ctx, "images", items) });
+  return out;
+}
+
 /** 생성기 목록(의존 순서). 나머지 묶음은 M1-04b 이후 단위에서 추가한다. */
 export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genAxes,
@@ -1457,6 +1536,7 @@ export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genTokenSchema,
   genFonts,
   genPairings,
+  genImages,
 ];
 
 function isHuman(abs: string): boolean {

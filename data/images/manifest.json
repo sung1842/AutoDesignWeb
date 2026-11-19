@@ -1,0 +1,4810 @@
+{
+  "bundle": "images",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "tmp_img:saas.workspace-001",
+      "path": "data/images/placeholder/saas.workspace-001.svg",
+      "sha256": "8f003e2412949c71344ffa35beb01f51a617045222c66af277dcfb07ecea737c",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.workspace",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.46,
+        0.51
+      ],
+      "dominantColor": "#C2987A",
+      "altKo": "책상·작업 공간 장면 임시 자리 1번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.workspace-002",
+      "path": "data/images/placeholder/saas.workspace-002.svg",
+      "sha256": "be49354667138806df33ed65b2d57308890fecb9c610568e3ebce44ac9615f9f",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.workspace",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.61,
+        0.64
+      ],
+      "dominantColor": "#C1AEB5",
+      "altKo": "책상·작업 공간 장면 임시 자리 2번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.workspace-003",
+      "path": "data/images/placeholder/saas.workspace-003.svg",
+      "sha256": "9a0fb0816ca3b6056b6ca0fe30f1a3519d7055114389a7d6f08e5b24a19d2881",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.workspace",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.55,
+        0.38
+      ],
+      "dominantColor": "#91A2B2",
+      "altKo": "책상·작업 공간 장면 임시 자리 3번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.workspace-004",
+      "path": "data/images/placeholder/saas.workspace-004.svg",
+      "sha256": "e2a3e04ec1d973da11fb6ca73fd72b6652f526119559b222aee0200a2299f0b9",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.workspace",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.39,
+        0.54
+      ],
+      "dominantColor": "#BDAA7E",
+      "altKo": "책상·작업 공간 장면 임시 자리 4번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.workspace-005",
+      "path": "data/images/placeholder/saas.workspace-005.svg",
+      "sha256": "db9e84a464191a916f0999b6e5d40d241a11f27ee671f669d8ac86a8676e2427",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.workspace",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.46,
+        0.54
+      ],
+      "dominantColor": "#AEC2B2",
+      "altKo": "책상·작업 공간 장면 임시 자리 5번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.workspace-006",
+      "path": "data/images/placeholder/saas.workspace-006.svg",
+      "sha256": "f122c5f59128a94957c0349b25a783bea05a17959ba405f5673760f109461a69",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.workspace",
+        "tone.cool",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.48,
+        0.65
+      ],
+      "dominantColor": "#8DA1B3",
+      "altKo": "책상·작업 공간 장면 임시 자리 6번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.workspace-007",
+      "path": "data/images/placeholder/saas.workspace-007.svg",
+      "sha256": "1c17f7a2d192eaccbf2152f91d3c48b24de3821a7369042557dd9d8caf5b80a5",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.workspace",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.41,
+        0.54
+      ],
+      "dominantColor": "#C09B7E",
+      "altKo": "책상·작업 공간 장면 임시 자리 7번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.workspace-008",
+      "path": "data/images/placeholder/saas.workspace-008.svg",
+      "sha256": "fbc745e9f19f19400d502d199f926ac2548e0750507cc2b049d4afc5c3e61798",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.workspace",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.42,
+        0.47
+      ],
+      "dominantColor": "#BCB3A9",
+      "altKo": "책상·작업 공간 장면 임시 자리 8번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.workspace-009",
+      "path": "data/images/placeholder/saas.workspace-009.svg",
+      "sha256": "fc8e572533a5ae3675eaeadfaeb1bc38dbb3558af992c57cf2e0fd0f65c9d53f",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.workspace",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.44,
+        0.35
+      ],
+      "dominantColor": "#999EBB",
+      "altKo": "책상·작업 공간 장면 임시 자리 9번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.workspace-010",
+      "path": "data/images/placeholder/saas.workspace-010.svg",
+      "sha256": "a65de30ecfff4b7c71f5f878bdb613c9e300a4941d38e9b549f38f263b728ee8",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.workspace",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.41,
+        0.46
+      ],
+      "dominantColor": "#C4A17E",
+      "altKo": "책상·작업 공간 장면 임시 자리 10번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.hands-device-001",
+      "path": "data/images/placeholder/saas.hands-device-001.svg",
+      "sha256": "157c1d43e87abf7e571929e95484fbaa07d5b7caa5d68e620096ebdc2f85190c",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.hands-device",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.64,
+        0.36
+      ],
+      "dominantColor": "#C8A576",
+      "altKo": "기기를 든 손, 화면 꺼짐 또는 흐림 장면 임시 자리 1번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.hands-device-002",
+      "path": "data/images/placeholder/saas.hands-device-002.svg",
+      "sha256": "4e914ed98667108138817b6947b3bca4aeabf6c16d31c287dfe5cc61bac98f01",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.hands-device",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.63,
+        0.55
+      ],
+      "dominantColor": "#BEB8BB",
+      "altKo": "기기를 든 손, 화면 꺼짐 또는 흐림 장면 임시 자리 2번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.hands-device-003",
+      "path": "data/images/placeholder/saas.hands-device-003.svg",
+      "sha256": "e856c6461a2efa9008135b56ef762c778cffda7ecb7910da5332cd45f93362c2",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.hands-device",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.46,
+        0.4
+      ],
+      "dominantColor": "#8FB0BC",
+      "altKo": "기기를 든 손, 화면 꺼짐 또는 흐림 장면 임시 자리 3번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.hands-device-004",
+      "path": "data/images/placeholder/saas.hands-device-004.svg",
+      "sha256": "82072e7c8d31e00ac5b373ca89fa682ce85de394411de51dcf00711ea5212d8b",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.hands-device",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.62,
+        0.45
+      ],
+      "dominantColor": "#CB9C7D",
+      "altKo": "기기를 든 손, 화면 꺼짐 또는 흐림 장면 임시 자리 4번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.hands-device-005",
+      "path": "data/images/placeholder/saas.hands-device-005.svg",
+      "sha256": "81e51d2bea1cf7706f19e891af5fd132bc6da1fe0d466f62e33977589d2c0d73",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.hands-device",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.37,
+        0.65
+      ],
+      "dominantColor": "#C4B5C0",
+      "altKo": "기기를 든 손, 화면 꺼짐 또는 흐림 장면 임시 자리 5번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.hands-device-006",
+      "path": "data/images/placeholder/saas.hands-device-006.svg",
+      "sha256": "ab14cde4090d635661a208931748fbcc477db039856cff0bc927303cbc2049b8",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.hands-device",
+        "tone.cool",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.54,
+        0.49
+      ],
+      "dominantColor": "#8EA3BA",
+      "altKo": "기기를 든 손, 화면 꺼짐 또는 흐림 장면 임시 자리 6번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.hands-device-007",
+      "path": "data/images/placeholder/saas.hands-device-007.svg",
+      "sha256": "87d8b7bfe5e71b67cc4cc571a752c082433c09799b36745252e5f31984867caa",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.hands-device",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.54,
+        0.47
+      ],
+      "dominantColor": "#BFA282",
+      "altKo": "기기를 든 손, 화면 꺼짐 또는 흐림 장면 임시 자리 7번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.hands-device-008",
+      "path": "data/images/placeholder/saas.hands-device-008.svg",
+      "sha256": "18f5a89e4910b807b44d67f17cc17a7993f3c0296371ad6f67cb879198dd8dbd",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.hands-device",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.39,
+        0.42
+      ],
+      "dominantColor": "#C0ADAB",
+      "altKo": "기기를 든 손, 화면 꺼짐 또는 흐림 장면 임시 자리 8번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.architecture-001",
+      "path": "data/images/placeholder/saas.architecture-001.svg",
+      "sha256": "bc9782bc2fe0917ba368dc72ed65fdcc0c54c47e602799c7992dbe0bd34734d6",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.architecture",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.46,
+        0.59
+      ],
+      "dominantColor": "#CD987F",
+      "altKo": "현대 건축·구조 장면 임시 자리 1번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.architecture-002",
+      "path": "data/images/placeholder/saas.architecture-002.svg",
+      "sha256": "80931b21f36d63626fdb8682c40c7e853e12b2fef421b1e4a3e87017e3f29b1d",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.architecture",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.63,
+        0.64
+      ],
+      "dominantColor": "#B7C0B9",
+      "altKo": "현대 건축·구조 장면 임시 자리 2번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.architecture-003",
+      "path": "data/images/placeholder/saas.architecture-003.svg",
+      "sha256": "890e99bb4c319ca0cc35cc30910c023fa5ce0307dda4ab2f51c8d43c6d93dc43",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.architecture",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.5,
+        0.53
+      ],
+      "dominantColor": "#949DBC",
+      "altKo": "현대 건축·구조 장면 임시 자리 3번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.architecture-004",
+      "path": "data/images/placeholder/saas.architecture-004.svg",
+      "sha256": "dc6fbcb32b4888da657c8490da34cb26d1d0f35c07646b061a8d5bf1bd9c1516",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.architecture",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.45,
+        0.54
+      ],
+      "dominantColor": "#CBA17A",
+      "altKo": "현대 건축·구조 장면 임시 자리 4번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.architecture-005",
+      "path": "data/images/placeholder/saas.architecture-005.svg",
+      "sha256": "f6a8aa41746197e7dc06b1cb4aed9db37feca502e77ccf699e42e0b45723f4b5",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.architecture",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.42,
+        0.48
+      ],
+      "dominantColor": "#C0C2B2",
+      "altKo": "현대 건축·구조 장면 임시 자리 5번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.architecture-006",
+      "path": "data/images/placeholder/saas.architecture-006.svg",
+      "sha256": "223772124eb79b924daf49f116d271bb163314a9a262a7d7b26e3a85c3d53e82",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.architecture",
+        "tone.cool",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.44,
+        0.43
+      ],
+      "dominantColor": "#8FA1BA",
+      "altKo": "현대 건축·구조 장면 임시 자리 6번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.architecture-007",
+      "path": "data/images/placeholder/saas.architecture-007.svg",
+      "sha256": "db82379a483e57a9fa608fbe287a5e34ad595fa931caad230dc46acd5f820f32",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.architecture",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.5,
+        0.59
+      ],
+      "dominantColor": "#C0AB85",
+      "altKo": "현대 건축·구조 장면 임시 자리 7번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.architecture-008",
+      "path": "data/images/placeholder/saas.architecture-008.svg",
+      "sha256": "6c3608874ca339f70a0840886f9e38267de1d1d3a98d814627c8ca73e2f79339",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.architecture",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.6,
+        0.6
+      ],
+      "dominantColor": "#B9B3AA",
+      "altKo": "현대 건축·구조 장면 임시 자리 8번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.architecture-009",
+      "path": "data/images/placeholder/saas.architecture-009.svg",
+      "sha256": "73b0db56de3e675c270e731f4410a83571f83d52e2e31ffc5e60ef5e20f7a6ac",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.architecture",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.49,
+        0.43
+      ],
+      "dominantColor": "#87AEB7",
+      "altKo": "현대 건축·구조 장면 임시 자리 9번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.architecture-010",
+      "path": "data/images/placeholder/saas.architecture-010.svg",
+      "sha256": "d6c70501ffc4c20ab8f5c646c2c007a0a597970e565ed49890a8e28dbe18c435",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.architecture",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.56,
+        0.52
+      ],
+      "dominantColor": "#C1A085",
+      "altKo": "현대 건축·구조 장면 임시 자리 10번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.material-001",
+      "path": "data/images/placeholder/saas.material-001.svg",
+      "sha256": "edec6b89df43713fc89d24f2e905f1838b05ce144e057275d94ba26cb8bedc38",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.material",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.38,
+        0.46
+      ],
+      "dominantColor": "#C7A784",
+      "altKo": "종이·콘크리트·유리 근접 장면 임시 자리 1번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.material-002",
+      "path": "data/images/placeholder/saas.material-002.svg",
+      "sha256": "852d4a5d9a2bd80a2525481a6951de6eeb09e3c96d71a32c872c15c291479eeb",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.material",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.61,
+        0.49
+      ],
+      "dominantColor": "#C0B5BE",
+      "altKo": "종이·콘크리트·유리 근접 장면 임시 자리 2번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.material-003",
+      "path": "data/images/placeholder/saas.material-003.svg",
+      "sha256": "dcd24966a8b49c21791305185be45befb1009c6037909497e98462c5e10f2745",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.material",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.57,
+        0.48
+      ],
+      "dominantColor": "#93AEB5",
+      "altKo": "종이·콘크리트·유리 근접 장면 임시 자리 3번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.material-004",
+      "path": "data/images/placeholder/saas.material-004.svg",
+      "sha256": "14e7bc452a1e59bb5ea9d0ea7ff715e5ca7a2cb7aa876b872a9dd796cd55c12e",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.material",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.65,
+        0.51
+      ],
+      "dominantColor": "#CA9883",
+      "altKo": "종이·콘크리트·유리 근접 장면 임시 자리 4번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.material-005",
+      "path": "data/images/placeholder/saas.material-005.svg",
+      "sha256": "2fbab2f2e14b9966ee9616afe64a176800a4185ca33e7faa9ab66bb765e7c318",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.material",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.5,
+        0.36
+      ],
+      "dominantColor": "#C1C3BC",
+      "altKo": "종이·콘크리트·유리 근접 장면 임시 자리 5번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.material-006",
+      "path": "data/images/placeholder/saas.material-006.svg",
+      "sha256": "02bac150c1c009905537759ce6a3ede91180a96759da2f5acae569975921cabb",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.material",
+        "tone.cool",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.62,
+        0.59
+      ],
+      "dominantColor": "#8AABC1",
+      "altKo": "종이·콘크리트·유리 근접 장면 임시 자리 6번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.material-007",
+      "path": "data/images/placeholder/saas.material-007.svg",
+      "sha256": "78b16a415a61dbaf64d4f724714a6221c6930db88426f8e7a2126cad4a5f9e8c",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.material",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.54,
+        0.57
+      ],
+      "dominantColor": "#D3A77C",
+      "altKo": "종이·콘크리트·유리 근접 장면 임시 자리 7번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.material-008",
+      "path": "data/images/placeholder/saas.material-008.svg",
+      "sha256": "090de42c79c90ab4731a70c2030d0ab61fab6748224564bc49d1a86d805f1d30",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.material",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.43,
+        0.58
+      ],
+      "dominantColor": "#B3B0BE",
+      "altKo": "종이·콘크리트·유리 근접 장면 임시 자리 8번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.material-009",
+      "path": "data/images/placeholder/saas.material-009.svg",
+      "sha256": "54b70ad7c1ecf83fff9c14969c0249d7d211a8358eaf31066ae3cccb0a537209",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.material",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.63,
+        0.46
+      ],
+      "dominantColor": "#95A0BE",
+      "altKo": "종이·콘크리트·유리 근접 장면 임시 자리 9번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.material-010",
+      "path": "data/images/placeholder/saas.material-010.svg",
+      "sha256": "990fe4366c96350e27d55ce50372201301b9bdd341fa2bce52769cca0fd904a7",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.material",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.6,
+        0.53
+      ],
+      "dominantColor": "#C0987C",
+      "altKo": "종이·콘크리트·유리 근접 장면 임시 자리 10번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.meeting-back-001",
+      "path": "data/images/placeholder/saas.meeting-back-001.svg",
+      "sha256": "f56f25b80773d0a7096dd408d33584cd392700904dddb62e91fdd659d8e82d5b",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.meeting-back",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.61,
+        0.38
+      ],
+      "dominantColor": "#D1AB78",
+      "altKo": "회의 장면 뒷모습·원경 장면 임시 자리 1번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.meeting-back-002",
+      "path": "data/images/placeholder/saas.meeting-back-002.svg",
+      "sha256": "c86b762ae18dfcf4ef1342dc4076d7cec0103e88b0a35c9365365445aeefc4a4",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.meeting-back",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.56,
+        0.63
+      ],
+      "dominantColor": "#B6AEAB",
+      "altKo": "회의 장면 뒷모습·원경 장면 임시 자리 2번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.meeting-back-003",
+      "path": "data/images/placeholder/saas.meeting-back-003.svg",
+      "sha256": "bd23611f7e1f0201b2437b44bb2efb97b091df8d6d75eb5535576ff0354e490f",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.meeting-back",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.48,
+        0.56
+      ],
+      "dominantColor": "#8EADBE",
+      "altKo": "회의 장면 뒷모습·원경 장면 임시 자리 3번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.meeting-back-004",
+      "path": "data/images/placeholder/saas.meeting-back-004.svg",
+      "sha256": "eb617c8217997573856dd6cfc8d2d817c61181ea3f77f51cd9efa1bb39cfde79",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.meeting-back",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.6,
+        0.36
+      ],
+      "dominantColor": "#BEA175",
+      "altKo": "회의 장면 뒷모습·원경 장면 임시 자리 4번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.meeting-back-005",
+      "path": "data/images/placeholder/saas.meeting-back-005.svg",
+      "sha256": "c2b6f09c02a1bf4f04e3f5844812c237c0f9545eb3824f0bc992108c634b2d6c",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.meeting-back",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.42,
+        0.37
+      ],
+      "dominantColor": "#B6C1B5",
+      "altKo": "회의 장면 뒷모습·원경 장면 임시 자리 5번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.meeting-back-006",
+      "path": "data/images/placeholder/saas.meeting-back-006.svg",
+      "sha256": "94c7bd610bccd7d2877194f10874cf2927bc4e9e165c384b48329ff0ba4dd227",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.meeting-back",
+        "tone.cool",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.53,
+        0.57
+      ],
+      "dominantColor": "#8EADB6",
+      "altKo": "회의 장면 뒷모습·원경 장면 임시 자리 6번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.meeting-back-007",
+      "path": "data/images/placeholder/saas.meeting-back-007.svg",
+      "sha256": "bfd7c8bf63ec8bfc4cb4600327e7039347279dd004403e42effbd82c33dc78fb",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.meeting-back",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.47,
+        0.6
+      ],
+      "dominantColor": "#CB9C82",
+      "altKo": "회의 장면 뒷모습·원경 장면 임시 자리 7번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.meeting-back-008",
+      "path": "data/images/placeholder/saas.meeting-back-008.svg",
+      "sha256": "73e003ffca45acd20aec16fe0af4315d5a12dd185c1661189aa1c4d33fdb6cf1",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.meeting-back",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.64,
+        0.61
+      ],
+      "dominantColor": "#C4ACAF",
+      "altKo": "회의 장면 뒷모습·원경 장면 임시 자리 8번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.meeting-back-009",
+      "path": "data/images/placeholder/saas.meeting-back-009.svg",
+      "sha256": "a455aa7a424f832f1431ee2f183cc47dabaf0bec396c5ccfc24f687c2f5f2c94",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "saas.meeting-back",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.41,
+        0.63
+      ],
+      "dominantColor": "#86ADBF",
+      "altKo": "회의 장면 뒷모습·원경 장면 임시 자리 9번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:saas.meeting-back-010",
+      "path": "data/images/placeholder/saas.meeting-back-010.svg",
+      "sha256": "ff54763581fba5bbecfb88053437a9923fd122a5fc182ceee4cdb4bd4a03610a",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "saas.meeting-back",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.55,
+        0.53
+      ],
+      "dominantColor": "#CB9D70",
+      "altKo": "회의 장면 뒷모습·원경 장면 임시 자리 10번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.studio-001",
+      "path": "data/images/placeholder/portfolio.studio-001.svg",
+      "sha256": "cfb232c2895015ad834feb3ba2f08e6517aa7c64ad4117b6bd1b64ed07cce25b",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.studio",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.53,
+        0.63
+      ],
+      "dominantColor": "#C6A27F",
+      "altKo": "작업실 장면 임시 자리 1번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.studio-002",
+      "path": "data/images/placeholder/portfolio.studio-002.svg",
+      "sha256": "94b234f494d1929ca3a60ad7c88f2a0fae3ed33373d322b6b80b17083ae709e5",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.studio",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.47,
+        0.36
+      ],
+      "dominantColor": "#BFB1AF",
+      "altKo": "작업실 장면 임시 자리 2번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.studio-003",
+      "path": "data/images/placeholder/portfolio.studio-003.svg",
+      "sha256": "c718b8931ee34952c82c40811b960e8ac1fa6b50e15da9fe3f89ea738616c22b",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.studio",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.45,
+        0.36
+      ],
+      "dominantColor": "#99A7BA",
+      "altKo": "작업실 장면 임시 자리 3번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.studio-004",
+      "path": "data/images/placeholder/portfolio.studio-004.svg",
+      "sha256": "570326a73c02571da61b424085b840d9da8b7d74d75056792f56a03936ae151d",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.studio",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.44,
+        0.65
+      ],
+      "dominantColor": "#D3987F",
+      "altKo": "작업실 장면 임시 자리 4번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.studio-005",
+      "path": "data/images/placeholder/portfolio.studio-005.svg",
+      "sha256": "d2e43c510104ea057fccef505fd873b6585d7a7b445f91a8f8d5cf9531a169e7",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.studio",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.35,
+        0.35
+      ],
+      "dominantColor": "#B4B7B9",
+      "altKo": "작업실 장면 임시 자리 5번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.studio-006",
+      "path": "data/images/placeholder/portfolio.studio-006.svg",
+      "sha256": "5af19541f7197edefbce6ca736629dc1bd515a18fbc4d609595e65cc7dbf9b3c",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.studio",
+        "tone.cool",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.51,
+        0.52
+      ],
+      "dominantColor": "#8BB2C1",
+      "altKo": "작업실 장면 임시 자리 6번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.studio-007",
+      "path": "data/images/placeholder/portfolio.studio-007.svg",
+      "sha256": "d504c4876c7118b821bb91c778a2865681a4c34d8fcf0d0e8f19277f25d7c3f1",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.studio",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.59,
+        0.55
+      ],
+      "dominantColor": "#CCA671",
+      "altKo": "작업실 장면 임시 자리 7번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.studio-008",
+      "path": "data/images/placeholder/portfolio.studio-008.svg",
+      "sha256": "71a6897358f79ffe87363cf24c30952006509aa41249d36e0304b57099f1b281",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.studio",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.41,
+        0.56
+      ],
+      "dominantColor": "#B5BFB0",
+      "altKo": "작업실 장면 임시 자리 8번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.studio-009",
+      "path": "data/images/placeholder/portfolio.studio-009.svg",
+      "sha256": "6936ee18de3544d6fb88b09aa0339ad90badf2fae7a1b5999c8b2d97dc4291ed",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.studio",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.64,
+        0.6
+      ],
+      "dominantColor": "#999CB7",
+      "altKo": "작업실 장면 임시 자리 9번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.studio-010",
+      "path": "data/images/placeholder/portfolio.studio-010.svg",
+      "sha256": "f11941731a2fffcc6db2fee5b0db2b312e921aadc9e0e2fe7500aecc0d72d7f6",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.studio",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.53,
+        0.36
+      ],
+      "dominantColor": "#C9AD77",
+      "altKo": "작업실 장면 임시 자리 10번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.tools-001",
+      "path": "data/images/placeholder/portfolio.tools-001.svg",
+      "sha256": "2e6da7e0495f8324de26a61806bc14ce5a41e32edde9a528a178662fb4edae59",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.tools",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.35,
+        0.53
+      ],
+      "dominantColor": "#CDA37D",
+      "altKo": "도구·재료 장면 임시 자리 1번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.tools-002",
+      "path": "data/images/placeholder/portfolio.tools-002.svg",
+      "sha256": "e8102b82a8782854c5a1a7a2e0a1df1cb2542e3d698f8e30a79e8ac60cfc0479",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.tools",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.43,
+        0.35
+      ],
+      "dominantColor": "#B3AEB6",
+      "altKo": "도구·재료 장면 임시 자리 2번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.tools-003",
+      "path": "data/images/placeholder/portfolio.tools-003.svg",
+      "sha256": "e006d7fd2cbcee8aebaa5b649474c4462903b0ea6af9f4617a539d59f54ef841",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.tools",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.59,
+        0.52
+      ],
+      "dominantColor": "#8CA0C3",
+      "altKo": "도구·재료 장면 임시 자리 3번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.tools-004",
+      "path": "data/images/placeholder/portfolio.tools-004.svg",
+      "sha256": "f9a7c2ca60c0d644b559fd7ead8873557c00c8c8ed5154977a13499f2ed589d4",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.tools",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.41,
+        0.53
+      ],
+      "dominantColor": "#D19782",
+      "altKo": "도구·재료 장면 임시 자리 4번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.tools-005",
+      "path": "data/images/placeholder/portfolio.tools-005.svg",
+      "sha256": "88eed1bf8a608bc4fa24d3c63ebc5d881bf8e2aa8ec0ee08efcde8de175836a6",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.tools",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.58,
+        0.63
+      ],
+      "dominantColor": "#B1BBAD",
+      "altKo": "도구·재료 장면 임시 자리 5번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.tools-006",
+      "path": "data/images/placeholder/portfolio.tools-006.svg",
+      "sha256": "3cd510835d4388f24e53aa64d1d464a7be13ca7edd7ef6972e4400d32bd879af",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.tools",
+        "tone.cool",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.57,
+        0.44
+      ],
+      "dominantColor": "#87ADB0",
+      "altKo": "도구·재료 장면 임시 자리 6번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.tools-007",
+      "path": "data/images/placeholder/portfolio.tools-007.svg",
+      "sha256": "773bed359f79a6255ba0e2c791e0b3a8657ffe5d8e09eebca69982fba4c9d112",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.tools",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.44,
+        0.49
+      ],
+      "dominantColor": "#D1AA7B",
+      "altKo": "도구·재료 장면 임시 자리 7번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.tools-008",
+      "path": "data/images/placeholder/portfolio.tools-008.svg",
+      "sha256": "8995abf85afceacd2492418278ad524f347976e86836b1abda16e3846d140306",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.tools",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.36,
+        0.65
+      ],
+      "dominantColor": "#B1B2A9",
+      "altKo": "도구·재료 장면 임시 자리 8번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.tools-009",
+      "path": "data/images/placeholder/portfolio.tools-009.svg",
+      "sha256": "07c7f92244a13da889dd3c32ccfe73dba4d7a6422b6a44ff6a6b7fa2571ee3b5",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.tools",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.43,
+        0.41
+      ],
+      "dominantColor": "#8AA7B1",
+      "altKo": "도구·재료 장면 임시 자리 9번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.tools-010",
+      "path": "data/images/placeholder/portfolio.tools-010.svg",
+      "sha256": "c56728d9d01bf9f2c44c9c6bd48c56b9f49801547b79ae4213bd1d9bdcfa1155",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.tools",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.61,
+        0.53
+      ],
+      "dominantColor": "#C2A885",
+      "altKo": "도구·재료 장면 임시 자리 10번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.still-life-001",
+      "path": "data/images/placeholder/portfolio.still-life-001.svg",
+      "sha256": "75c2c267f844d62da382761125cd7d7146f98514443b42d9b64217ef960a4d94",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.still-life",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.46,
+        0.42
+      ],
+      "dominantColor": "#BEAE80",
+      "altKo": "정물 장면 임시 자리 1번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.still-life-002",
+      "path": "data/images/placeholder/portfolio.still-life-002.svg",
+      "sha256": "181d21e694886b7d190cce9e05c5dd5c35ede73734e433e62cdeafdf6943527b",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.still-life",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.47,
+        0.37
+      ],
+      "dominantColor": "#C3B7B9",
+      "altKo": "정물 장면 임시 자리 2번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.still-life-003",
+      "path": "data/images/placeholder/portfolio.still-life-003.svg",
+      "sha256": "614075f0d83c7fdbdd987cdd80f49fbecb26bfb1a1ac1a814637539155240595",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.still-life",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.42,
+        0.51
+      ],
+      "dominantColor": "#9BA7BB",
+      "altKo": "정물 장면 임시 자리 3번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.still-life-004",
+      "path": "data/images/placeholder/portfolio.still-life-004.svg",
+      "sha256": "b31a4ec6bed93358a9dfe31068f735b18c0ddff6cf02bacd54919f0eb858800e",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.still-life",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.45,
+        0.46
+      ],
+      "dominantColor": "#CF9F7B",
+      "altKo": "정물 장면 임시 자리 4번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.still-life-005",
+      "path": "data/images/placeholder/portfolio.still-life-005.svg",
+      "sha256": "da31c43899f3cd0a2f7e44a35efa68805c7f7b32a76661b6172b3a6b3beb065f",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.still-life",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.4,
+        0.53
+      ],
+      "dominantColor": "#B2B4B1",
+      "altKo": "정물 장면 임시 자리 5번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.still-life-006",
+      "path": "data/images/placeholder/portfolio.still-life-006.svg",
+      "sha256": "658581ed6a75c86b7fd7bc7c839bc1b1940fc506bfbecbe770820ac86f92b786",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.still-life",
+        "tone.cool",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.54,
+        0.65
+      ],
+      "dominantColor": "#8BADB4",
+      "altKo": "정물 장면 임시 자리 6번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.still-life-007",
+      "path": "data/images/placeholder/portfolio.still-life-007.svg",
+      "sha256": "91b3d99f5cc988b59558cbf29d4573fb09c387cb3b7be447989e7fb321093658",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.still-life",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.63,
+        0.63
+      ],
+      "dominantColor": "#D09D7A",
+      "altKo": "정물 장면 임시 자리 7번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.still-life-008",
+      "path": "data/images/placeholder/portfolio.still-life-008.svg",
+      "sha256": "b946d004ddbeb8671d38a0fbb28b4545b5dbdd705cc901626a83006cae1ba608",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.still-life",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.36,
+        0.4
+      ],
+      "dominantColor": "#BCB8B3",
+      "altKo": "정물 장면 임시 자리 8번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.still-life-009",
+      "path": "data/images/placeholder/portfolio.still-life-009.svg",
+      "sha256": "3bee00ae2679ee0c3d9e31447b0c79fda622a953539fcda7f03a9ef106ffa9ba",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.still-life",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.61,
+        0.59
+      ],
+      "dominantColor": "#84A1BF",
+      "altKo": "정물 장면 임시 자리 9번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.still-life-010",
+      "path": "data/images/placeholder/portfolio.still-life-010.svg",
+      "sha256": "3a9aa66ef90d53b1f748ab679cc18e0a915b107f77011697438f9528c8d97080",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.still-life",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.42,
+        0.36
+      ],
+      "dominantColor": "#C1A680",
+      "altKo": "정물 장면 임시 자리 10번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.interior-001",
+      "path": "data/images/placeholder/portfolio.interior-001.svg",
+      "sha256": "41f1178d054bf78737e58d6b256c7d5f4714aa2c5c87d96c2b8b93de4eb0fb6c",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.interior",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.44,
+        0.57
+      ],
+      "dominantColor": "#C99980",
+      "altKo": "실내 공간 장면 임시 자리 1번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.interior-002",
+      "path": "data/images/placeholder/portfolio.interior-002.svg",
+      "sha256": "6560f0a5c4cb736552acdfe29cb442d33ddb621a7fc2e22c95824441f437213c",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.interior",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.54,
+        0.5
+      ],
+      "dominantColor": "#C2BAA9",
+      "altKo": "실내 공간 장면 임시 자리 2번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.interior-003",
+      "path": "data/images/placeholder/portfolio.interior-003.svg",
+      "sha256": "f6cc7eeb2db88d8c3e7086089bfdb445adb35b6d2e978f819a1c8909eb64df8c",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.interior",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.63,
+        0.55
+      ],
+      "dominantColor": "#8BA2B9",
+      "altKo": "실내 공간 장면 임시 자리 3번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.interior-004",
+      "path": "data/images/placeholder/portfolio.interior-004.svg",
+      "sha256": "c4b4ac95a65a0d9dce220c68952cb91047aebeb8d50052a522096895d940858b",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.interior",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.41,
+        0.4
+      ],
+      "dominantColor": "#CF9C74",
+      "altKo": "실내 공간 장면 임시 자리 4번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.interior-005",
+      "path": "data/images/placeholder/portfolio.interior-005.svg",
+      "sha256": "23e7a6cd19f863b5013b43dacc7b71f7d1e5d674b4aa7f7b810299604f7ba48e",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.interior",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.43,
+        0.47
+      ],
+      "dominantColor": "#B3AEBB",
+      "altKo": "실내 공간 장면 임시 자리 5번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.interior-006",
+      "path": "data/images/placeholder/portfolio.interior-006.svg",
+      "sha256": "19fbd556f5b024a092c2efe4725db194e2bc655b09e17fdf247dba182f90fa41",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.interior",
+        "tone.cool",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.65,
+        0.44
+      ],
+      "dominantColor": "#97A5AC",
+      "altKo": "실내 공간 장면 임시 자리 6번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.interior-007",
+      "path": "data/images/placeholder/portfolio.interior-007.svg",
+      "sha256": "57478614fcebb5c82b1984ee9e65ac59e311fb944ff2e1387d65f269b9399d5b",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.interior",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.35,
+        0.44
+      ],
+      "dominantColor": "#CAA177",
+      "altKo": "실내 공간 장면 임시 자리 7번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.interior-008",
+      "path": "data/images/placeholder/portfolio.interior-008.svg",
+      "sha256": "a161574dc3b9651322311db4b29ac2abb4b2d6280b17ca894f8ae5ba61387eba",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.interior",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.65,
+        0.55
+      ],
+      "dominantColor": "#B9C0AA",
+      "altKo": "실내 공간 장면 임시 자리 8번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.interior-009",
+      "path": "data/images/placeholder/portfolio.interior-009.svg",
+      "sha256": "4fb72e8470c88729b7e4dc012c0d2fccefefac9872926d9808f4763955625084",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.interior",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.49,
+        0.61
+      ],
+      "dominantColor": "#89B0C3",
+      "altKo": "실내 공간 장면 임시 자리 9번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.interior-010",
+      "path": "data/images/placeholder/portfolio.interior-010.svg",
+      "sha256": "3004e535b52426cfe61f1809ed4dd736038688485f44b5cb830bd4c8cd427886",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.interior",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.5,
+        0.42
+      ],
+      "dominantColor": "#D3977C",
+      "altKo": "실내 공간 장면 임시 자리 10번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.nature-001",
+      "path": "data/images/placeholder/portfolio.nature-001.svg",
+      "sha256": "2ab104ec0a98840f21a49adcd49d40ad159f619bd8eb370ac206c6ba7ceef19a",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.nature",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.58,
+        0.41
+      ],
+      "dominantColor": "#D4A579",
+      "altKo": "자연 질감·풍경 장면 임시 자리 1번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.nature-002",
+      "path": "data/images/placeholder/portfolio.nature-002.svg",
+      "sha256": "8481ac1993dc0061fcb66987f5e2f352ba7b46f8925911590e346325d9206f13",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.nature",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.62,
+        0.54
+      ],
+      "dominantColor": "#BAAFB2",
+      "altKo": "자연 질감·풍경 장면 임시 자리 2번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.nature-003",
+      "path": "data/images/placeholder/portfolio.nature-003.svg",
+      "sha256": "774503d94e22ad57d3c5024e09e6cc1c9325b85422b122daf19adcffba46563d",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.nature",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.46,
+        0.46
+      ],
+      "dominantColor": "#979FB9",
+      "altKo": "자연 질감·풍경 장면 임시 자리 3번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.nature-004",
+      "path": "data/images/placeholder/portfolio.nature-004.svg",
+      "sha256": "d9d49f3c0cb461ad63c06c6809144828c041c192de3ee85ab8964748bed83388",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.nature",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.62,
+        0.4
+      ],
+      "dominantColor": "#C19F82",
+      "altKo": "자연 질감·풍경 장면 임시 자리 4번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.nature-005",
+      "path": "data/images/placeholder/portfolio.nature-005.svg",
+      "sha256": "d7fbb5dbe7a1ca79a255b6973aaa6fe4f8a54be2e0b64704222a8b4e118b12e7",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.nature",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.47,
+        0.49
+      ],
+      "dominantColor": "#B5B7BF",
+      "altKo": "자연 질감·풍경 장면 임시 자리 5번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.nature-006",
+      "path": "data/images/placeholder/portfolio.nature-006.svg",
+      "sha256": "2df45ff4203893d6f4f9607906f16fa769120440ed95f3e863bc0ef593275da7",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.nature",
+        "tone.cool",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.44,
+        0.37
+      ],
+      "dominantColor": "#9BA2AD",
+      "altKo": "자연 질감·풍경 장면 임시 자리 6번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.nature-007",
+      "path": "data/images/placeholder/portfolio.nature-007.svg",
+      "sha256": "38a287792b52a8461af93ba6b4bad023725206807c7a83deb365da6765073eea",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "portfolio.nature",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.63,
+        0.45
+      ],
+      "dominantColor": "#CEA872",
+      "altKo": "자연 질감·풍경 장면 임시 자리 7번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:portfolio.nature-008",
+      "path": "data/images/placeholder/portfolio.nature-008.svg",
+      "sha256": "0fdfdca9e217db072b95278ec3df01f6e5745a72fbd886928a28554c57aa8237",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "portfolio.nature",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.39,
+        0.52
+      ],
+      "dominantColor": "#C1ADB3",
+      "altKo": "자연 질감·풍경 장면 임시 자리 8번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.cafe-interior-001",
+      "path": "data/images/placeholder/local_business.cafe-interior-001.svg",
+      "sha256": "a16d9976aefda91583d3697603011570b8698922646ed0396206d9e49dbcd088",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.cafe-interior",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.38,
+        0.42
+      ],
+      "dominantColor": "#CCAB7D",
+      "altKo": "카페 내부 장면 임시 자리 1번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.cafe-interior-002",
+      "path": "data/images/placeholder/local_business.cafe-interior-002.svg",
+      "sha256": "84de68b91109f8f6aec189d7589e7bb1def66bf6c03c7365af5032b8dc28ca06",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.cafe-interior",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.45,
+        0.48
+      ],
+      "dominantColor": "#B9BBAE",
+      "altKo": "카페 내부 장면 임시 자리 2번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.cafe-interior-003",
+      "path": "data/images/placeholder/local_business.cafe-interior-003.svg",
+      "sha256": "b00147894a151e5d26f3c3ac844207fd1d049ecbfac1a15fc7acb991be8fdc05",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.cafe-interior",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.57,
+        0.5
+      ],
+      "dominantColor": "#90A7B0",
+      "altKo": "카페 내부 장면 임시 자리 3번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.cafe-interior-004",
+      "path": "data/images/placeholder/local_business.cafe-interior-004.svg",
+      "sha256": "4ce7f2fca185c7a8d47b6e83bc11dea155e73052b20f1e3f7da6eca71ebfc90f",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.cafe-interior",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.37,
+        0.58
+      ],
+      "dominantColor": "#C8A17E",
+      "altKo": "카페 내부 장면 임시 자리 4번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.cafe-interior-005",
+      "path": "data/images/placeholder/local_business.cafe-interior-005.svg",
+      "sha256": "59ee1bdaa1b984e1b088663c618a29a03f014cd479f185fd24cfa1697f33114f",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.cafe-interior",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.47,
+        0.38
+      ],
+      "dominantColor": "#C1B2B9",
+      "altKo": "카페 내부 장면 임시 자리 5번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.cafe-interior-006",
+      "path": "data/images/placeholder/local_business.cafe-interior-006.svg",
+      "sha256": "246280d8474136cd5cebeb9182fe442aec3aeae33a673d7e23739cc007eb3dfb",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.cafe-interior",
+        "tone.cool",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.63,
+        0.49
+      ],
+      "dominantColor": "#87A3B0",
+      "altKo": "카페 내부 장면 임시 자리 6번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.cafe-interior-007",
+      "path": "data/images/placeholder/local_business.cafe-interior-007.svg",
+      "sha256": "2995e6b2b955351d01956677de07318e69691cc2467ed37e8198390240d849c7",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.cafe-interior",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.39,
+        0.39
+      ],
+      "dominantColor": "#CBAB84",
+      "altKo": "카페 내부 장면 임시 자리 7번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.cafe-interior-008",
+      "path": "data/images/placeholder/local_business.cafe-interior-008.svg",
+      "sha256": "0a7654a2ee0ff6103e38f99d08338d6d08598174c0a867ce4a0a304078c1d7f1",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.cafe-interior",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.49,
+        0.62
+      ],
+      "dominantColor": "#B0C1B2",
+      "altKo": "카페 내부 장면 임시 자리 8번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.cafe-interior-009",
+      "path": "data/images/placeholder/local_business.cafe-interior-009.svg",
+      "sha256": "d9b17f2a7b83576a2865ac1e67deff20efee4905985a87432cb87283bbdbe26a",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.cafe-interior",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.48,
+        0.35
+      ],
+      "dominantColor": "#95A5C1",
+      "altKo": "카페 내부 장면 임시 자리 9번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.cafe-interior-010",
+      "path": "data/images/placeholder/local_business.cafe-interior-010.svg",
+      "sha256": "72bb7e07d3502473f2aceac3f7408d9a469928f2b4dd19158c8b008bdb5b4a05",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.cafe-interior",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.64,
+        0.6
+      ],
+      "dominantColor": "#C8A578",
+      "altKo": "카페 내부 장면 임시 자리 10번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.cafe-interior-011",
+      "path": "data/images/placeholder/local_business.cafe-interior-011.svg",
+      "sha256": "dda3d795bad54bb202fcb6262f8cf0cae49b396f46169b83cd2422d641fa19d3",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.cafe-interior",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.63,
+        0.6
+      ],
+      "dominantColor": "#AEBDAD",
+      "altKo": "카페 내부 장면 임시 자리 11번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.cafe-interior-012",
+      "path": "data/images/placeholder/local_business.cafe-interior-012.svg",
+      "sha256": "1729f595aace0ead742b499eec4023508e0d62663a563c63992300a09a22e3c2",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.cafe-interior",
+        "tone.cool",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.63,
+        0.59
+      ],
+      "dominantColor": "#8AA6C1",
+      "altKo": "카페 내부 장면 임시 자리 12번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.coffee-001",
+      "path": "data/images/placeholder/local_business.coffee-001.svg",
+      "sha256": "e1840bd79c12445a8466acdca60ed045967ec704e85405bcaa2e2971b770bde1",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.coffee",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.38,
+        0.53
+      ],
+      "dominantColor": "#D4AD78",
+      "altKo": "커피·음료 장면 임시 자리 1번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.coffee-002",
+      "path": "data/images/placeholder/local_business.coffee-002.svg",
+      "sha256": "773df57e1e15a0cf7ffdfa02efccf0477f4581c304252829d6493bde5280d138",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.coffee",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.41,
+        0.59
+      ],
+      "dominantColor": "#B6BBB1",
+      "altKo": "커피·음료 장면 임시 자리 2번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.coffee-003",
+      "path": "data/images/placeholder/local_business.coffee-003.svg",
+      "sha256": "89557868d65c84b89b783c02b3c2be34293532b2bc287b3f3d88a8ce1c6060e8",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.coffee",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.38,
+        0.43
+      ],
+      "dominantColor": "#96A1C2",
+      "altKo": "커피·음료 장면 임시 자리 3번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.coffee-004",
+      "path": "data/images/placeholder/local_business.coffee-004.svg",
+      "sha256": "480c8a8ee9cffbcd3b246bcb52f17478e84d791d46a532d5ef94e5728e5e94ac",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.coffee",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.48,
+        0.38
+      ],
+      "dominantColor": "#BFA87A",
+      "altKo": "커피·음료 장면 임시 자리 4번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.coffee-005",
+      "path": "data/images/placeholder/local_business.coffee-005.svg",
+      "sha256": "115f522797125e18f3dd04bbfe6183836d1fa1003c48dada2749a7678debff53",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.coffee",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.57,
+        0.47
+      ],
+      "dominantColor": "#BDAEB3",
+      "altKo": "커피·음료 장면 임시 자리 5번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.coffee-006",
+      "path": "data/images/placeholder/local_business.coffee-006.svg",
+      "sha256": "1f2ef768358b8efdfcf40046e43c97bae489ed3b5b370aceb1cf2c57dcd1a309",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.coffee",
+        "tone.cool",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.54,
+        0.48
+      ],
+      "dominantColor": "#8FA3B8",
+      "altKo": "커피·음료 장면 임시 자리 6번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.coffee-007",
+      "path": "data/images/placeholder/local_business.coffee-007.svg",
+      "sha256": "931e76163993098a20f31babea2cc4884bfa74bbd4809cc8cba7cf3442610ad1",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.coffee",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.46,
+        0.46
+      ],
+      "dominantColor": "#C1A576",
+      "altKo": "커피·음료 장면 임시 자리 7번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.coffee-008",
+      "path": "data/images/placeholder/local_business.coffee-008.svg",
+      "sha256": "9f9271762a7af071bdc320cd0b87e4a91b468e6a2d2b745e4b4b25a17ff431b2",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.coffee",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.36,
+        0.6
+      ],
+      "dominantColor": "#B2AEBE",
+      "altKo": "커피·음료 장면 임시 자리 8번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.coffee-009",
+      "path": "data/images/placeholder/local_business.coffee-009.svg",
+      "sha256": "057b625fd0458612b40b0070c4d0b1e4cde5a744f1d51991b63b232db437a274",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.coffee",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.6,
+        0.59
+      ],
+      "dominantColor": "#9BA5AD",
+      "altKo": "커피·음료 장면 임시 자리 9번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.coffee-010",
+      "path": "data/images/placeholder/local_business.coffee-010.svg",
+      "sha256": "94d1dec7a852812728756156d82c4a3350109d30155f351792ad4e7c67523c30",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.coffee",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.57,
+        0.36
+      ],
+      "dominantColor": "#C79E7E",
+      "altKo": "커피·음료 장면 임시 자리 10번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.coffee-011",
+      "path": "data/images/placeholder/local_business.coffee-011.svg",
+      "sha256": "c79f5760dce38c0b82f5a14cbc30aaef28fba775ae12ff04eff82467eb76b532",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.coffee",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.36,
+        0.56
+      ],
+      "dominantColor": "#ADC0AC",
+      "altKo": "커피·음료 장면 임시 자리 11번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.coffee-012",
+      "path": "data/images/placeholder/local_business.coffee-012.svg",
+      "sha256": "8d743db396ad9f0df746c957ff53e35c263e3b263aa8f03287158b6d95225575",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.coffee",
+        "tone.cool",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.52,
+        0.4
+      ],
+      "dominantColor": "#8F9EAF",
+      "altKo": "커피·음료 장면 임시 자리 12번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.bakery-001",
+      "path": "data/images/placeholder/local_business.bakery-001.svg",
+      "sha256": "94191ccac18b9282387881a86e08d450815cf1f7af4902faaf216b59838ff33c",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.bakery",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.54,
+        0.39
+      ],
+      "dominantColor": "#CAA979",
+      "altKo": "빵·디저트 장면 임시 자리 1번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.bakery-002",
+      "path": "data/images/placeholder/local_business.bakery-002.svg",
+      "sha256": "6c93c9692e064248865af449704b0947299a13d7b3a448c0d8188c9368f2149c",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.bakery",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.46,
+        0.39
+      ],
+      "dominantColor": "#B0B6BE",
+      "altKo": "빵·디저트 장면 임시 자리 2번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.bakery-003",
+      "path": "data/images/placeholder/local_business.bakery-003.svg",
+      "sha256": "3f025aae154cd96717aee57fecc0b7649042f8b93c773b6375906ce89718f6fa",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.bakery",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.4,
+        0.41
+      ],
+      "dominantColor": "#99A9B5",
+      "altKo": "빵·디저트 장면 임시 자리 3번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.bakery-004",
+      "path": "data/images/placeholder/local_business.bakery-004.svg",
+      "sha256": "daf6b1fd9d39e64e36fd4519ff199861171e62672b57178318ad438c49cf0758",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.bakery",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.37,
+        0.55
+      ],
+      "dominantColor": "#BFA782",
+      "altKo": "빵·디저트 장면 임시 자리 4번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.bakery-005",
+      "path": "data/images/placeholder/local_business.bakery-005.svg",
+      "sha256": "5b13e7311b692d2ebaa68bd6c3b4b5df01bb400ebb09c46f6ddf31addd05affd",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.bakery",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.53,
+        0.43
+      ],
+      "dominantColor": "#C4C1B4",
+      "altKo": "빵·디저트 장면 임시 자리 5번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.bakery-006",
+      "path": "data/images/placeholder/local_business.bakery-006.svg",
+      "sha256": "ac9a20b8c6f86d8a3171e7cc05aba25cdbeaa10f89f6abfd89b3752eb9f816a0",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.bakery",
+        "tone.cool",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.42,
+        0.63
+      ],
+      "dominantColor": "#93A2BE",
+      "altKo": "빵·디저트 장면 임시 자리 6번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.bakery-007",
+      "path": "data/images/placeholder/local_business.bakery-007.svg",
+      "sha256": "31ba8809826b9db73dbe28667a94767eebebedf4f1ef689daea603743807a90b",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.bakery",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.42,
+        0.52
+      ],
+      "dominantColor": "#C89D74",
+      "altKo": "빵·디저트 장면 임시 자리 7번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.bakery-008",
+      "path": "data/images/placeholder/local_business.bakery-008.svg",
+      "sha256": "c7f219bf01b61d5231ca30c18421e95d51c94a859cc3eb2dc0ee47c3d2da3cfc",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.bakery",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.61,
+        0.42
+      ],
+      "dominantColor": "#B9AEB1",
+      "altKo": "빵·디저트 장면 임시 자리 8번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.bakery-009",
+      "path": "data/images/placeholder/local_business.bakery-009.svg",
+      "sha256": "97301323538165899697f27849c703e34823eefd20c693f45947c0a176eec286",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.bakery",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.65,
+        0.39
+      ],
+      "dominantColor": "#9AACB4",
+      "altKo": "빵·디저트 장면 임시 자리 9번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.bakery-010",
+      "path": "data/images/placeholder/local_business.bakery-010.svg",
+      "sha256": "4e9ead86133bd8595702b3bb1dd14b19964e77c428cdad71221e59de06147ed4",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.bakery",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.53,
+        0.45
+      ],
+      "dominantColor": "#BFA779",
+      "altKo": "빵·디저트 장면 임시 자리 10번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.food-001",
+      "path": "data/images/placeholder/local_business.food-001.svg",
+      "sha256": "049e43391245b3965c2c9fe81b3e40025b8cfffb38a24098d564abeee093028c",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.food",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.46,
+        0.6
+      ],
+      "dominantColor": "#BEA385",
+      "altKo": "한식·양식 플레이팅 장면 임시 자리 1번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.food-002",
+      "path": "data/images/placeholder/local_business.food-002.svg",
+      "sha256": "bc87b191437d21a16398121c8fca2b1090c4a1cf90be5c1151492c93692e3f8d",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.food",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.6,
+        0.56
+      ],
+      "dominantColor": "#B8BAAA",
+      "altKo": "한식·양식 플레이팅 장면 임시 자리 2번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.food-003",
+      "path": "data/images/placeholder/local_business.food-003.svg",
+      "sha256": "8ca43a0232c5ce3ca90fc0fc268fffc92828cb682639b1e65000d1316d42c977",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.food",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.36,
+        0.44
+      ],
+      "dominantColor": "#90A3C0",
+      "altKo": "한식·양식 플레이팅 장면 임시 자리 3번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.food-004",
+      "path": "data/images/placeholder/local_business.food-004.svg",
+      "sha256": "2a670d191d3ce6f7c4bec9abe9494941efc2b54357146fac4f495751552b1031",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.food",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.48,
+        0.53
+      ],
+      "dominantColor": "#D4A586",
+      "altKo": "한식·양식 플레이팅 장면 임시 자리 4번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.food-005",
+      "path": "data/images/placeholder/local_business.food-005.svg",
+      "sha256": "7585e57427d0e55312a62f1532eab2631f38ad8b91f0f008e1cf7ecc99e704f9",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.food",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.39,
+        0.64
+      ],
+      "dominantColor": "#B9B5B0",
+      "altKo": "한식·양식 플레이팅 장면 임시 자리 5번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.food-006",
+      "path": "data/images/placeholder/local_business.food-006.svg",
+      "sha256": "64848802aaaf53c5a2ec8392da248222b703b65d2034da2d711cb48ad39a623c",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.food",
+        "tone.cool",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.57,
+        0.47
+      ],
+      "dominantColor": "#97B0B8",
+      "altKo": "한식·양식 플레이팅 장면 임시 자리 6번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.food-007",
+      "path": "data/images/placeholder/local_business.food-007.svg",
+      "sha256": "22db545664c016f6c856eb6d9c1cefbd880d30ad1d13499ae6a871ed8c8675ab",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.food",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.63,
+        0.41
+      ],
+      "dominantColor": "#CE9B81",
+      "altKo": "한식·양식 플레이팅 장면 임시 자리 7번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.food-008",
+      "path": "data/images/placeholder/local_business.food-008.svg",
+      "sha256": "12ada3a86662873ac6b7810098bab8d429e0f654f1c9ddbbc2566e68ee8c80b0",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.food",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.47,
+        0.6
+      ],
+      "dominantColor": "#C3B0A9",
+      "altKo": "한식·양식 플레이팅 장면 임시 자리 8번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.food-009",
+      "path": "data/images/placeholder/local_business.food-009.svg",
+      "sha256": "fbfcdad113815e0c5996a1347d6dc2392981a0ba247b048126db99fcbc69178b",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.food",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.6,
+        0.58
+      ],
+      "dominantColor": "#929BBA",
+      "altKo": "한식·양식 플레이팅 장면 임시 자리 9번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.food-010",
+      "path": "data/images/placeholder/local_business.food-010.svg",
+      "sha256": "421ee7cacab7ab8342bb8d9e6d752c2600503c678eb338477523d87d7221c81e",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.food",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.56,
+        0.6
+      ],
+      "dominantColor": "#C0A471",
+      "altKo": "한식·양식 플레이팅 장면 임시 자리 10번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.food-011",
+      "path": "data/images/placeholder/local_business.food-011.svg",
+      "sha256": "cac563001ec5d93356320cd3f56b932722c23d1618a177fae7f12287a9c920d0",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.food",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.44,
+        0.36
+      ],
+      "dominantColor": "#C3BDAE",
+      "altKo": "한식·양식 플레이팅 장면 임시 자리 11번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.food-012",
+      "path": "data/images/placeholder/local_business.food-012.svg",
+      "sha256": "73fc8093f4cd4dd03a3d07209d1df3fdaa1fb8a230aac9ec27412f76b2f3b41e",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.food",
+        "tone.cool",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.4,
+        0.5
+      ],
+      "dominantColor": "#90A4BF",
+      "altKo": "한식·양식 플레이팅 장면 임시 자리 12번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.restaurant-interior-001",
+      "path": "data/images/placeholder/local_business.restaurant-interior-001.svg",
+      "sha256": "ef8c3d7f872c610449ea737ef68bef5e09a0fb53632a574d08b4aeb8fc08179d",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.restaurant-interior",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.56,
+        0.54
+      ],
+      "dominantColor": "#C79B77",
+      "altKo": "식당 내부 장면 임시 자리 1번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.restaurant-interior-002",
+      "path": "data/images/placeholder/local_business.restaurant-interior-002.svg",
+      "sha256": "8a691fc9a5625ef0073523a58ab53e740ac78c6ed7e27c6caefe1ae9ceb5ffe9",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.restaurant-interior",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.4,
+        0.56
+      ],
+      "dominantColor": "#BDC1B3",
+      "altKo": "식당 내부 장면 임시 자리 2번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.restaurant-interior-003",
+      "path": "data/images/placeholder/local_business.restaurant-interior-003.svg",
+      "sha256": "17576acc438d4b57fb159f7d068e6756c9588205e1c483e8a7305446517f199d",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.restaurant-interior",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.4,
+        0.61
+      ],
+      "dominantColor": "#8CABAD",
+      "altKo": "식당 내부 장면 임시 자리 3번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.restaurant-interior-004",
+      "path": "data/images/placeholder/local_business.restaurant-interior-004.svg",
+      "sha256": "9a090514ba2ee63457e04f650f80199a25ffc106fbe7bf1eabe88c2515c79bd3",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.restaurant-interior",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.56,
+        0.46
+      ],
+      "dominantColor": "#C0A07B",
+      "altKo": "식당 내부 장면 임시 자리 4번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.restaurant-interior-005",
+      "path": "data/images/placeholder/local_business.restaurant-interior-005.svg",
+      "sha256": "ac540486875d60611f0a46e0bec947bc1819913dee7a7a5b4fd9ab2dc74b8a25",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.restaurant-interior",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.47,
+        0.52
+      ],
+      "dominantColor": "#BBBCB2",
+      "altKo": "식당 내부 장면 임시 자리 5번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.restaurant-interior-006",
+      "path": "data/images/placeholder/local_business.restaurant-interior-006.svg",
+      "sha256": "567ab407e0d7bb4c7f65bfd27d63c42aa20e318f77dda5d2d41f2796e01495fb",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.restaurant-interior",
+        "tone.cool",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.59,
+        0.44
+      ],
+      "dominantColor": "#999CAE",
+      "altKo": "식당 내부 장면 임시 자리 6번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.restaurant-interior-007",
+      "path": "data/images/placeholder/local_business.restaurant-interior-007.svg",
+      "sha256": "a72179cbaf9964ef814142224cd1c4ac8991645fd0584811a45c1ff1959dcc90",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.restaurant-interior",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.36,
+        0.59
+      ],
+      "dominantColor": "#BE9B7B",
+      "altKo": "식당 내부 장면 임시 자리 7번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.restaurant-interior-008",
+      "path": "data/images/placeholder/local_business.restaurant-interior-008.svg",
+      "sha256": "d3a2d8cd8ec99a3ca2def031a474c909fe744cc83701f0e58505b63fcbc8fbde",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.restaurant-interior",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.41,
+        0.6
+      ],
+      "dominantColor": "#C2B8AF",
+      "altKo": "식당 내부 장면 임시 자리 8번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.restaurant-interior-009",
+      "path": "data/images/placeholder/local_business.restaurant-interior-009.svg",
+      "sha256": "cb736a03eaf91e54749c4c1d12f4ab9d67d6cd6c2bb900171d6d36eaa102bc07",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.restaurant-interior",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.51,
+        0.41
+      ],
+      "dominantColor": "#90A4C0",
+      "altKo": "식당 내부 장면 임시 자리 9번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.restaurant-interior-010",
+      "path": "data/images/placeholder/local_business.restaurant-interior-010.svg",
+      "sha256": "df9243dd0a216eb8124108f18f236cf4c5eb5a99816dc60420457aa3afcafa2f",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.restaurant-interior",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.51,
+        0.63
+      ],
+      "dominantColor": "#C69E7A",
+      "altKo": "식당 내부 장면 임시 자리 10번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.craft-001",
+      "path": "data/images/placeholder/local_business.craft-001.svg",
+      "sha256": "54c9337aeee5d9547c91ff7d5f110ba3d659db089e01d2638fb1910d1d3d5582",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.craft",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.49,
+        0.35
+      ],
+      "dominantColor": "#C6987E",
+      "altKo": "공방 작업 장면 임시 자리 1번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.craft-002",
+      "path": "data/images/placeholder/local_business.craft-002.svg",
+      "sha256": "840b20003c723b5cbc254052a1224331a6fdf325b5d83eb81a7fba55133e8af1",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.craft",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.5,
+        0.38
+      ],
+      "dominantColor": "#AEB5AC",
+      "altKo": "공방 작업 장면 임시 자리 2번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.craft-003",
+      "path": "data/images/placeholder/local_business.craft-003.svg",
+      "sha256": "aca3a53ea38be720a0aae1014ff6c18792f79e5b5589d73b78e751f8dff30768",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.craft",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.51,
+        0.6
+      ],
+      "dominantColor": "#859CAF",
+      "altKo": "공방 작업 장면 임시 자리 3번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.craft-004",
+      "path": "data/images/placeholder/local_business.craft-004.svg",
+      "sha256": "78d61fb6d81cae334f53ac604374f3d355e44230feda76a2270c2efde63e3acd",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.craft",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.61,
+        0.52
+      ],
+      "dominantColor": "#C4A174",
+      "altKo": "공방 작업 장면 임시 자리 4번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.craft-005",
+      "path": "data/images/placeholder/local_business.craft-005.svg",
+      "sha256": "ad439f864308c0424e65d8afbebff14680e31676ae62fa4aeaeec14cc36785dd",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.craft",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.44,
+        0.54
+      ],
+      "dominantColor": "#B9B5BD",
+      "altKo": "공방 작업 장면 임시 자리 5번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.craft-006",
+      "path": "data/images/placeholder/local_business.craft-006.svg",
+      "sha256": "429835a42effa2a9eca801f5be85d1246dfdd69a47895b9f6ff719be71dcb82f",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.craft",
+        "tone.cool",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.36,
+        0.63
+      ],
+      "dominantColor": "#87ACC3",
+      "altKo": "공방 작업 장면 임시 자리 6번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.craft-007",
+      "path": "data/images/placeholder/local_business.craft-007.svg",
+      "sha256": "d2bbc90336a8cc88efd7da2cbfeddbfa924cad1ef351dadb4fa4d5b317f38d16",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.craft",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.65,
+        0.51
+      ],
+      "dominantColor": "#CCA972",
+      "altKo": "공방 작업 장면 임시 자리 7번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.craft-008",
+      "path": "data/images/placeholder/local_business.craft-008.svg",
+      "sha256": "ace67697cb953e29b2bba4dd85067ba024f1c36400e6bbeeca57fc5713bb14bd",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.craft",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.47,
+        0.59
+      ],
+      "dominantColor": "#BDB1AB",
+      "altKo": "공방 작업 장면 임시 자리 8번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.craft-009",
+      "path": "data/images/placeholder/local_business.craft-009.svg",
+      "sha256": "5ff51e39d6f25503e2500fb5b2eefdaf67ccbdde76cd170a75d14d3ae08a9339",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.craft",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.53,
+        0.6
+      ],
+      "dominantColor": "#849FBA",
+      "altKo": "공방 작업 장면 임시 자리 9번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.craft-010",
+      "path": "data/images/placeholder/local_business.craft-010.svg",
+      "sha256": "a1b75a9d79074d36249c951d4a7d74c75a63e38a6d3780a88d40fd0a086e4289",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.craft",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.36,
+        0.48
+      ],
+      "dominantColor": "#CF9777",
+      "altKo": "공방 작업 장면 임시 자리 10번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.flower-001",
+      "path": "data/images/placeholder/local_business.flower-001.svg",
+      "sha256": "c7b4b8746dd55d1c8bd057b8531a5643b185e8bb2f856dd35b3a337c06a598af",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.flower",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.57,
+        0.56
+      ],
+      "dominantColor": "#C1AA80",
+      "altKo": "꽃·식물 장면 임시 자리 1번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.flower-002",
+      "path": "data/images/placeholder/local_business.flower-002.svg",
+      "sha256": "5085b0b98980ff8a7e90e4b3f4ae5cb8b099973b4af5a05ad054f3799a36097f",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.flower",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.55,
+        0.42
+      ],
+      "dominantColor": "#B3BFBB",
+      "altKo": "꽃·식물 장면 임시 자리 2번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.flower-003",
+      "path": "data/images/placeholder/local_business.flower-003.svg",
+      "sha256": "ee5028610955d4927aca01634ea1ef370d14c16587e71001b5a0b3b4a5a1fd6d",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.flower",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.54,
+        0.46
+      ],
+      "dominantColor": "#899FBF",
+      "altKo": "꽃·식물 장면 임시 자리 3번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.flower-004",
+      "path": "data/images/placeholder/local_business.flower-004.svg",
+      "sha256": "9027474508b331a79b9cdfe4b8a5e2b7b2602734a15abfa92fa1e56d6313d6fe",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.flower",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.37,
+        0.57
+      ],
+      "dominantColor": "#C0AA80",
+      "altKo": "꽃·식물 장면 임시 자리 4번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.flower-005",
+      "path": "data/images/placeholder/local_business.flower-005.svg",
+      "sha256": "fd3fe264d036314eff55a55a4f481b57dc55127e47d436ecdc7d6551718e12bf",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.flower",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.63,
+        0.54
+      ],
+      "dominantColor": "#BFB3AF",
+      "altKo": "꽃·식물 장면 임시 자리 5번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.flower-006",
+      "path": "data/images/placeholder/local_business.flower-006.svg",
+      "sha256": "df7448318a1c27114b163d6e88fa260470877cc4747a8890d79482f0187866ce",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.flower",
+        "tone.cool",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.64,
+        0.42
+      ],
+      "dominantColor": "#90A5C1",
+      "altKo": "꽃·식물 장면 임시 자리 6번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.flower-007",
+      "path": "data/images/placeholder/local_business.flower-007.svg",
+      "sha256": "cfeeb4f4e439a776bb2632d185e4c3a0b436c63295c39bf7861de1e718986d28",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.flower",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.59,
+        0.47
+      ],
+      "dominantColor": "#CFA07D",
+      "altKo": "꽃·식물 장면 임시 자리 7번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.flower-008",
+      "path": "data/images/placeholder/local_business.flower-008.svg",
+      "sha256": "2cf7bb585ba8bf05ff50a6fe447b7f0f8593e8011e861b1ccdf5ee5e1bee0bf1",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.flower",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.61,
+        0.63
+      ],
+      "dominantColor": "#BBADBE",
+      "altKo": "꽃·식물 장면 임시 자리 8번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.storefront-001",
+      "path": "data/images/placeholder/local_business.storefront-001.svg",
+      "sha256": "cba124e30d5e683043387963fe14fb9bec7ca245fd148bb0a7d33bdb99637f51",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.storefront",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.61,
+        0.48
+      ],
+      "dominantColor": "#BD9F7C",
+      "altKo": "상점 외관 장면 임시 자리 1번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.storefront-002",
+      "path": "data/images/placeholder/local_business.storefront-002.svg",
+      "sha256": "54fcd42c036e6b0ad74fb49e470d25820fae0a8f7d442892af9810b78117af11",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.storefront",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.58,
+        0.52
+      ],
+      "dominantColor": "#C2C0A9",
+      "altKo": "상점 외관 장면 임시 자리 2번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.storefront-003",
+      "path": "data/images/placeholder/local_business.storefront-003.svg",
+      "sha256": "a1e448edc97e4b43f0721e444e2c56cee51b5d0b826ed0faf572150b7a050ffe",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.storefront",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.42,
+        0.38
+      ],
+      "dominantColor": "#889CC0",
+      "altKo": "상점 외관 장면 임시 자리 3번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.storefront-004",
+      "path": "data/images/placeholder/local_business.storefront-004.svg",
+      "sha256": "ce65bc64cef1f33c317dc5fe16d0093d5545fcb78ccdd68dae1e7bc9c1ca0abb",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.storefront",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.61,
+        0.45
+      ],
+      "dominantColor": "#C8AA7D",
+      "altKo": "상점 외관 장면 임시 자리 4번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.storefront-005",
+      "path": "data/images/placeholder/local_business.storefront-005.svg",
+      "sha256": "bd568149aa2fca3300ed4fc58c1bb9663d42864a59ac0803f681087a36796399",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.storefront",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.58,
+        0.44
+      ],
+      "dominantColor": "#BABFAD",
+      "altKo": "상점 외관 장면 임시 자리 5번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.storefront-006",
+      "path": "data/images/placeholder/local_business.storefront-006.svg",
+      "sha256": "b3948cd86b21ffcc1373d20b227779725883376ee6ee1aaf9a25b616795b16c2",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.storefront",
+        "tone.cool",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.42,
+        0.46
+      ],
+      "dominantColor": "#8FA2B9",
+      "altKo": "상점 외관 장면 임시 자리 6번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.storefront-007",
+      "path": "data/images/placeholder/local_business.storefront-007.svg",
+      "sha256": "419a0d344cc726061765546cfc00300c02879c3dba5e22f326cd188db9843db8",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.storefront",
+        "tone.warm",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.46,
+        0.56
+      ],
+      "dominantColor": "#BE9B7D",
+      "altKo": "상점 외관 장면 임시 자리 7번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.storefront-008",
+      "path": "data/images/placeholder/local_business.storefront-008.svg",
+      "sha256": "0cd2b988d4d3988a84adc3b858ed6e7885924ac9b9b9a62739425d0207e5091a",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.storefront",
+        "tone.neutral",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.38,
+        0.62
+      ],
+      "dominantColor": "#BEAEAA",
+      "altKo": "상점 외관 장면 임시 자리 8번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.storefront-009",
+      "path": "data/images/placeholder/local_business.storefront-009.svg",
+      "sha256": "a6b4588a43849a04dc3bf7f4cae7cb394734388cf2cf584e3eb0db91b83ec5f6",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "local_business.storefront",
+        "tone.cool",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.55,
+        0.46
+      ],
+      "dominantColor": "#8AA5B4",
+      "altKo": "상점 외관 장면 임시 자리 9번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:local_business.storefront-010",
+      "path": "data/images/placeholder/local_business.storefront-010.svg",
+      "sha256": "aee9c9713cd4bb707f1b7d34497ce94f6e1c6edf623805bbfe8fa27c0ca68708",
+      "width": 1600,
+      "height": 2000,
+      "tags": [
+        "local_business.storefront",
+        "tone.warm",
+        "orient.portrait"
+      ],
+      "focalPoint": [
+        0.43,
+        0.44
+      ],
+      "dominantColor": "#C3A782",
+      "altKo": "상점 외관 장면 임시 자리 10번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:common.texture-paper-001",
+      "path": "data/images/placeholder/common.texture-paper-001.svg",
+      "sha256": "36075c8c84221eeab896fff31fd00de8e3335a216b2bc00377a1da030b1a9b12",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "common.texture-paper",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.59,
+        0.56
+      ],
+      "dominantColor": "#B8B8AE",
+      "altKo": "질감 배경 장면 임시 자리 1번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:common.texture-paper-002",
+      "path": "data/images/placeholder/common.texture-paper-002.svg",
+      "sha256": "0f32b3ea7ac9989071c6df0aad884e684f3c092fd0a9a858dd2f9c230ac6e5f1",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "common.texture-paper",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.44,
+        0.36
+      ],
+      "dominantColor": "#BAB7AC",
+      "altKo": "질감 배경 장면 임시 자리 2번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:common.texture-paper-003",
+      "path": "data/images/placeholder/common.texture-paper-003.svg",
+      "sha256": "dc03a07f3a073e2ad940f0ff8d2f5749632b1e35d6c11d589e64c6a08284b63f",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "common.texture-paper",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.55,
+        0.64
+      ],
+      "dominantColor": "#B8C2BE",
+      "altKo": "질감 배경 장면 임시 자리 3번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:common.texture-paper-004",
+      "path": "data/images/placeholder/common.texture-paper-004.svg",
+      "sha256": "4f16671d70eaede2fa1c3d0d42d09f2cc564a952e2df020435983fbfc97be663",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "common.texture-paper",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.63,
+        0.42
+      ],
+      "dominantColor": "#C1AEAB",
+      "altKo": "질감 배경 장면 임시 자리 4번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:common.texture-concrete-001",
+      "path": "data/images/placeholder/common.texture-concrete-001.svg",
+      "sha256": "ea816cb36fc8e4616c90312a706ae84efdd611b6a6dd029e32218e3a8ef90280",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "common.texture-concrete",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.4,
+        0.53
+      ],
+      "dominantColor": "#B9B7B4",
+      "altKo": "질감 배경 장면 임시 자리 1번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:common.texture-concrete-002",
+      "path": "data/images/placeholder/common.texture-concrete-002.svg",
+      "sha256": "d7728166023d45303a028062e7867f83cb2fac052c16a46ee6869ebd681b157c",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "common.texture-concrete",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.38,
+        0.54
+      ],
+      "dominantColor": "#B5AFB0",
+      "altKo": "질감 배경 장면 임시 자리 2번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:common.texture-concrete-003",
+      "path": "data/images/placeholder/common.texture-concrete-003.svg",
+      "sha256": "ac0b5cd5b1ffa630f009335a1dd64ec687c3d98487302d43186e0f3e1ab7b803",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "common.texture-concrete",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.55,
+        0.44
+      ],
+      "dominantColor": "#B9B5A9",
+      "altKo": "질감 배경 장면 임시 자리 3번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:common.texture-concrete-004",
+      "path": "data/images/placeholder/common.texture-concrete-004.svg",
+      "sha256": "9e79e8377c39ba494d52e12759653219b7c038a3f90d9235f4048a151d76b026",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "common.texture-concrete",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.57,
+        0.62
+      ],
+      "dominantColor": "#C3BAAB",
+      "altKo": "질감 배경 장면 임시 자리 4번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:common.texture-fabric-001",
+      "path": "data/images/placeholder/common.texture-fabric-001.svg",
+      "sha256": "cb3d57e4756eeefc32e9670d4efe5e098e05ffa78117b079501bde1d60d4e1f2",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "common.texture-fabric",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.62,
+        0.54
+      ],
+      "dominantColor": "#B1BBBB",
+      "altKo": "질감 배경 장면 임시 자리 1번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:common.texture-fabric-002",
+      "path": "data/images/placeholder/common.texture-fabric-002.svg",
+      "sha256": "0886c6fd6f607650423a67f71d753044e973d2b67091fbba4f4a9b73d9049a60",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "common.texture-fabric",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.37,
+        0.5
+      ],
+      "dominantColor": "#C3BDB7",
+      "altKo": "질감 배경 장면 임시 자리 2번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:common.texture-fabric-003",
+      "path": "data/images/placeholder/common.texture-fabric-003.svg",
+      "sha256": "20eec32633f23223bd40fa5020caa38646cf571dc826d01921fdda3d7c45a61f",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "common.texture-fabric",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.43,
+        0.44
+      ],
+      "dominantColor": "#BDB7A9",
+      "altKo": "질감 배경 장면 임시 자리 3번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    },
+    {
+      "id": "tmp_img:common.texture-fabric-004",
+      "path": "data/images/placeholder/common.texture-fabric-004.svg",
+      "sha256": "df3eb9ca34d667c017ea831682e8e361126e3096aa51f0a152d6730adcc1d3c9",
+      "width": 2400,
+      "height": 1600,
+      "tags": [
+        "common.texture-fabric",
+        "tone.neutral",
+        "orient.landscape"
+      ],
+      "focalPoint": [
+        0.51,
+        0.5
+      ],
+      "dominantColor": "#B4C3B2",
+      "altKo": "질감 배경 장면 임시 자리 4번",
+      "source": "placeholder",
+      "author": "seed:temp",
+      "license": "CC0-1.0",
+      "downloadedAt": null,
+      "hasPeople": false,
+      "hasRecognizableFace": false,
+      "hasLogoOrTrademark": false
+    }
+  ]
+}

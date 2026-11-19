@@ -94,3 +94,10 @@
 - 선택: B6·B7 `id = tmp_<장 ID>`, 장 ID는 `code`에 둔다. 프리셋·매핑·편집은 `code`로 참조하고 data:validate가 프리셋 페어링 code의 존재·허용 유형을 검사. 폰트 `files: []` + `filesPending: true`(파일·sha256·RFN 확인은 HUMAN_TODO B6). 사람 데이터 투입 시 id = 장 ID로 바꿔도 code 참조라 영향 없음
 - 영향 범위: scripts/data/seed-temp.ts·validate.ts, packages/design-spec 컴파일러(M2: 폰트 파일 없으면 시스템 폴백 스택)
 - 되돌리기 비용: 낮음
+
+## ASM-014 · M1 · conflict · 2026-11-19T16:27Z
+- 질문: 03장 3.10.2 "카테고리 내 톤 태그 각 ≥ 30%"는 8장 카테고리(saas.hands-device·portfolio.nature·local_business.flower)에서 성립 불가(3톤 × ⌈2.4⌉ = 9 > 8). 사진 원본·id 형식(`img:<tag>-<nnn>`)과 tmp_ 접두 요구도 겹침
+- 근거 탐색: 03장 3.10.2·3.10.3·3.10.5, 09장 9.2.2 B8, ASM-008
+- 선택: temp는 톤 순환(warm·neutral·cool)으로 8장 카테고리는 3/3/2, 방향은 교대(50/50). id `tmp_img:<tag>-<nnn>`. 파일은 에이전트가 만든 무늬 SVG(`source: placeholder`, `license: CC0-1.0`, sha256은 실제 파일 값). 톤 기준 정정은 HUMAN_TODO
+- 영향 범위: data/images/**, 04장 이미지 선택(M2)
+- 되돌리기 비용: 낮음
