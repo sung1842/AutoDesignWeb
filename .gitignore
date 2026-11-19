@@ -6,3 +6,5 @@ dist/
 .env.local
 reports/*.partial.json
 coverage/
+dist/
+*.tsbuildinfo

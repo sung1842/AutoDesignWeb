@@ -33,6 +33,52 @@ importers:
         specifier: ^3.2.0
         version: 3.2.7(@types/node@22.20.5)(tsx@4.23.15)
 
+  apps/web: {}
+
+  apps/worker: {}
+
+  packages/api-contract: {}
+
+  packages/assets: {}
+
+  packages/auth: {}
+
+  packages/compliance: {}
+
+  packages/config: {}
+
+  packages/data-contracts: {}
+
+  packages/db: {}
+
+  packages/design-spec: {}
+
+  packages/diagnosis: {}
+
+  packages/exporter: {}
+
+  packages/extractor: {}
+
+  packages/layout-schema: {}
+
+  packages/linter: {}
+
+  packages/llm: {}
+
+  packages/mail: {}
+
+  packages/pipeline: {}
+
+  packages/renderer: {}
+
+  packages/scoring: {}
+
+  packages/storage: {}
+
+  packages/taxonomy: {}
+
+  packages/ui: {}
+
 packages:
 
   '@esbuild/aix-ppc64@0.28.2':

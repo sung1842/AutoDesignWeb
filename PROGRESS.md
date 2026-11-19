@@ -68,7 +68,7 @@
 - P3 완료(spec-lock=ca6b1de, AD-024). 다음: M0 하위 단위 계획(09장 9.4.2) 작성 후 착수
 - M0 계획(9.4.2, 9.5.1. 코드는 저장소 루트에 9.1.2 트리로):
   - [x] 01 루트 스캐폴드: pnpm@9(corepack)·turbo·tsconfig strict·eslint·prettier·vitest·.nvmrc, lockfile
-  - [ ] 02 9.1.2 패키지·앱 빈 골격(index.ts), lint·typecheck 녹색
+  - [x] 02 9.1.2 패키지·앱 빈 골격(index.ts), lint·typecheck 녹색
   - [ ] 03 M0 수용 테스트(acMilestones M0) `test(acc)` 커밋 + 자체 잠금
   - [ ] 04 packages/config: env zod(06장 env 목록)·thresholds 로더·네트워크 가드, .env.example
   - [ ] 05 spec:extract(--from FINAL/review-pass/--init-tuned) → config/thresholds.json·test-policy.json
@@ -86,6 +86,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 22:00 | M0-02 패키지 21·앱 2 골격(tsc -b 참조), lint·typecheck 녹색 → 다음: M0-03 수용 테스트
 - 2026-11-19 21:55 | M0-01 루트 스캐폴드(pnpm 9.15.9 corepack, TS 5.9, eslint 9, vitest 3), lint 녹색 → 다음: M0-02 골격
 - 2026-11-19 21:45 | M0 계획 13단위 작성 → 다음: M0-01 루트 스캐폴드
 - 2026-11-19 21:40 | spec-lock 태그(ca6b1de, 원문 블록 해시 일치, AD-024), P3 완료 → 다음: M0 단위 계획

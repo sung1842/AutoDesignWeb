@@ -1,4 +1,74 @@
 {
   "files": [],
-  "references": []
+  "references": [
+    {
+      "path": "packages/config"
+    },
+    {
+      "path": "packages/data-contracts"
+    },
+    {
+      "path": "packages/taxonomy"
+    },
+    {
+      "path": "packages/design-spec"
+    },
+    {
+      "path": "packages/layout-schema"
+    },
+    {
+      "path": "packages/renderer"
+    },
+    {
+      "path": "packages/assets"
+    },
+    {
+      "path": "packages/diagnosis"
+    },
+    {
+      "path": "packages/extractor"
+    },
+    {
+      "path": "packages/linter"
+    },
+    {
+      "path": "packages/scoring"
+    },
+    {
+      "path": "packages/llm"
+    },
+    {
+      "path": "packages/pipeline"
+    },
+    {
+      "path": "packages/exporter"
+    },
+    {
+      "path": "packages/db"
+    },
+    {
+      "path": "packages/api-contract"
+    },
+    {
+      "path": "packages/compliance"
+    },
+    {
+      "path": "packages/auth"
+    },
+    {
+      "path": "packages/storage"
+    },
+    {
+      "path": "packages/mail"
+    },
+    {
+      "path": "packages/ui"
+    },
+    {
+      "path": "apps/web"
+    },
+    {
+      "path": "apps/worker"
+    }
+  ]
 }
