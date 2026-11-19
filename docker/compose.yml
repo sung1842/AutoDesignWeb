@@ -1,0 +1,12 @@
+# STACK_PROFILE=supabase 로컬 스택의 worker 컨테이너(06장 6.13.1). Postgres·Auth·Storage는 Supabase CLI가 띄운다.
+# Docker 없는 환경은 STACK_PROFILE=native(pnpm dev:stack)를 쓴다. 이 파일의 기동 검증은 needs_ci.
+services:
+  worker:
+    build:
+      context: ..
+      dockerfile: docker/worker.Dockerfile
+    env_file: ../.env.local
+    environment:
+      LLM_MODE: mock
+      NO_EXTERNAL_NETWORK: "1"
+    network_mode: host

@@ -1,0 +1,68 @@
+# CI(07장 7.1.5, 09장 9.4.2). 모든 잡은 외부 네트워크 차단·LLM mock으로 실행한다(AC-07-01).
+# 원격 배포·원격 DB 변경 잡은 두지 않는다(09장 F17). 이 파일은 M0 이후 에이전트가 수정하지 않는다(7.12.3).
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 18 * * *" # 매일 03:00 KST(야간)
+  workflow_dispatch:
+
+env:
+  NO_EXTERNAL_NETWORK: "1"
+  LLM_MODE: mock
+  STACK_PROFILE: supabase
+  QA_LOCK_DIGEST: ${{ vars.QA_LOCK_DIGEST }}
+
+permissions:
+  contents: read
+
+jobs:
+  pr:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      NO_EXTERNAL_NETWORK: "1"
+      LLM_MODE: mock
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: git fetch --tags --force
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm guard
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm qa:trace --audit
+      - run: pnpm verify:m8
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: verify-reports
+          path: reports/
+
+  nightly:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      NO_EXTERNAL_NETWORK: "1"
+      LLM_MODE: mock
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: git fetch --tags --force
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm verify:m8
+      - run: pnpm eval:golden --mode mock
+      - run: docker build -f docker/worker.Dockerfile .
