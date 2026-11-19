@@ -3,10 +3,11 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P3
-- lock: {owner: 2026-11-19T11:08Z, since: 2026-11-19T12:22Z}
-- review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 태그 review-pass, 계산법 AD-019
+- lock: 
+- review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
+- review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-20 01:08
-- 마지막 갱신: 2026-11-19 16:10 KST (예약 세션: decisions_v5 작성)
+- 마지막 갱신: 2026-11-19 21:30 KST (예약 세션: r4 반영 완료, r5·r6 리뷰, P2 멈춤)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -69,6 +70,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 21:30 | review-pass 태그 푸시 403 → review_pass_commit 기록·HUMAN_TODO(AD-020), unlock
 - 2026-11-19 21:22 | R6 R-B: B0·M0·m3, TL·AI·QA PASS. 8역할 PASS → P2 멈춤, review-pass 태그·해시(AD-019) → 다음: P3 FINAL
 - 2026-11-19 21:15 | r6 패킷 작성(R-B만, 4파일) → 다음: R-B 리뷰
 - 2026-11-19 21:12 | r5 잔여 grep 깨끗, 라운드 5 반영 완료. AD-018(r6은 R-B만) → 다음: r6 패킷
