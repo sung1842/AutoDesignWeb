@@ -13,7 +13,9 @@
     "format": "prettier --check .",
     "guard:self-lock": "tsx scripts/guard/self-lock.ts",
     "env:init": "tsx scripts/env/init-local.ts",
-    "spec:extract": "tsx scripts/spec/extract.ts"
+    "spec:extract": "tsx scripts/spec/extract.ts",
+    "dev:stack": "tsx scripts/stack/dev-stack.ts",
+    "db:native": "tsx scripts/stack/native-pg.ts"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

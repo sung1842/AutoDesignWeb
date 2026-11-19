@@ -1,0 +1,59 @@
+-- native 프로파일 전용 Supabase shim(06장 6.13.1 스택 프로파일 표, T-11·T-13).
+-- 상단 가드: auth 스키마가 이미 있으면(supabase 프로파일) 아무것도 하지 않는다.
+DO $shim$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = 'auth') THEN
+    RAISE NOTICE 'supabase shim: auth 스키마가 있어 건너뜀';
+    RETURN;
+  END IF;
+
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'anon') THEN CREATE ROLE anon NOLOGIN; END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'authenticated') THEN CREATE ROLE authenticated NOLOGIN; END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'service_role') THEN CREATE ROLE service_role NOLOGIN BYPASSRLS; END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'tastefit_app') THEN
+    CREATE ROLE tastefit_app LOGIN NOBYPASSRLS PASSWORD 'tastefit_app';
+  END IF;
+  GRANT anon, authenticated, service_role TO tastefit_app;
+
+  CREATE SCHEMA auth;
+  GRANT USAGE ON SCHEMA auth TO anon, authenticated, service_role;
+
+  CREATE TABLE auth.users (
+    id uuid PRIMARY KEY,
+    email text,
+    raw_user_meta_data jsonb,
+    created_at timestamptz NOT NULL DEFAULT now()
+  );
+  CREATE TABLE auth.identities (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id uuid NOT NULL REFERENCES auth.users (id) ON DELETE CASCADE,
+    provider text NOT NULL,
+    identity_data jsonb,
+    created_at timestamptz NOT NULL DEFAULT now()
+  );
+  CREATE TABLE auth.audit_log_entries (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    payload jsonb,
+    ip_address varchar(64),
+    created_at timestamptz NOT NULL DEFAULT now()
+  );
+  CREATE TABLE auth.sessions (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id uuid NOT NULL REFERENCES auth.users (id) ON DELETE CASCADE,
+    user_agent text,
+    ip inet,
+    created_at timestamptz NOT NULL DEFAULT now(),
+    updated_at timestamptz,
+    not_after timestamptz
+  );
+
+  -- auth.uid()·auth.role()·auth.jwt() = request.jwt.claims(SET LOCAL, DbPort.withUser·withAnon)
+  CREATE FUNCTION auth.jwt() RETURNS jsonb LANGUAGE sql STABLE AS
+    $f$ SELECT coalesce(nullif(current_setting('request.jwt.claims', true), ''), '{}')::jsonb $f$;
+  CREATE FUNCTION auth.uid() RETURNS uuid LANGUAGE sql STABLE AS
+    $f$ SELECT nullif(auth.jwt() ->> 'sub', '')::uuid $f$;
+  CREATE FUNCTION auth.role() RETURNS text LANGUAGE sql STABLE AS
+    $f$ SELECT auth.jwt() ->> 'role' $f$;
+  GRANT EXECUTE ON FUNCTION auth.jwt(), auth.uid(), auth.role() TO anon, authenticated, service_role;
+END
+$shim$;
