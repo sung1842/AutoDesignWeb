@@ -383,7 +383,7 @@ M0 스캐폴드·가드레일
 | 항목 | 내용 |
 |---|---|
 | 범위 | 9.1.2 트리 생성, pnpm/turbo 설정, TS strict, ESLint(커스텀 규칙: web의 playwright import 금지, llm 외 provider SDK import 금지, renderer의 tailwind/shadcn/lucide 금지, `dangerouslySetInnerHTML` 금지, `no-explicit-any` error), Prettier, Vitest·Playwright 설정(`config/test-policy.json` 참조), `packages/config` env zod 검증, docker compose + Supabase CLI 로컬 스택, web `/api/health`, worker `/health`, `scripts/guard/*`, `scripts/verify/*`, CI 워크플로, PROGRESS.md·BLOCKED.md·ASSUMPTIONS.md 초기화 |
-| 산출물 | 위 파일, `pnpm dev:stack`(로컬 전체 기동), `pnpm guard`, `pnpm verify:m0`~`verify:m8` 스크립트(아직 없는 마일스톤 테스트 디렉터리는 "테스트 0건 = 실패"로 처리) |
+| 산출물 | 위 파일, `pnpm dev:stack`(로컬 전체 기동), `pnpm guard`(07장 7.12.2 1~7단계 전부: 5단계 spec 대조, 6단계 baseRef·DECISIONS_LOG append-only·review-pass 대조, 7단계 `qa:trace --audit`), `pnpm spec:extract`(`--from FINAL`·`--from review-pass`·`--init-tuned`, T-02·T-03), `pnpm verify:m0`~`verify:m8` 스크립트(아직 없는 마일스톤 테스트 디렉터리는 "테스트 0건 = 실패"로 처리) |
 | 의존성 | 없음 |
 | 검증 | `pnpm verify:m0` |
 | 통과 조건 | ① 클린 클론에서 `pnpm i --frozen-lockfile` 성공 ② lint·typecheck 오류 0 ③ `GET /api/health` → 200 `{status:"ok", db:"ok", queue:"ok"}`, 스택 기동 후 120초 이내 ④ worker `/health` 200 ⑤ 필수 env 1개를 제거하고 web·worker 기동 시 종료 코드 1 + stderr에 변수명 출력 ⑥ guard 메타 테스트(`tests/guard/`) 전부 통과: 잠금 파일 1바이트 변경, `it.skip` 추가, `@ts-ignore` 추가, 테스트 1건 삭제, verify 스크립트 변경을 각각 임시 git 저장소에서 재현했을 때 guard 종료 코드 1 ⑦ renderer에 `lucide-react`를 추가한 픽스처 브랜치에서 deps 검사 실패 |
@@ -427,7 +427,7 @@ M0 스캐폴드·가드레일
 | 산출물 | 설문 자산(Storage) + `data/survey/manifest.lock.json`(assetId → sha256, 실측 L1), 진단·결과 화면 |
 | 의존성 | M3 |
 | 검증 | `pnpm verify:m4` |
-| 통과 조건 | ① `survey:build` 산출: 활성 카드 ≥ 48 중 approved 전부, A/B 120쌍 중 approved 쌍이 축별 ≥19쌍(S-06 g), 이미지 규격·용량은 02·06장 기준 ② `survey:build` 2회차 실행 시 업로드 0건, DB 변경 0행 ③ 설문 갱신 입력은 x_card(실측 L1)이며 계획 L1이 아님(단위 테스트) ④ 시뮬레이션(S-08): `pnpm sim:survey --gate`가 `release.surveySim.seeds.gate` 5개 × 1,000명(P-A는 800명) 풀링 점추정으로 `diagnosis`·`release.surveySim` 합격선(R-05, 02장 2.16, `anchorAccPABeta8Min`·`priorTypeChangeMax`·`robustNoneRmseMax` 포함)을 모두 통과하고 종료 문항 수 ≤ `diagnosis.maxQuestions`, 1단계 정확히 `diagnosis.stage1Questions`(D-13). 적응형 이득은 공통 난수 쌍체로 계산하고 부트스트랩 95% 구간을 리포트에 넣는다. 구간이 합격선에 걸치면 `margin_warning`(비차단). 09장은 별도 수치를 두지 않는다. 미달 시 임계값을 바꾸지 말고 02장 2.16.2 조정 절차를 따른다: 튜닝은 `seeds.dev`로만 하고(gate와 교집합 0), 조정 공간은 {typeDiscWeight ∈ {2,3,5,8}, (llChance, llRef) 3쌍, calibKappa ∈ {1.2,1.3,1.4}, R ∈ {200,400}, priorWeight ∈ {0.2,0.3}, 브리지 재배치 1회}로 닫으며 좌표 순차 탐색 dev 시도 ≤ `maxTuningTrials`, gate 실행 ≤ `maxGateRuns`다. 상한에 닿으면 BLOCKED.md·HUMAN_TODO에 BLK를 등록하고 G2-진단은 fail로 둔 채 M5 이후를 계속한다(HALT 계산 제외). 시드·합격선·조정 공간 변경은 금지(F20). `qa:trace`는 02장 2.16.2의 모든 행이 `release.surveySim` 키에 연결되는지 검사한다 ⑤ 무작위 응답 사용자 100명 전원 16문항 이내 종료, 오류 0 ⑥ 진단 중 LLM 호출·렌더 호출 0(스파이) ⑦ 응답 제출 API p95 ≤ 200ms(06장 D-0608), 로컬 200요청 ⑧ E2E(375×812, 1280×800): 익명 진단 완료 → 결과에 유형명·5축 차트·닮은 사이트 3개 링크·비제휴 고지 표시 ⑨ E2E: 진행 중 새로고침 후 같은 문항에서 재개, 뒤로가기 1회 후 응답 수정 시 벡터가 재계산됨 ⑩ 화면 텍스트에 "MBTI" 0건(D-01, 빌드 산출물 grep) |
+| 통과 조건 | ① `survey:build` 산출: 활성 카드 ≥ 48 중 approved 전부, A/B 120쌍 중 approved 쌍이 축별 ≥19쌍(S-06 g), 이미지 규격·용량은 02·06장 기준 ② `survey:build` 2회차 실행 시 업로드 0건, DB 변경 0행 ③ 설문 갱신 입력은 x_card(실측 L1)이며 계획 L1이 아님(단위 테스트) ④ 시뮬레이션(S-08): `pnpm sim:survey --gate`가 `release.surveySim.seeds.gate` 5개 × 1,000명(P-A는 800명) 풀링 점추정으로 `diagnosis`·`release.surveySim` 합격선(R-05, 02장 2.16, `anchorAccPABeta8Min`·`priorTypeChangeMax`·`robustNoneRmseMax` 포함)을 모두 통과하고 종료 문항 수 ≤ `diagnosis.maxQuestions`, 1단계 정확히 `diagnosis.stage1Questions`(D-13). 적응형 이득은 공통 난수 쌍체로 계산하고 부트스트랩 95% 구간을 리포트에 넣는다. 구간이 합격선에 걸치면 `margin_warning`(비차단). 09장은 별도 수치를 두지 않는다. 미달 시 임계값을 바꾸지 말고 02장 2.16.2 조정 절차를 따른다(T-03): 튜닝은 `seeds.dev`로만 하고(gate와 교집합 0), 조정 공간은 07장 7.12.1 `diagnosis.tunable`의 6좌표 닫힌 값 집합이다(값은 그 블록이 원천, 09장은 다시 적지 않는다). 런타임 값은 `config/diagnosis-tuned.json`(자체 잠금)이고 변경은 `chore(sim-tune):` 단독 커밋(이 파일과 `sim/reports/tuning-log.json`만)으로 한다. 좌표 순차 탐색 ①~⑥ 한 바퀴(시작점 포함 11회)마다 gate를 1회 돌리고(gate 결과는 PASS/FAIL만 기록, 선택 함수는 dev 리포트만 받음), dev 시도 ≤ `maxTuningTrials`, gate 실행 = 바퀴 수 ≤ `maxGateRuns`다. 목적함수(사전식)는 02장 2.16.2(AC-02-36). 상한에 닿으면 BLOCKED.md·HUMAN_TODO에 BLK를 등록하고 G2-진단은 fail로 둔 채 M5 이후를 계속한다(HALT 계산 제외). 시드·합격선·조정 공간 변경은 금지(F20). `qa:trace`는 02장 2.16.2의 모든 행이 `release.surveySim` 키에 연결되는지 검사한다 ⑤ 무작위 응답 사용자 100명 전원 16문항 이내 종료, 오류 0 ⑥ 진단 중 LLM 호출·렌더 호출 0(스파이) ⑦ 응답 제출 API p95 ≤ 200ms(06장 D-0608), 로컬 200요청 ⑧ E2E(375×812, 1280×800): 익명 진단 완료 → 결과에 유형명·5축 차트·닮은 사이트 3개 링크·비제휴 고지 표시 ⑨ E2E: 진행 중 새로고침 후 같은 문항에서 재개, 뒤로가기 1회 후 응답 수정 시 벡터가 재계산됨 ⑩ 화면 텍스트에 "MBTI" 0건(D-01, 빌드 산출물 grep) |
 
 ### 9.4.7 M5 — 인증·브랜드 입력·생성 파이프라인(Mock)
 
@@ -513,7 +513,8 @@ for 각 마일스톤 N (9.3 순서):
 | 장 간 충돌 | 두 장의 값이 다름 | 레지스터 > 영역 장 > 이 장 순으로 따르고 ASSUMPTIONS.md에 `conflict` 유형으로 기록 |
 | 사람 데이터 없음 | 묶음 파일 없음 | `pnpm seed:temp` 실행 후 진행. BLOCKED 아님 |
 | 환경 실패 | 스택 기동·패키지 설치 실패 | 먼저 06장 6.13.1 스택 프로파일 규칙으로 대체한다(Docker 없음 → native, 없는 브라우저 → needs_ci). 이 대체는 새 결정이 아니며 BLOCKED가 아니다. 대체 후에도 실패하면 30초·120초 백오프로 2회 재시도 → BLOCKED.md(`env` 유형) 후 환경 무관 작업으로 이동 |
-| 잠금 파일이 틀렸다고 판단 | 수용 테스트·임계값·스펙이 구현 불가로 보임 | 잠금 파일 수정 금지. BLOCKED.md(`locked-conflict` 유형)에 근거·재현 명령·제안 수정안을 쓰고 해당 AC만 미충족으로 남긴 채 진행 |
+| 잠금 파일이 틀렸다고 판단 | 수용 테스트·임계값·스펙이 구현 불가로 보임 | 잠금 파일 수정 금지. BLOCKED.md(`locked-conflict` 유형)에 근거·재현 명령·제안 수정안을 쓰고 해당 AC만 미충족으로 남긴 채 진행. 그 AC의 `release:check` 단계 결과에 `blockedBy: BLK-<n>`을 남긴다(종료 코드 3, 07장 7.11.2) |
+| 진단 튜닝 상한 도달 | M4 ④ dev 시도 또는 gate 바퀴가 상한 | BLOCKED.md(`sim-limit` 유형)에 tuning-log 경로·재현 명령을 쓰고 `sim-diagnosis-gate` 결과에 `blockedBy`를 남긴 채 M5 이후 진행(HALT 계산 제외) |
 | 즉시 중단(작업 종료) | 다음 중 하나: 비밀키가 커밋됨, 로컬이 아닌 DB·Storage에 쓰기가 필요, guard가 에이전트 자신의 잠금 위반을 탐지, BLOCKED 미해결 항목(프로파일 대체가 적용된 `env` 사유는 제외, S-01)이 서로 다른 마일스톤 3개에 걸침 | PROGRESS.md에 `HALT` 기록 후 작업 종료 |
 
 BLOCKED.md 항목 형식:
@@ -548,7 +549,7 @@ BLOCKED.md 항목 형식:
 
 | ID | 금지 행동 | 검사 방법 |
 |---|---|---|
-| F01 | 잠금 파일 수정·삭제·이동 | `config/lock/locked-hashes.json` 해시 비교 + CI 저장소 변수 `QA_LOCK_DIGEST`와 다이제스트 일치(R-09) + `git diff --name-only human-lock..HEAD -- <사람 잠금 경로>` 비어 있음 |
+| F01 | 잠금 파일 수정·삭제·이동 | `config/lock/locked-hashes.json` 해시 비교 + CI 저장소 변수 `QA_LOCK_DIGEST`와 다이제스트 일치(R-09) + `git diff --name-only <baseRef>..HEAD -- <사람·spec 잠금 경로>` 비어 있음. `baseRef = human-lock ?? spec-lock`(둘 다 없으면 FAIL, T-02). 예외는 `docs/spec/DECISIONS_LOG.md` append-only 1개(07장 7.12.2 6단계, T-01) |
 | F02 | 테스트 비활성화: `.skip`, `.only`, `.todo`, `.fixme`, `xit`, `xdescribe`, `test.describe.skip`, `skipIf`, `runIf` | 테스트 파일 정규식 grep |
 | F03 | 테스트 삭제·축소 | `vitest list --json` + `playwright test --list` 케이스 수가 `.guard/test-count.json`의 직전 마일스톤 값 이상 |
 | F04 | 임계값 완화: `config/thresholds.json`·`config/test-policy.json` 변경, 코드에 임계값 리터럴 중복 정의 | 해시 잠금 + 수용 테스트가 런타임 임계값 = 스펙 값 확인 |
@@ -567,7 +568,7 @@ BLOCKED.md 항목 형식:
 | F17 | 원격 배포·원격 DB 마이그레이션 실행 | `supabase db push`, `vercel`, `fly deploy` 명령이 스크립트·CI의 수동 트리거 잡 외에 존재하면 실패 |
 | F18 | temp 확인 필드 위조: `verified_by`·`approved`·`tos_checked_at`·`robots_checked_at`·`provenance`를 temp 값에서 다른 값으로 바꾸는 에이전트 커밋(S-10) | 직전 커밋 대비 JSON·YAML 필드 diff, 작성자가 사람 계정이 아니면 실패 |
 | F19 | 정규화기 b0·b1을 홀드아웃(앵커·카드·A/B) 왕복 결과에 맞춰 재적합, 정규화기 파일을 `seed:temp` 산출 외 커밋으로 변경(S-09) | `data/normalizers/**` 변경 커밋의 메시지·작성 스크립트 확인, `seed:temp` 재실행 결과와 바이트 비교 |
-| F20 | 진단 시뮬레이션 시드 집합(`gate`·`dev`)·합격선·조정 공간 변경, gate 시드로 튜닝(S-08) | `sim/config.json`·thresholds 잠금 해시, `sim/reports/*.json`의 `seedSet` 필드 검사 |
+| F20 | 진단 시뮬레이션 시드 집합(`gate`·`dev`)·합격선·조정 공간(`diagnosis.tunable`) 변경, gate 시드로 튜닝(S-08), tuned 값을 닫힌 집합 밖으로 설정·`chore(sim-tune):` 외 커밋으로 변경·dev 시도 상한 초과·한 바퀴 전 gate 실행(T-03) | `sim/config.json`·thresholds 잠금 해시, `sim/reports/*.json`의 `seedSet` 필드, `config/diagnosis-tuned.json` zod + 값 ∈ `tunable.*.values`, 변경 커밋 메시지·파일 목록, `tuning-log.json`의 시도 수·`gateRun` 위치 검사 |
 
 ### 9.5.6 해시 잠금
 
@@ -575,17 +576,19 @@ BLOCKED.md 항목 형식:
 
 | 구분 | 경로 | 잠그는 주체·시점 |
 |---|---|---|
-| 사람 잠금 | `CLAUDE.md`, `docs/spec/**`, `docs/dependency-allowlist.md`, `config/thresholds.json`, `config/test-policy.json`, `data/**` 중 `provenance:"human"` 파일, 사람이 제공한 `tests/acceptance/**` | 사람이 구현 시작 전 커밋하고 태그 `human-lock` 생성 |
+| 사람 잠금 | `CLAUDE.md`, `docs/dependency-allowlist.md`, `data/**` 중 `provenance:"human"` 파일, 사람이 제공한 `tests/acceptance/**` | 사람이 구현 시작 전 커밋하고 태그 `human-lock` 생성 |
+| spec 잠금(T-02) | `docs/spec/**`(예외: `DECISIONS_LOG.md` append-only), `config/thresholds.json`, `config/test-policy.json`(둘 다 `spec:extract` 산출) | 사람이 없으면 에이전트가 P3 끝에 `spec-lock` 태그를 만든다. 직전에 `spec:extract --from FINAL`과 `--from review-pass` 출력이 바이트 동일해야 하고(07장 7.12.2 6단계), 다르면 BLOCKED. `lockedBy:"spec"`. 사람이 `human-lock`을 만들면 그것이 baseRef가 된다 |
 | 자체 잠금 | `scripts/verify/**`, `scripts/guard/**`, `.guard/verify-scripts.json`(M0 종료), 에이전트가 작성한 `tests/acceptance/mN/**`(작성 커밋 직후), `data/linter/examples/**`(temp, M3 시작 커밋) | 에이전트가 `pnpm guard:self-lock <경로>` 실행 |
 
 **`config/lock/locked-hashes.json` 형식**(R-09. CI는 이 파일의 다이제스트를 저장소 변수 `QA_LOCK_DIGEST`와 비교한다. 에이전트에게는 저장소 설정 권한이 없다)
 
-```json
+```jsonc
 {
   "version": 1,
-  "baseRef": "human-lock",
+  "baseRef": "spec-lock",            // human-lock 태그가 있으면 "human-lock", 없으면 "spec-lock"(T-02). 둘 다 없으면 guard FAIL
   "entries": {
-    "config/thresholds.json": { "sha256": "9f2c…", "lockedBy": "human", "lockedAt": "2026-11-16T12:00:00Z" },
+    "config/thresholds.json": { "sha256": "9f2c…", "lockedBy": "spec", "lockedAt": "2026-11-16T12:00:00Z", "commit": "<spec-lock sha>" },
+    "CLAUDE.md": { "sha256": "77d0…", "lockedBy": "human", "lockedAt": "2026-11-16T12:00:00Z" },
     "tests/acceptance/m2/render-gates.test.ts": { "sha256": "41ab…", "lockedBy": "agent", "lockedAt": "2026-11-17T02:10:00Z", "commit": "a1b2c3d" }
   }
 }
@@ -594,8 +597,8 @@ BLOCKED.md 항목 형식:
 **guard:lock 판정 규칙**
 
 1. HEAD의 모든 entry에 대해 현재 파일 SHA-256 = entry.sha256.
-2. `human-lock` 태그 시점의 entries ⊆ HEAD entries, 그리고 공통 entry의 sha256이 동일(에이전트가 사람 잠금을 지우거나 바꿀 수 없음).
-3. 에이전트 entry는 **추가만** 가능. 기존 에이전트 entry의 sha256 변경 0.
+2. baseRef(`human-lock ?? spec-lock`, T-02) 시점의 entries ⊆ HEAD entries, 그리고 공통 entry의 sha256이 동일(에이전트가 사람·spec 잠금을 지우거나 바꿀 수 없음). `lockedBy ∈ {human, spec, agent}`.
+3. 에이전트 entry는 **추가만** 가능. 기존 에이전트 entry의 sha256 변경 0. 예외: `config/diagnosis-tuned.json`은 `chore(sim-tune):` 커밋에서만 sha256 갱신 허용(T-03, F20).
 4. `guard:self-lock`은 **이번 커밋에서 새로 추가된 파일**만 등록할 수 있다. 기존 파일 등록 시도 → 종료 코드 1.
 5. 잠금 디렉터리(`tests/acceptance/mN/`)에 entry 없는 새 파일이 생기면 실패(잠금 우회 방지).
 
@@ -612,7 +615,7 @@ BLOCKED.md 항목 형식:
 | 대상 | 원본 | 보조 | 규칙 |
 |---|---|---|---|
 | 제품 공백·장 간 충돌 | `docs/ASSUMPTIONS.md`(9.5.4) | — | 파일 맨 위에 "운영·환경 결정은 docs/spec/DECISIONS_LOG.md" 1줄 |
-| 운영·환경 결정(스택 프로파일 선택, Playwright 버전 고정 등) | `docs/spec/DECISIONS_LOG.md`(`AD-<번호>`) | — | 파일 맨 위에 "제품 공백은 docs/ASSUMPTIONS.md" 1줄 |
+| 운영·환경 결정(스택 프로파일 선택, Playwright 버전 고정 등) | `docs/spec/DECISIONS_LOG.md`(`AD-<번호>`) — **append-only, 07장 7.12.2 6단계 잠금 예외(T-01)**. 기존 줄 수정·삭제는 guard FAIL | — | 파일 맨 위에 "제품 공백은 docs/ASSUMPTIONS.md" 1줄 |
 | 막힘 | `BLOCKED.md`(9.5.3 형식) | `HUMAN_TODO.md` | 사람이 해야 하는 일만 HUMAN_TODO로 복사하고 BLK ID를 적는다 |
 | 진행 상태 | `PROGRESS.md` | — | P1~P5 헤더 유지. P4 절 안에 9.7 형식(마일스톤 상태 표·시작/종료 기록)을 넣는다. `lock`·`limit` 필드 유지 |
 | 세션 운영 규칙 | CLAUDE.md "세션 운영" 절(현행, 사람 잠금) | — | 변경 금지 |
@@ -747,7 +750,9 @@ BLOCKED.md 항목 형식:
 | 파일 | 내용 | 에이전트 권한 |
 |---|---|---|
 | `CLAUDE.md` | 아래 9.8.2 골격 | 읽기 전용(잠금) |
-| `docs/spec/00~09*.md`, `docs/spec/decisions.md` | 기획서 v2 원문을 장별 파일로 | 읽기 전용(잠금) |
+| `docs/spec/FINAL/*.md`(장 파일·`INDEX.md`·결정 레지스터 통합본) | 확정 기획서. `spec:extract` 추출 원천은 코드 상수 1개 `docs/spec/FINAL/07_quality.md`(T-02) | 읽기 전용(spec 잠금) |
+| `docs/spec/v2/*.md`, `docs/spec/decisions*.md`, `docs/reviews/**` | 작성·리뷰 기록용. 구현 판정에 쓰지 않는다 | 읽기 전용(spec 잠금) |
+| `docs/spec/DECISIONS_LOG.md` | 운영·환경 결정 | append-only(T-01) |
 | `docs/dependency-allowlist.md` | 허용 패키지·버전 범위·라이선스 | 읽기 전용(잠금) |
 | `docs/ASSUMPTIONS.md`, `BLOCKED.md`, `PROGRESS.md` | 운영 기록 | append |
 | `docs/runbook.md` | 실행·배포 절차 | 작성(M8) |
@@ -824,9 +829,10 @@ pnpm seed:temp | pnpm db:seed | pnpm survey:build | pnpm eval:golden --mode mock
 |---|---|---|
 | 0 | 출시 가능 | 모든 단계 `pass`(보류 0) |
 | 2 | 구현 완료, 사람 입력 대기 | `fail` 0이고 모든 보류(`temp`·`manual`·`needs_live`·`needs_ci`)가 07장 7.12.1 `deferrable` 허용표 안이며 조건 충족 |
-| 1 | 실패 | 그 밖(fail 1개 이상, 표에 없는 단계의 보류, 조건이 맞지 않는 보류) |
+| 3 | 구현 완료, 기록된 막힘 있음(**출시 불가**) | 모든 fail이 blockable(`sim-diagnosis-gate`·`survey-items-count`·open `locked-conflict` BLK 대상)이고 각 fail이 재현 명령 있는 open BLK를 `blockedBy`로 가리킴, 나머지 보류는 2의 조건 충족(T-05) |
+| 1 | 실패 | 그 밖(blockable 아닌 fail, BLK 연결 없는 fail, 카탈로그 밖·누락 단계, 표에 없는 단계의 보류, 조건이 맞지 않는 보류) |
 
-`reports/release-check.json`에는 07장 출시 게이트 각각의 `{id, status: pass|fail|temp|manual|needs_live|needs_ci, steps[], evidence}`를 기록한다. 상태 enum·종료 코드의 원천은 07장 7.11.2다(S-03).
+`reports/release-check.json`에는 07장 출시 게이트 각각의 `{id, status: pass|fail|temp|manual|needs_live|needs_ci, steps[], evidence}`를 기록한다. 상태 enum·종료 코드·단계 카탈로그(`spec:test-policy.steps`)의 원천은 07장 7.11.2다(S-03·T-05). 각 단계 결과에 `blockedBy: BLK-ID | null`을 둔다.
 
 ### 9.9.2 에이전트 완료 체크리스트
 
@@ -834,9 +840,9 @@ pnpm seed:temp | pnpm db:seed | pnpm survey:build | pnpm eval:golden --mode mock
 
 - [ ] `m0-done`~`m8-done` 태그 9개 존재
 - [ ] `pnpm verify:m8` 3회 연속 녹색(`reports/verify-m8-<n>.json` 3개의 `gitSha`가 같으면 세션이 달라도 인정, flaky 0, S-23)
-- [ ] `pnpm release:check` 종료 코드 0 또는 2
+- [ ] `pnpm release:check` 종료 코드 0, 2 또는 3(3은 출시 불가이며 막힘 BLK가 HUMAN_TODO에 있음, T-05)
 - [ ] `pnpm guard` 녹색, `.guard/test-count.json` 값이 M0 이후 단조 증가
-- [ ] BLOCKED.md의 open 항목 0, 또는 open 항목이 전부 `locked-conflict`·`env` 유형이고 각 항목에 재현 명령·제안 수정안 있음. 프로파일 대체(06장 6.13.1)로 해결된 환경 차이는 BLOCKED에 올리지 않고 `needs_ci`로만 남는다(9.5.3과 같은 규칙, S-01)
+- [ ] BLOCKED.md의 open 항목 0, 또는 open 항목이 전부 `locked-conflict`·`env`·`sim-limit`(M4 ④ 튜닝 상한 도달, `sim-diagnosis-gate` fail의 `blockedBy`) 유형이고 각 항목에 재현 명령·제안 수정안 있음. 프로파일 대체(06장 6.13.1)로 해결된 환경 차이는 BLOCKED에 올리지 않고 `needs_ci`로만 남는다(9.5.3과 같은 규칙, S-01)
 - [ ] PROGRESS.md 상태 표 M0~M8 전부 `done`, 마일스톤마다 시작·종료 기록 존재
 - [ ] ASSUMPTIONS.md 전 항목에 "되돌리기 비용" 기재
 - [ ] `docs/runbook.md`만으로 클린 클론 → `pnpm dev:stack` → 익명 진단 → 생성(mock) → 내보내기가 재현됨(M8 E2E가 runbook 명령을 그대로 실행)
@@ -858,7 +864,7 @@ pnpm seed:temp | pnpm db:seed | pnpm survey:build | pnpm eval:golden --mode mock
 |---|---|
 | AC-09-01 | Given 클린 클론, 외부 API 키 없음 / When `pnpm i --frozen-lockfile && pnpm dev:stack && pnpm verify:m8` / Then 종료 코드 0. |
 | AC-09-02 | `package.json`에 `verify:m0`~`verify:m8`, `verify:fast`, `guard`, `data:validate`, `seed:temp`, `survey:build`, `eval:golden`, `release:check` 스크립트가 존재하고, 각 `verify:mN`은 `verify:m(N-1)`의 모든 단계를 포함한다(스크립트 정적 검사). |
-| AC-09-03 | Given 임시 git 저장소 / When 잠금 파일 1바이트 수정, `it.skip` 추가, `@ts-ignore` 추가, 테스트 1건 삭제, `verify:*` 스크립트 변경, thresholds 값 변경, provenance temp→human 변경을 각각 적용 / Then `pnpm guard`가 7개 경우 모두 종료 코드 1과 해당 F-ID를 출력한다. |
+| AC-09-03 | Given 임시 git 저장소 / When 잠금 파일 1바이트 수정, `it.skip` 추가, `@ts-ignore` 추가, 테스트 1건 삭제, `verify:*` 스크립트 변경, thresholds 값 변경, provenance temp→human 변경, **`human-lock`·`spec-lock` 태그 둘 다 없는 상태**, **`spec-lock` 이후 `docs/spec/02_diagnosis.md` 1줄 수정**을 각각 적용 / Then `pnpm guard`가 9개 경우 모두 종료 코드 1과 해당 F-ID(또는 guard 단계)를 출력한다. 대조: `spec-lock` 이후 `docs/spec/DECISIONS_LOG.md` 끝에 1줄 추가만 한 커밋은 PASS(T-01·T-02). |
 | AC-09-04 | Given data/가 비어 있음 / When `pnpm seed:temp && pnpm data:validate` / Then 17개 묶음이 생성되고 전부 유효, 모든 id가 `tmp_`로 시작, 2회 실행 결과 바이트 동일. |
 | AC-09-05 | Given B3 프리셋 파일 1개가 `provenance:"human"` / When `pnpm seed:temp` / Then 그 파일의 SHA-256 불변. |
 | AC-09-06 | Given temp 묶음이 1개 이상 / When `pnpm release:check` / Then 자동 게이트가 전부 PASS여도 종료 코드는 2이고 리포트에 temp 묶음 ID가 나열된다. |
@@ -949,3 +955,12 @@ pnpm seed:temp | pnpm db:seed | pnpm survey:build | pnpm eval:golden --mode mock
 | S-06 a·b·c·f·g | 9.2.3 B16 스키마 삭제, 9.2.4 B16 32행, M2 ②·M3 ② 72조합, M3 ③ roundtripAbsMax, M3 ⑤ versionGateP95Sec, M4 ① ≥19쌍, M7 산출물 경로·⑥ 32, D-0904 키 |
 | S-09·S-10·S-41(09) | 9.2.2 B17 경로·B18~B25, 9.2.4 temp 규칙·자산 temp 공통 규칙, F18·F19, M1 ① 25묶음 |
 | S-08·S-11·S-12·S-19(09) | M4 ④ 시뮬레이션 판정·조정 상한, 9.6.2 역할별 Mock·`mixed`·`copy_*@gen_copy`·기대 결과 열 삭제, M7 ② 404·⑥ mixed 조건, F20 |
+
+### decisions_v4 반영 (2026-11-19)
+
+| T-ID | 반영 위치 | 비고 |
+|---|---|---|
+| T-01(QA3-01) | 9.5.7 DECISIONS_LOG 행 "append-only, 07 7.12.2 예외", F01 예외 문장, 9.8.1 | |
+| T-02(QA3-08) | F01 `baseRef = human-lock ?? spec-lock`, 9.5.6 spec 잠금 행·`lockedBy:"spec"`·예시·규칙 2, M0 산출물(`spec:extract`·guard 5~7단계), AC-09-03 사례 2개 + append 대조, 9.8.1 `docs/spec/FINAL/` | |
+| T-03(QA3-02·AI3-05) | M4 ④ 튜닝 절차(값은 07 `diagnosis.tunable` 참조, `chore(sim-tune):`, 바퀴별 gate), F20 확장, 규칙 3 예외(`diagnosis-tuned.json`), 9.5.3 `sim-limit` 행 | |
+| T-05(QA3-04) | 9.9.1 종료 코드 3·`blockedBy`, 9.9.2 완료 = 0·2·3·`sim-limit` 유형, 9.5.3 `locked-conflict` 행 | |
