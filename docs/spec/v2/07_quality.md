@@ -145,7 +145,7 @@ LLM 모드의 원천은 09장 9.6.1(D-0908)이다. 이 장의 사용 규칙:
   AC-02-15: [tests/unit/diagnosis/stop.spec.ts#"AC-02-15 stops at 16 valid answers"]
   TC-E-01:  [tests/e2e/survey-edge.spec.ts#"TC-E-01 all none_of_these"]
   ```
-- `qa:trace`는 `docs/spec/*.md`에서 `AC-\d{2}-\d{2,3}`와 `TC-[A-Z]+-\d{2}`를 추출해, 매핑이 없거나 매핑된 테스트가 존재하지 않으면 실패한다. [P2] 표시 TC는 매핑 대상에서 제외한다. 테스트 이름에 ID를 포함한다.
+- `qa:trace`는 `docs/spec/FINAL/*.md`(추출 원천 경로, 7.12.1 T-02)에서 `AC-\d{2}-\d{2,3}`와 `TC-[A-Z]+-\d{2}`를 추출해, 매핑이 없거나 매핑된 테스트가 존재하지 않으면 실패한다. [P2] 표시 TC는 매핑 대상에서 제외한다. 테스트 이름에 ID를 포함한다.
 
 ---
 
@@ -570,7 +570,7 @@ ID 체계: TC-E(진단 입력) / TC-B(브랜드 입력) / TC-R(장애·복원력
 | ID | 입력 | 기대 결과 |
 |---|---|---|
 | TC-C-01 | `budget_exhausted`: 일 지출이 `GEN_DAILY_BUDGET_USD`(10) 도달 | 신규 생성 503 `GEN_BUDGET_EXCEEDED` + 마감 안내, 진행 중 잡은 완료, 진단·결과·편집·내보내기 정상(KS-1) |
-| TC-C-02 | 동시 생성 10건(MockProvider 고정 지연 20s) | 동시 `running` ≤ `GEN_MAX_CONCURRENT_JOBS`(5, R-16), 초과분 대기열 + 순번 단조 감소, 전원 완료, 최대 대기 ≤ 2 × p95(AC-06-37) |
+| TC-C-02 | 동시 생성 10건(MockProvider 고정 지연 20s) | 동시 `running` ≤ 실효 상한 `min(GEN_MAX_CONCURRENT_JOBS, 머신 수 × WORKER_GEN_CONCURRENCY)`(R-16·S-14, MVP 실효 2), 초과분 대기열 + 순번 단조 감소, 전원 완료, 최대 대기 ≤ `perf.queueWaitMaxSec`(AC-06-37과 같은 테스트 파일, T-08) |
 | TC-C-03 | 비용 계산 | MockProvider usage × models.yaml 단가 = `generation_jobs.cost_usd`(소수 5자리 일치) |
 | TC-C-04 | 월 지출이 `GEN_MONTHLY_BUDGET_USD`(150) 도달 | TC-C-01과 같은 동작 |
 | TC-C-05 | 일 지출 80% 도달 | `ALERT_WEBHOOK_URL` 알림 1회(미설정 시 콘솔 no-op) |
@@ -587,9 +587,9 @@ ID 체계: TC-E(진단 입력) / TC-B(브랜드 입력) / TC-R(장애·복원력
 | LCP | ≤2.5s | 모바일, Lighthouse 기본 4G 슬로틀·CPU 4x, S01·S02 첫 문항·S03 | Lighthouse CI | G3 |
 | INP | ≤200ms | S02 카드 선택, S09 스텝 컨트롤 | Playwright trace(Event Timing) | G3 |
 | CLS | ≤0.1 | S01~S15 | Lighthouse CI | G3 |
-| 다음 문항 표시 | p95 ≤150ms(선택 → 다음 문항 이미지 표시 완료). 클라이언트 낙관 계산·선로드, 서버 처리 p95 ≤200ms(06장 D-0608) | Playwright 측정 | G3 |
+| 다음 문항 표시 | p95 ≤150ms(선택 → 다음 문항 이미지 표시 완료). 클라이언트 낙관 계산·선로드, 서버 처리 p95 ≤ `perf.surveyServerP95Ms`(200ms, 06장 D-0608) | Playwright 측정 | G3 |
 | 설문 이미지 | desktop 1280×800 WebP ≤140KB, mobile 780×1560 WebP ≤160KB, 2벌(R-07). 1단계 48장 + 2단계 120쌍 전수 | 빌드 검사 스크립트(`survey:build` 산출물) | G1 |
-| 결과 화면 | 마지막 응답 → S03 렌더 ≤1s, 서버 계산 ≤200ms | API 타이밍 | G3 |
+| 결과 화면 | 마지막 응답 → S03 렌더 ≤1s, 서버 계산 ≤ `perf.resultServerMs`(200ms) | API 타이밍 | G3 |
 | 편집 반영 | p95 ≤200ms(스타일) / ≤500ms(구조)(R-17, TC-D-01) | E2E 20회 | G3 |
 | JS 전송량 | S02 초기 JS ≤200KB(gzip) | 빌드 리포트 | G3 |
 | 폰트 | 첫 화면 ≤300KB | TC-F-02 | G3 |
@@ -853,7 +853,8 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
 |---|---|
 | `config/thresholds.json` | 임계값 단일 원천. 아래 블록에서 `spec:extract`로 생성(S-04·S-05). 최상위 `diagnosis`·`generation`·`perf`·`release` |
 | `config/test-policy.json` | 재시도·커버리지·시각 회귀 `maxDiffPixelRatio`·보류 허용표 `deferrable`. 아래 블록에서 `spec:extract`로 생성 |
-| `config/forbidden-allowlist.json` | 금지 패턴 예외 경로 |
+| `config/forbidden-allowlist.json` | 금지 패턴 예외 **경로만**(T-08). 리터럴은 담지 않는다. `qa:trace --audit` 예외 리터럴은 `spec:test-policy.auditAllowLiterals` |
+| `config/diagnosis-tuned.json`, `sim/reports/tuning-log.json` | 진단 튜닝 상수의 런타임 값과 탐색 기록(T-03). spec 잠금이 아니라 **자체 잠금**이다. 값 집합·초기값·시도 상한은 아래 블록 `diagnosis.tunable`·`release.surveySim`이 정하고 guard 8단계(7.12.2)가 검사한다 |
 | `tests/acceptance/**`(사람 제공분) | 각 장 AC 수용 테스트 |
 | `data/golden/**`, `eval/golden/baseline.json` | 골든 케이스, 기준선 reportId |
 | `eval/blind/baseline_prompt.md`, `eval/blind/protocols.json` | 블라인드 평가 설정(쌍 수·평가자 수·질문 문구) |
@@ -865,26 +866,40 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
 **`config/thresholds.json` 전체 구조(S-05, 원천은 이 블록 하나)**
 
 - 이 블록이 `config/thresholds.json`의 바이트 원천이다. `pnpm spec:extract`가 `<!-- spec:thresholds -->` 표지 바로 다음 json 코드 블록을 파싱해 키 순서를 유지한 채 2칸 들여쓰기로 직렬화한다(S-04).
+- **추출 원천 경로(T-02)**: `spec:extract`·`qa:trace`가 읽는 파일은 코드 상수 하나 `SPEC_SOURCE = "docs/spec/FINAL/07_quality.md"`다(09장 9.8.1과 같다). `docs/spec/v2/`는 기록용이며 두 도구가 읽지 않는다. 예외는 `spec:extract --from review-pass` 하나로, 이때만 `review-pass` 태그 시점의 `docs/spec/v2/07_quality.md`를 읽는다(그 시점에는 FINAL이 없다. 7.12.2 사람 없는 운영 표).
 - 최상위 객체는 `diagnosis`(02장 값), `generation`(04장 값), `perf`(06·07장 런타임 SLO와 서비스 UI 접근성), `release`(07장 출시 전용) 네 개뿐이다. 키는 camelCase다. 평면 키(`harmonyMin`, `beta` 등 최상위 숫자)와 snake_case 키(`harmony_floor`, `golden.full_success_min` 등)는 폐지한다.
 - 한 의미는 키 하나에만 둔다. 출시 판정이 운영 하한과 같은 값을 쓰면 `release`에 복제하지 않고 `generation`·`perf` 키를 참조한다. 예: 골든 조화 하한은 `generation.harmonyFloor`, 골든 비용 상한은 `generation.costGuard.capUsd`, 골든 p95는 `perf.latencyP95Sec`.
 - 다른 장은 숫자를 다시 쓰지 않고 키 경로만 적는다(04 AC-04-43, 02 D-0214, 09 9.5.6·M3·M4). 본문 표의 수치는 설명용 사본이며 다르면 이 블록이 이긴다.
 - 린터 탐지 상수(AIL-xx 표의 hue 범위·blur px 등 규칙 정의값)는 임계값이 아니라 규칙 정의다. 원천은 04장 4.13.2 표이고 `packages/linter/data/rule-params.json`에 두며 자체 잠금한다(AD-006). `generation.lint`에는 게이트 판정값만 둔다.
 - `scripts/guard/thresholds-schema.ts`는 zod `.strict()` 스키마로 파일 전체를 검사한다. 모르는 키, 빠진 키, 타입이 다른 값이 하나라도 있으면 FAIL이다.
+- **진단 튜닝 상수(T-03, QA3-02·AI3-05)**: 02장 2.16.2 조정 공간 6좌표만 `diagnosis.tunable`에 둔다. 각 좌표는 `{values: 닫힌 값 집합, initial: 초기값}`이고 키 순서가 탐색 순서 ①~⑥이다(① `typeDiscWeight` ② `llChanceRef` = [`llChance`, `llRef`] 쌍 ③ `calibKappa` ④ `candidateSamples`(1단계 R) ⑤ `priorWeight` ⑥ `bridgeRelocated`(브리지 SV 재배치 1회, 2.4.2)). 합격선(`release.surveySim`)·β·σ0·sigmaStop·문항 수·λ·시드·`maxTuningTrials`·`maxGateRuns`와 나머지 `diagnosis` 키는 spec 잠금 그대로다. `tunable` 자체(값 집합·초기값)도 이 블록의 일부라 spec 잠금이다.
+  - 런타임 값은 `config/diagnosis-tuned.json`에서 읽는다. 스키마(zod strict): `{ "typeDiscWeight": number, "llChance": number, "llRef": number, "calibKappa": number, "candidateSamples": integer, "priorWeight": number, "bridgeRelocated": boolean }`. 파일이 없을 때만 `pnpm spec:extract --init-tuned`가 `tunable.*.initial`로 초기 파일을 만든다(`llChanceRef.initial`은 `llChance`·`llRef`로 펼친다. 이미 있으면 아무것도 쓰지 않는다). 이 파일은 guard 5단계 spec 대조 대상이 아니다. 이후 변경은 2.16.2 탐색 결과만, `chore(sim-tune):` 단독 커밋(이 파일과 `tuning-log.json` 외 변경 0)으로 한다.
+  - 엔진은 `getTuned()`로만 읽는다. `config_snapshot`·`engine_version`에 tuned 파일 SHA-256을 남긴다. 판정 코드에 tuned 값·`tunable.values` 원소와 같은 숫자 리터럴이 있으면 guard 3단계가 FAIL한다.
+  - `sim/reports/tuning-log.json` 스키마: `{ "trials": [{ "round", "coordinate", "value", "devMetrics", "objective", "chosen", "gateRun" }] }`(AI3-05 ⑤). `gateRun` 항목은 PASS/FAIL만 담고 지표값을 담지 않는다. 목적함수(사전식)·좌표별 평가 지표·시도 계수(시작점 포함 1바퀴 11회)·gate 시점(①~⑥ 한 바퀴 뒤, `maxGateRuns` = 바퀴 수)의 원천은 02장 2.16.2(AC-02-36)다.
 
 <!-- spec:thresholds -->
 ```json
 {
   "diagnosis": {
     "beta": 8, "sigma0": 0.25, "sigmaStop": 0.08, "maxQuestions": 16, "stage1Questions": 8,
-    "lambda": [1, 1, 1, 1, 1], "calibKappa": 1.3, "priorWeight": 0.3,
-    "stage1": { "candidateSamples": 200, "minPairDist": 0.35, "minDistinctTypes": 3, "maxAppearPerVector": 3, "epsilonExplore": 0.10, "typeDiscWeight": 5.0 },
+    "lambda": [1, 1, 1, 1, 1],
+    "stage1": { "minPairDist": 0.35, "minDistinctTypes": 3, "maxAppearPerVector": 3, "epsilonExplore": 0.10 },
     "noneAvoidDist": 0.35, "noneExploreAfter": 3, "cantTellInsensitiveAfter": 2,
-    "consistency": { "llChance": -0.15, "llRef": 0.25, "checkBonus": 0.05, "minScored": 4 },
+    "consistency": { "checkBonus": 0.05, "minScored": 4 },
     "typing": { "tieEps": 0.01, "boundaryEps": 0.05, "conflictMinPicks": 3, "conflictMinCenterDist": 0.60, "lowSignalMinPicks": 4 },
     "positionBias": { "sameSlotRatio": 0.80, "minAnswers": 5 },
     "similarSites": { "maxScore": 0.45, "tau": 0.05, "count": 3 },
     "fastAnswerMs": 1000,
-    "surveyAssetL1AbsMax": 0.15
+    "surveyAssetL1AbsMax": 0.15,
+    "typeCenterMinDist": 0.50,
+    "tunable": {
+      "typeDiscWeight": { "values": [2, 3, 5, 8], "initial": 5 },
+      "llChanceRef": { "values": [[-0.15, 0.25], [-0.20, 0.25], [-0.15, 0.30]], "initial": [-0.15, 0.25] },
+      "calibKappa": { "values": [1.2, 1.3, 1.4], "initial": 1.3 },
+      "candidateSamples": { "values": [200, 400], "initial": 200 },
+      "priorWeight": { "values": [0.2, 0.3], "initial": 0.3 },
+      "bridgeRelocated": { "values": [false, true], "initial": false }
+    }
   },
   "generation": {
     "harmonyFloor": 80, "tasteFloor": 75, "sFreeFloor": 65,
@@ -896,7 +911,7 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
     "sFreeD0": 0.30,
     "variant": { "targetDistTf": 0.50, "targetDistMin": 0.25, "l2DiffMin": 3, "renderDistMin": 0.15, "candidatePairDistMin": 0.20 },
     "costGuard": { "skipVisionUsd": 0.24, "skipRepairUsd": 0.27, "capUsd": 0.30 },
-    "fallbackAtSec": 120, "killAtSec": 180,
+    "fallbackAtSec": 120, "killAtSec": 180, "fallbackAbortToleranceSec": 2,
     "renderViewports": [375, 768, 1024, 1280, 1920],
     "firstViewFontKbMax": 300
   },
@@ -906,6 +921,8 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
     "editStyleP95Ms": 200, "editStructP95Ms": 500,
     "lcpMaxMs": 2500, "inpMaxMs": 200, "clsMax": 0.1,
     "nextQuestionP95Ms": 150, "resultMaxMs": 1000, "surveyApiP95Ms": 300,
+    "surveyServerP95Ms": 200, "resultServerMs": 200,
+    "mockE2eSubmitToCardsSec": 30, "queueWaitMaxSec": 180,
     "surveyJsKbMax": 200, "cardImageDesktopKbMax": 140, "cardImageMobileKbMax": 160,
     "a11y": { "axeSeriousCriticalMax": 0, "lighthouseA11yMin": 95, "touchTargetPx": 44 }
   },
@@ -940,7 +957,7 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
       "populationPerSeed": 1000, "populationPA": 800,
       "maxTuningTrials": 15, "maxGateRuns": 3
     },
-    "extractor": { "roundtripAbsMax": 0.10, "spearmanMin": 0.70, "maeMax": 0.15, "stabilityMax": 0.01, "reliableAxesMin": 3 },
+    "extractor": { "roundtripAbsMax": 0.10, "spearmanMin": 0.70, "maeMax": 0.15, "stabilityMax": 0.01, "reliableAxesMin": 3, "anchorMinDist": 0.25 },
     "export": { "pixelDiffMax": 0.01, "lighthousePerfMin": 90, "lighthouseA11yMin": 95, "lcpMaxMs": 2500, "clsMax": 0.05 },
     "blind": {
       "aiDetectMax": 0.65, "aiLikeRateMax": 0.25, "aiLikeVsBaselineMaxRatio": 0.5,
@@ -949,7 +966,7 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
       "strongBaselinePrefMin": 0.60, "strongBaselinePrefLbMin": 0.45, "personalOffsetPrefWarnMax": 0.55,
       "makerMeanMin": 3.5, "tmValidityMin": 0.75, "lintRecallMin": 0.80, "lintFalsePosMax": 0.10, "harmonyValidityMin": 0.80
     },
-    "usability": { "taskSuccessMin": 0.80, "susMin": 70, "t1MedianMaxSec": 240, "blockerMax": 0 }
+    "usability": { "taskSuccessMin": 0.80, "susMin": 70, "t1MedianMaxSec": 240, "blockerMax": 0, "seqMedianMin": 5 }
   }
 }
 ```
@@ -980,6 +997,29 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
 | `release.golden.variantRenderDMin`(07) | `generation.variant.renderDistMin` |
 | `golden.full_success_min`·`golden.min_guarantee`(04) | `release.golden.fullSuccessMin`, `.minGuarantee` |
 | `generation.lint.*`의 규칙 탐지 상수(04) | `packages/linter/data/rule-params.json`(임계값 아님) |
+| `diagnosis.stage1.typeDiscWeight`, `diagnosis.consistency.llChance`·`llRef`, `diagnosis.calibKappa`, `diagnosis.stage1.candidateSamples`, `diagnosis.priorWeight`(07 v2) | 값 집합·초기값 `diagnosis.tunable.*`, 런타임 값 `config/diagnosis-tuned.json`의 같은 이름 키(T-03) |
+| 응답 제출 서버 처리 p95 200ms(06 D-0608, 09 M4 ⑦, 07 7.5.1) | `perf.surveyServerP95Ms`. API 관측 p95는 `perf.surveyApiP95Ms`(300) 그대로(T-08) |
+| 결과 서버 계산 200ms(07 7.5.1) | `perf.resultServerMs` |
+| mock E2E 제출 → 카드 30초(09 M5 ①) | `perf.mockE2eSubmitToCardsSec` |
+| 대기열 최대 대기 "2 × p95"(07 TC-C-02, 06 AC-06-37) | `perf.queueWaitMaxSec`(180 = 2 × `perf.latencyP95Sec`). 동시 상한은 S-14 실효 상한 |
+| 앵커 간 추출 거리 ≥ 0.25(09 M3 ④) | `release.extractor.anchorMinDist` |
+| 유형 중심 간 거리 ≥ 0.50(09 M1 ③) | `diagnosis.typeCenterMinDist` |
+| 폴백 abort 허용 오차 ± 2s(06 AC-06-40) | `generation.fallbackAbortToleranceSec` |
+| SEQ 과제별 중앙값 ≥ 5(00 §5.3) | `release.usability.seqMedianMin`. `blockerMax` = "S1 미해결 수"(PM3-08) |
+
+**사양 상수(비임계값) 표(T-08, QA3-05 ③)**: 합격 판정의 비교 기준이 아니라 사양 자체를 정하는 수다. 아래 표로 닫는다. 09장 9.4 통과 조건과 각 장 AC에서 **비교 기준**으로 쓰인 수치는 위 블록의 키이거나 이 표의 행이어야 하며, `qa:trace`가 검사한다(AC-07-22). 표에 없는 수를 비교 기준으로 쓰려면 이 표나 블록을 고쳐야 하므로 spec 잠금 이후에는 불가능하다.
+
+| ID | 분류 | 값 | 원천 | 비고 |
+|---|---|---|---|---|
+| SC-01 | HTTP 상태 코드 | 06장 6.4 오류 표에 나오는 모든 상태 코드(404·409·422·429·503 등) | 06장 6.4 오류 표 | 감사 대상 아님(동등 매처) |
+| SC-02 | 데이터 수량 | 축 5, 유형 8, 프리셋 8, 용도 3, 카드 계획 48, A/B 쌍 120, 폴백 시안 72, 렌더러 스냅샷 24, Playwright 조합 9 | 02·03·04·09장 | 개수는 `toHaveLength`·`toBe`로 쓴다 |
+| SC-03 | 기간 | 보관 91일·89일 경계 사례, 매직링크·세션 만료 등 06장 보관·인증 표의 기간 | 06장 6.3.3·6.6 | 경계 사례 입력값 |
+| SC-04 | 반복·표본 수 | E2E 반복 20회, 동시 `reserve` 20회, 결정론 반복 2회, 부하 10 VU × 5분, 로컬 200요청 | 각 AC 본문 | 측정 조건이며 합격선이 아니다 |
+| SC-05 | Mock 픽스처 기대값 | `ok` 기본 경로 7호출·잡 비용 $0.23 ± 10%(AC-06-56), `slow` 종료 상한 135s(AC-06-40), MockProvider 고정 지연 20s(TC-C-02) | 06장 6.9.4, 09장 9.6.2 | Mock 시나리오 정의값. 운영 합격선과 별개 |
+| SC-06 | 런타임 사양 | 폴링 2초·60초 이후 5초(R-14), 진행 단계 갱신 ≤ 10s, 동시성 전역 5·사용자당 1·컨텍스트 3(R-16, 실효 상한 S-14) | 01·04·06장 | 플래그·env가 원천인 값은 그 이름으로 읽는다 |
+| SC-07 | 계산 예시 | Wilson 하한 0.352(40쌍 중 20승, AC-07-15) | 7.8 | 공식 검증용 기대값 |
+
+- 테스트에서 사양 상수를 비교 매처의 피연산자로 쓰고 그 값이 thresholds 잎 값과 우연히 같으면(예: SC-05의 10%와 `release.extractor.roundtripAbsMax` 0.10) 리터럴로 쓰지 않고 `tests/acceptance/_support/spec-constants.ts`의 이름(`SC_05_MOCK_COST_TOLERANCE` 등, 이름에 SC ID 접두어)으로 쓴다. `qa:trace --audit`는 이 파일의 각 상수가 이 표의 행 ID와 값에 일치하는지 대조하고, 일치하는 것만 감사 예외로 둔다.
 
 <!-- spec:test-policy -->
 ```json
@@ -987,6 +1027,7 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
   "retries": { "playwright": 0, "vitest": 0 },
   "coverage": { "coreBranchMin": 90, "repoLineMin": 75, "changedFileLineMin": 75 },
   "visual": { "maxDiffPixelRatio": 0.01 },
+  "auditAllowLiterals": [0, 1, 0.5, 100],
   "deferrable": {
     "temp": ["font-budget", "asset-license-verify", "normalizer-human", "extractor-human-label", "fewshot-count", "high-risk-domains", "legal-text"],
     "needs_live": ["golden-live", "judge-vision-live", "model-promotion"],
@@ -1009,23 +1050,50 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
     로컬 실행에서 변수가 없으면 2단계는 'needs_ci'로 표시하고 CI에서 반드시 실행)
 3. 판정 코드(scoring, linter, pipeline, eval, sim)에서 thresholds 키에 대응하는 숫자 리터럴 비교식
    (예: `>= 0.9`, `< 75`)을 AST로 탐지 → 1건이라도 있으면 FAIL (getThresholds() 경유만 허용, 09장 F04)
+   진단 엔진·sim 코드에서 diagnosis-tuned.json 값 또는 diagnosis.tunable.*.values 원소와 같은 숫자 리터럴 → FAIL (getTuned() 경유만 허용, T-03)
 4. 수용 테스트가 런타임 getThresholds() 값 = 스펙 표 값(이 장 7.2.5·7.3·7.5·7.7·7.8)임을 확인
 5. spec 대조(S-04): `pnpm spec:extract && git diff --exit-code config/thresholds.json config/test-policy.json`
    → 다르면 FAIL. 이어서 scripts/guard/thresholds-schema.ts(zod strict)로 키 구조 검사
 6. 기준 ref(S-04): baseRef = `human-lock` 태그가 있으면 그것, 없으면 `spec-lock` 태그. 둘 다 없으면 FAIL.
    09장 규칙 2의 "human-lock 시점 entries ⊆ HEAD entries"는 이 baseRef로 판정한다.
    baseRef 시점의 docs/spec/** 와 HEAD의 docs/spec/** 가 다르면 FAIL(스펙 고정점 보호. 사람 relock만 예외)
+   예외 목록(닫힌 목록, T-01): docs/spec/DECISIONS_LOG.md 1개뿐. append-only로만 허용한다.
+     판정: baseRef 시점 파일 바이트가 HEAD 파일 바이트의 접두어이면 PASS, 아니면(기존 줄 수정·삭제·순서 변경) FAIL.
+     baseRef 이후 커밋마다 같은 판정(직전 커밋 내용이 그 커밋 내용의 접두어)을 한다. 이 밖의 파일(INDEX.md 등)은 예외 0개다.
+   review-pass 대조(T-02): `review-pass` 태그가 없으면 FAIL. spec:extract --from review-pass 출력과
+     spec:extract --from spec-lock 출력(thresholds.json·test-policy.json 두 파일)이 바이트 단위로 다르면 FAIL.
+     review-pass 출력의 두 블록 SHA-256이 PROGRESS.md의 `review_pass_hashes`와 다르면 FAIL.
+     human-lock이 baseRef이면 이 대조는 건너뛴다(사람 relock이 고정점을 대체)
 7. QA_LOCK_DIGEST가 없으면 2단계는 needs_ci(test-policy deferrable `lock-digest`). 이 상태로는 종료 코드 0 불가
+8. 진단 튜닝 자체 잠금(T-03): config/diagnosis-tuned.json이 있으면
+   a. zod strict 스키마(7.12.1) 위반 → FAIL
+   b. 각 값 ∈ diagnosis.tunable의 해당 values(llChance·llRef는 쌍으로 llChanceRef.values) → 아니면 FAIL
+   c. sim/reports/tuning-log.json의 dev 시도 수(시작점 포함) ≤ release.surveySim.maxTuningTrials,
+      gateRun 수 ≤ release.surveySim.maxGateRuns, gateRun 항목에 지표값 필드 있음 → 앞 둘 초과나 셋째는 FAIL
+   d. 이 파일을 바꾼 커밋의 제목이 `chore(sim-tune):`이 아니거나 이 파일·tuning-log.json 외 변경이 있으면 FAIL
+   e. 최신 sim 리포트의 engine_version·config_snapshot에 기록된 tuned 해시 ≠ 현재 파일 SHA-256 → FAIL
 ```
 
 **사람 없는 운영(S-04)**: 이 저장소는 사람 없이 진행된다(저장소 CLAUDE.md). 그래서 기준 파일의 고정점을 사람 대신 스펙 문서에 둔다.
 
 | 단계 | 누가 | 무엇을 |
 |---|---|---|
-| P3 종료 | 에이전트 | `docs/spec/FINAL` 확정 커밋에 `spec-lock` 태그를 붙인다. 이후 `docs/spec/**` 변경은 guard FAIL이다 |
+| P2 멈춤(8개 역할 C1~C3 PASS) | 에이전트 | 멈춤 기준을 충족한 커밋에 `review-pass` 태그를 붙인다(T-02). 그 커밋의 `docs/spec/v2/07_quality.md`에서 `spec:thresholds`·`spec:test-policy` 블록 SHA-256을 계산해 PROGRESS.md `review_pass_hashes: {thresholds, testPolicy}`에 기록한다 |
+| P3 종료 | 에이전트 | `spec-lock` 직전에 `pnpm spec:extract --from FINAL`과 `pnpm spec:extract --from review-pass` 출력이 바이트 단위로 같은지 확인한다. 다르면 `spec-lock`을 붙이지 않고 BLOCKED로 둔다(BLOCKED.md에 다른 키 경로 기록). 같으면 `docs/spec/FINAL` 확정 커밋에 `spec-lock` 태그를 붙인다. 이후 `docs/spec/**` 변경은 guard FAIL이다(예외는 6단계 닫힌 목록의 append-only `docs/spec/DECISIONS_LOG.md` 1개) |
 | M0 | 에이전트 | `pnpm spec:extract`로 `config/thresholds.json`·`test-policy.json`을 만들고 `locked-hashes.json`에 `lockedBy:"spec"`으로 등록한다. 직접 편집은 금지다(5단계가 잡는다) |
-| 수용 테스트 자체 잠금 직전 | 에이전트 | `pnpm qa:trace --audit`. 테스트 본문의 수치 리터럴을 FAIL로 처리한다(허용 리터럴 {0, 1, 0.5, 100}만, 목록은 `config/forbidden-allowlist.json`). 기대값은 `getThresholds()` 키로만 쓴다 |
+| 수용 테스트 자체 잠금 직전 | 에이전트 | `pnpm qa:trace --audit`(T-08, 아래 정의). 기대값은 `getThresholds()` 키 또는 사양 상수 표(7.12.1) 이름으로만 쓴다 |
 | 사람이 생기면 | 사람 | 7.12.3 절차로 relock → `human-lock` 태그. 이후 baseRef는 `human-lock`이다 |
+
+**`qa:trace --audit` 정의(T-08, QA3-05 보완안 1·2·4)**:
+
+| 항목 | 규칙 |
+|---|---|
+| 범위 | `tests/acceptance/**`와, 그 파일이 import하는 모든 모듈(테스트 헬퍼·픽스처 JSON 포함, import 그래프 전체). 상수·변수는 선언까지 따라가 리터럴로 풀어서 본다(`const H = 80` + `toBeGreaterThanOrEqual(H)` = 리터럴 80) |
+| 대상 위치 | 비교 매처의 기대값(`toBeGreaterThan`, `toBeGreaterThanOrEqual`, `toBeLessThan`, `toBeLessThanOrEqual`, `toBeCloseTo`의 인자)과 비교 연산자 `>=`·`<=`·`<`·`>`의 피연산자 |
+| FAIL 조건 | 대상 위치의 숫자 리터럴이 `config/thresholds.json` 잎 값 집합(배열 원소 포함)에 있고 `spec:test-policy.auditAllowLiterals`({0, 1, 0.5, 100})에 없으면 FAIL. 단 `tests/acceptance/_support/spec-constants.ts`의 상수 중 사양 상수 표 행과 ID·값이 일치하는 것은 제외 |
+| 대상 아님 | `toBe`·`toEqual`·`toHaveLength`·`toStrictEqual`의 정수 인자, HTTP 상태 코드(SC-01), 사양 상수 표 값 |
+| 예외 정의의 원천 | 리터럴 예외는 `auditAllowLiterals` 하나다(02 AC-02-30도 이 키를 참조). `config/forbidden-allowlist.json`은 경로 예외만 담는다 |
+| 키 커버리지 | 09장 9.4 통과 조건과 각 장 AC에서 비교 기준으로 쓰인 수치가 thresholds 키이거나 사양 상수 표 행인지 검사한다. 둘 다 아니면 FAIL하고 문서 위치를 출력한다 |
 
 `spec-lock`은 사람 승인을 대신하지 않는다. 기준이 "에이전트가 정한 값"이 아니라 "구현 전에 확정된 문서의 값"임을 기계적으로 보장할 뿐이다. 그래서 `release:check`는 `QA_LOCK_DIGEST`가 확인될 때까지 종료 코드 0을 내지 않는다(7.11.2).
 
@@ -1033,7 +1101,7 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
 
 | 행위자 | 허용 | 금지 |
 |---|---|---|
-| 구현 에이전트 | `pnpm spec:extract` 실행(출력이 스펙과 같아야 함), P3 종료 커밋에 `spec-lock` 태그 1회(이미 있으면 금지), 잠금 파일 읽기, 잠금 대상이 아닌 테스트 추가, `guard:self-lock`(09장, 새 파일만), 변경 요청서 `qa/LOCK_CHANGE_REQUEST.md`에 {파일, 현재값, 제안값, 근거, 실패 로그} 작성 후 BLOCKED.md에 기록 | 잠금 파일 수정·삭제·이동, `locked-hashes.json` 재생성, `guard:relock --human` 실행, `spec-lock`·`human-lock` 태그 이동·삭제, `config/thresholds.json`·`test-policy.json` 직접 편집, CI 워크플로 수정, 판정 코드에 우회 분기 추가 |
+| 구현 에이전트 | `pnpm spec:extract` 실행(출력이 스펙과 같아야 함), P2 멈춤 커밋에 `review-pass` 태그 1회와 PROGRESS.md `review_pass_hashes` 기록(이미 있으면 금지), P3 종료 커밋에 `spec-lock` 태그 1회(이미 있으면 금지, `review-pass` 대조 통과 후에만), `docs/spec/DECISIONS_LOG.md` 끝에 줄 추가(append-only), `chore(sim-tune):` 단독 커밋으로 `config/diagnosis-tuned.json` 변경(7.12.2 8단계), 잠금 파일 읽기, 잠금 대상이 아닌 테스트 추가, `guard:self-lock`(09장, 새 파일만), 변경 요청서 `qa/LOCK_CHANGE_REQUEST.md`에 {파일, 현재값, 제안값, 근거, 실패 로그} 작성 후 BLOCKED.md에 기록 | 잠금 파일 수정·삭제·이동, `locked-hashes.json` 재생성, `guard:relock --human` 실행, `review-pass`·`spec-lock`·`human-lock` 태그 이동·삭제, `docs/spec/DECISIONS_LOG.md` 기존 줄 수정·삭제, `config/thresholds.json`·`test-policy.json` 직접 편집, CI 워크플로 수정, 판정 코드에 우회 분기 추가 |
 | 사람(저장소 소유자) | 요청서 검토 → 파일 수정 → `pnpm guard:relock --human <경로>` → `QA_LOCK_DIGEST` 갱신 → 커밋 `chore(qa-lock): <사유>` → `git tag -f human-lock` | — |
 
 추가 규칙:
@@ -1062,10 +1130,13 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
 | AC-07-14 | 7.4의 모든 TC([P2] 제외)가 테스트 이름에 ID를 포함해 자동화되어 있고(수동 지정 제외), 릴리스 실행에서 전부 통과한다. |
 | AC-07-15 | `pnpm eval:compare --finalize`는 블라인드 쌍 수 <40이면 `REJECT(blind_pairs)`, 40쌍 중 20승이면 Wilson 하한 0.352로 `blind_wilson_lb` 통과를 출력한다. |
 | AC-07-16 | Given 7.12.1 `spec:thresholds` 블록과 값 1개가 다른 `config/thresholds.json`, When `pnpm guard`, Then spec 대조 단계가 FAIL하고 다른 키 경로를 출력한다. 블록에 없는 키 1개를 추가하거나 있는 키 1개를 지워도 `thresholds-schema` 단계가 FAIL한다. |
-| AC-07-17 | Given `human-lock`·`spec-lock` 태그가 모두 없는 저장소, When `pnpm guard`, Then FAIL. `spec-lock`만 있으면 guard:lock이 그 커밋을 baseRef로 판정하고, 그 이후 `docs/spec/**`가 바뀐 커밋에서 FAIL한다. |
+| AC-07-17 | Given `human-lock`·`spec-lock` 태그가 모두 없는 저장소, When `pnpm guard`, Then FAIL. `spec-lock`만 있으면 guard:lock이 그 커밋을 baseRef로 판정하고, 그 이후 `docs/spec/**`가 바뀐 커밋에서 FAIL한다(7.12.2 6단계 예외 목록 제외, AC-07-25). |
 | AC-07-18 | Given 수용 테스트 본문에 `expect(h).toBeGreaterThanOrEqual(80)` 같은 허용 목록 밖 수치 리터럴, When `pnpm qa:trace --audit`, Then FAIL하고 파일·줄을 출력한다. |
 | AC-07-19 | Given 허용표(`deferrable`)에 없는 단계가 `temp`를 반환하거나, `LLM_MODE=live`인데 `golden-live`가 `needs_live`를 반환, When `pnpm release:check`, Then 종료 코드 1. 모든 보류가 허용표 안이고 fail 0이면 2, 전부 pass면 0. |
 | AC-07-20 | 변이 테스트: 진단 엔진의 β를 8.0 → 8.5로 바꾸고 골든 M1a를 실행하면 FAIL한다. `build-answers`를 같은 커밋에서 2회 실행하면 바이트가 같다. |
+| AC-07-22 | (T-08, QA3-05) 메타 테스트: `tests/acceptance/` 안의 `expect(res.status).toBe(404)`와 `expect(list).toHaveLength(72)`는 `pnpm qa:trace --audit` PASS다. `expect(h).toBeGreaterThanOrEqual(80)`은 FAIL이고, 헬퍼 파일 `const H = 80` + `toBeGreaterThanOrEqual(H)`도 FAIL이며 둘 다 파일·줄을 출력한다. 사양 상수 표 밖의 수치를 비교 기준으로 쓰는 AC 문장 1개를 넣은 픽스처 문서에서 `qa:trace` 키 커버리지 검사가 FAIL한다. `config/forbidden-allowlist.json`에 숫자 리터럴 항목이 있으면 guard가 FAIL한다. |
+| AC-07-24 | (T-02, QA3-08) 메타 테스트: FINAL `spec:thresholds` 블록의 값 1개를 `review-pass` 시점 블록과 다르게 만든 저장소에서 `spec-lock` 생성 절차(`pnpm spec:extract --from FINAL`·`--from review-pass` 대조)와 `pnpm guard` 6단계가 모두 FAIL한다. `review-pass` 태그가 없으면 guard가 FAIL한다. `spec:extract`·`qa:trace`의 입력 경로는 코드 상수 1개(`docs/spec/FINAL/07_quality.md`)이고 09장 9.8.1과 같다. |
+| AC-07-25 | (T-01, QA3-01) 메타 테스트: `spec-lock` 이후 `docs/spec/DECISIONS_LOG.md` 끝에 AD 1줄을 추가한 커밋에서 `pnpm guard`는 PASS다. 같은 파일의 기존 줄 1개를 수정하거나 삭제한 커밋, `docs/spec/FINAL/07_quality.md` 1바이트를 바꾼 커밋, `docs/spec/INDEX.md`를 바꾼 커밋에서는 FAIL이다. `rg 'DECISIONS_LOG'`로 CLAUDE.md·07·09를 검색하면 경로가 `docs/spec/DECISIONS_LOG.md` 하나로 나온다. |
 
 ---
 
@@ -1113,7 +1184,7 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
 | 승격 도구 | `eval:compare`(+`--finalize`), `eval_sets`, `eval_judgments`, ADM-09 | 06, 00 | 7.2.8, 7.8 |
 | 이벤트 | 00장 §8.3 + `survey_exit`, `ui_error_shown` | 00(R-23) | 7.3.4, 7.9 |
 | 플래그 | `JOB_COST_CAP_USD`, `GEN_DAILY_BUDGET_USD`, `GEN_MONTHLY_BUDGET_USD`, `GEN_MAX_CONCURRENT_JOBS`, `GEN_ENABLED`, `BETA_INVITE_ONLY`, `JUDGE_VISION_MODE` | 00 IF-09, 06 | TC-C, 7.5.3 |
-| 임계값·정책 파일 | `config/thresholds.json`(`release` 객체), `config/test-policy.json`, `config/lock/locked-hashes.json`, `QA_LOCK_DIGEST` | 09, 07(R-09) | 7.12 |
+| 임계값·정책 파일 | `config/thresholds.json`(`release` 객체), `config/test-policy.json`, `config/lock/locked-hashes.json`, `QA_LOCK_DIGEST`, `config/diagnosis-tuned.json`·`sim/reports/tuning-log.json`(자체 잠금, T-03), 태그 `review-pass`·`spec-lock`·`human-lock` | 09, 07(R-09) | 7.12 |
 | 화면 ID·상태 | S01~S15, 1.12.1 매트릭스, `?__state=` | 01(R-19) | 시각 회귀, axe, E2E |
 | 원본 유사도 임계값 | `config/originality.json` | 08(R-20) | G-11 |
 | 법무 출시 체크리스트 | 08장 8.15, `pnpm compliance:check` | 08 | G6 |
@@ -1161,8 +1232,12 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
 | R-01~R-04 | 식별자 | 머리말, 7.2.2~7.2.3, 전 절 |
 | R-05 | 진단 합격선 | 7.3.1, `release.surveySim` |
 | S-01·S-02(07) | native 프로파일 보류 단계, 시각 기준선 지문, 브라우저 매트릭스 needs_ci | 7.1.2, 7.7 테스트 조합, 7.12.1 deferrable |
-| S-04 | 사람 없는 기준 고정점(`spec:extract`, `spec-lock`, `qa:trace --audit`) | 7.12.2 5~7단계·사람 없는 운영 표, 7.12.3, AC-07-16~18 |
+| S-04 | 사람 없는 기준 고정점(`spec:extract`, `spec-lock`, `qa:trace --audit`) | 7.12.2 5~7단계·사람 없는 운영 표, 7.12.3, AC-07-16~18 · → T-01·T-02·T-08로 보완 |
 | S-05 | thresholds 키 구조 단일화 | 7.12.1 전체 JSON 블록·옛 키 대응표, 7.2.5 |
+| T-01(QA3-01) | 결정 기록 파일 append-only 잠금 예외(닫힌 목록 1개) | 7.12.2 6단계·사람 없는 운영 표, 7.12.3, AC-07-17·25 |
+| T-02(QA3-08) | spec 고정점 = `review-pass`, 추출 원천 `docs/spec/FINAL/07_quality.md` 1개 | 7.12.1, 7.12.2 6단계·사람 없는 운영 표, 7.12.3, 7.1.7 경로, AC-07-24 |
+| T-03(QA3-02·AI3-05) | `diagnosis.tunable`·`config/diagnosis-tuned.json` 분리, 자체 잠금 | 7.12.1 블록·잠금 대상 표·옛 키 대응표, 7.12.2 3·8단계, 7.12.3 · 탐색 규칙·AC-02-36은 02장 |
+| T-08(QA3-05·AI3-06·PM3-08·QA3-10) | `qa:trace --audit` 재정의, 신규 키 8개, 사양 상수 표, `auditAllowLiterals` | 7.12.1 블록·대응표·사양 상수 표, 7.12.2 감사 정의 표, 7.5.1, TC-C-02, AC-07-22 |
 | S-03 | 보류 상태 enum·허용표·종료 코드, 진단 API 부하 로컬 측정 | 7.1.5, 7.11.2, 7.5.1, AC-07-19 |
 | S-07 | 골든 M1a·M1b, muRef, build-answers 결정론 | 7.2.2, 7.2.4, 7.2.5, AC-07-20 |
 | S-11·S-12 | MockProvider 역할별·`mixed`·`copy_*@gen_copy` 시나리오의 사용자 결과 | 7.1.4, TC-R-14~18 |
