@@ -60,3 +60,10 @@
 - 2026-11-19 10:22 | decisions_v4 작성(T-01~T-36, Blocker 3·Major 37 전부 대응, Minor는 선택 반영표). AD-008·009 기록, T-17·T-11 사람…
 - 2026-11-19 10:10 | 라운드 3 PD·법무 리뷰 작성 → 8개 수집 완료. 합계 Blocker 3(QA3-01·TL3-01·LG3-01), Major 37. 다음은 decisions_v4
 - 2026-11-19 09:58 | 라운드 3 UI·AI/ML 리뷰 작성(UI FAIL/FAIL/PASS M4, AI FAIL×3 M5)
+- 2026-11-19 16:45 | 08-a: P14·auth 90일, 감사 1년 파기, 신고 증거·abuse_holds, 본인 확인, AC-08-55~57
+- 2026-11-19 16:40 | 03-b: text_cols hero 6종·토큰 판정, FP15 body, lint-matrix AC-03-43, styleguide 입력, 3.15 요약
+- 2026-11-19 16:35 | 03-a: 반전 면 매핑·accentTextSafe, expectedSize·nav.wordmark, 텍스트 역할 17행, AC-03-42·44·45·46
+- 2026-11-19 16:30 | 04-b: maxChars_job·role_overrides·AIL-24, G-12·AIL-17 expectedSize, styleguide 입력, AC-04-46
+- 2026-11-19 16:25 | 04-a: TM reliable 마스크·S_free null, 후보 인덱스·DIVERSITY, 이미지 단계 선택, 원가 참조, AC-04-44·45·47
+- 2026-11-19 16:15 | 01-b 반영: S03 notice 서버 선택·retestHint(T-25·22), S12 재검사 배너·채택 후속 시트·shareStatus(T-22·16), 1.6.5 취…
+- 2026-11-19 16:05 | 01-a 반영: 1.4.3 자극물 크기 규칙·회전 안내·layoutMode, 1.4.11 mobile 와이어프레임, 1.14.3 썸네일 탭, AC-01-55(T-23); 1…

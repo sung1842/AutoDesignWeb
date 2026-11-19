@@ -3,8 +3,8 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P2
-- lock: {owner: 2026-11-19T07:08Z, since: 2026-11-19T07:15Z}
-- limit.next_reset_kst: 2026-11-19 19:57
+- lock: {owner: 2026-11-19T11:08Z, since: 2026-11-19T11:10Z}
+- limit.next_reset_kst: 2026-11-20 01:08
 - 마지막 갱신: 2026-11-19 16:10 KST (예약 세션: decisions_v5 작성)
 
 ## 실행 환경 사실(2026-11-18 점검)
@@ -77,10 +77,3 @@
 - 2026-11-19 16:58 | 00-a: 9.2 참조·9.3 취소·9.4 평가 예산 표·A5/A7 쿼리·IP·감사·권한·G-13, v2.3
 - 2026-11-19 16:52 | 05-a: 5.9 앵커 temp 분기, D-056 → 04 m_k 참조
 - 2026-11-19 16:50 | 02-a: tunable 분리·튜닝 목적함수, x_card 원천·비차단 4행, pickNotice, AC-02-34~37
-- 2026-11-19 16:45 | 08-a: P14·auth 90일, 감사 1년 파기, 신고 증거·abuse_holds, 본인 확인, AC-08-55~57
-- 2026-11-19 16:40 | 03-b: text_cols hero 6종·토큰 판정, FP15 body, lint-matrix AC-03-43, styleguide 입력, 3.15 요약
-- 2026-11-19 16:35 | 03-a: 반전 면 매핑·accentTextSafe, expectedSize·nav.wordmark, 텍스트 역할 17행, AC-03-42·44·45·46
-- 2026-11-19 16:30 | 04-b: maxChars_job·role_overrides·AIL-24, G-12·AIL-17 expectedSize, styleguide 입력, AC-04-46
-- 2026-11-19 16:25 | 04-a: TM reliable 마스크·S_free null, 후보 인덱스·DIVERSITY, 이미지 단계 선택, 원가 참조, AC-04-44·45·47
-- 2026-11-19 16:15 | 01-b 반영: S03 notice 서버 선택·retestHint(T-25·22), S12 재검사 배너·채택 후속 시트·shareStatus(T-22·16), 1.6.5 취…
-- 2026-11-19 16:05 | 01-a 반영: 1.4.3 자극물 크기 규칙·회전 안내·layoutMode, 1.4.11 mobile 와이어프레임, 1.14.3 썸네일 탭, AC-01-55(T-23); 1…
