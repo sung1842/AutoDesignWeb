@@ -396,14 +396,14 @@ mobile: 헤드라인 → 보조 → 정보 줄 → 예시 1(전체 폭) → 예�
 | # | 영역 | 내용 | 규칙 |
 |---|---|---|---|
 | ① | 유형 헤더 | 라벨 "나의 디자인 성향 유형", 유형 이름(디스플레이 40/56px), 설명 2문장, 키워드 3개 | 02장 유형 텍스트 고정값만(R-04). LLM 생성 금지. 성격검사식 알파벳 코드 표기 금지(D-01) |
-| ② | 경계·신뢰 안내 | 표시 조건·우선순위는 02장 2.13.1이 원천이다(S-29). 순서 `low_signal` → `conflict` → κ < 0.50 → `is_boundary` 중 **첫 번째 하나만** 문구로 표시하고(`result.notice.lowSignal`(+ [다시 진단하기]) / `result.notice.conflict` / `result.notice.lowConsistency` / `result.notice.boundary`), 그 아래에 신뢰도 한 줄(`result.confidence.{high,medium,low}`)을 붙인다. 시즌 재생으로 유형이 바뀐 결과의 첫 방문에는 `result.notice.seasonAdjusted` 1회. 문구 원문은 1.15.3 | 백분율 표기 0건 |
+| ② | 경계·신뢰 안내 | **서버가 고른다**(T-25): `ResultView.notice`(02장 2.13.1 `pickNotice`, 우선순위 S-29) 값을 키로만 바꾼다 — `low_signal` → `result.notice.lowSignal`(+ [다시 진단하기]), `conflict` → `result.notice.conflict`, `low_consistency` → `result.notice.lowConsistency`(재진단 권유), `boundary` → `result.notice.boundary`, `null` → 표시 없음. 그 아래 신뢰도 한 줄(`result.confidence.{high,medium,low}`)을 붙이되 `notice ∈ {low_signal, low_consistency}`이면 생략한다. `ResultView.seasonAdjusted = true`이면 소유자 뷰 첫 방문에 `result.notice.seasonAdjusted` 1회(`localStorage tf_season_seen_{resultId}`, 서버 상태 없음). 클라이언트는 σ·κ·경계 값으로 임계 비교를 하지 않는다. 문구 원문은 1.15.3 | 백분율 표기 0건 |
 | ③ | 유형 미니 페이지 | 앵커 프리셋 사전 렌더 이미지 desktop 1장 + mobile 1장 | 1px `--svc-frame` 테두리, 그림자 없음 |
 | ④ | 5축 프로필 | 양극 막대 5개(1.5.2.1) + 같은 내용 `<table>` | 레이더 차트 금지 |
 | ⑤ | 내 유형 디자인 가이드 | 서체 페어링명(한글·영문), 팔레트 칩 4~6개(색 이름 + HEX), radius 계열명 + "복사" | 00장 D-001. 읽기 전용. "복사" = CSS 변수 텍스트를 클립보드로, 토스트 "복사했어요" (`guide_copy{field}`) |
 | ⑥ | 닮은 실제 사이트 3곳 | 사이트명(`title`), 도메인, 외부 링크(`ResultView.similarSites`, 정확히 3개 또는 남은 수) | 이미지·로고·파비콘·`background-image` 0건, `target="_blank" rel="noopener noreferrer nofollow"`. "○○형", "○○ 스타일" 같은 브랜드 동일시 표현 금지. 목록 아래 비제휴 고지 고정 문구(08장 8.10.2). 후보가 0~2개면 남은 수만, 0개면 "아직 비슷한 사이트를 찾지 못했어요"(02장 2.14) |
 | ⑦ | 공감 평가 | "이 결과가 내 취향과 얼마나 맞나요?" 1~5 라디오(1 전혀 아니에요 … 5 아주 잘 맞아요) | 수정 가능, `POST /api/surveys/:id/rating` → `200 {suggestedTypes}`, 이벤트 `result_rating`. 1~2점이면 응답의 `suggestedTypes`(2·3순위)로 인접 유형 패널(1.5.2.2). 평가와 별도로 ⑦ 아래 텍스트 버튼 "다른 유형 보기"로도 패널을 연다(02장 2.13.3) |
 | ⑧ | 지난 결과와 비교 | 같은 소유자의 직전 결과가 있으면 유형 변경 여부 + 축별 변화량(±정수) | 없으면 숨김 |
-| ⑨ | CTA | 주 "이 취향으로 내 사이트 시안 만들기"(→ S06), 보조 "결과 공유하기", "다시 진단하기" | mobile 주 CTA 하단 고정 |
+| ⑨ | CTA | 주 "이 취향으로 내 사이트 시안 만들기"(→ S06), 보조 "결과 공유하기", "다시 진단하기". 바로 아래 소유자 전용 보조 문구 `result.retestHint`(T-22 ①, 00장 §5.4 원문) | mobile 주 CTA 하단 고정. `result.retestHint`는 공개 보기에서 숨김 |
 | ⑩ | 관리 | "이 결과 삭제" → 확인 다이얼로그 → `DELETE /api/surveys/:id` 즉시 삭제, 공유 링크 404 | 소유자만, 최하단 텍스트 버튼(00장 §10.4) |
 
 #### 1.5.2.1 5축 양극 막대
@@ -470,6 +470,8 @@ mobile 순서: ① → ② → ③(desktop 이미지 전체 폭, [데스크톱][
 **AC-01-19** Given 공감 2점 후 인접 유형 B 선택, When 생성 요청, Then 요청의 앵커 유형 = B이고 결과 레코드의 `type_id`는 그대로다.
 **AC-01-20** 공개 모드에서 공감 평가·삭제·"이 취향으로 시안 만들기" 0건, "나도 진단하기"·"신고" 각 1건.
 **AC-01-21** 사용성 테스트 T2 "축 점수의 의미를 말로 설명하기" 성공률 ≥ 80%(00장 §5.3).
+**AC-01-57**(T-25, UX3-03) 픽스처 5종(GS-25 low_signal, GS-28 conflict, κ < 0.50, boundary, 해당 없음)에서 `ResultView.notice`가 각각 `low_signal`·`conflict`·`low_consistency`·`boundary`·null이고, S03에 ② 안내가 0 또는 1개 보이며 문구가 `copy/ko.ts`와 같다. `low_signal`·`low_consistency`에서는 신뢰도 줄이 없다. S03 DOM에 `%` 0건, `apps/web`에서 `sigma`·`kappa` 임계 비교 0건(정적 검사). `seasonAdjusted=true` 결과는 같은 브라우저 두 번째 방문에서 안내가 0개다.
+**AC-01-59**(T-22, PM3-01·UX3-05) ① 소유자 S03에 `result.retestHint`가 보이고 공개 보기에는 없다 ② 최신 결과 7일 경과 픽스처 사용자의 S12에 `me.retestBanner`가 보이고 [닫기] 후 새로고침하면 안 보이며, 5일 경과·15일 경과에서는 처음부터 없다 ③ 채택 8일 경과 픽스처 사용자가 S12에 들어오면 시트가 1회 보이고, [배포했어요] 후 재진입에서 0회이며 `adoption_followup_answer`가 정확히 1건(zod 통과) ④ 같은 방문에서 S12 → S09로 이동해도 시트가 다시 뜨지 않는다 ⑤ [닫기]로 닫은 시안은 다음 방문에도 다시 묻지 않고 이벤트 0건이다.
 
 ### 1.5.3 S04 로그인 [P0]
 
@@ -672,7 +674,7 @@ type JobPhase  = 'queued' | 'compiling' | 'generating' | 'rendering' | 'scoring'
 
 ### 1.6.5 취소·이탈
 
-- [만들기 취소] → 확인 시트 → `POST /api/generations/:jobId/cancel`. 문구: 비폴백 시안이 아직 노출되지 않았으면(`queued`·`running` 구분 없음) "취소해도 생성 횟수는 줄지 않아요", 비폴백 시안이 1개 이상 노출됐으면 "이미 나온 시안이 있어서 생성 횟수 1회가 사용돼요"(S-16, 원천 06장 6.2.3: 취소 시점 비폴백 노출 ≥ 1이면 차감, 0이면 환불) → `canceled`.
+- [만들기 취소] → 확인 시트 → `POST /api/generations/:jobId/cancel`. 문구 분기(원천 06장 6.2.3 취소 처리 규칙, S-16·T-20): ① 비폴백 시안이 아직 노출되지 않았고(`queued`·`running` 구분 없음) `GET /api/me.quota.refundableCancelsLeft ≥ 1`이면 `gen.cancel.refund` "취소해도 생성 횟수는 줄지 않아요" ② 노출 0이지만 `refundableCancelsLeft = 0`이면 `gen.cancel.noRefund` "오늘은 취소해도 생성 횟수 1회가 사용돼요" ③ 비폴백 시안이 1개 이상 노출됐으면 `gen.cancel.used` "이미 나온 시안이 있어서 생성 횟수 1회가 사용돼요" → `canceled`. 응답 `202 {refunded}`가 시트 문구와 다르면(경쟁 조건) 응답 기준으로 토스트를 고친다.
 - 탭을 닫아도 잡은 계속된다. `/g/[jobId]` 재접속 또는 S12 "진행 중 작업"으로 복귀.
 - 완료 알림(이메일·브라우저 알림) = **[P2]**.
 
@@ -713,22 +715,24 @@ desktop 1440
 | 뷰포트 토글 | 미리보기 상단 [데스크톱][모바일] | 같음 |
 | 기타 | [전체 화면으로 보기](미리보기 도메인 새 탭), [같은 정보로 다시 만들기](확인 시트 "생성 횟수 1회가 사용돼요(오늘 남은 {d}회)" → `POST /api/projects/:id/generations {kind:'regenerate'}`), [다른 정보로 만들기](S06, 같은 결과) | 같음 |
 
-- 변형 라벨(R-03)과 정의 1줄(고정 문구, `labelKey`로 카피 표에서 찾음):
+- 변형 라벨(R-03)과 정의 1줄(고정 문구). `MockupCard.labelKey ∈ {variant.v_true, variant.v_fit, variant.v_bal}`에 `.label`·`.desc`를 붙여 1.15.3 카피 표에서 찾는다(T-26, 아래 문장과 카피 표 문자열이 같아야 한다):
   - `v_true` "취향 그대로" — "진단한 취향에 가장 가깝게 만들었어요"(S-32. 보정이 있었다면 이 카드에도 아래 보정 칩이 붙는다)
   - `v_fit` "용도 최적" — "{용도 라벨}에 맞게 구성과 대비를 조정했어요"
   - `v_bal` "균형" — "취향과 용도 사이에서 균형을 잡았어요"
-  - `isFallback = true`: 변형 라벨은 그대로 두고 "기본 구성" 배지 + "이 방향은 자동 구성 대신 기본 구성으로 준비했어요"(04장 4.12)
+  - `isFallback = true`: 변형 라벨은 그대로 두고 `drafts.fallbackBadge`("기본 구성") 배지 + "이 방향은 자동 구성 대신 기본 구성으로 준비했어요"(04장 4.12)
 - **보정 칩**(S-32): `MockupCard.movedAxes`(최대 2)를 문구 템플릿으로 보여 준다. `reason=purpose` → `calib.purpose` "{용도}에서는 {축}을 {방향}으로 조정했어요", `reason=type` → `calib.type` "{유형 이름}의 범위 안에서 {축}을 {방향}으로 맞췄어요", `reason=distance` → `calib.distance` "다른 시안과 구분되도록 {축}을 {방향}으로 옮겼어요". {축}·{방향}은 02장 축 쉬운 말(1.5.2.1 양 끝 라벨).
 - **취향 그대로와 다른 점**(S-32): `v_fit`·`v_bal`에는 `MockupCard.diffFromTrue` 상위 2개를 L2 쉬운 말 사전(`l2.plain.<key>.<value>`, 1.15.3, 예: "더 촘촘한 여백 · 각진 모서리")으로 보여 준다. `v_true`는 표시하지 않는다. "원래대로 보기" 토글은 [P2](00장 §7.1).
-- 그 아래 브랜드 컬러 안내(`brand_color_notice` 5값, 1.5.5.3), `useSampleContent`면 "예시 콘텐츠" 배지. 업종에 맞는 사진이 없어 일부를 색면으로 바꾼 시안은 `drafts.photoSubstituted`를 표시한다(S-34, 04장 4.9.4).
+- 그 아래 브랜드 컬러 안내(`brand_color_notice` 5값, 1.5.5.3), `useSampleContent`면 "예시 콘텐츠" 배지. 업종에 맞는 사진이 없어 일부를 색면으로 바꾼 시안(`MockupCard.photoSubstituted = true`, 04장 4.9.4 결정론 결과)에만 `drafts.photoSubstituted`를 표시한다(S-34·T-26).
 - 점수(`harmonyScore`·`tasteScore`) 숫자는 표시하지 않는다(노출 시안은 모두 기준 통과).
 - 카드 순서 고정: `v_true`, `v_fit`, `v_bal`. 위치 편향은 `mockup_select.variant`로 사후 점검.
 - 미리보기를 처음 볼 때 `mockup_view` 1회(변형별).
 
 ### 1.7.2 부분 성공·폴백
 
-- `partial`: 비폴백 시안 + 누락 변형을 채운 "기본 구성" 카드로 3칸이 모두 찬다(04장 4.12). 안내 "일부 방향은 기본 구성으로 준비했어요". 한도 차감(R-15).
-- `fallback`: 3칸 모두 "기본 구성" + 안내 "이번엔 기준에 맞는 자동 구성을 만들지 못해 기본 구성으로 준비했어요. 생성 횟수는 줄지 않았어요"(R-15 환불) + [다시 만들기](`kind:'regenerate'`).
+- **머리 상태 정의(T-26)**: 비폴백 3 ∧ `copySource='llm'` → `succeeded`, 비폴백 1~2 → `partial`, 비폴백 0 → `fallback`. **템플릿 덱(`GenerationView.copySource='template'`)이면 비폴백 3이어도 `partial`**(S-12, 06장 `GenerationView`).
+- 안내 선택(동시 최대 2줄, 이 순서): ① 비폴백 < 3이면 `drafts.partial` ② `copySource='template'`이면 `drafts.templateCopy`. `fallback`은 ①② 대신 `drafts.fallback` 1줄.
+- `partial`: 비폴백 시안 + 누락 변형을 채운 `drafts.fallbackBadge`("기본 구성") 카드로 3칸이 모두 찬다(04장 4.12). 한도 차감(R-15).
+- `fallback`: 3칸 모두 "기본 구성" + `drafts.fallback`(R-15 환불) + [다시 만들기](`kind:'regenerate'`).
 - 파이프라인 내부 재생성 1회(D-23) 외에 무료 추가 생성 버튼은 두지 않는다.
 
 ### 1.7.3 선택
@@ -738,6 +742,8 @@ desktop 1440
 
 **AC-01-33** 모든 시안 카드·미리보기·편집 화면에 "AI 생성" 배지(`aria-label="AI로 생성된 시안"`)가 있다(08장 AC-08-27).
 **AC-01-34** S08·S13 미리보기 iframe은 서비스와 다른 등록 도메인이고 `sandbox` 속성값이 빈 문자열(`sandbox=""`)이며, 로드된 문서의 `<script>` 0개다(R-17, CSP 세부 → 06장 6.11.4).
+**AC-01-54**(T-35, S-32) E2E: S08에서 `v_fit`·`v_bal` 카드에 보정 칩(`movedAxes` 최대 2, 1.15.3 `calib.*` 문구)과 "취향 그대로와 다른 점" 행(`diffFromTrue` 상위 2, `l2.plain.*`)이 보이고 `v_true` 카드에는 차이 행이 0개다. `movedAxes`가 빈 카드에는 칩이 0개다(07장 TC-D-08).
+**AC-01-58**(T-26, UX3-04) ① 07장 TC-R-16 픽스처(`copy_schema_fail@gen_copy`)의 S08에 `drafts.templateCopy`가 보이고 머리 상태가 `partial`이며, 비폴백 3이면 `drafts.partial`은 보이지 않는다 ② 비폴백 2 + 폴백 1 픽스처에는 `drafts.partial`만 보인다 ③ 업종 매칭 0 픽스처에서 `photoSubstituted=true`인 카드에만 `drafts.photoSubstituted`가 보인다 ④ 1.7.1·1.7.2 본문 문구와 1.15.3 `variant.*`·`drafts.*` 키 문자열이 같다(정적 대조).
 
 ---
 
@@ -798,7 +804,7 @@ tablet(768~1023): 패널은 왼쪽 드로어(폭 320px, [편집 패널] 버튼�
 | 섹션 순서 | desktop 드래그 핸들 + 위/아래 버튼, tablet 위/아래 버튼 | 내비 처음·히어로 첫 섹션·푸터 마지막 고정. 이동 후 LT 제약 위반이면 적용 + 경고 | `section_order` |
 | 섹션 숨김 | 눈 토글 | `required_blocks`·내비·히어로·푸터 숨김 불가, 섹션 수 하한 유지(비활성 + 이유 툴팁) | `section_hide` |
 | 섹션 variant | 섹션 행 펼침 → variant 후보 카드 ≤ 3 | `allowed_variants`, LT-05 위반 카드 비활성 | `candidate` |
-| 텍스트 | 부모 페이지 오버레이(측정용 iframe에서 얻은 `slotRects` 위치에 그린 클릭 영역, 1.8.5, 04장 D-0413, 06장 6.11.4)에서 슬롯 클릭 → 패널 텍스트 탭의 해당 슬롯 입력란 포커스. 표시 iframe은 이벤트를 보내지 않는다(R-17). 입력란 아래 "다른 문구" 덱 대안 카드(04장 CopyDeck 옵션) | 슬롯 maxLength(03장), 1.5.5.3 규칙 1~4. 500ms 입력 정지 = 1 op | `text` |
+| 텍스트 | 부모 페이지 오버레이(측정용 iframe에서 얻은 `slotRects` 위치에 그린 클릭 영역, 1.8.5, 04장 D-0413, 06장 6.11.4)에서 슬롯 클릭 → 패널 텍스트 탭의 해당 슬롯 입력란 포커스. 표시 iframe은 이벤트를 보내지 않는다(R-17). 입력란 아래 "다른 문구" 덱 대안 카드(04장 CopyDeck 옵션) | 슬롯 maxLength(03장), 1.5.5.3 규칙 1~4. 500ms 입력 정지 = 1 op. 헤드라인 줄 예산(T-30): 편집한 텍스트 길이가 `headlineBudget`(03장 3.8.1)을 넘으면 그 섹션 노드의 `role_overrides[slot_id]`를 한 단계 낮춘 값(예: `t-display` → `t-1`)으로 op에 함께 기록하고, 예산 안으로 돌아오면 덱 생성 때의 값으로 되돌린다. 하향 뒤에도 넘치면 입력란 아래 "제목이 길어 {n}줄로 보여요" 경고(저장은 막지 않음, 저장 게이트가 넘침을 검사). 원천 04장 4.5.2 `role_overrides` | `text` |
 | 예시 자리 | `[예시]` 플레이스홀더·예시 연락처 슬롯은 오버레이에서 점선 밑줄, 텍스트 탭 상단 "확인이 필요한 예시 문구 {n}곳" | 연락처·주소·사업자정보 슬롯은 예시값만(`maskPII` 후 저장, 08장 8.7.5) | `text` |
 | 이미지 | 이미지 슬롯 클릭 → 같은 태그의 이미지 팩 후보 ≤ 6 | 이미지 팩만(D-27, R-34) | `candidate` |
 
@@ -901,7 +907,9 @@ type EditOp = {
 ### 1.10.3 신고 모달(S03 공개 보기·S13)
 
 - 사유 라디오: 사칭 / 피싱 / 저작권 침해 / 상표 침해 / 불법·유해 / 기타(enum `impersonation|phishing|copyright|trademark|inappropriate|other`, 00장 §10.3·08장 8.9.5), 설명 ≤ 1,000자(선택), 회신 이메일(선택).
-- 제출 `POST /api/share/:shareId/report` → "신고가 접수됐어요. 24시간 안에 검토해요". 자동 비공개 규칙은 → 00장 §10.3. 이벤트 `report_submit`.
+- 제출 버튼 위에 Cloudflare Turnstile 위젯(S04와 같은 컴포넌트, T-16). 위젯 통과 전 [신고하기] 비활성. 제출 `POST /api/share/:shareId/report {…, turnstileToken}` → "신고가 접수됐어요. 24시간 안에 검토해요". 403 `TURNSTILE_FAILED`이면 위젯을 다시 띄우고 `report.turnstileFailed` "확인이 만료됐어요. 다시 확인해 주세요". 자동 비공개 규칙은 → 00장 §10.3. 이벤트 `report_submit`.
+- 같은 Turnstile 규칙을 S14 `/support` 문의 폼과 `/sources` 권리 요청 폼에도 적용한다(06장 6.4.3 익명 창구 3종). 권리 요청 중 개인정보 요청은 접수 화면에 "계정 이메일로 확인 메일을 보냈어요. 메일의 링크를 눌러야 처리가 시작돼요"를 보여 준다(이메일이 계정과 달라도 같은 문구, 06장 T-16).
+- 자동 비공개되면 로그인 소유자에게 메일 `share_hidden_notice`가 가고 S12 해당 항목에 `me.share.underReview`가 보인다(1.11).
 
 **AC-01-43** 공유 토글을 끈 뒤 60초 안에 `/p/[shareId]`가 404를 반환하고, 신고 자동 비공개된 링크는 410 + S15 문구를 보인다. S13 DOM에 08장 고정 배너 문구가 있다.
 
@@ -913,10 +921,12 @@ type EditOp = {
 |---|---|---|
 | 진행 중 작업 | `GET /api/projects`의 `activeJobId`가 있는 프로젝트: 브랜드명, 단계, 경과 → `/g/[jobId]` | 영역 숨김 |
 | 프로젝트 | 프로젝트(브랜드 입력 1개 단위, 최대 10개) 카드: 브랜드명, 용도, 수정일, 시안 썸네일 최대 3개(각각 "다듬는 중"/"내보냄·공유함") → 시안 클릭 시 `/edit/[mockupId]`(선택 전 시안이면 `/g/[jobId]`), ⋯ 메뉴: 프로젝트 삭제(`DELETE /api/projects/:id`, 확인 후 즉시 삭제, 공유 링크 404) | "아직 만든 시안이 없어요" + [새로 진단하기] |
-| 진단 결과 | `GET /api/surveys?mine=1` 행: 날짜, 유형 이름, 시즌(`taxonomyVersion`) → `/r/[shareId]`, [이 결과로 시안 만들기] | "아직 진단 결과가 없어요" + [진단 시작] |
+| 재검사 배너(T-22 ②) | `GET /api/me`의 `retest.eligible = true`이고 `localStorage tf_retest_dismissed_{retest.resultId}`가 없으면 상단 배너 `me.retestBanner` [다시 진단하기](`POST /api/surveys {entry:'retest', restart:true}`) [닫기](localStorage 기록, 서버 상태 없음). eligible = 최신 결과 후 6~14일 ∧ 그 뒤 결과 없음(서버 판정) | 숨김 |
+| 진단 결과 | `GET /api/surveys?mine=1` 행: 날짜, 유형 이름, 시즌(`taxonomyVersion`), 공유 상태(`shareStatus`: `public` "공개" / `private` "비공개" / `under_review` → `me.share.underReview` "신고로 검토 중이에요"(T-16) / null 표시 없음) → `/r/[shareId]`, [이 결과로 시안 만들기] | "아직 진단 결과가 없어요" + [진단 시작] |
 | 한도 | `GET /api/me`의 `quota` → "오늘 남은 생성 {dayLimit−dayUsed}/{dayLimit}회 · 이번 달 {monthLimit−monthUsed}/{monthLimit}회" | — |
 | 계정 | 이메일, 로그아웃, [탈퇴 및 데이터 삭제](확인 입력 "탈퇴" 타이핑 후 `DELETE /api/me {confirm:'탈퇴'}`, 처리 기간 → 08장) | — |
 
+- **채택 후속 시트(T-22 ③, 서버 상태)**: 로그인 사용자의 S12·S09 진입 시 `GET /api/me.adoptionFollowup`이 null이 아니면 바텀 시트 1개를 띄운다(방문당 최대 1개, 같은 방문에서 S12 → S09로 가도 다시 띄우지 않음, `sessionStorage` 방문 플래그). 질문 `followup.q` "{브랜드명} 시안, 실제로 사용했나요?" + 4지 [배포했어요](`deployed`) [외주·개발자에게 전달했어요](`handed_off`) [참고만 했어요](`reference_only`) [안 썼어요](`unused`) + [닫기](`dismissed`). 선택 즉시 `POST /api/mockups/:id/adoption-followup {answer}` → 204, 시트 닫힘 + 토스트 `followup.thanks`. `dismissed`도 같은 API로 보내며 그 시안은 다시 묻지 않는다. 409 `FOLLOWUP_ALREADY_ANSWERED`는 조용히 닫는다. 대상 시안 선택(가장 오래된 1건)은 서버가 한다(06장 `MeView`).
 - 프로젝트 10개 도달 상태에서 브리프 제출 시 `409 PROJECT_LIMIT`(1.12) → "오래된 프로젝트를 지우면 새로 만들 수 있어요" + [내 기록에서 정리하기].
 - 재진단: [새로 진단하기]는 새 세션(`POST /api/surveys {entry:'retest', restart:true}`, 덮어쓰지 않음). 진행 중 세션이 있으면 이어하기를 먼저 제안. 새 결과 화면은 직전 결과 비교(1.5.2 ⑧)를 표시. 이전 노출 자극물 회피 → 02장.
 
@@ -931,7 +941,7 @@ type EditOp = {
 |---|---|---|---|---|---|
 | S01 | — (정적) | — | `unsupported_browser` | `resume_banner` | `gen_paused_banner`, `purpose_hint_selected` |
 | S02 | `loading`(스켈레톤 카드) | — | `stimulus_failed`(카드 대체 텍스트), `offline`, `session_expired`, `taxonomy_changed`, `seq_conflict` | `back_one`(이전 문항 표시) | `transition`, `early_stop`, `fast_toast` |
-| S03 | `loading`(헤더·막대 스켈레톤) | `no_similar_sites` | `not_found`(삭제 포함 404), `share_hidden`(410), `share_disabled`(503) | — | `owner`, `public`, `boundary`, `low_signal`, `confidence_low`, `override`, `compare_prev`, `season_adjusted` |
+| S03 | `loading`(헤더·막대 스켈레톤) | `no_similar_sites` | `not_found`(삭제 포함 404), `share_hidden`(410), `share_disabled`(503) | — | `owner`, `public`, `notice_low_signal`, `notice_conflict`, `notice_low_consistency`, `notice_boundary`(= `ResultView.notice`, T-25), `confidence_low`, `override`, `compare_prev`, `season_adjusted`, `retest_hint`(소유자, T-22) |
 | S04 | 버튼 스피너 | — | `link_expired`, `auth_failed`, `signup_disabled`, `turnstile_failed` | `email_sent` | — |
 | S05 | — | — | `consent_save_failed` | — | — |
 | S06 | 제출 스피너 | — | `field_errors`, `pii_masked`, `blocked_brand_high_risk`, `blocked_brand_phishing`, `attestation_required`, `invite_required`, `quota_day`, `quota_month`, `job_in_progress`, `project_limit`, `rate_limited`, `gen_paused` | `draft_restored`, `autosubmit` | `sample_filled` |
@@ -940,7 +950,7 @@ type EditOp = {
 | S09 | `loading`(SSR 편집 스켈레톤, 판정 전) | — | `save_failed`, `version_conflict`, `edit_gate_failed`, `contrast_rejected`, `gate_failed` | 새로고침 후 복원 | `gate_pending`, `auto_fixed`, `harmony_low`, `mobile_readonly`(편집 불허 기기), `narrow_edit`(편집 허용 ∧ 뷰포트 < 768, 1열 탭, T-24) |
 | S10 | `gate_pending`, `building` | — | `gate_failed`, `export_failed`, `rate_limited` | — | `placeholder_warning`, `done` |
 | S11 | — | `off` | `share_disabled`, `version_gate_not_passed` | — | `on`, `stale_version` |
-| S12 | `loading` | `empty_projects`, `empty_results` | `load_failed` | 진행 중 작업 영역 | `project_limit` |
+| S12 | `loading` | `empty_projects`, `empty_results` | `load_failed` | 진행 중 작업 영역 | `project_limit`, `retest_banner`(T-22), `adoption_sheet`(T-22, S09에서도), `share_under_review`(T-16) |
 | S13 | `loading` | — | `not_found`, `share_hidden`, `share_disabled` | — | — |
 
 ### 1.12.2 오류 코드 → 사용자 표시
@@ -977,6 +987,7 @@ type EditOp = {
 | `EDIT_GATE_FAILED`(`GATE_FAILED:G-13`) | 422 | S09 텍스트 탭 | 해당 슬롯 오류 + 마지막 op 되돌림 | "이 문구에는 쓸 수 없는 표현이 들어 있어요. 바로 전 상태로 되돌렸어요."(`reason`별 문구는 `BLOCKED_BRAND`와 같음, S-24) | — |
 | `RATE_LIMITED` | 429 | S02 시작·S06·S10·신고 | 토스트 | "요청이 많아 잠시 쉬어 가요. {retryAfterS}초 뒤에 다시 시도해 주세요." | 카운트다운 후 버튼 재활성(수치 원천 06장 6.10.1, R-31) |
 | `QUOTA_DAY` | 429 | S06·S08 | 인라인 박스 | "오늘 만들 수 있는 시안 3회를 모두 썼어요. 입력하신 내용은 저장돼 있어요. 내일 0시에 다시 만들 수 있어요." | [만든 시안 보기](S12), "더 많이 만들고 싶다면"(`paywall_view{placement:'quota_day'}`) |
+| `QUOTA_DAY`(`details.reason='cost_cap'`) | 429 | S06·S08 | 인라인 박스 | "오늘은 시안을 더 만들 수 없어요. 내일 0시에 다시 만들 수 있어요."(사유 구분 문구 없음, T-20) | [내 기록] |
 | `QUOTA_MONTH` | 429 | S06·S08 | 같음 | "이번 달 만들 수 있는 시안 15회를 모두 썼어요. 다음 달 1일에 다시 열려요." | 같음(`placement:'quota_month'`) |
 | `GEN_BUDGET_EXCEEDED` | 503 | S01 배너, S06·S08 | 배너 | "오늘 생성이 마감되었어요. 내일 0시에 다시 열려요. 진단과 편집은 그대로 할 수 있어요." | — |
 | `GEN_DISABLED` | 503 | S01 배너, S06·S08, S07(queued 잡 실패) | 배너 | "지금은 시안 생성이 잠시 멈춰 있어요. 진단과 편집은 그대로 할 수 있어요. 생성 횟수는 줄지 않았어요." | — |
@@ -1196,6 +1207,20 @@ type EditOp = {
 | `result.notice.lowConsistency` | 고른 화면들의 방향이 조금씩 달라요 — 다시 해 보면 더 정확해져요 |
 | `result.notice.boundary` | {1순위}에 가깝고, {2순위} 성향도 있어요 |
 | `result.notice.seasonAdjusted` | 디자인 기준 업데이트로 결과가 조정되었어요 |
+| `gen.cancel.refund` | 취소해도 생성 횟수는 줄지 않아요 |
+| `gen.cancel.noRefund` | 오늘은 취소해도 생성 횟수 1회가 사용돼요 |
+| `gen.cancel.used` | 이미 나온 시안이 있어서 생성 횟수 1회가 사용돼요 |
+| `result.retestHint` | 1주 뒤 다시 해 보면 결과가 얼마나 일관된지 알려드려요 |
+| `me.retestBanner` | 다시 진단해 보면 결과가 얼마나 일관된지 볼 수 있어요 |
+| `me.share.underReview` | 신고로 검토 중이에요. 검토가 끝나면 알려드릴게요 |
+| `report.turnstileFailed` | 확인이 만료됐어요. 다시 확인해 주세요 |
+| `followup.q` | {브랜드명} 시안, 실제로 사용했나요? |
+| `followup.deployed` | 배포했어요 |
+| `followup.handedOff` | 외주·개발자에게 전달했어요 |
+| `followup.referenceOnly` | 참고만 했어요 |
+| `followup.unused` | 안 썼어요 |
+| `followup.dismiss` | 닫기 |
+| `followup.thanks` | 알려 주셔서 고마워요 |
 | `result.confidence.high` / `.medium` / `.low` | 뚜렷한 편이에요 / 대체로 이쪽이에요 / 여러 취향이 섞여 있어요 |
 | `result.axis.open` | 이 축은 아직 확실하지 않아요 |
 | `result.axis.insensitive` | 이 부분은 크게 가리지 않는 편이에요 |
@@ -1205,7 +1230,16 @@ type EditOp = {
 | `login.title` | 시안을 만들고 저장하려면 로그인이 필요해요 |
 | `gen.title` | 시안을 만들고 있어요 |
 | `gen.slow` | 평소보다 조금 걸리고 있어요. 이 화면을 닫아도 계속 만들어요 |
-| `drafts.partial` | 기준을 통과한 시안만 보여드려요 |
+| `drafts.partial` | 일부 방향은 기본 구성으로 준비했어요 |
+| `drafts.fallback` | 이번엔 기준에 맞는 자동 구성을 만들지 못해 기본 구성으로 준비했어요. 생성 횟수는 줄지 않았어요 |
+| `drafts.templateCopy` | 문구는 기본 문장으로 채웠어요. 다듬기에서 바꿔 보세요 |
+| `drafts.fallbackBadge` | 기본 구성 |
+| `variant.v_true.label` | 취향 그대로 |
+| `variant.v_true.desc` | 진단한 취향에 가장 가깝게 만들었어요 |
+| `variant.v_fit.label` | 용도 최적 |
+| `variant.v_fit.desc` | {용도 라벨}에 맞게 구성과 대비를 조정했어요 |
+| `variant.v_bal.label` | 균형 |
+| `variant.v_bal.desc` | 취향과 용도 사이에서 균형을 잡았어요 |
 | `drafts.photoSubstituted` | 업종에 맞는 사진이 없어 일부는 색면으로 구성했어요 |
 | `calib.purpose` | {용도}에서는 {축}을 {방향}으로 조정했어요 |
 | `calib.type` | {유형 이름}의 범위 안에서 {축}을 {방향}으로 맞췄어요 |
@@ -1269,6 +1303,7 @@ type EditOp = {
 | `share_link_enable` / `share_link_disable` | S11 | 서버 |
 | `mockup_adopted` | S10·S11 | 서버(최초 1회) |
 | `paywall_view` / `paywall_interest` | S06·S14 | 노출·클릭 |
+| `adoption_followup_answer` | S12·S09 시트 | 서버: `POST /api/mockups/:id/adoption-followup`이 `answer ≠ dismissed`를 저장했을 때 1회(T-22). `dismissed`는 이벤트 없음 |
 | `report_submit` | 신고 모달 | 서버 |
 | `account_delete` | S12 | 서버 |
 | `ui_error_shown` (R-23) | 전 화면 | 1.12.2 문구 표시 시 `{code, screen: 'S01'..'S15'}` |
@@ -1413,6 +1448,13 @@ type EditOp = {
 | S-30 | Major | 1.4.3 mobile 고정 창·desktop w_min, ux.cardScale | |
 | T-23 (UX3-01) | Major | 1.4.3 크기 규칙 재작성(1열·토글 전환, mobile `card_h` 276 + safe-area, 하단 바 두 줄, 회전 안내 판정), 1.4.11 와이어프레임, 1.4.12 `cardScale`·`layoutMode`, 1.14.3 썸네일 탭, AC-01-55 | S-30 일부 → T-23으로 대체 |
 | T-24 (UX3-02) | Major | 1.3.1 판정 시점·SSR, 1.9 9번, 1.7.1 레일 편집 불허 CTA, 1.2 S11 진입, 1.12.1 S09 `narrow_edit`, 1.14.2 확대 행, 1.15.3 `drafts.mobile.*`, AC-01-56 | S-31 보완 |
+| T-22 (PM3-01·UX3-05) | Major | 1.5.2 ⑨ `result.retestHint`, 1.11 재검사 배너·채택 후속 시트, 1.12.1 S03·S12 상태, 1.16 `adoption_followup_answer`, 1.15.3 `me.retestBanner`·`followup.*`, AC-01-59 | S-18 보완 |
+| T-25 (UX3-03) | Major | 1.5.2 ② 서버 `ResultView.notice`·`seasonAdjusted`·신뢰도 줄 생략, 1.12.1 S03 상태명, AC-01-57 | S-29 보완 |
+| T-26 (UX3-04) | Major | 1.7.1 `labelKey`·`photoSubstituted`, 1.7.2 머리 상태·안내 선택, 1.15.3 `drafts.*`·`variant.*` 6키, AC-01-58 | S-12·S-34 보완 |
+| T-16 (LG3-05·UX3-09) | Major | 1.10.3 Turnstile·권리 요청 확인 안내·`report.turnstileFailed`, 1.11 `shareStatus`·`me.share.underReview`, 1.12.1 S12 | S-27 보완 |
+| T-20 (PM3-02) | Major | 1.6.5 시트 문구 3분기(`gen.cancel.*`, `refundableCancelsLeft`), 1.12.2 `QUOTA_DAY` `cost_cap` 행 | S-16 보완 |
+| T-35 (PD3-05) | Major | AC-01-54(S08 칩·차이 행, 07 TC-D-08) | S-32 행에 AC ID |
+| T-30 (UI3-04) | Major | 1.8.4 텍스트 편집 시 `role_overrides` 기록·경고 | |
 | S-31 | Major | 1.3.1, 1.8.7, 1.9, D-0112 | |
 | S-32·S-34·S-37(01) | Major | 1.7.1 보정 칩·차이·v_true 문구·photoSubstituted, 1.5.5.3 notice 5값, 1.15.3 키 | |
 | S-40(01) | — | 1.8.5 폰트·측정 규칙 | |
