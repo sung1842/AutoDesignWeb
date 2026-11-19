@@ -6,3 +6,12 @@ export {
   type Check,
   type StackHealth,
 } from "./health.js";
+export {
+  createDbPort,
+  q,
+  type Aal,
+  type DbPort,
+  type QueryResult,
+  type Row,
+  type Tx,
+} from "./port.js";

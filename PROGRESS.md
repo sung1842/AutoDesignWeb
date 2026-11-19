@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T15:09Z, since: 2026-11-19T15:15Z}
+- lock: {owner: 2026-11-19T15:09Z, since: 2026-11-19T15:18Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
@@ -115,6 +115,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-20 00:55 | guard 복구: DbPort·fixtures 계약 스텁(수집 0건 해소), env 비밀값 검사 audit 오탐 해소(ASM-009) → 다음: M1-02
 - 2026-11-20 00:45 | M1-01 수용 테스트 2파일(7ac566c) 자체 잠금, trace M1 17행, ASM-008 → 다음: M1-02 data-contracts
 - 2026-11-19 23:47 | M1 계획 11단위 작성, 세션 종료 unlock → 다음: M1-01 수용 테스트
 - 2026-11-19 23:46 | M0 완료: 종료 잠금 23파일, verify:m0 pass_blocked(BLK-001~005), m0-done → 다음: M1 하위 단위 계획(09장 9.4.3)
@@ -129,4 +130,3 @@
 - 2026-11-19 23:25 | M0-08 guard 1~4단계(exit 3=BLK-001), BLK-002(자체잠금 테스트 정규식 오류) → 다음: M0-09 guard 5~7
 - 2026-11-19 23:15 | BLK-001 라이선스 규칙 locked-conflict 기록(HUMAN_TODO) → 다음: M0-08 guard 1~4
 - 2026-11-19 23:10 | M0-07 web·worker health, env 종료 1, m0 stack.test 8/8 녹색 → 다음: M0-08 guard 1~4
-- 2026-11-19 22:55 | M0-06 native PG+shim 기동 확인(tastefit_app 접속), dev:stack 골격 → 다음: M0-07 health

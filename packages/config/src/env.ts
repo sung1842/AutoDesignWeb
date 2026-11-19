@@ -9,13 +9,10 @@ const LLM_MODES = ["mock", "replay", "record", "live"] as const;
 const PROFILES = ["supabase", "native"] as const;
 
 const origin = z.url({ protocol: /^https?$/ });
-const secret32 = z.string().refine((s) => Buffer.byteLength(s) >= 32, "32바이트 이상");
-const base64Secret32 = z
-  .string()
-  .refine(
-    (s) => /^[A-Za-z0-9+/_-]+={0,2}$/.test(s) && Buffer.from(s, "base64").length >= 32,
-    "32바이트 이상 base64",
-  );
+// 32바이트 하한(06장 6.13.2)은 길이 검사로 표현한다. 문자 수 ≥ 32이면 UTF-8 바이트 수도 ≥ 32(더 엄격한 쪽, ASM-009).
+const secret32 = z.string().min(32, "32바이트 이상");
+// base64 43자 이상 = 258비트 이상 = 디코딩 32바이트 이상(동치, ASM-009).
+const base64Secret32 = z.string().regex(/^[A-Za-z0-9+/_-]{43,}={0,2}$/, "32바이트 이상 base64");
 
 export interface EnvIssue {
   name: string;
