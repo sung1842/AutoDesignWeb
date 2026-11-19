@@ -290,7 +290,7 @@ TokenSet 최상위 그룹(필수): `color`, `font`, `type`, `space`, `radius`, `
 
 ### 3.1.12 내보내기용 토큰 파일 3종 [P0]
 
-내보내기 패키지 구조·README·LICENSES는 → 04장·08장. 본 장은 토큰 파일 형식만 정한다. 공통 파일 `styleguide.html`(S-35, 04장 4.16.1, E-14)은 아래 토큰 파일과 3.5 컴포넌트 템플릿만으로 컴파일하며, 파일 목록은 04장 4.16.1과 같다.
+내보내기 패키지 구조·README·LICENSES는 → 04장·08장. 본 장은 토큰 파일 형식만 정한다. 공통 파일 `styleguide.html`(S-35, 04장 4.16.1, E-14)은 **그 버전의** 아래 토큰 파일(`tokens`·`l2`)과 3.5 컴포넌트 템플릿만으로 컴파일하며, 서체·팔레트·radius 표기는 결과 화면 가이드와 같은 포맷터 `formatGuide(tokens)`를 쓴다(입력은 그 버전 토큰, 앵커 프리셋 값은 "유형 기본값" 참고 행, T-32). 파일 목록은 04장 4.16.1과 같다.
 
 | 파일 | 형식 |
 |---|---|
@@ -497,6 +497,7 @@ icon.set:   앵커 값(유형 고정)
 
 - `allowSoftRoundShadow = true`인 프리셋(T3·T4·T6)은 유형 정체성상 soft radius + 흐린 그림자가 의도된 조합이므로 04장 AIL-06을 warn으로 낮춘다(S-33, PD2-02).
 - CI `presets:lint-matrix`(S-33): 8개 프리셋 각각에서 3.4.5 허용 집합 중 값 1개만 바꾼 조합 전부를 `standardTree`로 렌더해 AIL error 0을 요구한다. 실패 조합은 `harmony.json.conflicts`에 CF-13부터 등록해 F 집합(04장 4.3)과 편집 선택지에서 자동으로 제외한다.
+- **AC-03-43**(T-35, S-33) CI `presets:lint-matrix` 리포트에 프리셋별 조합 수가 있고 AIL error 0건이다. CF-13 이후로 등록된 조합의 값은 04장 4.15 편집 선택지에서 `disabled`다(07장 TC-D-09).
 - 초기 프리셋은 운영자 설계(`provenance.method = 'operator'`, 08장 G1)이며 특정 사이트 값을 복사하지 않는다. 시즌 릴리스에서 05장 근거 리포트(도메인 ≥ 3 집계)로 조정하면 `cluster_median`으로 바뀐다.
 - 각 유형의 시그니처 후보에는 장식 효과가 아닌 시그니처가 1개 이상 있거나 장식 효과가 1개 이하로 끝나는 조합이 있다(04장 v_fit `decor.max = 1` 대응: T5는 SIG-02, T7은 SIG-08).
 - 프리셋 JSON 형식(→ 09장 B3 확장):
@@ -842,6 +843,7 @@ interface VariantDef {
   decor_slots: SignatureId[];        // 이 variant에 적용 가능한 시그니처
   slots: SlotDef[];
   mobile: MobileRule;               // 3.11.3
+  text_cols?: { lg: number; base: number };  // hero variant 필수(T-30): 텍스트 칼럼 수. lg = 12열 중(1280), base = 4열 중(375, 기본 4). 3.8.1 headlineBudget 입력
 }
 interface SlotDef {
   id: string; kind: 'copy'|'list'|'image'|'link';
@@ -999,7 +1001,7 @@ interface SlotDef {
 | FP12 | 친근한 고딕 | Gothic A1 500, **700** | DM Sans(100%) | Gothic A1 400 | — | 700 | .50 .40 .60 | N | T3, T6 |
 | FP13 | 포스터 | Black Han Sans **400** | — | Pretendard 400 | — | 700 | .45 .95 .15 | N | T5 |
 | FP14 | 볼드 그로테스크 | Wanted Sans 800, **900** | Bricolage Grotesque(96%) | Wanted Sans 400 | — | 700 | .35 .85 .30 | N | T5, T7 |
-| FP15 | 실험 디스플레이 | Wanted Sans 700, **800** | Syne(96%) | Pretendard 400 | — | 700 | .40 .80 .35 | N | T5, T6 |
+| FP15 | 실험 디스플레이 | Wanted Sans 700, **800** | Syne(96%) | Wanted Sans 400(T-33: 패밀리 2종, 옛 Pretendard 400) | — | 700 | .40 .80 .35 | N | T5, T6 |
 | FP16 | 테크 그로테스크 | Wanted Sans 500, **700**, 800 | Space Grotesk(100%) | Wanted Sans 400 | JetBrains Mono 400 | 700 | .15 .55 .35 | N | T7 |
 | FP17 | 콘솔 | SUIT 500, **700**, 800 | — | SUIT 400 | JetBrains Mono 400 | 700 | .20 .40 .40 | N | T2, T3, T7 |
 | FP18 | 단정한 휴머니스트 | IBM Plex Sans KR 500, **600**, 700 | Manrope(100%) | IBM Plex Sans KR 400 | — | 600 | .40 .35 .45 | N | T2, T3 |
@@ -1058,7 +1060,7 @@ generic: sans-serif | serif
 | 언어 | `<html lang="ko">`, 라틴 문장은 쓰지 않음(04장 CP-08) | 컴파일러 |
 | 본문 정렬 | 왼쪽 정렬만. 양쪽 정렬(justify) 금지. 가운데 정렬 본문은 3줄 이하일 때만 | 블록 템플릿 |
 | 본문 폭 | `type.measure` 36em(한글 34~38자), body 18px이면 34em | 토큰 |
-| 헤드라인 줄 수 | 데스크톱 1280에서 ≤ 2줄, 375에서 ≤ 3줄. 초과 시 결정론 순서: ① 짧은 덱 옵션 교체 → ② 해당 role 단계 1단 하향(`t-display` → `t-1` → `t-2`, 최대 1회, `spec.render_adjustments[]` 기록, H6 위반 아님) → ③ warn(S-39) | 렌더 측정 |
+| 헤드라인 줄 수 | 데스크톱 1280에서 ≤ 2줄, 375에서 ≤ 3줄. 초과 판정은 `headlineBudget` 토큰 계산(아래, T-30). 결정론 순서: ① 짧은 덱 옵션 교체 → ② 해당 role 단계 1단 하향(`t-display` → `t-1` → `t-2`, 최대 1회, 확정 트리 `role_overrides` 기록, H6 위반 아님) → ③ warn(S-39, AIL-24) | 토큰 계산(검증은 렌더 측정, AC-03-26) |
 | 고아 글자 | 헤드라인 마지막 줄이 1~2글자면 위반(덱 옵션 교체) | 렌더 측정 |
 | 하이픈 | `hyphens: manual` | — |
 
@@ -1094,7 +1096,7 @@ generic: sans-serif | serif
 | 전화번호 | `02-000-0000` 형식, `tel:` 링크 |
 | 이모지 | 제목·버튼·태그·카드 제목 안 0개(AIL-10) |
 
-**줄 예산 함수(S-39, UI2-03)**: `headlineBudget(presetTokens, variant, viewport) → maxChars = floor(textWidth / (size × 0.95)) × maxLines × 0.85`. 0.95 = 한글 평균 글자 폭 계수, 0.85 = keep-all 손실 계수(골든 세트로 보정, 변경 시 결정 기록). `textWidth`는 variant 메타 `text_cols`(`blocks.json`, 예: split 6/12, type-only 10/12, centered 8/12)로 계산하고 1280과 375 중 작은 `maxChars`를 쓴다. 04장 카피 덱의 `hero.headline` 3옵션 중 ≥ 1개는 `maxChars` 이하여야 한다(G-01).
+**줄 예산 함수(S-39, UI2-03)**: `headlineBudget(presetTokens, variant, viewport) → maxChars = floor(textWidth / (size × 0.95)) × maxLines × 0.85`. 0.95 = 한글 평균 글자 폭 계수, 0.85 = keep-all 손실 계수(골든 세트로 보정, 변경 시 결정 기록). `textWidth`는 variant 메타 `VariantDef.text_cols`로 계산한다: 1280은 `floor(1200 × lg / 12 − 24)`, 375는 `floor(343 × base / 4)`(px, `floor` 반올림, T-30). hero 6종 값(필수): `hero.full-bleed-image` {lg 7, base 4}, `hero.left-aligned` {8, 4}, `hero.offset` {6, 4}, `hero.split` {6, 4}, `hero.type-only` {10, 4}, `hero.centered` {8, 4}. 덱 제약 입력은 04장 4.6.2 `maxChars_job`(변형 3 × hero 허용 목록 × {1280, 375}의 최솟값)이고, 후보별 넘침 처리는 그 후보의 `maxChars`로 **토큰 계산**으로 판정한다(04장 4.10.2, 렌더 측정은 AC-03-26 검증 전용). 하향 결과는 확정 트리 `role_overrides`에 둔다(옛 `spec.render_adjustments[]` → T-30으로 폐지). 같은 함수를 `cta.headline`(big-type 1280 2줄·375 3줄)·`footer.wordmark`·`nav.wordmark`에도 쓴다.
 
 **AC-03-26** 골든 세트 렌더에서 고아 글자 헤드라인 0건, 375px 4줄 이상 헤드라인 0건, justify 0건(렌더 측정). 줄 넘침은 위 ① 또는 ②로 100% 해소되어 ③ 발생 0건이고, ② 비율(≤ 25%)을 기록한다(S-39).
 **AC-03-27** 3.8.2 자간 표를 크기 경계값(23/24/31/32/47/48/71/72px) × 서체 분류 3종으로 검사하는 단위 테스트가 통과한다.
@@ -1468,10 +1470,12 @@ interface HarmonyResult { score: number; items: {id: string; points: number; max
 | 서체·조판 | AC-03-22~27 |
 | 아이콘·이미지 | AC-03-28~32 |
 | 반응형·다크 | AC-03-33~35 |
-| 브랜드 | AC-03-36~37 |
+| 브랜드 | AC-03-36~37, 41(colorName) |
 | 조화 | AC-03-38~40 |
+| 텍스트 역할·줄 예산 | AC-03-42(3.1.5a), 45(expectedSize), 46(역할 커버리지) |
+| 반전 면·프리셋 조합 | AC-03-43(lint-matrix), 44(반전 면·accent 텍스트) |
 
-AC-03-01~39는 L1 결정론 테스트 또는 렌더 테스트로 매 PR에서 실행한다(07장 7.1 L1·시각 회귀). AC-03-40은 비공개 베타 전 평가(G7a)에서 1회 측정한다.
+AC-03-01~39·41~46은 L1 결정론 테스트 또는 렌더 테스트로 매 PR에서 실행한다(07장 7.1 L1·시각 회귀). AC-03-40은 비공개 베타 전 평가(G7a)에서 1회 측정한다. 마일스톤 배정은 07장 7.12.1 `acMilestones`.
 
 ---
 
@@ -1552,9 +1556,9 @@ AC-03-01~39는 L1 결정론 테스트 또는 렌더 테스트로 매 PR에서 �
 | decisions_v2 R-06 | — | 3.4.8 | 카드 풀 48 = 16 × 3 |
 | decisions_v2 R-27, R-30, R-34 | — | 3.2.1, 3.4.1, 3.10.2 | |
 | QA-10 한글 폰트 대응 | Major | 3.7.3(한글 필수), 3.7.4(스택), AC-03-23 | |
-| S-33(03) | — | 3.1.8 카드 그림자 단계, 3.4.1 `allowSoftRoundShadow`·`presets:lint-matrix`, FP15 Wanted Sans 800 | |
+| S-33(03) | — | 3.1.8 카드 그림자 단계, 3.4.1 `allowSoftRoundShadow`·`presets:lint-matrix`(AC-03-43), FP15 Wanted Sans 800(body는 T-33) | |
 | S-34(03) | — | 3.10 톤 일치, D-0309 반영 | |
-| S-35(03) | — | 3.1.12 styleguide.html | |
+| S-35(03) | — | 3.1.12 styleguide.html(입력 = 그 버전 토큰, T-32) | |
 | S-37 | — | 3.13.2 사전 가능성 판정·종료 순서·notice 5값, AC-03-36 픽스처 | |
 | S-38 | — | 3.1.5 단계 이름 t-*, 3.1.5a 텍스트 역할 표(B25), H7 정의, AC-03-42(옛 3.1.5a의 AC-03-38, T-10) | |
 | S-39 | — | 3.8.1 넘침 처리 순서, headlineBudget, AC-03-26 | |
@@ -1563,3 +1567,7 @@ AC-03-01~39는 L1 결정론 테스트 또는 렌더 테스트로 매 PR에서 �
 | T-28(UI3-02) | — | 3.1.5 `expectedSize`, 3.1.5a `nav.wordmark` = `t-lead`, C18·3.13.4, AC-03-45 | |
 | T-29(UI3-03) | — | 3.1.5a 역할 17행 추가·`price` → `pricing.price`, AC-03-46 | B25 갱신 |
 | T-10(QA3-07) | — | 3.1.5a AC-03-38 → AC-03-42(조화 쪽 AC-03-38 유지) | ID 정의 1건 |
+| T-30(UI3-04) | — | 3.8.1 `text_cols` 계산·hero 6종 값·`maxChars_job`·토큰 판정·`role_overrides`, `VariantDef.text_cols` | `render_adjustments` 폐지 |
+| T-33(PD3-03) | — | 3.7.3 FP15 body = Wanted Sans 400(패밀리 2종, AC-03-25·H4) | `pairings.json` 같게 |
+| T-35(PD3-05) | — | AC-03-43(lint-matrix) | 07 TC-D-09 |
+| T-32(PD3-02) | — | 3.1.12 styleguide 입력·`formatGuide` | |
