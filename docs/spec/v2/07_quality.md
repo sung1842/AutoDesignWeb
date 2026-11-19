@@ -142,10 +142,12 @@ LLM 모드의 원천은 09장 9.6.1(D-0908)이다. 이 장의 사용 규칙:
 
 - 모든 장의 수용 기준 ID(`AC-0X-NN`)와 이 장의 TC ID는 `qa/traceability.yaml`에 1개 이상의 테스트 식별자로 매핑된다.
   ```yaml
-  AC-02-15: [tests/unit/diagnosis/stop.spec.ts#"AC-02-15 stops at 16 valid answers"]
+  AC-02-15: [tests/acceptance/m4/diagnosis-stop.spec.ts#"AC-02-15 stops at 16 valid answers"]
   TC-E-01:  [tests/e2e/survey-edge.spec.ts#"TC-E-01 all none_of_these"]
   ```
-- `qa:trace`는 `docs/spec/FINAL/*.md`(추출 원천 경로, 7.12.1 T-02)에서 `AC-\d{2}-\d{2,3}`와 `TC-[A-Z]+-\d{2}`를 추출해, 매핑이 없거나 매핑된 테스트가 존재하지 않으면 실패한다. [P2] 표시 TC는 매핑 대상에서 제외한다. 테스트 이름에 ID를 포함한다.
+- `qa:trace`는 `docs/spec/FINAL/*.md`(추출 원천 경로, 7.12.1 T-02)에서 `AC-\d{2}-\d{2,3}[a-z]?`(접미사 포함, QA3-09)와 `TC-[A-Z]+-\d{2}`를 추출해, 매핑이 없거나 매핑된 테스트가 존재하지 않으면 실패한다. [P2] 표시 TC는 매핑 대상에서 제외한다. 테스트 이름에 ID를 포함한다.
+- **배정 위치 강제(T-09, QA3-06)**: 각 AC는 `spec:test-policy.acMilestones`(7.12.1 "AC 배정표")가 정한 마일스톤 `M<k>`의 `tests/acceptance/m<k>/` 안 테스트에 매핑되어야 PASS다. 다른 경로(`tests/unit/`, 다른 `m<j>/` 등)에만 매핑되면 FAIL이다. TC-*는 위치 제한이 없다. 사람 확인 AC(수동 등재)는 `release/manual-checklist.md`의 AC ID 행으로만 인정한다.
+- 배정표의 범위 항목 `AC-xx-a~b`는 번호 a~b의 접미사 ID(`03b`·`07a` 등)를 포함하고, 단일 항목은 정확히 그 ID만 가리킨다. 문서의 모든 AC ID는 정확히 한 마일스톤에 배정되어야 하고(0개·2개 이상 FAIL), 배정표에 없는 새 ID는 M8로 본다는 기본값을 두되 `qa:trace`는 이를 경고로 출력하고 다음 `spec-lock` 전에 표에 넣어야 한다.
 
 ---
 
@@ -474,6 +476,7 @@ ID 체계: TC-E(진단 입력) / TC-B(브랜드 입력) / TC-R(장애·복원력
 | TC-B-17 | 고위험 브랜드·피싱 문구 | 거부 `BLOCKED_BRAND`(`reason: high_risk`/`phishing_term`, R-13) | 통합 |
 | TC-B-18 | 레퍼런스 사이트명과 일치하는 name | `BRAND_ATTESTATION_REQUIRED`(422) → 체크 후 재제출 성공 | E2E |
 | TC-B-19 | `brand_color` = "#1f2a44" / "1F2A44" / "#GGGGGG" | 첫째는 대문자 정규화 허용, 나머지 거부 | L1 |
+| TC-B-20 | (T-34·T-35) 업종 키워드가 든 브리프 3종(매칭 있음·매칭 0·portfolio) | `image_tags_allowed = purposeTags ∩ industryTags`, 매칭 0이면 `{storefront} ∪ common.texture-*`, 톤 단계 선택(C1 → C2 → `fallback_variant`)이 결정론이고 `photoSubstituted`가 그 결과와 일치 → 04장 AC-04-44(M5) | L1+L2 |
 
 ### 7.4.3 TC-R 장애·복원력 (MockProvider, →09장 9.6.2)
 
@@ -552,6 +555,8 @@ ID 체계: TC-E(진단 입력) / TC-B(브랜드 입력) / TC-R(장애·복원력
 | TC-D-05 | undo 50회 / redo | 생성 원본까지 복구, 상태 해시 일치(AC-01-37), `auto_fix`는 원인 op와 함께 취소 |
 | TC-D-06 | 저장 | 서버가 재컴파일·재검사(G-01~G-12), 실패 시 저장 거부 + 원인 안내(`GATE_FAILED:<id>`) |
 | TC-D-07 | 슬롯 선택(미리보기 클릭) | 부모 오버레이 + `slotRects`로 선택, iframe 내부 스크립트 0 |
+| TC-D-08 | (T-35, S-32) S08 비교 화면 | `v_true` 외 카드에 보정 칩(`movedAxes` ≤ 2)·"취향 그대로와 다른 점" 행(`diffFromTrue` 상위 2)이 보이고 `v_true`에는 차이 행 0 → 01장 AC-01-54(M6, E2E) |
+| TC-D-09 | (T-35, S-33) `presets:lint-matrix` | 8개 프리셋 × 3.4.5 허용 값 1개 변경 리포트의 린터 error 0, CF 조합에 걸리는 값은 편집 선택지에서 `disabled` → 03장 AC-03-43(M3, CI) |
 
 ### 7.4.8 TC-X 내보내기 (→04장 4.16, D-26)
 
@@ -1088,6 +1093,20 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
 
 - 테스트에서 사양 상수를 비교 매처의 피연산자로 쓰고 그 값이 thresholds 잎 값과 우연히 같으면(예: SC-05의 10%와 `release.extractor.roundtripAbsMax` 0.10) 리터럴로 쓰지 않고 `tests/acceptance/_support/spec-constants.ts`의 이름(`SC_05_MOCK_COST_TOLERANCE` 등, 이름에 SC ID 접두어)으로 쓴다. `qa:trace --audit`는 이 파일의 각 상수가 이 표의 행 ID와 값에 일치하는지 대조하고, 일치하는 것만 감사 예외로 둔다.
 
+**AC → 마일스톤 배정표(T-09, QA3-06·PM3-04)**: 원칙은 "그 기능을 처음 만드는 마일스톤, 정할 수 없거나 사람 데이터·출시 판정이 필요하면 M8"이다. 원천은 아래 `spec:test-policy.acMilestones`이고 이 표는 그 사람용 보기다(09장 9.4는 참조만). 00장 AC-00-01·07은 문서 검사(`qa:trace --docs`)로 M0에 둔다. 신규 ID(T-36)는 미리 배정했다.
+
+| 마일스톤 | 장: AC 번호 |
+|---|---|
+| M0 스캐폴드·가드레일 | 00: 01, 07 · 06: 32, 50 · 07: 01, 04~07, 16~18, 22~25 · 09: 01~03, 08, 09, 11, 14, 15 |
+| M1 데이터 계약·DB | 02: 01, 12 · 03: 01 · 05: 02~04 · 06: 01~07, 51 · 09: 04, 05 |
+| M2 컴파일러·렌더러·폴백 | 03: 02~11, 15~38, 41, 42, 44~46 · 04: 03~11, 17, 18, 18a, 30 · 06: 24~26, 28 |
+| M3 품질 모듈 | 03: 39, 43 · 04: 12, 13, 19~21, 26, 43, 45 · 05: 12, 14, 15, 22, 24, 25 · 08: 11~16 |
+| M4 설문·진단·결과·이벤트 API | 00: 02, 03, 11, 12 · 01: 04~21, 55, 57 · 02: 02~11, 13~31, 33~37 · 03: 12~14 · 05: 10, 23 · 06: 08, 11, 12, 46 · 07: 08, 20 · 09: 17 |
+| M5 인증·브리프·생성(Mock)·한도 | 00: 14~17 · 01: 01, 02, 22~34, 51, 58 · 04: 01, 02, 14~16, 22~25, 37, 38, 44, 46, 47 · 06: 09, 10, 13, 15~18, 20~23, 38~40, 45, 47, 52, 55, 56, 59~63 · 07: 02, 13 · 08: 24~26, 38~42 · 09: 07, 13, 18 |
+| M6 편집·버전·공유·내보내기·채택 | 00: 09, 10 · 01: 35~43, 50, 52~54, 56, 59 · 04: 31~35 · 06: 27, 41, 42, 48, 65 · 08: 17~23, 27, 28 |
+| M7 운영·개인정보·어드민·골든 실행기 | 00: 04, 06, 13, 18~23 · 01: 49 · 04: 36, 39 · 05: 01, 05~09, 11, 12a, 13, 16~18 · 06: 14, 19, 29~31, 33~36, 43, 44, 49, 53, 54, 57, 58, 64, 66 · 07: 03, 09, 15, 26 · 08: 01~10, 29~37, 43, 43b, 46~48, 55~57 |
+| M8 하드닝·출시 판정 | 00: 05, 08, 24 · 01: 03, 44~48 · 02: 32 · 03: 40 · 04: 27~29, 40~42 · 05: 19~21, 26~32 · 06: 37 · 07: 10~12, 14, 19, 21 · 08: 44, 45, 49~54 · 09: 06, 10, 12, 16 |
+
 <!-- spec:test-policy -->
 ```json
 {
@@ -1103,6 +1122,17 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
   },
   "blockable": ["sim-diagnosis-gate", "survey-items-count"],
   "exitCodes": { "pass": 0, "fail": 1, "deferredOk": 2, "blockedRecorded": 3 },
+  "acMilestones": {
+    "M0": ["AC-00-01", "AC-00-07", "AC-06-32", "AC-06-50", "AC-07-01", "AC-07-04~07", "AC-07-16~18", "AC-07-22~25", "AC-09-01~03", "AC-09-08", "AC-09-09", "AC-09-11", "AC-09-14", "AC-09-15"],
+    "M1": ["AC-02-01", "AC-02-12", "AC-03-01", "AC-05-02~04", "AC-06-01~07", "AC-06-51", "AC-09-04", "AC-09-05"],
+    "M2": ["AC-03-02~11", "AC-03-15~38", "AC-03-41", "AC-03-42", "AC-03-44~46", "AC-04-03~11", "AC-04-17", "AC-04-18", "AC-04-18a", "AC-04-30", "AC-06-24~26", "AC-06-28"],
+    "M3": ["AC-03-39", "AC-03-43", "AC-04-12", "AC-04-13", "AC-04-19~21", "AC-04-26", "AC-04-43", "AC-04-45", "AC-05-12", "AC-05-14", "AC-05-15", "AC-05-22", "AC-05-24", "AC-05-25", "AC-08-11~16"],
+    "M4": ["AC-00-02", "AC-00-03", "AC-00-11", "AC-00-12", "AC-01-04~21", "AC-01-55", "AC-01-57", "AC-02-02~11", "AC-02-13~31", "AC-02-33~37", "AC-03-12~14", "AC-05-10", "AC-05-23", "AC-06-08", "AC-06-11", "AC-06-12", "AC-06-46", "AC-07-08", "AC-07-20", "AC-09-17"],
+    "M5": ["AC-00-14~17", "AC-01-01", "AC-01-02", "AC-01-22~34", "AC-01-51", "AC-01-58", "AC-04-01", "AC-04-02", "AC-04-14~16", "AC-04-22~25", "AC-04-37", "AC-04-38", "AC-04-44", "AC-04-46", "AC-04-47", "AC-06-09", "AC-06-10", "AC-06-13", "AC-06-15~18", "AC-06-20~23", "AC-06-38~40", "AC-06-45", "AC-06-47", "AC-06-52", "AC-06-55", "AC-06-56", "AC-06-59~63", "AC-07-02", "AC-07-13", "AC-08-24~26", "AC-08-38~42", "AC-09-07", "AC-09-13", "AC-09-18"],
+    "M6": ["AC-00-09", "AC-00-10", "AC-01-35~43", "AC-01-50", "AC-01-52~54", "AC-01-56", "AC-01-59", "AC-04-31~35", "AC-06-27", "AC-06-41", "AC-06-42", "AC-06-48", "AC-06-65", "AC-08-17~23", "AC-08-27", "AC-08-28"],
+    "M7": ["AC-00-04", "AC-00-06", "AC-00-13", "AC-00-18~23", "AC-01-49", "AC-04-36", "AC-04-39", "AC-05-01", "AC-05-05~09", "AC-05-11", "AC-05-12a", "AC-05-13", "AC-05-16~18", "AC-06-14", "AC-06-19", "AC-06-29~31", "AC-06-33~36", "AC-06-43", "AC-06-44", "AC-06-49", "AC-06-53", "AC-06-54", "AC-06-57", "AC-06-58", "AC-06-64", "AC-06-66", "AC-07-03", "AC-07-09", "AC-07-15", "AC-07-26", "AC-08-01~10", "AC-08-29~37", "AC-08-43", "AC-08-43b", "AC-08-46~48", "AC-08-55~57"],
+    "M8": ["AC-00-05", "AC-00-08", "AC-00-24", "AC-01-03", "AC-01-44~48", "AC-02-32", "AC-03-40", "AC-04-27~29", "AC-04-40~42", "AC-05-19~21", "AC-05-26~32", "AC-06-37", "AC-07-10~12", "AC-07-14", "AC-07-19", "AC-07-21", "AC-08-44", "AC-08-45", "AC-08-49~54", "AC-09-06", "AC-09-10", "AC-09-12", "AC-09-16"]
+  },
   "steps": [
     ["ci-green-3x", "G1"],
     ["coverage", "G1"],
@@ -1165,7 +1195,7 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
 }
 ```
 
-`config/test-policy.json`도 위 블록(`<!-- spec:test-policy -->`)에서 `spec:extract`로 만든다. `steps`는 7.11.2 단계 카탈로그(`[단계 ID, 게이트]`, T-05)이고 `release:check`는 이 목록과 보고 단계 집합이 같아야 한다. `blockable`·`exitCodes`는 종료 코드 3 규칙(T-05)이다. `deferrable`은 보류 허용표(S-03)이고 상태 enum·종료 코드 규칙은 7.11.2가 원천이다. 테스트 타임아웃 값은 04·06장이 정의하는 런타임 값과 별개로 러너 설정에만 두며 판정 기준이 아니다.
+`config/test-policy.json`도 위 블록(`<!-- spec:test-policy -->`)에서 `spec:extract`로 만든다. `acMilestones`는 AC 배정표(T-09)다. `steps`는 7.11.2 단계 카탈로그(`[단계 ID, 게이트]`, T-05)이고 `release:check`는 이 목록과 보고 단계 집합이 같아야 한다. `blockable`·`exitCodes`는 종료 코드 3 규칙(T-05)이다. `deferrable`은 보류 허용표(S-03)이고 상태 enum·종료 코드 규칙은 7.11.2가 원천이다. 테스트 타임아웃 값은 04·06장이 정의하는 런타임 값과 별개로 러너 설정에만 두며 판정 기준이 아니다.
 
 ### 7.12.2 잠금 검사 (이중 검증)
 
@@ -1264,6 +1294,7 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
 | AC-07-20 | 변이 테스트: 진단 엔진의 β를 8.0 → 8.5로 바꾸고 골든 M1a를 실행하면 FAIL한다. `build-answers`를 같은 커밋에서 2회 실행하면 바이트가 같다. |
 | AC-07-21 | (T-05, QA3-04) 메타 테스트 ① 클린 클론·`seed:temp`·키 없음·native에서 모든 자동 단계가 pass이면 `release:check` 종료 코드 2이고 `reports/release-check.json`에 카탈로그(`spec:test-policy.steps`)의 단계 ID가 전부, 그리고 그것만 있다 ② 카탈로그에 없는 단계 ID를 보고하는 가짜 단계를 넣거나 카탈로그 단계 1개를 빼면 1 ③ `sim-diagnosis-gate` fail + 결과의 `blockedBy`가 재현 명령 있는 open BLK를 가리키면 3, `blockedBy`가 없거나 BLK가 closed면 1 ④ blockable이 아닌 `coverage` fail에 BLK를 연결해도 1(그 BLK가 `locked-conflict`가 아니면) ⑤ 09장 AC-09-06과 G1 `data-provenance`를 같은 temp 픽스처로 실행하면 둘 다 "temp 묶음 있음 → 2"로 일치한다 ⑥ `LLM_MODE=live`에서 `golden-live` 리포트 `runsCompleted < 96`(예산 중단)이면 `golden-live` fail이고 종료 코드 1이다(T-21). |
 | AC-07-22 | (T-08, QA3-05) 메타 테스트: `tests/acceptance/` 안의 `expect(res.status).toBe(404)`와 `expect(list).toHaveLength(72)`는 `pnpm qa:trace --audit` PASS다. `expect(h).toBeGreaterThanOrEqual(80)`은 FAIL이고, 헬퍼 파일 `const H = 80` + `toBeGreaterThanOrEqual(H)`도 FAIL이며 둘 다 파일·줄을 출력한다. 사양 상수 표 밖의 수치를 비교 기준으로 쓰는 AC 문장 1개를 넣은 픽스처 문서에서 `qa:trace` 키 커버리지 검사가 FAIL한다. `config/forbidden-allowlist.json`에 숫자 리터럴 항목이 있으면 guard가 FAIL한다. |
+| AC-07-23 | (T-09, QA3-06) ① `pnpm qa:trace`가 00~09장 모든 AC ID(정규식 `AC-\d{2}-\d{2,3}[a-z]?`)에 대해 배정 마일스톤을 정확히 1개 출력하고 배정 없는 ID·중복 배정 ID가 0개다 ② 메타 테스트: M5 배정 AC를 `tests/unit/`에만 매핑하면 FAIL, `tests/acceptance/m4/`에만 매핑해도 FAIL, `tests/acceptance/m5/`에 매핑하면 PASS ③ `AC-06-03b`처럼 접미사가 붙은 ID가 범위 항목 `AC-06-01~07`로 배정된다 ④ 표에 없는 가짜 ID `AC-06-99`를 문서에 넣으면 경고 1건과 함께 M8로 출력된다. |
 | AC-07-24 | (T-02, QA3-08) 메타 테스트: FINAL `spec:thresholds` 블록의 값 1개를 `review-pass` 시점 블록과 다르게 만든 저장소에서 `spec-lock` 생성 절차(`pnpm spec:extract --from FINAL`·`--from review-pass` 대조)와 `pnpm guard` 6단계가 모두 FAIL한다. `review-pass` 태그가 없으면 guard가 FAIL한다. `spec:extract`·`qa:trace`의 입력 경로는 코드 상수 1개(`docs/spec/FINAL/07_quality.md`)이고 09장 9.8.1과 같다. |
 | AC-07-25 | (T-01, QA3-01) 메타 테스트: `spec-lock` 이후 `docs/spec/DECISIONS_LOG.md` 끝에 AD 1줄을 추가한 커밋에서 `pnpm guard`는 PASS다. 같은 파일의 기존 줄 1개를 수정하거나 삭제한 커밋, `docs/spec/FINAL/07_quality.md` 1바이트를 바꾼 커밋, `docs/spec/INDEX.md`를 바꾼 커밋에서는 FAIL이다. `rg 'DECISIONS_LOG'`로 CLAUDE.md·07·09를 검색하면 경로가 `docs/spec/DECISIONS_LOG.md` 하나로 나온다. |
 
@@ -1367,6 +1398,8 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
 | T-02(QA3-08) | spec 고정점 = `review-pass`, 추출 원천 `docs/spec/FINAL/07_quality.md` 1개 | 7.12.1, 7.12.2 6단계·사람 없는 운영 표, 7.12.3, 7.1.7 경로, AC-07-24 |
 | T-03(QA3-02·AI3-05) | `diagnosis.tunable`·`config/diagnosis-tuned.json` 분리, 자체 잠금 | 7.12.1 블록·잠금 대상 표·옛 키 대응표, 7.12.2 3·8단계, 7.12.3 · 탐색 규칙·AC-02-36은 02장 |
 | T-08(QA3-05·AI3-06·PM3-08·QA3-10) | `qa:trace --audit` 재정의, 신규 키 8개, 사양 상수 표, `auditAllowLiterals` | 7.12.1 블록·대응표·사양 상수 표, 7.12.2 감사 정의 표, 7.5.1, TC-C-02, AC-07-22 |
+| T-35(PD3-05) | S-32~S-34 규칙 TC 등록: TC-B-20(AC-04-44), TC-D-08(AC-01-54), TC-D-09(AC-03-43), 배정표 반영 | 7.4 카탈로그, 7.12.1 배정표 |
+| T-09(QA3-06·PM3-04) | AC → 마일스톤 배정표(00~09장 425개 ID, 신규 T-36 ID 포함), `acMilestones`, `qa:trace` 배정 위치 강제·접미사 정규식, 06 6.17 표는 참조로 | 7.1.7, 7.12.1 배정표·블록, AC-07-23 |
 | T-05(QA3-04) | 단계 카탈로그 57단계·`spec:test-policy.steps`·`blockable`·`exitCodes`, 허용표 추가(temp `data-provenance`·`extractor-roundtrip`, manual 5종, needs_ci `ci-green-3x`·`supabase-rest-rls`·`gotrue-auth-tables`), 종료 코드 3, temp 묶음 대응, "9.8" → "9.2" | 7.11.2, 7.12.1 블록, AC-07-21 |
 | T-06(AI3-01) | `extractor-roundtrip` temp 상태 분류(실패 축만 temp, reliable < 3 fail), `survey-items-count` blockable | 7.11.2 카탈로그 |
 | T-11(TL3-01) | needs_ci `supabase-rest-rls` | 7.11.2 허용표·카탈로그 |

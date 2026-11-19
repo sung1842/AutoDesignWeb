@@ -5,7 +5,7 @@
 - phase: P2
 - lock: {owner: 2026-11-19T05:57Z, since: 2026-11-19T05:57Z}
 - limit.next_reset_kst: 2026-11-19 19:57
-- 마지막 갱신: 2026-11-19 15:40 KST (예약 세션: 06-c·06-d·07-b 반영)
+- 마지막 갱신: 2026-11-19 15:40 KST (예약 세션: 06-c·06-d·07-b·07-c 반영)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -28,7 +28,7 @@
 - 라운드 2: [x] PM [x] 프로덕트 디자이너 [x] UX [x] UI [x] 테크 리드 [x] AI/ML [x] QA [x] 법무 → [x] decisions_v3(S-01~S-41) [x] 반영(아래 20단위)
 - 라운드 2 반영 단위(decisions_v3.md "반영 순서" 참고): [x] 07-a [x] 07-b [x] 07-c [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 09-a [x] 09-b [x] 09-c [x] 04-a [x] 04-b [x] 04-c [x] 03 [x] 02 [x] 05 [x] 01 [x] 08 [x] 00 [x] 잔여 표기 grep
 - 라운드 3: [x] PM [x] 프로덕트 디자이너 [x] UX [x] UI [x] 테크 리드 [x] AI/ML [x] QA [x] 법무 → [x] decisions_v4(T-01~T-36) [ ] 반영(아래 22단위)
-- 라운드 3 반영 단위(decisions_v4.md "반영 순서" 참고): [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 07-a [x] 07-b [ ] 07-c [ ] 07-d [ ] 09-a [ ] 09-b [ ] 09-c [ ] 01-a [ ] 01-b [ ] 04-a [ ] 04-b [ ] 03-a [ ] 03-b [ ] 08-a [ ] 02-a [ ] 05-a [ ] 00-a [ ] 잔여 표기 grep
+- 라운드 3 반영 단위(decisions_v4.md "반영 순서" 참고): [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 07-a [x] 07-b [x] 07-c [ ] 07-d [ ] 09-a [ ] 09-b [ ] 09-c [ ] 01-a [ ] 01-b [ ] 04-a [ ] 04-b [ ] 03-a [ ] 03-b [ ] 08-a [ ] 02-a [ ] 05-a [ ] 00-a [ ] 잔여 표기 grep
 - 판정 기록(라운드별 C1/C2/C3):
   - R2 PM: FAIL/FAIL/FAIL (Blocker 0, Major 5: 예산-목표 불일치, 취소 시 한도 규칙 충돌, KPI 쿼리 분모, 검증 표본 확보, 00↔07·09 불일치)
   - R2 UX: FAIL/FAIL/FAIL (1라운드 19/19 해결, Blocker 0, Major 3: 결과 신뢰 문구 01↔02 불일치, 진단 카드 크기 규칙이 실제 화면에서 불성립, 편집 가능 판정을 화면 폭으로 해 200% 확대 시 편집 소실)
@@ -57,6 +57,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 15:30 | 07-c 반영: AC → 마일스톤 배정표(00~09장 425 ID, 중복·누락 0 스크립트 확인)·acMilestones·qa:trace 배정 위치 강제·접미사 정규식, 06 6.17 참조화, TC-B-20·TC-D-08·09(T-35), AC-07-23. AD-017
 - 2026-11-19 15:20 | 07-b 반영: 7.11.2 단계 카탈로그 57단계·허용표 확장·종료 코드 3·temp 묶음 대응, spec:test-policy steps·blockable·exitCodes, 골든 리포트 runsCompleted, AC-07-21. AD-016
 - 2026-11-19 15:06 | 06-d 반영: 오류 코드 6종, 익명 창구 turnstileToken·privacy_request 본인 확인(verify 엔드포인트)·메일 템플릿 표·shareStatus, MeView(refundableCancelsLeft·retest·adoptionFollowup), adoption-followup API, ResultView.notice·seasonAdjusted, GenerationView.copySource, MockupCard.photoSubstituted, styleguide.html, AC-06-65·66, 6.19 정리. AD-013~015
 - 2026-11-19 15:03 | 06-c 반영: 6.9.4 전면 개정(캐시 예열 순서·기본 경로 공식 $0.23363·attempt별 예약·실효 cap 비례 생략·usage_overrun·Mock usage 픽스처·cost_spike/cost_ramp/usage_overrun), llm_calls.cache_write_tokens_in, A4·A11, AC-06-07·21·56 개정·61·62, T-20 취소 환불 2회/일·USER_DAILY_COST_CAP_USD·cancel_generation_job·AC-06-63, T-21 EVAL_* 예산·집계 분리·AC-06-64, T-08 진단 perf 키. AD-010~012. (재개 예약은 예약 실행 중 생성 불가)
