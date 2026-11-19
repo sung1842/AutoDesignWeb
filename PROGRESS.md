@@ -27,7 +27,8 @@
 ## P2. 리뷰 루프
 - 라운드 2: [x] PM [x] 프로덕트 디자이너 [x] UX [x] UI [x] 테크 리드 [x] AI/ML [x] QA [x] 법무 → [x] decisions_v3(S-01~S-41) [x] 반영(아래 20단위)
 - 라운드 2 반영 단위(decisions_v3.md "반영 순서" 참고): [x] 07-a [x] 07-b [x] 07-c [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 09-a [x] 09-b [x] 09-c [x] 04-a [x] 04-b [x] 04-c [x] 03 [x] 02 [x] 05 [x] 01 [x] 08 [x] 00 [x] 잔여 표기 grep
-- 라운드 3: [x] PM [x] 프로덕트 디자이너 [x] UX [x] UI [x] 테크 리드 [x] AI/ML [x] QA [x] 법무 → [ ] decisions_v4 [ ] 반영
+- 라운드 3: [x] PM [x] 프로덕트 디자이너 [x] UX [x] UI [x] 테크 리드 [x] AI/ML [x] QA [x] 법무 → [x] decisions_v4(T-01~T-36) [ ] 반영(아래 22단위)
+- 라운드 3 반영 단위(decisions_v4.md "반영 순서" 참고): [ ] 06-a [ ] 06-b [ ] 06-c [ ] 06-d [ ] 07-a [ ] 07-b [ ] 07-c [ ] 07-d [ ] 09-a [ ] 09-b [ ] 09-c [ ] 01-a [ ] 01-b [ ] 04-a [ ] 04-b [ ] 03-a [ ] 03-b [ ] 08-a [ ] 02-a [ ] 05-a [ ] 00-a [ ] 잔여 표기 grep
 - 판정 기록(라운드별 C1/C2/C3):
   - R2 PM: FAIL/FAIL/FAIL (Blocker 0, Major 5: 예산-목표 불일치, 취소 시 한도 규칙 충돌, KPI 쿼리 분모, 검증 표본 확보, 00↔07·09 불일치)
   - R2 UX: FAIL/FAIL/FAIL (1라운드 19/19 해결, Blocker 0, Major 3: 결과 신뢰 문구 01↔02 불일치, 진단 카드 크기 규칙이 실제 화면에서 불성립, 편집 가능 판정을 화면 폭으로 해 200% 확대 시 편집 소실)
@@ -56,6 +57,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 10:22 | decisions_v4 작성(T-01~T-36, Blocker 3·Major 37 전부 대응, Minor는 선택 반영표). AD-008·009 기록, T-17·T-11 사람 검토 HUMAN_TODO
 - 2026-11-19 10:10 | 라운드 3 PD·법무 리뷰 작성 → 8개 수집 완료. 합계 Blocker 3(QA3-01·TL3-01·LG3-01), Major 37. 다음은 decisions_v4
 - 2026-11-19 09:58 | 라운드 3 UI·AI/ML 리뷰 작성(UI FAIL/FAIL/PASS M4, AI FAIL×3 M5)
 - 2026-11-19 09:40 | 라운드 3 QA·테크 리드 리뷰 작성(QA FAIL/FAIL/PASS B1·M7, TECH FAIL×3 B1·M3)
