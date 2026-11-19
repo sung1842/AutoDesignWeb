@@ -1,0 +1,49 @@
+{
+  "id": "GS-25",
+  "provenance": "temp",
+  "kind": "edge",
+  "purpose": "saas",
+  "persona": {
+    "thetaStar": {
+      "expression": 0.5,
+      "temperature": 0.5,
+      "shape": 0.5,
+      "density": 0.5,
+      "depth": 0.5
+    },
+    "simulator": {
+      "beta": 16,
+      "policy": "none_of_these",
+      "seed": 25
+    }
+  },
+  "answers": null,
+  "brand": {
+    "name": "테스트앱",
+    "description": "업무를 더 빠르게 끝내도록 돕는 서비스입니다",
+    "primaryAction": "signup",
+    "keyPoints": [
+      "[임시] 핵심 장점 하나",
+      "[임시] 핵심 장점 둘"
+    ]
+  },
+  "expected": {
+    "typeId": "T7",
+    "anchorPresetId": "PS-T7",
+    "muRef": null,
+    "flags": [
+      "low_signal"
+    ],
+    "brandNameIn": [
+      "nav",
+      "hero",
+      "footer"
+    ],
+    "mustNotLint": [
+      "error:*"
+    ],
+    "fallbackAllowed": false,
+    "typeIdProvisional": true,
+    "noteKo": "μ·σ 사전값 유지(02장 AC-02-04) → `flags:[\"low_signal\"]`, 유형은 02장 신호 부족 규칙, 시안 3개 정상 생성"
+  }
+}

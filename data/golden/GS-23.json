@@ -1,0 +1,45 @@
+{
+  "id": "GS-23",
+  "provenance": "temp",
+  "kind": "core",
+  "purpose": "portfolio",
+  "persona": {
+    "thetaStar": {
+      "expression": 0.75,
+      "temperature": 0.65,
+      "shape": 0.25,
+      "density": 0.25,
+      "depth": 0.05
+    },
+    "simulator": {
+      "beta": 16,
+      "policy": "argmax",
+      "seed": 23
+    }
+  },
+  "answers": null,
+  "brand": {
+    "name": "윤채아 패션",
+    "description": "작업과 경력을 한곳에 모아 소개하는 페이지입니다",
+    "primaryAction": "view_work",
+    "keyPoints": [
+      "[임시] 핵심 장점 하나",
+      "[임시] 핵심 장점 둘"
+    ]
+  },
+  "expected": {
+    "typeId": "T8",
+    "anchorPresetId": "PS-T8",
+    "muRef": null,
+    "flags": [],
+    "brandNameIn": [
+      "nav",
+      "hero",
+      "footer"
+    ],
+    "mustNotLint": [
+      "error:*"
+    ],
+    "fallbackAllowed": false
+  }
+}

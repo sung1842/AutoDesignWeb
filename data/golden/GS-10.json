@@ -1,0 +1,45 @@
+{
+  "id": "GS-10",
+  "provenance": "temp",
+  "kind": "core",
+  "purpose": "saas",
+  "persona": {
+    "thetaStar": {
+      "expression": 0.4,
+      "temperature": 0.95,
+      "shape": 0.67,
+      "density": 0.5,
+      "depth": 0.39
+    },
+    "simulator": {
+      "beta": 16,
+      "policy": "argmax",
+      "seed": 10
+    }
+  },
+  "answers": null,
+  "brand": {
+    "name": "큐레잇",
+    "description": "업무를 더 빠르게 끝내도록 돕는 서비스입니다",
+    "primaryAction": "signup",
+    "keyPoints": [
+      "[임시] 핵심 장점 하나",
+      "[임시] 핵심 장점 둘"
+    ]
+  },
+  "expected": {
+    "typeId": "T4",
+    "anchorPresetId": "PS-T4",
+    "muRef": null,
+    "flags": [],
+    "brandNameIn": [
+      "nav",
+      "hero",
+      "footer"
+    ],
+    "mustNotLint": [
+      "error:*"
+    ],
+    "fallbackAllowed": false
+  }
+}

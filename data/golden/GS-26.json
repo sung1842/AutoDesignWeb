@@ -1,0 +1,47 @@
+{
+  "id": "GS-26",
+  "provenance": "temp",
+  "kind": "edge",
+  "purpose": "local_business",
+  "persona": {
+    "thetaStar": {
+      "expression": 1,
+      "temperature": 1,
+      "shape": 1,
+      "density": 1,
+      "depth": 1
+    },
+    "simulator": {
+      "beta": 16,
+      "policy": "argmax",
+      "seed": 26
+    }
+  },
+  "answers": null,
+  "brand": {
+    "name": "빛나는 디저트",
+    "description": "동네에서 매일 문을 여는 작은 가게입니다",
+    "primaryAction": "menu",
+    "keyPoints": [
+      "[임시] 핵심 장점 하나",
+      "[임시] 핵심 장점 둘"
+    ]
+  },
+  "expected": {
+    "typeId": "T6",
+    "anchorPresetId": "PS-T6",
+    "muRef": null,
+    "flags": [],
+    "brandNameIn": [
+      "nav",
+      "hero",
+      "footer"
+    ],
+    "mustNotLint": [
+      "error:*"
+    ],
+    "fallbackAllowed": false,
+    "typeIdProvisional": true,
+    "noteKo": "μ ∈ [0,1], 04장 용도 허용 범위 처리 후 하드 게이트 전부(G-01~G-13) 통과, `v_true` TM은 04장 정의대로 기록"
+  }
+}

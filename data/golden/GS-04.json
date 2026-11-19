@@ -1,0 +1,41 @@
+{
+  "id": "GS-04",
+  "provenance": "temp",
+  "kind": "core",
+  "purpose": "saas",
+  "persona": {
+    "thetaStar": {
+      "expression": 0.25,
+      "temperature": 0.28,
+      "shape": 0.12,
+      "density": 0.62,
+      "depth": 0.05
+    },
+    "simulator": {
+      "beta": 16,
+      "policy": "argmax",
+      "seed": 4
+    }
+  },
+  "answers": null,
+  "brand": {
+    "name": "핏로그",
+    "description": "업무를 더 빠르게 끝내도록 돕는 서비스입니다",
+    "primaryAction": "demo"
+  },
+  "expected": {
+    "typeId": "T2",
+    "anchorPresetId": "PS-T2",
+    "muRef": null,
+    "flags": [],
+    "brandNameIn": [
+      "nav",
+      "hero",
+      "footer"
+    ],
+    "mustNotLint": [
+      "error:*"
+    ],
+    "fallbackAllowed": false
+  }
+}

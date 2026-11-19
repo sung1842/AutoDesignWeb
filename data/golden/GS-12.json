@@ -1,0 +1,46 @@
+{
+  "id": "GS-12",
+  "provenance": "temp",
+  "kind": "core",
+  "purpose": "local_business",
+  "persona": {
+    "thetaStar": {
+      "expression": 0.4,
+      "temperature": 0.95,
+      "shape": 0.72,
+      "density": 0.5,
+      "depth": 0.29
+    },
+    "simulator": {
+      "beta": 16,
+      "policy": "argmax",
+      "seed": 12
+    }
+  },
+  "answers": null,
+  "brand": {
+    "name": "바람결 플라워",
+    "description": "동네에서 매일 문을 여는 작은 가게입니다",
+    "primaryAction": "contact",
+    "keyPoints": [
+      "[임시] 핵심 장점 하나",
+      "[임시] 핵심 장점 둘"
+    ],
+    "brandColor": "#1F2A44"
+  },
+  "expected": {
+    "typeId": "T4",
+    "anchorPresetId": "PS-T4",
+    "muRef": null,
+    "flags": [],
+    "brandNameIn": [
+      "nav",
+      "hero",
+      "footer"
+    ],
+    "mustNotLint": [
+      "error:*"
+    ],
+    "fallbackAllowed": false
+  }
+}

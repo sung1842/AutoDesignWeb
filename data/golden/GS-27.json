@@ -1,0 +1,47 @@
+{
+  "id": "GS-27",
+  "provenance": "temp",
+  "kind": "edge",
+  "purpose": "portfolio",
+  "persona": {
+    "thetaStar": {
+      "expression": 0,
+      "temperature": 0,
+      "shape": 0,
+      "density": 0,
+      "depth": 0
+    },
+    "simulator": {
+      "beta": 16,
+      "policy": "argmax",
+      "seed": 27
+    }
+  },
+  "answers": null,
+  "brand": {
+    "name": "무명 아카이브",
+    "description": "작업과 경력을 한곳에 모아 소개하는 페이지입니다",
+    "primaryAction": "view_work",
+    "keyPoints": [
+      "[임시] 핵심 장점 하나",
+      "[임시] 핵심 장점 둘"
+    ]
+  },
+  "expected": {
+    "typeId": "T2",
+    "anchorPresetId": "PS-T2",
+    "muRef": null,
+    "flags": [],
+    "brandNameIn": [
+      "nav",
+      "hero",
+      "footer"
+    ],
+    "mustNotLint": [
+      "error:*"
+    ],
+    "fallbackAllowed": false,
+    "typeIdProvisional": true,
+    "noteKo": "μ ∈ [0,1], 04장 용도 허용 범위 처리 후 하드 게이트 전부(G-01~G-13) 통과, `v_true` TM은 04장 정의대로 기록"
+  }
+}

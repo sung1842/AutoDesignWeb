@@ -1,0 +1,48 @@
+{
+  "id": "GS-30",
+  "provenance": "temp",
+  "kind": "edge",
+  "purpose": "local_business",
+  "persona": {
+    "thetaStar": {
+      "expression": 0.16,
+      "temperature": 0.36,
+      "shape": 0.72,
+      "density": 0.07,
+      "depth": 0.34
+    },
+    "simulator": {
+      "beta": 16,
+      "policy": "argmax",
+      "seed": 30
+    }
+  },
+  "answers": null,
+  "brand": {
+    "name": "골목안쪽작은빵집과커피를함께하는한결같은동네가게오래머무는곳",
+    "description": "골목 안쪽에서 매일 아침 반죽을 하고 저녁까지 천천히 구워 내는 작은 빵집이며 계절 재료로 만든 디저트와 커피를 함께 내는 동네 사랑방 같은 곳",
+    "primaryAction": "reserve",
+    "keyPoints": [
+      "매일 아침 직접 반죽해서 굽는 천연 발효 사워도우 빵과 계절 과일로 만든",
+      "동네 단골이 오래 머물 수 있도록 창가 쪽에 넓은 테이블과 콘센트를 넉넉",
+      "주말에는 미리 예약한 손님에게 갓 구운 빵을 따뜻할 때 바로 포장해 드리"
+    ]
+  },
+  "expected": {
+    "typeId": "T3",
+    "anchorPresetId": "PS-T3",
+    "muRef": null,
+    "flags": [],
+    "brandNameIn": [
+      "nav",
+      "hero",
+      "footer"
+    ],
+    "mustNotLint": [
+      "error:*"
+    ],
+    "fallbackAllowed": false,
+    "typeIdProvisional": false,
+    "noteKo": "375px에서 G-04~G-06 통과(넘침·잘림·겹침 0)"
+  }
+}

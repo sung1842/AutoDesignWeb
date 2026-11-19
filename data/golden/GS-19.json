@@ -1,0 +1,45 @@
+{
+  "id": "GS-19",
+  "provenance": "temp",
+  "kind": "core",
+  "purpose": "saas",
+  "persona": {
+    "thetaStar": {
+      "expression": 0.54,
+      "temperature": 0.23,
+      "shape": 0.32,
+      "density": 0.67,
+      "depth": 0.75
+    },
+    "simulator": {
+      "beta": 16,
+      "policy": "argmax",
+      "seed": 19
+    }
+  },
+  "answers": null,
+  "brand": {
+    "name": "데이터숲",
+    "description": "업무를 더 빠르게 끝내도록 돕는 서비스입니다",
+    "primaryAction": "demo",
+    "keyPoints": [
+      "[임시] 핵심 장점 하나",
+      "[임시] 핵심 장점 둘"
+    ]
+  },
+  "expected": {
+    "typeId": "T7",
+    "anchorPresetId": "PS-T7",
+    "muRef": null,
+    "flags": [],
+    "brandNameIn": [
+      "nav",
+      "hero",
+      "footer"
+    ],
+    "mustNotLint": [
+      "error:*"
+    ],
+    "fallbackAllowed": false
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "id": "GS-13",
+  "provenance": "temp",
+  "kind": "core",
+  "purpose": "saas",
+  "persona": {
+    "thetaStar": {
+      "expression": 0.95,
+      "temperature": 0.52,
+      "shape": 0.05,
+      "density": 0.95,
+      "depth": 0.56
+    },
+    "simulator": {
+      "beta": 16,
+      "policy": "argmax",
+      "seed": 13
+    }
+  },
+  "answers": null,
+  "brand": {
+    "name": "로그웨이브",
+    "description": "업무를 더 빠르게 끝내도록 돕는 서비스입니다",
+    "primaryAction": "demo",
+    "keyPoints": [
+      "[임시] 핵심 장점 하나",
+      "[임시] 핵심 장점 둘"
+    ]
+  },
+  "expected": {
+    "typeId": "T5",
+    "anchorPresetId": "PS-T5",
+    "muRef": null,
+    "flags": [],
+    "brandNameIn": [
+      "nav",
+      "hero",
+      "footer"
+    ],
+    "mustNotLint": [
+      "error:*"
+    ],
+    "fallbackAllowed": false
+  }
+}

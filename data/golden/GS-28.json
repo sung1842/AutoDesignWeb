@@ -1,0 +1,49 @@
+{
+  "id": "GS-28",
+  "provenance": "temp",
+  "kind": "edge",
+  "purpose": "saas",
+  "persona": {
+    "thetaStar": {
+      "expression": 0.58,
+      "temperature": 0.44,
+      "shape": 0.36,
+      "density": 0.56,
+      "depth": 0.45
+    },
+    "simulator": {
+      "beta": 16,
+      "policy": "alternate:T3,T5",
+      "seed": 28
+    }
+  },
+  "answers": null,
+  "brand": {
+    "name": "하이브리드랩",
+    "description": "업무를 더 빠르게 끝내도록 돕는 서비스입니다",
+    "primaryAction": "demo",
+    "keyPoints": [
+      "[임시] 핵심 장점 하나",
+      "[임시] 핵심 장점 둘"
+    ]
+  },
+  "expected": {
+    "typeId": "T7",
+    "anchorPresetId": "PS-T7",
+    "muRef": null,
+    "flags": [
+      "conflict"
+    ],
+    "brandNameIn": [
+      "nav",
+      "hero",
+      "footer"
+    ],
+    "mustNotLint": [
+      "error:*"
+    ],
+    "fallbackAllowed": false,
+    "typeIdProvisional": true,
+    "noteKo": "평균 벡터로 생성하지 않음, `flags` ⊇ `conflict`, 생성 닻은 1순위 앵커 1개(02장 AC-02-19)"
+  }
+}

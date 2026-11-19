@@ -1,0 +1,45 @@
+{
+  "id": "GS-06",
+  "provenance": "temp",
+  "kind": "core",
+  "purpose": "local_business",
+  "persona": {
+    "thetaStar": {
+      "expression": 0.3,
+      "temperature": 0.18,
+      "shape": 0.12,
+      "density": 0.62,
+      "depth": 0.05
+    },
+    "simulator": {
+      "beta": 16,
+      "policy": "argmax",
+      "seed": 6
+    }
+  },
+  "answers": null,
+  "brand": {
+    "name": "온기제과",
+    "description": "동네에서 매일 문을 여는 작은 가게입니다",
+    "primaryAction": "menu",
+    "keyPoints": [
+      "[임시] 핵심 장점 하나",
+      "[임시] 핵심 장점 둘"
+    ]
+  },
+  "expected": {
+    "typeId": "T2",
+    "anchorPresetId": "PS-T2",
+    "muRef": null,
+    "flags": [],
+    "brandNameIn": [
+      "nav",
+      "hero",
+      "footer"
+    ],
+    "mustNotLint": [
+      "error:*"
+    ],
+    "fallbackAllowed": false
+  }
+}

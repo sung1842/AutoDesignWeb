@@ -1,0 +1,49 @@
+{
+  "id": "GS-29",
+  "provenance": "temp",
+  "kind": "edge",
+  "purpose": "local_business",
+  "persona": {
+    "thetaStar": {
+      "expression": 0.48,
+      "temperature": 0.73,
+      "shape": 0.19,
+      "density": 0.13,
+      "depth": 0
+    },
+    "simulator": {
+      "beta": 16,
+      "policy": "argmax",
+      "seed": 29
+    }
+  },
+  "answers": null,
+  "brand": {
+    "name": "경계카페",
+    "description": "동네에서 매일 문을 여는 작은 가게입니다",
+    "primaryAction": "visit",
+    "keyPoints": [
+      "[임시] 핵심 장점 하나",
+      "[임시] 핵심 장점 둘"
+    ]
+  },
+  "expected": {
+    "typeId": "T8",
+    "anchorPresetId": "PS-T8",
+    "muRef": null,
+    "flags": [
+      "tie"
+    ],
+    "brandNameIn": [
+      "nav",
+      "hero",
+      "footer"
+    ],
+    "mustNotLint": [
+      "error:*"
+    ],
+    "fallbackAllowed": false,
+    "typeIdProvisional": true,
+    "noteKo": "02장 동률 규칙의 결정론적 결과, 3회 실행 유형 동일, `flags` ⊇ `tie`, `is_boundary=true`"
+  }
+}

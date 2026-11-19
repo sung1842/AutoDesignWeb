@@ -1,0 +1,45 @@
+{
+  "id": "GS-03",
+  "provenance": "temp",
+  "kind": "core",
+  "purpose": "local_business",
+  "persona": {
+    "thetaStar": {
+      "expression": 0.21,
+      "temperature": 0.81,
+      "shape": 0.12,
+      "density": 0.05,
+      "depth": 0.05
+    },
+    "simulator": {
+      "beta": 16,
+      "policy": "argmax",
+      "seed": 3
+    }
+  },
+  "answers": null,
+  "brand": {
+    "name": "소담공방",
+    "description": "동네에서 매일 문을 여는 작은 가게입니다",
+    "primaryAction": "visit",
+    "keyPoints": [
+      "[임시] 핵심 장점 하나",
+      "[임시] 핵심 장점 둘"
+    ]
+  },
+  "expected": {
+    "typeId": "T1",
+    "anchorPresetId": "PS-T1",
+    "muRef": null,
+    "flags": [],
+    "brandNameIn": [
+      "nav",
+      "hero",
+      "footer"
+    ],
+    "mustNotLint": [
+      "error:*"
+    ],
+    "fallbackAllowed": false
+  }
+}

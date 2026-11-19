@@ -1,0 +1,46 @@
+{
+  "id": "GS-20",
+  "provenance": "temp",
+  "kind": "core",
+  "purpose": "portfolio",
+  "persona": {
+    "thetaStar": {
+      "expression": 0.54,
+      "temperature": 0.18,
+      "shape": 0.27,
+      "density": 0.62,
+      "depth": 0.7
+    },
+    "simulator": {
+      "beta": 16,
+      "policy": "argmax",
+      "seed": 20
+    }
+  },
+  "answers": null,
+  "brand": {
+    "name": "오세린 브랜딩",
+    "description": "작업과 경력을 한곳에 모아 소개하는 페이지입니다",
+    "primaryAction": "view_work",
+    "keyPoints": [
+      "[임시] 핵심 장점 하나",
+      "[임시] 핵심 장점 둘"
+    ],
+    "brandColor": "#B70203"
+  },
+  "expected": {
+    "typeId": "T7",
+    "anchorPresetId": "PS-T7",
+    "muRef": null,
+    "flags": [],
+    "brandNameIn": [
+      "nav",
+      "hero",
+      "footer"
+    ],
+    "mustNotLint": [
+      "error:*"
+    ],
+    "fallbackAllowed": false
+  }
+}

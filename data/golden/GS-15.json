@@ -1,0 +1,45 @@
+{
+  "id": "GS-15",
+  "provenance": "temp",
+  "kind": "core",
+  "purpose": "local_business",
+  "persona": {
+    "thetaStar": {
+      "expression": 0.95,
+      "temperature": 0.57,
+      "shape": 0.05,
+      "density": 0.95,
+      "depth": 0.56
+    },
+    "simulator": {
+      "beta": 16,
+      "policy": "argmax",
+      "seed": 15
+    }
+  },
+  "answers": null,
+  "brand": {
+    "name": "새벽커피로스터스",
+    "description": "동네에서 매일 문을 여는 작은 가게입니다",
+    "primaryAction": "visit",
+    "keyPoints": [
+      "[임시] 핵심 장점 하나",
+      "[임시] 핵심 장점 둘"
+    ]
+  },
+  "expected": {
+    "typeId": "T5",
+    "anchorPresetId": "PS-T5",
+    "muRef": null,
+    "flags": [],
+    "brandNameIn": [
+      "nav",
+      "hero",
+      "footer"
+    ],
+    "mustNotLint": [
+      "error:*"
+    ],
+    "fallbackAllowed": false
+  }
+}

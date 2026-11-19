@@ -1824,6 +1824,183 @@ function genApprovals(ctx: Ctx): Out[] {
   return [{ path: "data/survey/approvals.json", content: bundle(ctx, "approvals", items) }];
 }
 
+// ---------- B13 references/seed.json (09장 9.2.4 B13, 쿼터 05장 5.2.2) ----------
+function genReferences(ctx: Ctx): Out[] {
+  const cents = [...specCentroids(ctx.root).entries()];
+  const purposes = ["saas", "portfolio", "local_business"];
+  const tiers = ["T1", "T2", "T3"];
+  const items: Obj[] = [];
+  for (let i = 0; i < 60; i++) {
+    // 유형당 7~8개: T1~T4 8개, T5~T8 7개 (32 + 28 = 60)
+    const ti = i < 32 ? Math.floor(i / 8) : 4 + Math.floor((i - 32) / 7);
+    const [typeId, c] = cents[ti] ?? ["T1", [0.5, 0.5, 0.5, 0.5, 0.5]];
+    const l1 = c.map(
+      (v) => Math.round(Math.min(1, Math.max(0, v + (ctx.rand() * 0.3 - 0.15))) * 100) / 100,
+    );
+    const nn = String(i + 1).padStart(2, "0");
+    items.push({
+      id: `tmp_ref_${nn}`,
+      url: `https://tmp-ref-${nn}.invalid/`,
+      domain: `tmp-ref-${nn}.invalid`,
+      titleKo: `[임시] 레퍼런스 ${nn}`,
+      typeId,
+      l1,
+      tier: tiers[i % 3],
+      purpose: purposes[Math.floor(i / 3) % 3],
+      styleTags: [],
+      badgeKo: "[임시]",
+      robotsCheckedAt: "temp:not-checked",
+      termsCheckedAt: "temp:not-checked",
+      optOut: false,
+    });
+  }
+  return [{ path: "data/references/seed.json", content: bundle(ctx, "references", items) }];
+}
+
+// ---------- B16 golden/GS-NN.json (07장 7.2.2 스키마·7.2.3 구성표 32행 골격, muRef·answers null(T-04)) ----------
+const AXIS_KEY_BY_NAME = ["expression", "temperature", "shape", "density", "depth"];
+const DEFAULT_ACTION_DESC: Record<string, string> = {
+  saas: "업무를 더 빠르게 끝내도록 돕는 서비스입니다",
+  portfolio: "작업과 경력을 한곳에 모아 소개하는 페이지입니다",
+  local_business: "동네에서 매일 문을 여는 작은 가게입니다",
+};
+
+/** grapheme 기준 정확히 n자(끝 공백은 마침표로 바꿔 trim 손실 없음). */
+function fitLen(text: string, n: number): string {
+  const seg = [...new Intl.Segmenter("ko", { granularity: "grapheme" }).segment(text)].map(
+    (x) => x.segment,
+  );
+  const out = seg.slice(0, n);
+  if (out[out.length - 1] === " ") out[out.length - 1] = ".";
+  if (out.length < n) throw new Error(`fitLen: ${text} < ${n}`);
+  return out.join("");
+}
+
+function genGolden(ctx: Ctx): Out[] {
+  const rows = table(section(chapter(ctx.root, "07_quality.md"), "### 7.2.3"));
+  const edgeRows = new Map(
+    table(
+      section(chapter(ctx.root, "07_quality.md"), "### 7.2.3").split("엣지 케이스 기대 결과")[1] ??
+        "",
+    ).map((r) => [r[0] ?? "", r[1] ?? ""]),
+  );
+  const cents = specCentroids(ctx.root);
+  const clipG = (x: number): number => Math.round(Math.min(0.95, Math.max(0.05, x)) * 100) / 100;
+  const nearest = (v: number[]): string =>
+    [...cents.entries()]
+      .map(([t, c]) => ({ t, d: Math.hypot(...c.map((x, i) => x - (v[i] ?? 0))) }))
+      .sort((a, b) => a.d - b.d || (a.t < b.t ? -1 : 1))[0]?.t ?? "T1";
+  const pairs = [...cents.entries()].flatMap(([a, ca], i) =>
+    [...cents.entries()]
+      .slice(i + 1)
+      .map(([b, cb]) => ({ a, b, d: Math.hypot(...ca.map((x, k) => x - (cb[k] ?? 0))), ca, cb })),
+  );
+  const far = [...pairs].sort((x, y) => y.d - x.d)[0];
+  const close = [...pairs].sort((x, y) => x.d - y.d)[0];
+  const mid = (p: typeof far): number[] =>
+    p
+      ? p.ca.map((x, k) => Math.round(((x + (p.cb[k] ?? 0)) / 2) * 100) / 100)
+      : [0.5, 0.5, 0.5, 0.5, 0.5];
+  const theta = new Map<string, number[]>();
+  const out: Out[] = [];
+  for (const r of rows) {
+    const id = r[0] ?? "";
+    if (!/^GS-\d\d$/.test(id)) continue;
+    const num = Number(id.slice(3));
+    const kind = r[1] ?? "";
+    const typeCell = r[2] ?? "";
+    const purpose = r[3] ?? "";
+    const off = r[4] ?? "";
+    let th: number[];
+    let policy = "argmax";
+    const flags: string[] = [];
+    const same = /^GS-\d\d와 동일$|^GS-\d\d과 동일$/.test(off) ? off.slice(0, 5) : null;
+    if (same) th = theta.get(same) ?? [0.5, 0.5, 0.5, 0.5, 0.5];
+    else if (/^T[1-8]$/.test(typeCell)) {
+      const c = [...(cents.get(typeCell) ?? [])];
+      for (const m of off.matchAll(/([a-z]+) ([+−-])0\.05/g)) {
+        const k = AXIS_KEY_BY_NAME.indexOf(m[1] ?? "");
+        if (k >= 0) c[k] = (c[k] ?? 0) + (m[2] === "+" ? 0.05 : -0.05);
+      }
+      th = c.map(clipG);
+    } else if (off.includes("전 축 1.0")) th = [1, 1, 1, 1, 1];
+    else if (off.includes("전 축 0.0")) th = [0, 0, 0, 0, 0];
+    else if (typeCell === "상충") {
+      th = mid(far);
+      policy = `alternate:${far?.a ?? ""},${far?.b ?? ""}`;
+      flags.push("conflict");
+    } else if (typeCell === "동률") {
+      th = mid(close);
+      flags.push("tie");
+    } else {
+      th = [0.5, 0.5, 0.5, 0.5, 0.5];
+      policy = "none_of_these";
+      flags.push("low_signal");
+    }
+    theta.set(id, th);
+    const typeId = /^T[1-8]$/.test(typeCell) ? typeCell : nearest(th);
+    const nameCell = r[5] ?? "";
+    let name = nameCell.replace(/^"|"$/g, "");
+    if (nameCell.startsWith("name 30자"))
+      name = fitLen("골목안쪽작은빵집과커피를함께하는한결같은동네가게오래머무는곳", 30);
+    const feat = r[7] ?? "";
+    const brand: Obj = {
+      name: [...name].slice(0, 30).join(""),
+      description: DEFAULT_ACTION_DESC[purpose] ?? "",
+      primaryAction: r[6] ?? "",
+    };
+    if (!feat.includes("key_points 0개") && !feat.includes("key_points 3개"))
+      brand.keyPoints = ["[임시] 핵심 장점 하나", "[임시] 핵심 장점 둘"];
+    if (feat.includes("key_points 3개")) {
+      brand.description = fitLen(
+        "골목 안쪽에서 매일 아침 반죽을 하고 저녁까지 천천히 구워 내는 작은 빵집이며 계절 재료로 만든 디저트와 커피를 함께 내는 동네 사랑방 같은 곳입니다",
+        80,
+      );
+      brand.keyPoints = [
+        "매일 아침 직접 반죽해서 굽는 천연 발효 사워도우 빵과 계절 과일로 만든 타르트",
+        "동네 단골이 오래 머물 수 있도록 창가 쪽에 넓은 테이블과 콘센트를 넉넉히 둔 자리",
+        "주말에는 미리 예약한 손님에게 갓 구운 빵을 따뜻할 때 바로 포장해 드리는 서비스",
+      ].map((x) => fitLen(x, 40)); // 7.2.3 GS-30: 전 필드 상한(01장 1.5.5.2)
+    }
+    if (feat.includes("key_points 영문")) brand.keyPoints = ["Fast payment", "Simple setup"];
+    const color = /#[0-9A-F]{6}/i.exec(feat)?.[0];
+    if (color) brand.brandColor = color.toUpperCase();
+    if (feat.includes("audience")) brand.audience = "브랜드 문구가 필요한 작은 회사";
+    const desc = /description "([^"]+)"/.exec(feat)?.[1];
+    if (desc) brand.description = desc;
+    const gs: Obj = {
+      id,
+      provenance: "temp",
+      kind,
+      purpose,
+      persona: {
+        thetaStar: Object.fromEntries(AXIS_KEY_BY_NAME.map((k, i) => [k, th[i] ?? 0])),
+        simulator: { beta: 16, policy, seed: num },
+      },
+      answers: null,
+      brand,
+      expected: {
+        typeId,
+        anchorPresetId: `PS-${typeId}`,
+        muRef: null,
+        flags,
+        brandNameIn: ["nav", "hero", "footer"],
+        mustNotLint: ["error:*"],
+        fallbackAllowed: false,
+        ...(kind === "edge"
+          ? {
+              typeIdProvisional: !/^T[1-8]$/.test(typeCell),
+              noteKo: edgeRows.get(id) ?? edgeRows.get("GS-26/27") ?? "",
+            }
+          : {}),
+      },
+    };
+    out.push({ path: `data/golden/${id}.json`, content: stable(gs) });
+  }
+  if (out.length !== 32) throw new Error(`7.2.3 골든 ${out.length} ≠ 32`);
+  return out;
+}
+
 /** 생성기 목록(의존 순서). 나머지 묶음은 M1-04b 이후 단위에서 추가한다. */
 export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genAxes,
@@ -1847,6 +2024,8 @@ export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genCardPlan,
   genAbPlan,
   genApprovals,
+  genReferences,
+  genGolden,
 ];
 
 function isHuman(abs: string): boolean {

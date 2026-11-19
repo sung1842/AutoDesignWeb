@@ -1,0 +1,45 @@
+{
+  "id": "GS-21",
+  "provenance": "temp",
+  "kind": "core",
+  "purpose": "local_business",
+  "persona": {
+    "thetaStar": {
+      "expression": 0.59,
+      "temperature": 0.23,
+      "shape": 0.32,
+      "density": 0.62,
+      "depth": 0.65
+    },
+    "simulator": {
+      "beta": 16,
+      "policy": "argmax",
+      "seed": 21
+    }
+  },
+  "answers": null,
+  "brand": {
+    "name": "라온 필라테스",
+    "description": "동네에서 매일 문을 여는 작은 가게입니다",
+    "primaryAction": "reserve",
+    "keyPoints": [
+      "[임시] 핵심 장점 하나",
+      "[임시] 핵심 장점 둘"
+    ]
+  },
+  "expected": {
+    "typeId": "T7",
+    "anchorPresetId": "PS-T7",
+    "muRef": null,
+    "flags": [],
+    "brandNameIn": [
+      "nav",
+      "hero",
+      "footer"
+    ],
+    "mustNotLint": [
+      "error:*"
+    ],
+    "fallbackAllowed": false
+  }
+}

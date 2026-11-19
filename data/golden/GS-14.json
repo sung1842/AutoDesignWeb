@@ -1,0 +1,45 @@
+{
+  "id": "GS-14",
+  "provenance": "temp",
+  "kind": "core",
+  "purpose": "portfolio",
+  "persona": {
+    "thetaStar": {
+      "expression": 0.95,
+      "temperature": 0.57,
+      "shape": 0.05,
+      "density": 0.95,
+      "depth": 0.51
+    },
+    "simulator": {
+      "beta": 16,
+      "policy": "argmax",
+      "seed": 14
+    }
+  },
+  "answers": null,
+  "brand": {
+    "name": "최우진 3D",
+    "description": "작업과 경력을 한곳에 모아 소개하는 페이지입니다",
+    "primaryAction": "view_work",
+    "keyPoints": [
+      "[임시] 핵심 장점 하나",
+      "[임시] 핵심 장점 둘"
+    ]
+  },
+  "expected": {
+    "typeId": "T5",
+    "anchorPresetId": "PS-T5",
+    "muRef": null,
+    "flags": [],
+    "brandNameIn": [
+      "nav",
+      "hero",
+      "footer"
+    ],
+    "mustNotLint": [
+      "error:*"
+    ],
+    "fallbackAllowed": false
+  }
+}

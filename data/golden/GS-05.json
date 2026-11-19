@@ -1,0 +1,45 @@
+{
+  "id": "GS-05",
+  "provenance": "temp",
+  "kind": "core",
+  "purpose": "portfolio",
+  "persona": {
+    "thetaStar": {
+      "expression": 0.3,
+      "temperature": 0.23,
+      "shape": 0.17,
+      "density": 0.67,
+      "depth": 0.05
+    },
+    "simulator": {
+      "beta": 16,
+      "policy": "argmax",
+      "seed": 5
+    }
+  },
+  "answers": null,
+  "brand": {
+    "name": "이도현 UX",
+    "description": "작업과 경력을 한곳에 모아 소개하는 페이지입니다",
+    "primaryAction": "contact",
+    "keyPoints": [
+      "[임시] 핵심 장점 하나",
+      "[임시] 핵심 장점 둘"
+    ]
+  },
+  "expected": {
+    "typeId": "T2",
+    "anchorPresetId": "PS-T2",
+    "muRef": null,
+    "flags": [],
+    "brandNameIn": [
+      "nav",
+      "hero",
+      "footer"
+    ],
+    "mustNotLint": [
+      "error:*"
+    ],
+    "fallbackAllowed": false
+  }
+}

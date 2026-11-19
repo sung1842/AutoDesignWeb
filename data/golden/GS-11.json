@@ -1,0 +1,45 @@
+{
+  "id": "GS-11",
+  "provenance": "temp",
+  "kind": "core",
+  "purpose": "portfolio",
+  "persona": {
+    "thetaStar": {
+      "expression": 0.35,
+      "temperature": 0.95,
+      "shape": 0.72,
+      "density": 0.55,
+      "depth": 0.34
+    },
+    "simulator": {
+      "beta": 16,
+      "policy": "argmax",
+      "seed": 11
+    }
+  },
+  "answers": null,
+  "brand": {
+    "name": "박지민 일러스트",
+    "description": "작업과 경력을 한곳에 모아 소개하는 페이지입니다",
+    "primaryAction": "resume",
+    "keyPoints": [
+      "[임시] 핵심 장점 하나",
+      "[임시] 핵심 장점 둘"
+    ]
+  },
+  "expected": {
+    "typeId": "T4",
+    "anchorPresetId": "PS-T4",
+    "muRef": null,
+    "flags": [],
+    "brandNameIn": [
+      "nav",
+      "hero",
+      "footer"
+    ],
+    "mustNotLint": [
+      "error:*"
+    ],
+    "fallbackAllowed": false
+  }
+}
