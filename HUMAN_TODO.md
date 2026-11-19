@@ -17,3 +17,4 @@
 - [ ] (BLK-001) 의존성 라이선스 규칙 충돌: next·sharp·eslint의 간접 의존성에 LGPL-3.0(libvips)·CC-BY-4.0·BlueOak·0BSD·Python-2.0이 있음. 09장 F12 허용 라이선스 확장 여부를 결정하고 relock해 주세요(BLOCKED.md BLK-001)
 - [ ] (BLK-002) 자체 잠금된 m0 수용 테스트 1건의 정규식 오류(DECISIONS_LOG 경로 검사). BLOCKED.md BLK-002의 수정안대로 고치고 relock해 주세요
 - [ ] (AD-027) `docs/dependency-allowlist.md`의 zod 사용 범위에 루트 scripts(guard)를 추가할지 확인해 주세요
+- [ ] (BLK-003) 사양 상수 표(07장 7.12.1)에 96(골든 잡 수)·19(축별 A/B 최소 쌍)·0.00001(비용 합계 허용오차) 행 추가 여부를 결정하고 relock해 주세요(BLOCKED.md BLK-003)

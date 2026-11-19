@@ -4,10 +4,12 @@
 //   --upto M<k>          종료 코드 판정을 M0..M<k> 배정 AC로 한정(진행 중 마일스톤용. 출력은 전체)
 //   --spec-dir <dir>     추출 원천 디렉터리(기본 docs/spec/FINAL)
 //   --audit              AC 배정(중복 0) + 리터럴 감사(audit.ts). 매핑 완전성은 보지 않는다(7.11.2 qa-trace 단계)
-//   --docs·--key-coverage는 이후 단위에서 추가한다.
+//   --key-coverage       키 커버리지만(key-coverage.ts). --audit에도 포함된다. BLK-003 항목만 있으면 종료 3
+//   --docs는 이후 단위에서 추가한다.
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { audit } from "./audit.js";
+import { keyCoverage, type CoverageHit } from "./key-coverage.js";
 
 export const AC_RE = /AC-\d{2}-\d{2,3}[a-z]?/g;
 export const TC_RE = /TC-[A-Z]+-\d{2}/g;
@@ -160,6 +162,7 @@ function main(argv: string[]): number {
   const specDir = arg(argv, "--spec-dir") ?? join(root, "docs/spec/FINAL");
   const r = trace(root, specDir);
   if (argv.includes("--audit")) return auditMain(root, specDir, r);
+  if (argv.includes("--key-coverage")) return coverageCode(printCoverage(root, specDir));
   const upto = arg(argv, "--upto");
   const k = upto ? Number(upto.replace(/^M/, "")) : 8;
   const gated = Object.entries(r.results).filter(([, v]) => Number(v.milestone.slice(1)) <= k);
@@ -178,6 +181,21 @@ function main(argv: string[]): number {
   return fails.length || tcFails.length || r.duplicated.length || r.unassigned.length ? 1 : 0;
 }
 
+function printCoverage(root: string, specDir: string): CoverageHit[] {
+  const hits = keyCoverage(root, specDir);
+  for (const h of hits) {
+    const tag = h.blockedBy ? `BLOCKED ${h.blockedBy}` : "FAIL";
+    process.stdout.write(
+      `${tag} key-coverage ${h.file}:${h.line}: 비교 수치 "${h.text}"(${h.value})가 thresholds 키·사양 상수 표 밖\n`,
+    );
+  }
+  return hits;
+}
+
+/** 0 통과 · 1 fail · 3 BLOCKED 기록 항목만(test-policy exitCodes). */
+const coverageCode = (hits: CoverageHit[]): number =>
+  hits.some((h) => !h.blockedBy) ? 1 : hits.length ? 3 : 0;
+
 function auditMain(root: string, specDir: string, r: TraceReport): number {
   const hits = audit(root, specDir);
   for (const id of r.duplicated) process.stdout.write(`FAIL ${id}: 중복 배정\n`);
@@ -186,10 +204,12 @@ function auditMain(root: string, specDir: string, r: TraceReport): number {
     const via = h.decl === h.use ? "" : ` (리터럴 위치 ${h.decl})`;
     process.stdout.write(`FAIL audit ${h.use}: thresholds 잎 값 리터럴 ${h.value}${via}\n`);
   }
+  const cov = printCoverage(root, specDir);
   process.stdout.write(
-    `qa:trace --audit: 중복 배정 ${r.duplicated.length}, 리터럴 ${hits.length}\n`,
+    `qa:trace --audit: 중복 배정 ${r.duplicated.length}, 리터럴 ${hits.length}, 키 커버리지 ${cov.length}(blocked ${cov.filter((h) => h.blockedBy).length})\n`,
   );
-  return hits.length || r.duplicated.length ? 1 : 0;
+  if (hits.length || r.duplicated.length) return 1;
+  return coverageCode(cov);
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) process.exitCode = main(process.argv.slice(2));
