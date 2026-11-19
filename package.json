@@ -32,7 +32,7 @@
     "verify:m8": "tsx scripts/verify/run.ts m8",
     "data:validate": "tsx scripts/data/validate.ts",
     "seed:temp": "tsx scripts/data/seed-temp.ts",
-    "db:seed": "tsx scripts/todo.ts db:seed M1",
+    "db:seed": "tsx scripts/data/db-seed.ts",
     "survey:build": "tsx scripts/todo.ts survey:build M4",
     "eval:golden": "tsx scripts/todo.ts eval:golden M7",
     "release:check": "tsx scripts/todo.ts release:check M8"

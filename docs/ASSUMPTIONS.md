@@ -150,3 +150,10 @@
 - 선택: M1에는 4.13 AIL-01~24 규칙별 pos-1(violation)·neg-1(clean) 골격만 둔다(`skeleton: true`, page·tokens null). M3 시작 단위에서 실제 예시로 교체한 뒤 자체 잠금한다(PROGRESS M3 이월)
 - 영향 범위: data/linter/examples/**, M3 ①
 - 되돌리기 비용: 낮음
+
+## ASM-022 · M1 · gap · 2026-11-19T17:28Z
+- 질문: db:seed의 대상 테이블과 temp 데이터의 DB 표현(B13에는 사람 라벨이 없는데 AC-05-02는 primary 라벨을 요구, 프리셋·정규화기 status)
+- 근거 탐색: 06장 6.3.3(0002·0003·blocked_brands 주석)·6.16 시드 규칙, 05장 5.3.6·AC-05-02, 09장 9.2.4 B13·B18, 08장 8.9.2
+- 선택: 대상 = taxonomy_releases(envelope taxonomyVersion, active, 공개일 = 분기 첫 월요일)·types·presets·sources('direct' 1행)·reference_sites·reference_labels·normalizers·blocked_brands, 전부 upsert. temp B13이면 primary 라벨을 유도: axes = round(1+4·l1)(1..5), l2 = 같은 유형 앵커 프리셋 l2, type_primary = typeId, checklist S-04/05/08/10 = "temp", rater op·session `seed:temp`, reference_sites.flags = ['temp']. human B13이면 라벨을 만들지 않는다(라벨 도구 몫). 프리셋은 status approved(앱이 읽을 수 있게, provenance jsonb에 temp 표시가 그대로 남음), 정규화기는 status draft(temp는 released 금지, 이미 released면 덮지 않음)
+- 영향 범위: scripts/data/db-seed.ts, M4 닮은 사이트·survey:build
+- 되돌리기 비용: 낮음
