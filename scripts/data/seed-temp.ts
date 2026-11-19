@@ -1347,6 +1347,98 @@ function genTokenSchema(ctx: Ctx): Out[] {
   ];
 }
 
+// ---------- B6 fonts/registry.json (03장 3.7.2) · B7 fonts/pairings.json (03장 3.7.3) ----------
+// id는 tmp_ 접두(ASM-008 자유 id 묶음). 페어링의 장 ID(FP01~)는 `code`에 두고 프리셋 l2는 code를 쓴다(ASM-013).
+// 폰트 원본 파일은 사람 묶음(HUMAN_TODO B6)이라 temp에는 `files: []`(filesPending).
+const fontSourceUrl = (src: string, family: string): string => {
+  if (src.startsWith("github.com")) return `https://${src}`;
+  if (src === "fonts.google.com")
+    return `https://fonts.google.com/specimen/${family.replace(/ /g, "+")}`;
+  return `https://${src}/`;
+};
+const familyOf = (cell: string): string => cell.replace(/\(.*\)$/, "").trim();
+
+function fontRows(root: string): string[][] {
+  return table(section(chapter(root, "03_design_system.md"), "### 3.7.2"));
+}
+
+function genFonts(ctx: Ctx): Out[] {
+  const items: Obj[] = fontRows(ctx.root).map((r) => {
+    const family = familyOf(r[1] ?? "");
+    const src = fontSourceUrl(r[5] ?? "", family);
+    const item: Obj = {
+      id: `tmp_${r[0] ?? ""}`,
+      code: r[0] ?? "",
+      family,
+      script: r[2] ?? "",
+      classification: r[3] ?? "",
+      buildWeights: (r[4] ?? "").split(",").map((w) => Number(w.trim())),
+      license: "OFL-1.1",
+      licenseUrl: src,
+      sourceUrl: src,
+      files: [],
+      filesPending: true,
+      reservedFontName: false,
+      verifiedAt: null,
+      subsetFamily: `tf-${r[0] ?? ""}`,
+    };
+    if (r[6]) item.noteKo = r[6];
+    return item;
+  });
+  return [{ path: "data/fonts/registry.json", content: bundle(ctx, "fonts", items) }];
+}
+
+function genPairings(ctx: Ctx): Out[] {
+  const fonts = fontRows(ctx.root).map((r) => ({
+    id: `tmp_${r[0] ?? ""}`,
+    family: familyOf(r[1] ?? ""),
+    cls: r[3] ?? "",
+  }));
+  const fontByName = (name: string): { id: string; cls: string } => {
+    const f = fonts.find((x) => name.startsWith(x.family));
+    if (!f) throw new Error(`3.7.3 서체 ${name} 없음`);
+    return f;
+  };
+  const rows = table(section(chapter(ctx.root, "03_design_system.md"), "### 3.7.3"));
+  const items: Obj[] = rows.map((r) => {
+    const headCell = (r[2] ?? "").replace(/\([^)]*\)/g, "");
+    const head = fontByName(headCell);
+    const weights = [...headCell.matchAll(/(\*\*)?(\d{3})(\*\*)?/g)].map((m) => ({
+      w: m[2] ?? "",
+      def: m[1] === "**",
+    }));
+    const latin = (r[3] ?? "") === "—" ? null : fontByName(familyOf(r[3] ?? ""));
+    const adj = /\((\d+)%\)/.exec(r[3] ?? "")?.[1];
+    const body = fontByName((r[4] ?? "").replace(/\(.*\)/, "").trim());
+    const mono = (r[5] ?? "") === "—" ? null : fontByName(r[5] ?? "");
+    const [temp, expr, soft] = (r[7] ?? "").split(/\s+/).map(Number);
+    const item: Obj = {
+      id: `tmp_${r[0] ?? ""}`,
+      code: r[0] ?? "",
+      nameKo: r[1] ?? "",
+      headingFontId: head.id,
+      bodyFontId: body.id,
+      headlineWeights: weights.map((x) => x.w),
+      defaultHeadlineWeight: weights.find((x) => x.def)?.w ?? weights[0]?.w ?? "",
+      emphasisWeight: Number(/(\d{3})/.exec(r[6] ?? "")?.[1] ?? "700"),
+      sig: { temp: temp ?? 0, expr: expr ?? 0, soft: soft ?? 0 },
+      contrastSerif: (r[8] ?? "") === "Y",
+      allowedTypes: (r[9] ?? "").split(",").map((t) => t.trim()),
+      classHeading: head.cls,
+      classBody: body.cls,
+      tags: [...new Set([head.cls, body.cls, ...(mono ? ["mono"] : [])])],
+    };
+    if (latin) {
+      item.headingLatinFontId = latin.id;
+      item.latinSizeAdjust = Number(adj ?? "100") / 100;
+    }
+    if (mono) item.labelFontId = mono.id;
+    if ((r[2] ?? "").includes("≥ 48px")) item.weightNotesKo = "300은 ≥ 48px 단계만";
+    return item;
+  });
+  return [{ path: "data/fonts/pairings.json", content: bundle(ctx, "pairings", items) }];
+}
+
 /** 생성기 목록(의존 순서). 나머지 묶음은 M1-04b 이후 단위에서 추가한다. */
 export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genAxes,
@@ -1363,6 +1455,8 @@ export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genComponents,
   genBlocks,
   genTokenSchema,
+  genFonts,
+  genPairings,
 ];
 
 function isHuman(abs: string): boolean {

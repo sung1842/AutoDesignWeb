@@ -1,0 +1,514 @@
+{
+  "bundle": "fonts",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "tmp_kr-pretendard",
+      "code": "kr-pretendard",
+      "family": "Pretendard",
+      "script": "hangul",
+      "classification": "sans_neo_grotesque",
+      "buildWeights": [
+        400,
+        500,
+        700,
+        800
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://github.com/orioncactus/pretendard",
+      "sourceUrl": "https://github.com/orioncactus/pretendard",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-kr-pretendard"
+    },
+    {
+      "id": "tmp_kr-suit",
+      "code": "kr-suit",
+      "family": "SUIT",
+      "script": "hangul",
+      "classification": "sans_geometric",
+      "buildWeights": [
+        400,
+        500,
+        700,
+        800
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://github.com/sun-typeface/SUIT",
+      "sourceUrl": "https://github.com/sun-typeface/SUIT",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-kr-suit"
+    },
+    {
+      "id": "tmp_kr-wanted",
+      "code": "kr-wanted",
+      "family": "Wanted Sans",
+      "script": "hangul",
+      "classification": "sans_neo_grotesque",
+      "buildWeights": [
+        400,
+        500,
+        700,
+        800,
+        900
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://github.com/wanteddev/wanted-sans",
+      "sourceUrl": "https://github.com/wanteddev/wanted-sans",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-kr-wanted"
+    },
+    {
+      "id": "tmp_kr-plex",
+      "code": "kr-plex",
+      "family": "IBM Plex Sans KR",
+      "script": "hangul",
+      "classification": "sans_humanist",
+      "buildWeights": [
+        400,
+        500,
+        600,
+        700
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://github.com/IBM/plex",
+      "sourceUrl": "https://github.com/IBM/plex",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-kr-plex"
+    },
+    {
+      "id": "tmp_kr-gothic-a1",
+      "code": "kr-gothic-a1",
+      "family": "Gothic A1",
+      "script": "hangul",
+      "classification": "sans_neo_grotesque",
+      "buildWeights": [
+        400,
+        500,
+        700
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://fonts.google.com/specimen/Gothic+A1",
+      "sourceUrl": "https://fonts.google.com/specimen/Gothic+A1",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-kr-gothic-a1"
+    },
+    {
+      "id": "tmp_kr-noto-serif",
+      "code": "kr-noto-serif",
+      "family": "Noto Serif KR",
+      "script": "hangul",
+      "classification": "serif",
+      "buildWeights": [
+        400,
+        500,
+        600,
+        700
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://github.com/notofonts/noto-cjk",
+      "sourceUrl": "https://github.com/notofonts/noto-cjk",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-kr-noto-serif"
+    },
+    {
+      "id": "tmp_kr-maruburi",
+      "code": "kr-maruburi",
+      "family": "MaruBuri",
+      "script": "hangul",
+      "classification": "serif",
+      "buildWeights": [
+        300,
+        400,
+        600,
+        700
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://hangeul.naver.com/",
+      "sourceUrl": "https://hangeul.naver.com/",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-kr-maruburi",
+      "noteKo": "배포 라이선스 OFL 여부 원문 확인 필수"
+    },
+    {
+      "id": "tmp_kr-hahmlet",
+      "code": "kr-hahmlet",
+      "family": "Hahmlet",
+      "script": "hangul",
+      "classification": "serif",
+      "buildWeights": [
+        400,
+        500,
+        600
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://fonts.google.com/specimen/Hahmlet",
+      "sourceUrl": "https://fonts.google.com/specimen/Hahmlet",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-kr-hahmlet"
+    },
+    {
+      "id": "tmp_kr-gowun-batang",
+      "code": "kr-gowun-batang",
+      "family": "Gowun Batang",
+      "script": "hangul",
+      "classification": "serif",
+      "buildWeights": [
+        400,
+        700
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://fonts.google.com/specimen/Gowun+Batang",
+      "sourceUrl": "https://fonts.google.com/specimen/Gowun+Batang",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-kr-gowun-batang"
+    },
+    {
+      "id": "tmp_kr-gowun-dodum",
+      "code": "kr-gowun-dodum",
+      "family": "Gowun Dodum",
+      "script": "hangul",
+      "classification": "sans_humanist",
+      "buildWeights": [
+        400
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://fonts.google.com/specimen/Gowun+Dodum",
+      "sourceUrl": "https://fonts.google.com/specimen/Gowun+Dodum",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-kr-gowun-dodum",
+      "noteKo": "굵기 1종"
+    },
+    {
+      "id": "tmp_kr-black-han",
+      "code": "kr-black-han",
+      "family": "Black Han Sans",
+      "script": "hangul",
+      "classification": "display",
+      "buildWeights": [
+        400
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://fonts.google.com/specimen/Black+Han+Sans",
+      "sourceUrl": "https://fonts.google.com/specimen/Black+Han+Sans",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-kr-black-han",
+      "noteKo": "헤드라인 전용"
+    },
+    {
+      "id": "tmp_kr-do-hyeon",
+      "code": "kr-do-hyeon",
+      "family": "Do Hyeon",
+      "script": "hangul",
+      "classification": "display",
+      "buildWeights": [
+        400
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://fonts.google.com/specimen/Do+Hyeon",
+      "sourceUrl": "https://fonts.google.com/specimen/Do+Hyeon",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-kr-do-hyeon",
+      "noteKo": "헤드라인 전용"
+    },
+    {
+      "id": "tmp_en-fraunces",
+      "code": "en-fraunces",
+      "family": "Fraunces",
+      "script": "latin",
+      "classification": "serif",
+      "buildWeights": [
+        600,
+        700
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://fonts.google.com/specimen/Fraunces",
+      "sourceUrl": "https://fonts.google.com/specimen/Fraunces",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-en-fraunces"
+    },
+    {
+      "id": "tmp_en-instrument-serif",
+      "code": "en-instrument-serif",
+      "family": "Instrument Serif",
+      "script": "latin",
+      "classification": "serif",
+      "buildWeights": [
+        400
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://fonts.google.com/specimen/Instrument+Serif",
+      "sourceUrl": "https://fonts.google.com/specimen/Instrument+Serif",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-en-instrument-serif",
+      "noteKo": "고대비"
+    },
+    {
+      "id": "tmp_en-newsreader",
+      "code": "en-newsreader",
+      "family": "Newsreader",
+      "script": "latin",
+      "classification": "serif",
+      "buildWeights": [
+        600
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://fonts.google.com/specimen/Newsreader",
+      "sourceUrl": "https://fonts.google.com/specimen/Newsreader",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-en-newsreader"
+    },
+    {
+      "id": "tmp_en-dm-serif",
+      "code": "en-dm-serif",
+      "family": "DM Serif Display",
+      "script": "latin",
+      "classification": "serif",
+      "buildWeights": [
+        400
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://fonts.google.com/specimen/DM+Serif+Display",
+      "sourceUrl": "https://fonts.google.com/specimen/DM+Serif+Display",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-en-dm-serif",
+      "noteKo": "고대비"
+    },
+    {
+      "id": "tmp_en-cormorant",
+      "code": "en-cormorant",
+      "family": "Cormorant",
+      "script": "latin",
+      "classification": "serif",
+      "buildWeights": [
+        400,
+        500
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://fonts.google.com/specimen/Cormorant",
+      "sourceUrl": "https://fonts.google.com/specimen/Cormorant",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-en-cormorant",
+      "noteKo": "고대비"
+    },
+    {
+      "id": "tmp_en-space-grotesk",
+      "code": "en-space-grotesk",
+      "family": "Space Grotesk",
+      "script": "latin",
+      "classification": "sans_neo_grotesque",
+      "buildWeights": [
+        600,
+        700
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://fonts.google.com/specimen/Space+Grotesk",
+      "sourceUrl": "https://fonts.google.com/specimen/Space+Grotesk",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-en-space-grotesk"
+    },
+    {
+      "id": "tmp_en-dm-sans",
+      "code": "en-dm-sans",
+      "family": "DM Sans",
+      "script": "latin",
+      "classification": "sans_geometric",
+      "buildWeights": [
+        700
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://fonts.google.com/specimen/DM+Sans",
+      "sourceUrl": "https://fonts.google.com/specimen/DM+Sans",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-en-dm-sans"
+    },
+    {
+      "id": "tmp_en-manrope",
+      "code": "en-manrope",
+      "family": "Manrope",
+      "script": "latin",
+      "classification": "sans_geometric",
+      "buildWeights": [
+        600
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://fonts.google.com/specimen/Manrope",
+      "sourceUrl": "https://fonts.google.com/specimen/Manrope",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-en-manrope"
+    },
+    {
+      "id": "tmp_en-jakarta",
+      "code": "en-jakarta",
+      "family": "Plus Jakarta Sans",
+      "script": "latin",
+      "classification": "sans_geometric",
+      "buildWeights": [
+        700
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://fonts.google.com/specimen/Plus+Jakarta+Sans",
+      "sourceUrl": "https://fonts.google.com/specimen/Plus+Jakarta+Sans",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-en-jakarta"
+    },
+    {
+      "id": "tmp_en-bricolage",
+      "code": "en-bricolage",
+      "family": "Bricolage Grotesque",
+      "script": "latin",
+      "classification": "display",
+      "buildWeights": [
+        800
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://fonts.google.com/specimen/Bricolage+Grotesque",
+      "sourceUrl": "https://fonts.google.com/specimen/Bricolage+Grotesque",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-en-bricolage"
+    },
+    {
+      "id": "tmp_en-archivo",
+      "code": "en-archivo",
+      "family": "Archivo",
+      "script": "latin",
+      "classification": "sans_neo_grotesque",
+      "buildWeights": [
+        800
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://fonts.google.com/specimen/Archivo",
+      "sourceUrl": "https://fonts.google.com/specimen/Archivo",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-en-archivo"
+    },
+    {
+      "id": "tmp_en-syne",
+      "code": "en-syne",
+      "family": "Syne",
+      "script": "latin",
+      "classification": "display",
+      "buildWeights": [
+        700
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://fonts.google.com/specimen/Syne",
+      "sourceUrl": "https://fonts.google.com/specimen/Syne",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-en-syne"
+    },
+    {
+      "id": "tmp_en-plex-mono",
+      "code": "en-plex-mono",
+      "family": "IBM Plex Mono",
+      "script": "latin",
+      "classification": "mono",
+      "buildWeights": [
+        400,
+        500
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://github.com/IBM/plex",
+      "sourceUrl": "https://github.com/IBM/plex",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-en-plex-mono"
+    },
+    {
+      "id": "tmp_en-jetbrains-mono",
+      "code": "en-jetbrains-mono",
+      "family": "JetBrains Mono",
+      "script": "latin",
+      "classification": "mono",
+      "buildWeights": [
+        400,
+        500
+      ],
+      "license": "OFL-1.1",
+      "licenseUrl": "https://github.com/JetBrains/JetBrainsMono",
+      "sourceUrl": "https://github.com/JetBrains/JetBrainsMono",
+      "files": [],
+      "filesPending": true,
+      "reservedFontName": false,
+      "verifiedAt": null,
+      "subsetFamily": "tf-en-jetbrains-mono"
+    }
+  ]
+}

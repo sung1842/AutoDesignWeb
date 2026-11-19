@@ -1,0 +1,611 @@
+{
+  "bundle": "pairings",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "tmp_FP01",
+      "code": "FP01",
+      "nameKo": "에디토리얼 명조",
+      "headingFontId": "tmp_kr-maruburi",
+      "bodyFontId": "tmp_kr-pretendard",
+      "headlineWeights": [
+        "400",
+        "600",
+        "700"
+      ],
+      "defaultHeadlineWeight": "600",
+      "emphasisWeight": 700,
+      "sig": {
+        "temp": 0.7,
+        "expr": 0.45,
+        "soft": 0.35
+      },
+      "contrastSerif": false,
+      "allowedTypes": [
+        "T1"
+      ],
+      "classHeading": "serif",
+      "classBody": "sans_neo_grotesque",
+      "tags": [
+        "serif",
+        "sans_neo_grotesque"
+      ]
+    },
+    {
+      "id": "tmp_FP02",
+      "code": "FP02",
+      "nameKo": "갤러리 세리프",
+      "headingFontId": "tmp_kr-noto-serif",
+      "bodyFontId": "tmp_kr-noto-serif",
+      "headlineWeights": [
+        "400",
+        "500",
+        "600"
+      ],
+      "defaultHeadlineWeight": "500",
+      "emphasisWeight": 600,
+      "sig": {
+        "temp": 0.55,
+        "expr": 0.55,
+        "soft": 0.25
+      },
+      "contrastSerif": true,
+      "allowedTypes": [
+        "T1",
+        "T8"
+      ],
+      "classHeading": "serif",
+      "classBody": "serif",
+      "tags": [
+        "serif"
+      ],
+      "headingLatinFontId": "tmp_en-instrument-serif",
+      "latinSizeAdjust": 1.04
+    },
+    {
+      "id": "tmp_FP03",
+      "code": "FP03",
+      "nameKo": "개성 명조",
+      "headingFontId": "tmp_kr-hahmlet",
+      "bodyFontId": "tmp_kr-plex",
+      "headlineWeights": [
+        "400",
+        "500",
+        "600"
+      ],
+      "defaultHeadlineWeight": "500",
+      "emphasisWeight": 600,
+      "sig": {
+        "temp": 0.6,
+        "expr": 0.55,
+        "soft": 0.4
+      },
+      "contrastSerif": false,
+      "allowedTypes": [
+        "T1",
+        "T4"
+      ],
+      "classHeading": "serif",
+      "classBody": "sans_humanist",
+      "tags": [
+        "serif",
+        "sans_humanist"
+      ]
+    },
+    {
+      "id": "tmp_FP04",
+      "code": "FP04",
+      "nameKo": "포근한 바탕",
+      "headingFontId": "tmp_kr-gowun-batang",
+      "bodyFontId": "tmp_kr-gowun-dodum",
+      "headlineWeights": [
+        "700"
+      ],
+      "defaultHeadlineWeight": "700",
+      "emphasisWeight": 700,
+      "sig": {
+        "temp": 0.9,
+        "expr": 0.4,
+        "soft": 0.7
+      },
+      "contrastSerif": false,
+      "allowedTypes": [
+        "T4"
+      ],
+      "classHeading": "serif",
+      "classBody": "sans_humanist",
+      "tags": [
+        "serif",
+        "sans_humanist"
+      ]
+    },
+    {
+      "id": "tmp_FP05",
+      "code": "FP05",
+      "nameKo": "따뜻한 바탕",
+      "headingFontId": "tmp_kr-gowun-batang",
+      "bodyFontId": "tmp_kr-gowun-batang",
+      "headlineWeights": [
+        "400",
+        "700"
+      ],
+      "defaultHeadlineWeight": "700",
+      "emphasisWeight": 700,
+      "sig": {
+        "temp": 0.85,
+        "expr": 0.5,
+        "soft": 0.55
+      },
+      "contrastSerif": false,
+      "allowedTypes": [
+        "T4"
+      ],
+      "classHeading": "serif",
+      "classBody": "serif",
+      "tags": [
+        "serif"
+      ],
+      "headingLatinFontId": "tmp_en-fraunces",
+      "latinSizeAdjust": 0.98
+    },
+    {
+      "id": "tmp_FP06",
+      "code": "FP06",
+      "nameKo": "손맛 세리프",
+      "headingFontId": "tmp_kr-hahmlet",
+      "bodyFontId": "tmp_kr-hahmlet",
+      "headlineWeights": [
+        "500",
+        "600"
+      ],
+      "defaultHeadlineWeight": "600",
+      "emphasisWeight": 600,
+      "sig": {
+        "temp": 0.75,
+        "expr": 0.65,
+        "soft": 0.4
+      },
+      "contrastSerif": true,
+      "allowedTypes": [
+        "T4",
+        "T8"
+      ],
+      "classHeading": "serif",
+      "classBody": "serif",
+      "tags": [
+        "serif"
+      ],
+      "headingLatinFontId": "tmp_en-dm-serif",
+      "latinSizeAdjust": 1
+    },
+    {
+      "id": "tmp_FP07",
+      "code": "FP07",
+      "nameKo": "스위스 고딕",
+      "headingFontId": "tmp_kr-suit",
+      "bodyFontId": "tmp_kr-suit",
+      "headlineWeights": [
+        "700",
+        "800"
+      ],
+      "defaultHeadlineWeight": "800",
+      "emphasisWeight": 700,
+      "sig": {
+        "temp": 0.2,
+        "expr": 0.5,
+        "soft": 0.2
+      },
+      "contrastSerif": false,
+      "allowedTypes": [
+        "T2",
+        "T7"
+      ],
+      "classHeading": "sans_geometric",
+      "classBody": "sans_geometric",
+      "tags": [
+        "sans_geometric"
+      ],
+      "headingLatinFontId": "tmp_en-space-grotesk",
+      "latinSizeAdjust": 1
+    },
+    {
+      "id": "tmp_FP08",
+      "code": "FP08",
+      "nameKo": "단단한 그로테스크",
+      "headingFontId": "tmp_kr-wanted",
+      "bodyFontId": "tmp_kr-wanted",
+      "headlineWeights": [
+        "700",
+        "800",
+        "900"
+      ],
+      "defaultHeadlineWeight": "800",
+      "emphasisWeight": 700,
+      "sig": {
+        "temp": 0.3,
+        "expr": 0.65,
+        "soft": 0.3
+      },
+      "contrastSerif": false,
+      "allowedTypes": [
+        "T2",
+        "T5"
+      ],
+      "classHeading": "sans_neo_grotesque",
+      "classBody": "sans_neo_grotesque",
+      "tags": [
+        "sans_neo_grotesque"
+      ],
+      "headingLatinFontId": "tmp_en-archivo",
+      "latinSizeAdjust": 1
+    },
+    {
+      "id": "tmp_FP09",
+      "code": "FP09",
+      "nameKo": "시스템 플렉스",
+      "headingFontId": "tmp_kr-plex",
+      "bodyFontId": "tmp_kr-plex",
+      "headlineWeights": [
+        "500",
+        "600",
+        "700"
+      ],
+      "defaultHeadlineWeight": "700",
+      "emphasisWeight": 600,
+      "sig": {
+        "temp": 0.2,
+        "expr": 0.35,
+        "soft": 0.25
+      },
+      "contrastSerif": false,
+      "allowedTypes": [
+        "T2",
+        "T7"
+      ],
+      "classHeading": "sans_humanist",
+      "classBody": "sans_humanist",
+      "tags": [
+        "sans_humanist",
+        "mono"
+      ],
+      "labelFontId": "tmp_en-plex-mono"
+    },
+    {
+      "id": "tmp_FP10",
+      "code": "FP10",
+      "nameKo": "다정한 기하",
+      "headingFontId": "tmp_kr-suit",
+      "bodyFontId": "tmp_kr-suit",
+      "headlineWeights": [
+        "500",
+        "700",
+        "800"
+      ],
+      "defaultHeadlineWeight": "700",
+      "emphasisWeight": 700,
+      "sig": {
+        "temp": 0.55,
+        "expr": 0.45,
+        "soft": 0.75
+      },
+      "contrastSerif": false,
+      "allowedTypes": [
+        "T3",
+        "T4",
+        "T6"
+      ],
+      "classHeading": "sans_geometric",
+      "classBody": "sans_geometric",
+      "tags": [
+        "sans_geometric"
+      ],
+      "headingLatinFontId": "tmp_en-jakarta",
+      "latinSizeAdjust": 1
+    },
+    {
+      "id": "tmp_FP11",
+      "code": "FP11",
+      "nameKo": "말랑한 포스터",
+      "headingFontId": "tmp_kr-do-hyeon",
+      "bodyFontId": "tmp_kr-suit",
+      "headlineWeights": [
+        "400"
+      ],
+      "defaultHeadlineWeight": "400",
+      "emphasisWeight": 700,
+      "sig": {
+        "temp": 0.65,
+        "expr": 0.75,
+        "soft": 0.85
+      },
+      "contrastSerif": false,
+      "allowedTypes": [
+        "T5",
+        "T6"
+      ],
+      "classHeading": "display",
+      "classBody": "sans_geometric",
+      "tags": [
+        "display",
+        "sans_geometric"
+      ]
+    },
+    {
+      "id": "tmp_FP12",
+      "code": "FP12",
+      "nameKo": "친근한 고딕",
+      "headingFontId": "tmp_kr-gothic-a1",
+      "bodyFontId": "tmp_kr-gothic-a1",
+      "headlineWeights": [
+        "500",
+        "700"
+      ],
+      "defaultHeadlineWeight": "700",
+      "emphasisWeight": 700,
+      "sig": {
+        "temp": 0.5,
+        "expr": 0.4,
+        "soft": 0.6
+      },
+      "contrastSerif": false,
+      "allowedTypes": [
+        "T3",
+        "T6"
+      ],
+      "classHeading": "sans_neo_grotesque",
+      "classBody": "sans_neo_grotesque",
+      "tags": [
+        "sans_neo_grotesque"
+      ],
+      "headingLatinFontId": "tmp_en-dm-sans",
+      "latinSizeAdjust": 1
+    },
+    {
+      "id": "tmp_FP13",
+      "code": "FP13",
+      "nameKo": "포스터",
+      "headingFontId": "tmp_kr-black-han",
+      "bodyFontId": "tmp_kr-pretendard",
+      "headlineWeights": [
+        "400"
+      ],
+      "defaultHeadlineWeight": "400",
+      "emphasisWeight": 700,
+      "sig": {
+        "temp": 0.45,
+        "expr": 0.95,
+        "soft": 0.15
+      },
+      "contrastSerif": false,
+      "allowedTypes": [
+        "T5"
+      ],
+      "classHeading": "display",
+      "classBody": "sans_neo_grotesque",
+      "tags": [
+        "display",
+        "sans_neo_grotesque"
+      ]
+    },
+    {
+      "id": "tmp_FP14",
+      "code": "FP14",
+      "nameKo": "볼드 그로테스크",
+      "headingFontId": "tmp_kr-wanted",
+      "bodyFontId": "tmp_kr-wanted",
+      "headlineWeights": [
+        "800",
+        "900"
+      ],
+      "defaultHeadlineWeight": "900",
+      "emphasisWeight": 700,
+      "sig": {
+        "temp": 0.35,
+        "expr": 0.85,
+        "soft": 0.3
+      },
+      "contrastSerif": false,
+      "allowedTypes": [
+        "T5",
+        "T7"
+      ],
+      "classHeading": "sans_neo_grotesque",
+      "classBody": "sans_neo_grotesque",
+      "tags": [
+        "sans_neo_grotesque"
+      ],
+      "headingLatinFontId": "tmp_en-bricolage",
+      "latinSizeAdjust": 0.96
+    },
+    {
+      "id": "tmp_FP15",
+      "code": "FP15",
+      "nameKo": "실험 디스플레이",
+      "headingFontId": "tmp_kr-wanted",
+      "bodyFontId": "tmp_kr-wanted",
+      "headlineWeights": [
+        "700",
+        "800"
+      ],
+      "defaultHeadlineWeight": "800",
+      "emphasisWeight": 700,
+      "sig": {
+        "temp": 0.4,
+        "expr": 0.8,
+        "soft": 0.35
+      },
+      "contrastSerif": false,
+      "allowedTypes": [
+        "T5",
+        "T6"
+      ],
+      "classHeading": "sans_neo_grotesque",
+      "classBody": "sans_neo_grotesque",
+      "tags": [
+        "sans_neo_grotesque"
+      ],
+      "headingLatinFontId": "tmp_en-syne",
+      "latinSizeAdjust": 0.96
+    },
+    {
+      "id": "tmp_FP16",
+      "code": "FP16",
+      "nameKo": "테크 그로테스크",
+      "headingFontId": "tmp_kr-wanted",
+      "bodyFontId": "tmp_kr-wanted",
+      "headlineWeights": [
+        "500",
+        "700",
+        "800"
+      ],
+      "defaultHeadlineWeight": "700",
+      "emphasisWeight": 700,
+      "sig": {
+        "temp": 0.15,
+        "expr": 0.55,
+        "soft": 0.35
+      },
+      "contrastSerif": false,
+      "allowedTypes": [
+        "T7"
+      ],
+      "classHeading": "sans_neo_grotesque",
+      "classBody": "sans_neo_grotesque",
+      "tags": [
+        "sans_neo_grotesque",
+        "mono"
+      ],
+      "headingLatinFontId": "tmp_en-space-grotesk",
+      "latinSizeAdjust": 1,
+      "labelFontId": "tmp_en-jetbrains-mono"
+    },
+    {
+      "id": "tmp_FP17",
+      "code": "FP17",
+      "nameKo": "콘솔",
+      "headingFontId": "tmp_kr-suit",
+      "bodyFontId": "tmp_kr-suit",
+      "headlineWeights": [
+        "500",
+        "700",
+        "800"
+      ],
+      "defaultHeadlineWeight": "700",
+      "emphasisWeight": 700,
+      "sig": {
+        "temp": 0.2,
+        "expr": 0.4,
+        "soft": 0.4
+      },
+      "contrastSerif": false,
+      "allowedTypes": [
+        "T2",
+        "T3",
+        "T7"
+      ],
+      "classHeading": "sans_geometric",
+      "classBody": "sans_geometric",
+      "tags": [
+        "sans_geometric",
+        "mono"
+      ],
+      "labelFontId": "tmp_en-jetbrains-mono"
+    },
+    {
+      "id": "tmp_FP18",
+      "code": "FP18",
+      "nameKo": "단정한 휴머니스트",
+      "headingFontId": "tmp_kr-plex",
+      "bodyFontId": "tmp_kr-plex",
+      "headlineWeights": [
+        "500",
+        "600",
+        "700"
+      ],
+      "defaultHeadlineWeight": "600",
+      "emphasisWeight": 600,
+      "sig": {
+        "temp": 0.4,
+        "expr": 0.35,
+        "soft": 0.45
+      },
+      "contrastSerif": false,
+      "allowedTypes": [
+        "T2",
+        "T3"
+      ],
+      "classHeading": "sans_humanist",
+      "classBody": "sans_humanist",
+      "tags": [
+        "sans_humanist"
+      ],
+      "headingLatinFontId": "tmp_en-manrope",
+      "latinSizeAdjust": 1
+    },
+    {
+      "id": "tmp_FP19",
+      "code": "FP19",
+      "nameKo": "신문 명조",
+      "headingFontId": "tmp_kr-noto-serif",
+      "bodyFontId": "tmp_kr-noto-serif",
+      "headlineWeights": [
+        "500",
+        "600",
+        "700"
+      ],
+      "defaultHeadlineWeight": "600",
+      "emphasisWeight": 700,
+      "sig": {
+        "temp": 0.6,
+        "expr": 0.45,
+        "soft": 0.3
+      },
+      "contrastSerif": false,
+      "allowedTypes": [
+        "T1",
+        "T8"
+      ],
+      "classHeading": "serif",
+      "classBody": "serif",
+      "tags": [
+        "serif"
+      ],
+      "headingLatinFontId": "tmp_en-newsreader",
+      "latinSizeAdjust": 1
+    },
+    {
+      "id": "tmp_FP20",
+      "code": "FP20",
+      "nameKo": "럭셔리 세리프",
+      "headingFontId": "tmp_kr-maruburi",
+      "bodyFontId": "tmp_kr-maruburi",
+      "headlineWeights": [
+        "300",
+        "400"
+      ],
+      "defaultHeadlineWeight": "300",
+      "emphasisWeight": 600,
+      "sig": {
+        "temp": 0.35,
+        "expr": 0.6,
+        "soft": 0.15
+      },
+      "contrastSerif": true,
+      "allowedTypes": [
+        "T8"
+      ],
+      "classHeading": "serif",
+      "classBody": "serif",
+      "tags": [
+        "serif"
+      ],
+      "headingLatinFontId": "tmp_en-cormorant",
+      "latinSizeAdjust": 1.05,
+      "weightNotesKo": "300은 ≥ 48px 단계만"
+    }
+  ]
+}

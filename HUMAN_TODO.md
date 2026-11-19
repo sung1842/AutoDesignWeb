@@ -23,3 +23,4 @@
 
 - [ ] (ASM-010) 02장 2.11.2 유형 설명 문안 8개가 표기 범위 200~400자보다 짧음(154~190자). 문안 보강 또는 범위 개정 결정
 - [ ] (ASM-012) `data/taxonomy/blocks.json` temp 문안(블록 기본 제목·nav 라벨)과 variant별 allowed_bg 값 확인. 03장 3.6.1 "50 variant"(표 합계 53, nav 제외 해석) 표기 정정 여부
+- [ ] (ASM-013) B6 폰트 26종 원본 파일·OFL 원문·RFN 여부 확인 후 `data/fonts/registry.json`(human)로 교체. temp는 파일 없음(`filesPending`)이라 M2 렌더는 폴백 스택으로만 가능

@@ -175,6 +175,29 @@ function checkCrossRefs(root: string, out: Issue[]): void {
     for (const k of ["pairingId", "pairing_id"])
       if (p[k] !== undefined)
         ref("B3 presets", `${String(p.id)}.${k} (pairings)`, p[k], pairingIds);
+  // 프리셋 l2·허용 집합의 페어링 장 ID(FP01~)는 B7 `code`로 찾는다(ASM-013).
+  const pairingCodes = new Map(pairings.map((p) => [String(p.code ?? p.id), p]));
+  for (const p of presets) {
+    const l2 = (p.l2 ?? {}) as Obj;
+    const allowed = ((p.allowed ?? {}) as Obj)["type.pairing_id"];
+    const codes = [l2["type.pairing_id"], ...(Array.isArray(allowed) ? allowed : [])];
+    for (const c of codes) {
+      ref(
+        "B3 presets",
+        `${String(p.id)}.type.pairing_id (pairings code)`,
+        c,
+        new Set(pairingCodes.keys()),
+      );
+      const pr = pairingCodes.get(String(c));
+      const types = pr?.allowedTypes;
+      if (pr && Array.isArray(types) && !types.includes(String(p.typeId)))
+        out.push({
+          bundle: "B3 presets",
+          path: "(교차 참조)",
+          message: `${String(p.id)}: pairings ${String(c)}의 허용 유형에 ${String(p.typeId)} 없음`,
+        });
+    }
+  }
 
   const cards = items("B10");
   for (const c of cards) ref("B10 card-plan", `${String(c.id)}.presetId`, c.presetId, presetIds);
