@@ -5,11 +5,13 @@ import { dataStage } from "./stages/data.js";
 import { depsStage } from "./stages/deps.js";
 import { lockStage } from "./stages/lock.js";
 import { patternStage } from "./stages/patterns.js";
+import { specStage } from "./stages/spec.js";
 import { verifyScriptsStage } from "./stages/verify-scripts.js";
 import type { Finding } from "./lib.js";
 
 export const STAGES: ReadonlyArray<[string, () => Finding[]]> = [
   ["guard:lock", () => lockStage()],
+  ["guard:spec", () => specStage()],
   ["guard:patterns", () => patternStage()],
   ["guard:verify-scripts", () => verifyScriptsStage()],
   ["guard:data", () => dataStage()],
