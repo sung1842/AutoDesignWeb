@@ -472,6 +472,7 @@ mobile 순서: ① → ② → ③(desktop 이미지 전체 폭, [데스크톱][
 **AC-01-21** 사용성 테스트 T2 "축 점수의 의미를 말로 설명하기" 성공률 ≥ 80%(00장 §5.3).
 **AC-01-57**(T-25, UX3-03) 픽스처 5종(GS-25 low_signal, GS-28 conflict, κ < 0.50, boundary, 해당 없음)에서 `ResultView.notice`가 각각 `low_signal`·`conflict`·`low_consistency`·`boundary`·null이고, S03에 ② 안내가 0 또는 1개 보이며 문구가 `copy/ko.ts`와 같다. `low_signal`·`low_consistency`에서는 신뢰도 줄이 없다. S03 DOM에 `%` 0건, `apps/web`에서 `sigma`·`kappa` 임계 비교 0건(정적 검사). `seasonAdjusted=true` 결과는 같은 브라우저 두 번째 방문에서 안내가 0개다.
 **AC-01-59**(T-22, PM3-01·UX3-05) ① 소유자 S03에 `result.retestHint`가 보이고 공개 보기에는 없다 ② 최신 결과 7일 경과 픽스처 사용자의 S12에 `me.retestBanner`가 보이고 [닫기] 후 새로고침하면 안 보이며, 5일 경과·15일 경과에서는 처음부터 없다 ③ 채택 8일 경과 픽스처 사용자가 S12에 들어오면 시트가 1회 보이고, [배포했어요] 후 재진입에서 0회이며 `adoption_followup_answer`가 정확히 1건(zod 통과) ④ 같은 방문에서 S12 → S09로 이동해도 시트가 다시 뜨지 않는다 ⑤ [닫기]로 닫은 시안은 다음 방문에도 다시 묻지 않고 이벤트 0건이다.
+**AC-01-60**(U-13, RA4-03) ① 정적 대조 스크립트: 06장 6.4.2 코드 중 사용자 경로(관리자 전용 제외)에서 날 수 있는 코드가 1.12.2 행 또는 기본 규칙으로 100% 대응한다 ② E2E: 본인 확인 링크 성공은 `/support?verified=1`(S14)에서 `support.verified` 배너로 끝나고, 재사용 링크는 S15 `VERIFY_LINK_INVALID` 문구로 끝난다. 두 경로 모두 1.2 route 안이다(AC-01-03 유지).
 
 ### 1.5.3 S04 로그인 [P0]
 
@@ -908,7 +909,9 @@ type EditOp = {
 
 - 사유 라디오: 사칭 / 피싱 / 저작권 침해 / 상표 침해 / 불법·유해 / 기타(enum `impersonation|phishing|copyright|trademark|inappropriate|other`, 00장 §10.3·08장 8.9.5), 설명 ≤ 1,000자(선택), 회신 이메일(선택).
 - 제출 버튼 위에 Cloudflare Turnstile 위젯(S04와 같은 컴포넌트, T-16). 위젯 통과 전 [신고하기] 비활성. 제출 `POST /api/share/:shareId/report {…, turnstileToken}` → "신고가 접수됐어요. 24시간 안에 검토해요". 403 `TURNSTILE_FAILED`이면 위젯을 다시 띄우고 `report.turnstileFailed` "확인이 만료됐어요. 다시 확인해 주세요". 자동 비공개 규칙은 → 00장 §10.3. 이벤트 `report_submit`.
-- 같은 Turnstile 규칙을 S14 `/support` 문의 폼과 `/sources` 권리 요청 폼에도 적용한다(06장 6.4.3 익명 창구 3종). 권리 요청 중 개인정보 요청은 접수 화면에 "계정 이메일로 확인 메일을 보냈어요. 메일의 링크를 눌러야 처리가 시작돼요"를 보여 준다(이메일이 계정과 달라도 같은 문구, 06장 T-16).
+- 같은 Turnstile 규칙을 S14 `/support` 문의 폼과 `/sources` 권리 요청 폼에도 적용한다(06장 6.4.3 익명 창구 3종).
+- 개인정보 요청 본인 확인 링크의 성공 착지는 S14 `/support?verified=1`이다(06장 6.4.3 302, U-13). 이때 페이지 상단에 `support.verified` 배너(`role="status"`) "요청 확인이 끝났어요. 처리 결과는 메일로 알려드릴게요"를 보이고 문의 폼은 그대로 둔다. 실패(410)는 1.12.2 `VERIFY_LINK_INVALID` 행.
+- 권리 요청 중 개인정보 요청은 접수 화면에 "계정 이메일로 확인 메일을 보냈어요. 메일의 링크를 눌러야 처리가 시작돼요"를 보여 준다(이메일이 계정과 달라도 같은 문구, 06장 T-16).
 - 자동 비공개되면 로그인 소유자에게 메일 `share_hidden_notice`가 가고 S12 해당 항목에 `me.share.underReview`가 보인다(1.11).
 
 **AC-01-43** 공유 토글을 끈 뒤 60초 안에 `/p/[shareId]`가 404를 반환하고, 신고 자동 비공개된 링크는 410 + S15 문구를 보인다. S13 DOM에 08장 고정 배너 문구가 있다.
@@ -959,6 +962,8 @@ type EditOp = {
 
 **API 오류(HTTP)**
 
+- 기본 규칙(U-13): 06장 6.4.2 카탈로그에 있으나 이 표에 행이 없는 코드는 `INTERNAL` 행과 같이 표시한다. 사용자 경로에서 날 수 있는 코드는 모두 이 표의 행 또는 이 기본 규칙으로 대응한다(AC-01-60).
+
 | 코드 | HTTP | 화면 | 표시 형식 | 문구 | 행동 |
 |---|---|---|---|---|---|
 | `VALIDATION_FAILED` | 400 | S06 등 폼 | 필드 오류 | 1.5.5.3의 필드별 문구(`details.issues[].path`로 매핑) | 해당 필드 포커스 |
@@ -993,6 +998,9 @@ type EditOp = {
 | `GEN_DISABLED` | 503 | S01 배너, S06·S08, S07(queued 잡 실패) | 배너 | "지금은 시안 생성이 잠시 멈춰 있어요. 진단과 편집은 그대로 할 수 있어요. 생성 횟수는 줄지 않았어요." | — |
 | `SHARE_DISABLED` | 503 | S03(공개)·S13·S11 | S15 / 토글 비활성 | "지금은 공유 페이지를 잠시 볼 수 없어요." | [처음으로] |
 | `SIGNUP_DISABLED` | 503 | S04 콜백 | 인라인 | "현재 신규 가입을 일시 중단했어요. 진단과 결과 보기는 그대로 할 수 있어요." | [처음으로] |
+| `VERIFY_LINK_INVALID` | 410 | 메일 확인 링크 착지(`GET /api/rights-requests/:id/verify`) | S15 | "확인 링크가 만료됐거나 이미 쓰였어요. 다시 요청해 주세요." | [문의하기](→ S14 `/support`) (U-13) |
+| `SURVEY_ITEMS_INSUFFICIENT` | 503 | S01·S02 | S15 | `INTERNAL`과 같은 문구 | [다시 시도][처음으로] (U-13) |
+| `JOB_ALREADY_FINISHED` | 409 | S07 취소 시트 | (사용자 표시 없음) | — | 시트를 닫고 잡 상태를 다시 폴링(U-13) |
 | `INTERNAL` | 500 | 전 화면 | S15 | "잠시 문제가 생겼어요. 저장된 내용은 안전해요." | [다시 시도][처음으로] |
 
 **잡·내보내기 오류 코드**(`GenerationView.errorCode`, `exports.errorCode`, HTTP 아님)
@@ -1213,6 +1221,7 @@ type EditOp = {
 | `result.retestHint` | 1주 뒤 다시 해 보면 결과가 얼마나 일관된지 알려드려요 |
 | `me.retestBanner` | 다시 진단해 보면 결과가 얼마나 일관된지 볼 수 있어요 |
 | `me.share.underReview` | 신고로 검토 중이에요. 검토가 끝나면 알려드릴게요 |
+| `support.verified` | 요청 확인이 끝났어요. 처리 결과는 메일로 알려드릴게요 |
 | `report.turnstileFailed` | 확인이 만료됐어요. 다시 확인해 주세요 |
 | `followup.q` | {브랜드명} 시안, 실제로 사용했나요? |
 | `followup.deployed` | 배포했어요 |
@@ -1458,3 +1467,4 @@ type EditOp = {
 | S-31 | Major | 1.3.1, 1.8.7, 1.9, D-0112 | |
 | S-32·S-34·S-37(01) | Major | 1.7.1 보정 칩·차이·v_true 문구·photoSubstituted, 1.5.5.3 notice 5값, 1.15.3 키 | |
 | S-40(01) | — | 1.8.5 폰트·측정 규칙 | |
+| U-13(01, r4 RA4-03) | Major | 1.10.3 verify 성공 착지 S14 `support.verified`, 1.12.2 기본 규칙·`VERIFY_LINK_INVALID`·`SURVEY_ITEMS_INSUFFICIENT`·`JOB_ALREADY_FINISHED` 행, AC-01-60 | |
