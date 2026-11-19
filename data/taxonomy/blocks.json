@@ -1,0 +1,1913 @@
+{
+  "bundle": "blocks",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "nav",
+      "nameKo": "내비게이션",
+      "default_heading_ko": null,
+      "nav_label": null,
+      "slots": [],
+      "variants": [
+        {
+          "id": "nav.split",
+          "align": "left",
+          "skeleton": null,
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "",
+          "metaKo": "컴파일러 생성"
+        },
+        {
+          "id": "nav.center",
+          "align": "center",
+          "skeleton": null,
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "",
+          "metaKo": "컴파일러 생성"
+        },
+        {
+          "id": "nav.minimal",
+          "align": "left",
+          "skeleton": null,
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "",
+          "metaKo": "컴파일러 생성"
+        }
+      ]
+    },
+    {
+      "id": "hero",
+      "nameKo": "히어로",
+      "default_heading_ko": null,
+      "nav_label": null,
+      "slots": [
+        {
+          "id": "eyebrow",
+          "kind": "copy",
+          "deckKeys": [
+            "hero.eyebrow"
+          ],
+          "required": false,
+          "maxLength": 14
+        },
+        {
+          "id": "headline",
+          "kind": "copy",
+          "deckKeys": [
+            "hero.headline"
+          ],
+          "required": true,
+          "maxLength": 24
+        },
+        {
+          "id": "sub",
+          "kind": "copy",
+          "deckKeys": [
+            "hero.sub"
+          ],
+          "required": true,
+          "maxLength": 80
+        },
+        {
+          "id": "primaryCta",
+          "kind": "link",
+          "deckKeys": [
+            "cta.primary"
+          ],
+          "required": true,
+          "maxLength": 10
+        },
+        {
+          "id": "secondaryCta",
+          "kind": "link",
+          "deckKeys": [
+            "cta.secondary"
+          ],
+          "required": false,
+          "maxLength": 10
+        },
+        {
+          "id": "media",
+          "kind": "image",
+          "deckKeys": [],
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "id": "hero.split",
+          "align": "left",
+          "skeleton": "split",
+          "image": {
+            "countKo": "1(4:5 또는 1:1)",
+            "ratios": [
+              "4:5",
+              "1:1"
+            ]
+          },
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": "hero.left-aligned",
+          "allowed_bg": [
+            "bg",
+            "surface"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-04",
+            "SIG-06",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-10",
+            "SIG-12"
+          ],
+          "mobile": "텍스트 → 이미지. 이미지 비율 4:5 → 4:5 유지, 1:1 유지",
+          "text_cols": {
+            "lg": 6,
+            "base": 4
+          }
+        },
+        {
+          "id": "hero.type-only",
+          "align": "left",
+          "skeleton": "type",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-04",
+            "SIG-06",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-11"
+          ],
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용",
+          "metaKo": "거대 타이포, 이미지 없음",
+          "text_cols": {
+            "lg": 10,
+            "base": 4
+          }
+        },
+        {
+          "id": "hero.full-bleed-image",
+          "align": "left",
+          "skeleton": "full",
+          "image": {
+            "countKo": "1(16:9 / 21:9)",
+            "ratios": [
+              "16:9",
+              "21:9"
+            ]
+          },
+          "icon_grid": false,
+          "text_over_image": true,
+          "fallback_variant": "hero.type-only",
+          "allowed_bg": [
+            "image"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-04",
+            "SIG-06",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-10",
+            "SIG-11"
+          ],
+          "mobile": "이미지 비율 16:9·21:9 → 4:5로 재크롭(focal point), 텍스트 오버레이 유지",
+          "metaKo": "`text_over_image`",
+          "text_cols": {
+            "lg": 7,
+            "base": 4
+          }
+        },
+        {
+          "id": "hero.left-aligned",
+          "align": "left",
+          "skeleton": "type",
+          "image": {
+            "countKo": "0~1(3:2 작게, 우하단)",
+            "ratios": [
+              "3:2"
+            ]
+          },
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": "hero.type-only",
+          "allowed_bg": [
+            "bg",
+            "surface"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-04",
+            "SIG-06",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-10"
+          ],
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용",
+          "text_cols": {
+            "lg": 8,
+            "base": 4
+          }
+        },
+        {
+          "id": "hero.offset",
+          "align": "asym",
+          "skeleton": "split",
+          "image": {
+            "countKo": "2(4:5 + 1:1)",
+            "ratios": [
+              "4:5",
+              "1:1"
+            ]
+          },
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": "hero.split",
+          "allowed_bg": [
+            "bg",
+            "surface"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-04",
+            "SIG-06",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-10"
+          ],
+          "mobile": "주 이미지만 표시(보조 1:1 이미지 숨김), 텍스트 → 이미지",
+          "text_cols": {
+            "lg": 6,
+            "base": 4
+          }
+        },
+        {
+          "id": "hero.centered",
+          "align": "center",
+          "skeleton": "type",
+          "image": {
+            "countKo": "0~1(16:9 아래)",
+            "ratios": [
+              "16:9"
+            ]
+          },
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": "hero.left-aligned",
+          "allowed_bg": [
+            "bg",
+            "surface"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-04",
+            "SIG-06",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-10"
+          ],
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용",
+          "metaKo": "그라디언트 배경·Tag eyebrow 불가",
+          "text_cols": {
+            "lg": 8,
+            "base": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "value",
+      "nameKo": "가치",
+      "default_heading_ko": "왜 선택해야 할까요",
+      "nav_label": "특징",
+      "slots": [
+        {
+          "id": "items",
+          "kind": "list",
+          "deckKeys": [
+            "value.items"
+          ],
+          "required": true,
+          "maxLength": {
+            "제목": 18,
+            "본문": 90
+          },
+          "listRangeKo": "3~4(icon-grid 정확히 3, bento 4)"
+        }
+      ],
+      "variants": [
+        {
+          "id": "value.numbered",
+          "align": "left",
+          "skeleton": "list",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-01",
+            "SIG-02",
+            "SIG-03",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용",
+          "metaKo": "01/02/03 번호"
+        },
+        {
+          "id": "value.rule-list",
+          "align": "left",
+          "skeleton": "list",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-01",
+            "SIG-02",
+            "SIG-03",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용",
+          "metaKo": "2열 괘선 목록"
+        },
+        {
+          "id": "value.icon-grid",
+          "align": "left",
+          "skeleton": "grid",
+          "image": null,
+          "icon_grid": true,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-01",
+            "SIG-02",
+            "SIG-03",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열",
+          "metaKo": "`icon_grid`(페이지당 ≤ 1, AIL-05)"
+        },
+        {
+          "id": "value.bento",
+          "align": "asym",
+          "skeleton": "grid",
+          "image": {
+            "countKo": "항목별 1",
+            "ratios": []
+          },
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": "value.numbered",
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-01",
+            "SIG-02",
+            "SIG-03",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-10"
+          ],
+          "mobile": "1열",
+          "metaKo": "`grid_mode = bento`일 때만, 항목 ≥ 4이고 항목마다 고유 이미지 또는 수치(AIL-12)"
+        }
+      ]
+    },
+    {
+      "id": "feature",
+      "nameKo": "기능",
+      "default_heading_ko": "주요 기능",
+      "nav_label": "기능",
+      "slots": [
+        {
+          "id": "items",
+          "kind": "list",
+          "deckKeys": [
+            "feature.items"
+          ],
+          "required": true,
+          "maxLength": {
+            "제목": 20,
+            "본문": 120
+          },
+          "listRangeKo": "zigzag 2~3, stack·split-list 3~5"
+        },
+        {
+          "id": "media",
+          "kind": "image",
+          "deckKeys": [],
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "id": "feature.zigzag",
+          "align": "asym",
+          "skeleton": "split",
+          "image": {
+            "countKo": "항목별 1(3:2)",
+            "ratios": [
+              "3:2"
+            ]
+          },
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": "feature.stack",
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-01",
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-10"
+          ],
+          "mobile": "항목마다 텍스트 → 이미지, 교차 해제"
+        },
+        {
+          "id": "feature.stack",
+          "align": "left",
+          "skeleton": "full",
+          "image": {
+            "countKo": "1(16:9)",
+            "ratios": [
+              "16:9"
+            ]
+          },
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-01",
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-10"
+          ],
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용",
+          "fallbackKo": "블록 제거(용도 필수가 아닐 때). saas에서 value가 없으면 value.numbered로 치환"
+        },
+        {
+          "id": "feature.split-list",
+          "align": "left",
+          "skeleton": "split",
+          "image": {
+            "countKo": "1(4:5)",
+            "ratios": [
+              "4:5"
+            ]
+          },
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": "feature.stack",
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-01",
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-10"
+          ],
+          "mobile": "세로 스택, 텍스트 → 이미지 순"
+        }
+      ]
+    },
+    {
+      "id": "showcase",
+      "nameKo": "쇼케이스",
+      "default_heading_ko": "대표 화면",
+      "nav_label": null,
+      "slots": [
+        {
+          "id": "media",
+          "kind": "image",
+          "deckKeys": [],
+          "required": true
+        },
+        {
+          "id": "caption",
+          "kind": "copy",
+          "deckKeys": [
+            "work.items[0]"
+          ],
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "id": "showcase.wide",
+          "align": "left",
+          "skeleton": "full",
+          "image": {
+            "countKo": "1(21:9)",
+            "ratios": [
+              "21:9"
+            ]
+          },
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-04",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-10"
+          ],
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용",
+          "fallbackKo": "type-only 대체 불가 → 블록 제거 후 G-01 재검사",
+          "metaKo": "대표작·제품 화면 1장"
+        },
+        {
+          "id": "showcase.framed",
+          "align": "center",
+          "skeleton": "full",
+          "image": {
+            "countKo": "1(16:9) + 캡션",
+            "ratios": [
+              "16:9"
+            ]
+          },
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-04",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-10"
+          ],
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용",
+          "fallbackKo": "type-only 대체 불가 → 블록 제거 후 G-01 재검사"
+        }
+      ]
+    },
+    {
+      "id": "stats",
+      "nameKo": "수치",
+      "default_heading_ko": "숫자로 보기",
+      "nav_label": null,
+      "slots": [
+        {
+          "id": "items",
+          "kind": "list",
+          "deckKeys": [
+            "stats.items"
+          ],
+          "required": true,
+          "maxLength": {
+            "값": 10,
+            "라벨": 16
+          },
+          "listRangeKo": "3~4(row), 2~4(split)"
+        }
+      ],
+      "variants": [
+        {
+          "id": "stats.row",
+          "align": "left",
+          "skeleton": "grid",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-03",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "2×2",
+          "metaKo": "3~4개 가로"
+        },
+        {
+          "id": "stats.split",
+          "align": "asym",
+          "skeleton": "split",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-03",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열(제목 → 목록/지도)",
+          "metaKo": "제목·리드 좌 + 수치 우"
+        }
+      ]
+    },
+    {
+      "id": "process",
+      "nameKo": "과정",
+      "default_heading_ko": "이용 방법",
+      "nav_label": "이용 방법",
+      "slots": [
+        {
+          "id": "items",
+          "kind": "list",
+          "deckKeys": [
+            "feature.items"
+          ],
+          "required": true,
+          "maxLength": {
+            "제목": 20,
+            "본문": 120
+          },
+          "listRangeKo": "3~5 / 3~6"
+        }
+      ],
+      "variants": [
+        {
+          "id": "process.horizontal",
+          "align": "left",
+          "skeleton": "grid",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-03",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열",
+          "metaKo": "3~5단계"
+        },
+        {
+          "id": "process.vertical",
+          "align": "left",
+          "skeleton": "list",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-03",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용",
+          "metaKo": "3~6단계"
+        }
+      ]
+    },
+    {
+      "id": "proof",
+      "nameKo": "후기",
+      "default_heading_ko": "고객 이야기",
+      "nav_label": null,
+      "slots": [
+        {
+          "id": "items",
+          "kind": "list",
+          "deckKeys": [
+            "proof.items"
+          ],
+          "required": true,
+          "maxLength": {
+            "인용": 120
+          },
+          "listRangeKo": "1(quote-large), 2~3(cards)"
+        }
+      ],
+      "variants": [
+        {
+          "id": "proof.quote-large",
+          "align": "center",
+          "skeleton": "type",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용",
+          "metaKo": "인용 1개"
+        },
+        {
+          "id": "proof.cards",
+          "align": "left",
+          "skeleton": "grid",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열",
+          "metaKo": "2~3개, 이니셜 아바타"
+        }
+      ]
+    },
+    {
+      "id": "pricing",
+      "nameKo": "요금",
+      "default_heading_ko": "요금 안내",
+      "nav_label": "요금",
+      "slots": [
+        {
+          "id": "plans",
+          "kind": "list",
+          "deckKeys": [],
+          "required": true,
+          "listRangeKo": "1 / 2~3"
+        }
+      ],
+      "variants": [
+        {
+          "id": "pricing.cards",
+          "align": "left",
+          "skeleton": "grid",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열 스택, 강조 플랜 먼저",
+          "metaKo": "2~3 플랜, 강조 ≤ 1"
+        },
+        {
+          "id": "pricing.single",
+          "align": "center",
+          "skeleton": "type",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용",
+          "metaKo": "1 플랜"
+        }
+      ]
+    },
+    {
+      "id": "faq",
+      "nameKo": "자주 묻는 질문",
+      "default_heading_ko": "자주 묻는 질문",
+      "nav_label": "FAQ",
+      "slots": [
+        {
+          "id": "items",
+          "kind": "list",
+          "deckKeys": [
+            "faq.items"
+          ],
+          "required": true,
+          "maxLength": {
+            "질문": 40,
+            "답": 160
+          },
+          "listRangeKo": "3~6"
+        }
+      ],
+      "variants": [
+        {
+          "id": "faq.accordion",
+          "align": "left",
+          "skeleton": "list",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-01",
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용",
+          "metaKo": "1열"
+        },
+        {
+          "id": "faq.two-col",
+          "align": "asym",
+          "skeleton": "split",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-01",
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열(제목 → 목록/지도)",
+          "metaKo": "좌 제목 고정 + 우 목록"
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "nameKo": "행동 유도",
+      "default_heading_ko": null,
+      "nav_label": null,
+      "slots": [
+        {
+          "id": "headline",
+          "kind": "copy",
+          "deckKeys": [
+            "hero.headline"
+          ],
+          "required": true,
+          "maxLength": 24
+        },
+        {
+          "id": "primaryCta",
+          "kind": "link",
+          "deckKeys": [
+            "cta.primary"
+          ],
+          "required": true,
+          "maxLength": 10
+        }
+      ],
+      "variants": [
+        {
+          "id": "cta.band",
+          "align": "center",
+          "skeleton": "type",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-06",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용",
+          "metaKo": "`bg = inverse` 고정"
+        },
+        {
+          "id": "cta.big-type",
+          "align": "left",
+          "skeleton": "type",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-06",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용",
+          "metaKo": "display 단계 제목"
+        },
+        {
+          "id": "cta.image",
+          "align": "left",
+          "skeleton": "full",
+          "image": {
+            "countKo": "1(21:9)",
+            "ratios": [
+              "21:9"
+            ]
+          },
+          "icon_grid": false,
+          "text_over_image": true,
+          "fallback_variant": "cta.band",
+          "allowed_bg": [
+            "image"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-06",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-10"
+          ],
+          "mobile": "이미지 비율 16:9·21:9 → 4:5로 재크롭(focal point), 텍스트 오버레이 유지",
+          "metaKo": "`text_over_image`"
+        }
+      ]
+    },
+    {
+      "id": "menu",
+      "nameKo": "메뉴",
+      "default_heading_ko": "메뉴",
+      "nav_label": "메뉴",
+      "slots": [
+        {
+          "id": "groups",
+          "kind": "list",
+          "deckKeys": [
+            "menu.groups"
+          ],
+          "required": true,
+          "maxLength": {
+            "항목명": 20,
+            "설명": 40
+          },
+          "listRangeKo": "그룹 1~4, 항목 2~10"
+        }
+      ],
+      "variants": [
+        {
+          "id": "menu.leader",
+          "align": "left",
+          "skeleton": "list",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-01",
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용",
+          "metaKo": "점선 리더 + 가격"
+        },
+        {
+          "id": "menu.cards",
+          "align": "left",
+          "skeleton": "grid",
+          "image": {
+            "countKo": "항목별 1(1:1)",
+            "ratios": [
+              "1:1"
+            ]
+          },
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": "menu.leader",
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-01",
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-10"
+          ],
+          "mobile": "2열(gallery.feature는 대 1 + 소 2×2)",
+          "metaKo": "항목 3~8"
+        },
+        {
+          "id": "menu.columns",
+          "align": "left",
+          "skeleton": "list",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-01",
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용",
+          "metaKo": "그룹 2~4를 2열"
+        }
+      ]
+    },
+    {
+      "id": "highlight",
+      "nameKo": "하이라이트",
+      "default_heading_ko": "이곳의 특별함",
+      "nav_label": null,
+      "slots": [
+        {
+          "id": "items",
+          "kind": "list",
+          "deckKeys": [
+            "highlight.items"
+          ],
+          "required": true,
+          "maxLength": {
+            "제목": 16,
+            "본문": 60
+          },
+          "listRangeKo": "정확히 3"
+        }
+      ],
+      "variants": [
+        {
+          "id": "highlight.trio",
+          "align": "left",
+          "skeleton": "grid",
+          "image": {
+            "countKo": "항목별 1(4:5)",
+            "ratios": [
+              "4:5"
+            ]
+          },
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": "highlight.text-trio",
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-10"
+          ],
+          "mobile": "2열(gallery.feature는 대 1 + 소 2×2)",
+          "metaKo": "항목 3"
+        },
+        {
+          "id": "highlight.text-trio",
+          "align": "left",
+          "skeleton": "grid",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열"
+        },
+        {
+          "id": "highlight.split",
+          "align": "asym",
+          "skeleton": "split",
+          "image": {
+            "countKo": "1(4:5) + 목록",
+            "ratios": [
+              "4:5"
+            ]
+          },
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": "highlight.text-trio",
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-10"
+          ],
+          "mobile": "세로 스택, 텍스트 → 이미지 순"
+        }
+      ]
+    },
+    {
+      "id": "gallery",
+      "nameKo": "갤러리",
+      "default_heading_ko": "작업",
+      "nav_label": "작업",
+      "slots": [
+        {
+          "id": "media",
+          "kind": "image",
+          "deckKeys": [],
+          "required": true
+        },
+        {
+          "id": "captions",
+          "kind": "list",
+          "deckKeys": [
+            "work.items"
+          ],
+          "required": false,
+          "maxLength": {
+            "제목": 20,
+            "캡션": 40
+          },
+          "listRangeKo": "3.6.1 수량"
+        }
+      ],
+      "variants": [
+        {
+          "id": "gallery.grid",
+          "align": "left",
+          "skeleton": "grid",
+          "image": {
+            "countKo": "6/8/9(1:1 또는 4:5 균일)",
+            "ratios": [
+              "1:1",
+              "4:5"
+            ]
+          },
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-10"
+          ],
+          "mobile": "2열(gallery.feature는 대 1 + 소 2×2)",
+          "fallbackKo": "블록 제거"
+        },
+        {
+          "id": "gallery.masonry",
+          "align": "asym",
+          "skeleton": "grid",
+          "image": {
+            "countKo": "5~9(혼합 비율)",
+            "ratios": []
+          },
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": "gallery.grid",
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-10"
+          ],
+          "mobile": "2열(gallery.feature는 대 1 + 소 2×2)"
+        },
+        {
+          "id": "gallery.feature",
+          "align": "asym",
+          "skeleton": "grid",
+          "image": {
+            "countKo": "5(대 1 + 소 4)",
+            "ratios": []
+          },
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": "gallery.grid",
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-10"
+          ],
+          "mobile": "2열(gallery.feature는 대 1 + 소 2×2)"
+        }
+      ]
+    },
+    {
+      "id": "location",
+      "nameKo": "오시는 길",
+      "default_heading_ko": "오시는 길",
+      "nav_label": "오시는 길",
+      "slots": [
+        {
+          "id": "address",
+          "kind": "copy",
+          "deckKeys": [
+            "contact.*"
+          ],
+          "required": true
+        },
+        {
+          "id": "hours",
+          "kind": "copy",
+          "deckKeys": [
+            "contact.*"
+          ],
+          "required": true
+        },
+        {
+          "id": "phone",
+          "kind": "copy",
+          "deckKeys": [
+            "contact.*"
+          ],
+          "required": false
+        },
+        {
+          "id": "mapPlaceholder",
+          "kind": "image",
+          "deckKeys": [],
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "id": "location.info-map",
+          "align": "asym",
+          "skeleton": "split",
+          "image": {
+            "countKo": "1(지도 플레이스홀더 3:2)",
+            "ratios": [
+              "3:2"
+            ]
+          },
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": "location.info-only",
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-10"
+          ],
+          "mobile": "1열(제목 → 목록/지도)",
+          "metaKo": "지도 임베드 MVP 제외"
+        },
+        {
+          "id": "location.info-only",
+          "align": "left",
+          "skeleton": "list",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용",
+          "metaKo": "주소·영업시간·전화"
+        }
+      ]
+    },
+    {
+      "id": "story",
+      "nameKo": "이야기",
+      "default_heading_ko": "우리 이야기",
+      "nav_label": "소개",
+      "slots": [
+        {
+          "id": "body",
+          "kind": "copy",
+          "deckKeys": [
+            "story.body"
+          ],
+          "required": true,
+          "maxLength": 240
+        },
+        {
+          "id": "media",
+          "kind": "image",
+          "deckKeys": [],
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "id": "story.split",
+          "align": "asym",
+          "skeleton": "split",
+          "image": {
+            "countKo": "1(4:5)",
+            "ratios": [
+              "4:5"
+            ]
+          },
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": "story.text",
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-10",
+            "SIG-12"
+          ],
+          "mobile": "텍스트 → 이미지. 이미지 비율 4:5 → 4:5 유지, 1:1 유지"
+        },
+        {
+          "id": "story.text",
+          "align": "left",
+          "skeleton": "type",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용",
+          "metaKo": "본문 2단락, measure 적용"
+        }
+      ]
+    },
+    {
+      "id": "about",
+      "nameKo": "소개",
+      "default_heading_ko": "소개",
+      "nav_label": "소개",
+      "slots": [
+        {
+          "id": "title",
+          "kind": "copy",
+          "deckKeys": [
+            "about.title"
+          ],
+          "required": true,
+          "maxLength": 20
+        },
+        {
+          "id": "body",
+          "kind": "copy",
+          "deckKeys": [
+            "about.body"
+          ],
+          "required": true,
+          "maxLength": 240
+        },
+        {
+          "id": "media",
+          "kind": "image",
+          "deckKeys": [],
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "id": "about.split",
+          "align": "asym",
+          "skeleton": "split",
+          "image": {
+            "countKo": "1(4:5)",
+            "ratios": [
+              "4:5"
+            ]
+          },
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": "about.text",
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-10",
+            "SIG-12"
+          ],
+          "mobile": "텍스트 → 이미지. 이미지 비율 4:5 → 4:5 유지, 1:1 유지"
+        },
+        {
+          "id": "about.text",
+          "align": "left",
+          "skeleton": "type",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용"
+        }
+      ]
+    },
+    {
+      "id": "service",
+      "nameKo": "서비스",
+      "default_heading_ko": "서비스",
+      "nav_label": "서비스",
+      "slots": [
+        {
+          "id": "items",
+          "kind": "list",
+          "deckKeys": [
+            "service.items"
+          ],
+          "required": true,
+          "maxLength": {
+            "제목": 16,
+            "본문": 90
+          },
+          "listRangeKo": "정확히 3"
+        }
+      ],
+      "variants": [
+        {
+          "id": "service.list",
+          "align": "left",
+          "skeleton": "list",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용",
+          "metaKo": "3개"
+        },
+        {
+          "id": "service.cards",
+          "align": "left",
+          "skeleton": "grid",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열",
+          "metaKo": "3개 카드"
+        }
+      ]
+    },
+    {
+      "id": "contact",
+      "nameKo": "문의",
+      "default_heading_ko": "문의하기",
+      "nav_label": "문의",
+      "slots": [
+        {
+          "id": "title",
+          "kind": "copy",
+          "deckKeys": [
+            "about.title",
+            "contact.*"
+          ],
+          "required": false
+        },
+        {
+          "id": "body",
+          "kind": "copy",
+          "deckKeys": [
+            "about.title",
+            "contact.*"
+          ],
+          "required": false
+        },
+        {
+          "id": "contactInfo",
+          "kind": "copy",
+          "deckKeys": [
+            "about.title",
+            "contact.*"
+          ],
+          "required": true
+        },
+        {
+          "id": "form",
+          "kind": "copy",
+          "deckKeys": [
+            "about.title",
+            "contact.*"
+          ],
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "id": "contact.split-form",
+          "align": "asym",
+          "skeleton": "split",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": "contact.simple",
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "세로 스택, 텍스트 → 이미지 순",
+          "metaKo": "폼 + 연락처. 정적 내보내기 폼은 `action` 미지정 + README 안내"
+        },
+        {
+          "id": "contact.simple",
+          "align": "left",
+          "skeleton": "type",
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용",
+          "metaKo": "연락처 + CTA"
+        }
+      ]
+    },
+    {
+      "id": "footer",
+      "nameKo": "푸터",
+      "default_heading_ko": null,
+      "nav_label": null,
+      "slots": [
+        {
+          "id": "wordmark",
+          "kind": "copy",
+          "deckKeys": [
+            "footer.tagline",
+            "contact.*"
+          ],
+          "required": true
+        },
+        {
+          "id": "tagline",
+          "kind": "copy",
+          "deckKeys": [
+            "footer.tagline",
+            "contact.*"
+          ],
+          "required": false
+        },
+        {
+          "id": "businessInfo",
+          "kind": "copy",
+          "deckKeys": [
+            "footer.tagline",
+            "contact.*"
+          ],
+          "required": true
+        },
+        {
+          "id": "links",
+          "kind": "link",
+          "deckKeys": [
+            "footer.tagline",
+            "contact.*"
+          ],
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "id": "footer.minimal",
+          "align": "left",
+          "skeleton": null,
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-01",
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "",
+          "metaKo": "big-type은 Wordmark를 display 크기로"
+        },
+        {
+          "id": "footer.columns",
+          "align": "left",
+          "skeleton": null,
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-01",
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09"
+          ],
+          "mobile": "",
+          "metaKo": "big-type은 Wordmark를 display 크기로"
+        },
+        {
+          "id": "footer.big-type",
+          "align": "left",
+          "skeleton": null,
+          "image": null,
+          "icon_grid": false,
+          "text_over_image": false,
+          "fallback_variant": null,
+          "allowed_bg": [
+            "bg",
+            "surface",
+            "inverse"
+          ],
+          "decor_slots": [
+            "SIG-01",
+            "SIG-02",
+            "SIG-07",
+            "SIG-08",
+            "SIG-09",
+            "SIG-11"
+          ],
+          "mobile": "",
+          "metaKo": "big-type은 Wordmark를 display 크기로"
+        }
+      ]
+    }
+  ]
+}

@@ -22,3 +22,4 @@
 - [ ] (BLK-005) 이미 푸시된 커밋 5fefdda의 다중 scope `feat(web,worker)`가 AC-09-11 테스트 정규식에 걸림. scope에 쉼표 허용 또는 예외 처리 후 relock해 주세요(BLOCKED.md BLK-005)
 
 - [ ] (ASM-010) 02장 2.11.2 유형 설명 문안 8개가 표기 범위 200~400자보다 짧음(154~190자). 문안 보강 또는 범위 개정 결정
+- [ ] (ASM-012) `data/taxonomy/blocks.json` temp 문안(블록 기본 제목·nav 라벨)과 variant별 allowed_bg 값 확인. 03장 3.6.1 "50 variant"(표 합계 53, nav 제외 해석) 표기 정정 여부

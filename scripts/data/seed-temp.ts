@@ -947,6 +947,234 @@ function genComponents(ctx: Ctx): Out[] {
   return [{ path: "data/taxonomy/components.json", content: bundle(ctx, "components", items) }];
 }
 
+// ---------- C03 blocks.json (03장 3.6.1~3.6.3·3.8.1 text_cols·3.11.3 모바일, 04장 4.6.2 덱 상한) ----------
+/** 3.6.2 default_heading_ko·nav_label: 03장은 예시(faq·menu·location)만 정함 → 나머지는 temp 문안(ASM-012). */
+const BLOCK_META: Record<string, { nameKo: string; heading: string; nav: string | null }> = {
+  nav: { nameKo: "내비게이션", heading: "", nav: null },
+  hero: { nameKo: "히어로", heading: "", nav: null },
+  value: { nameKo: "가치", heading: "왜 선택해야 할까요", nav: "특징" },
+  feature: { nameKo: "기능", heading: "주요 기능", nav: "기능" },
+  showcase: { nameKo: "쇼케이스", heading: "대표 화면", nav: null },
+  stats: { nameKo: "수치", heading: "숫자로 보기", nav: null },
+  process: { nameKo: "과정", heading: "이용 방법", nav: "이용 방법" },
+  proof: { nameKo: "후기", heading: "고객 이야기", nav: null },
+  pricing: { nameKo: "요금", heading: "요금 안내", nav: "요금" },
+  faq: { nameKo: "자주 묻는 질문", heading: "자주 묻는 질문", nav: "FAQ" },
+  cta: { nameKo: "행동 유도", heading: "", nav: null },
+  menu: { nameKo: "메뉴", heading: "메뉴", nav: "메뉴" },
+  highlight: { nameKo: "하이라이트", heading: "이곳의 특별함", nav: null },
+  gallery: { nameKo: "갤러리", heading: "작업", nav: "작업" },
+  location: { nameKo: "오시는 길", heading: "오시는 길", nav: "오시는 길" },
+  story: { nameKo: "이야기", heading: "우리 이야기", nav: "소개" },
+  about: { nameKo: "소개", heading: "소개", nav: "소개" },
+  service: { nameKo: "서비스", heading: "서비스", nav: "서비스" },
+  contact: { nameKo: "문의", heading: "문의하기", nav: "문의" },
+  footer: { nameKo: "푸터", heading: "", nav: null },
+};
+/** 3.8.1 hero 6종 text_cols(T-30). */
+const HERO_TEXT_COLS: Record<string, [number, number]> = {
+  "full-bleed-image": [7, 4],
+  "left-aligned": [8, 4],
+  offset: [6, 4],
+  split: [6, 4],
+  "type-only": [10, 4],
+  centered: [8, 4],
+};
+/** 3.2.4 시그니처 적용 블록(blocksKo) → variant 판정. */
+function decorSlotsFor(block: string, variant: string, img: boolean, sigs: Obj[]): string[] {
+  const vid = `${block}.${variant}`;
+  return sigs
+    .filter((g) => !g.reserved)
+    .filter((g) => {
+      const t = String(g.blocksKo ?? "");
+      const id = String(g.id);
+      if (id === "SIG-02" || id === "SIG-07" || id === "SIG-09")
+        return block !== "nav" || id === "SIG-09";
+      if (id === "SIG-08") return true;
+      if (id === "SIG-10") return img;
+      if (id === "SIG-11")
+        return (
+          vid === "hero.type-only" || vid === "hero.full-bleed-image" || vid === "footer.big-type"
+        );
+      if (id === "SIG-12")
+        return vid === "hero.split" || vid === "story.split" || vid === "about.split";
+      return t.split(/[,，]/).some((x) => x.trim().split(" ")[0] === block);
+    })
+    .map((g) => String(g.id));
+}
+/** 3.11.3 모바일 규칙 선택. */
+function mobileRule(rows: string[][], vid: string, skeleton: string): string {
+  const find = (pred: (k: string) => boolean): string | undefined =>
+    rows.find((r) => pred(r[0] ?? ""))?.[1];
+  const block = vid.split(".")[0] ?? "";
+  const exact = find((k) =>
+    k
+      .split(/,\s*/)
+      .map((x) => x.trim())
+      .some(
+        (x) =>
+          x === vid ||
+          x === `${block}.*` ||
+          (x.includes("/") &&
+            x
+              .replace(/\.split$/, "")
+              .split("/")
+              .includes(block) &&
+            vid.endsWith(".split")),
+      ),
+  );
+  if (exact) return exact;
+  if (skeleton === "split") return find((k) => k.startsWith("split(일반)")) ?? "";
+  if (skeleton === "grid") return find((k) => k.startsWith("grid(일반)")) ?? "";
+  return find((k) => k.startsWith("list, type")) ?? "";
+}
+/** 04장 4.6.2 길이 셀 → 상한. "제목 6–18, 본문 30–90" → {제목: 18, 본문: 90}, "8–24" → 24. */
+function deckLimit(cell: string): number | Record<string, number> | null {
+  const parts = cell.split(",").map((x) => x.trim());
+  const upper = (x: string): number | null => {
+    const m = /(\d+)\s*$/.exec(x.replace(/[^\d–≤ ]/g, " ").trim());
+    return m ? Number(m[1]) : null;
+  };
+  if (parts.length > 1 || /^[가-힣]/.test(parts[0] ?? "")) {
+    const o: Record<string, number> = {};
+    for (const x of parts) {
+      const name = /^([가-힣]+)/.exec(x)?.[1];
+      const u = upper(x);
+      if (name && u !== null) o[name] = u;
+    }
+    return Object.keys(o).length ? o : null;
+  }
+  return upper(parts[0] ?? "");
+}
+
+function genBlocks(ctx: Ctx): Out[] {
+  const md = chapter(ctx.root, "03_design_system.md");
+  const cat = table(section(md, "### 3.6.1"));
+  const slotRows = new Map(table(section(md, "### 3.6.3")).map((r) => [r[0] ?? "", r]));
+  const mobRows = table(section(md, "### 3.11.3"));
+  const sigs = JSON.parse(genSignatures(ctx)[0]?.content ?? "{}").items.filter(
+    (x: Obj) => x.kind === "signature",
+  ) as Obj[];
+  const deck = new Map<string, number | Record<string, number> | null>();
+  for (const r of table(section(chapter(ctx.root, "04_generation.md"), "### 4.6.2"))) {
+    const keys = [...(r[0] ?? "").matchAll(/`([^`]+)`/g)].map((m) => m[1] ?? "");
+    const lens = (r[2] ?? "").split(" / ");
+    keys.forEach((k, i) => deck.set(k, deckLimit(lens[i] ?? lens[0] ?? "")));
+  }
+  const blocks: Obj[] = [];
+  let cur: Obj | null = null;
+  let prevFb = "—";
+  for (const r of cat) {
+    const bname = r[0] ?? "";
+    if (bname) {
+      const meta = BLOCK_META[bname];
+      if (!meta) throw new Error(`BLOCK_META에 ${bname} 없음`);
+      cur = {
+        id: bname,
+        nameKo: meta.nameKo,
+        default_heading_ko: meta.heading || null,
+        nav_label: meta.nav,
+        slots: [] as Obj[],
+        variants: [] as Obj[],
+      };
+      blocks.push(cur);
+      const sr = slotRows.get(bname);
+      if (sr) {
+        const names = (sr[1] ?? "")
+          .split(/,\s*/)
+          .map((x) => x.trim())
+          .filter(Boolean);
+        const deckKeys = (sr[2] ?? "")
+          .split(/,\s*/)
+          .map((x) => /([a-z]+\.(?:[a-z]+|\*)(?:\[\d\])?)/.exec(x)?.[1] ?? "")
+          .filter(Boolean);
+        const nonMedia = names.filter(
+          (n) => !n.startsWith("media") && !n.startsWith("mapPlaceholder"),
+        );
+        (cur.slots as Obj[]).push(
+          ...names.map((raw) => {
+            const id = raw
+              .replace(/[●]/g, "")
+              .replace(/\(.*\)/, "")
+              .replace(/×n/, "")
+              .trim();
+            const kind = /^media|mapPlaceholder/.test(id)
+              ? "image"
+              : /Cta$|^links$/.test(id)
+                ? "link"
+                : /^(items|plans|groups|captions)$/.test(id)
+                  ? "list"
+                  : "copy";
+            const idx = nonMedia.indexOf(raw);
+            const keys =
+              kind === "image"
+                ? []
+                : nonMedia.length === deckKeys.length && idx >= 0
+                  ? [deckKeys[idx] ?? ""]
+                  : deckKeys;
+            const slot: Obj = { id, kind, deckKeys: keys, required: raw.includes("●") };
+            const lim = keys.length === 1 ? deck.get(keys[0] ?? "") : undefined;
+            if (lim !== undefined && lim !== null) slot.maxLength = lim;
+            if (kind === "list" && sr[3] && sr[3] !== "—") slot.listRangeKo = sr[3];
+            return slot;
+          }),
+        );
+      }
+    }
+    if (!cur) continue;
+    const vs = (r[1] ?? "").split(" / ").map((x) => x.trim());
+    const aligns = (r[2] ?? "").split(" / ").map((x) => x.trim());
+    vs.forEach((v, i) => {
+      const id = `${String(cur?.id)}.${v}`;
+      const skeleton = r[3] === "—" ? null : (r[3] ?? null);
+      const imgCell = r[4] ?? "0";
+      const hasImg = imgCell !== "0";
+      const ratios = [...imgCell.matchAll(/\b(1:1|4:5|3:2|16:9|21:9)\b/g)].map((m) => m[1] ?? "");
+      const metaCell = r[5] ?? "";
+      const fb = (r[6] ?? "—") === "〃" ? prevFb : (r[6] ?? "—");
+      prevFb = fb;
+      const fbVariant = /^[a-z-]+$/.test(fb)
+        ? `${String(cur?.id)}.${fb}`
+        : fb.startsWith("value.")
+          ? fb
+          : null;
+      const textOverImage = metaCell.includes("text_over_image");
+      const allowedBg =
+        id === "cta.band"
+          ? ["inverse"]
+          : textOverImage
+            ? ["image"]
+            : String(cur?.id) === "hero"
+              ? ["bg", "surface"]
+              : ["bg", "surface", "inverse"];
+      const vdef: Obj = {
+        id,
+        align: aligns[i] ?? aligns[0] ?? "",
+        skeleton,
+        image: hasImg ? { countKo: imgCell, ratios: [...new Set(ratios)] } : null,
+        icon_grid: metaCell.includes("icon_grid"),
+        text_over_image: textOverImage,
+        fallback_variant: fbVariant,
+        allowed_bg: allowedBg,
+        decor_slots: decorSlotsFor(String(cur?.id), v, hasImg, sigs),
+        mobile: skeleton ? mobileRule(mobRows, id, skeleton) : "",
+      };
+      if (fb !== "—" && !fbVariant) vdef.fallbackKo = fb;
+      if (metaCell) vdef.metaKo = metaCell;
+      const tc = String(cur?.id) === "hero" ? HERO_TEXT_COLS[v] : undefined;
+      if (tc) vdef.text_cols = { lg: tc[0], base: tc[1] };
+      (cur?.variants as Obj[]).push(vdef);
+    });
+  }
+  // "50 variant" = nav(컴파일러 생성) 3개를 뺀 수(표 합계 53, ASM-012)
+  const nVar = blocks
+    .filter((b) => b.id !== "nav")
+    .reduce((a, b) => a + (b.variants as Obj[]).length, 0);
+  if (blocks.length !== 20 || nVar !== 50)
+    throw new Error(`3.6.1 블록 ${blocks.length}/20, variant ${nVar}/50`);
+  return [{ path: "data/taxonomy/blocks.json", content: bundle(ctx, "blocks", blocks) }];
+}
+
 /** 생성기 목록(의존 순서). 나머지 묶음은 M1-04b 이후 단위에서 추가한다. */
 export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genAxes,
@@ -961,6 +1189,7 @@ export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
   genSignatures,
   genHarmony,
   genComponents,
+  genBlocks,
 ];
 
 function isHuman(abs: string): boolean {
