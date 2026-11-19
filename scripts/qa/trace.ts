@@ -5,10 +5,11 @@
 //   --spec-dir <dir>     추출 원천 디렉터리(기본 docs/spec/FINAL)
 //   --audit              AC 배정(중복 0) + 리터럴 감사(audit.ts). 매핑 완전성은 보지 않는다(7.11.2 qa-trace 단계)
 //   --key-coverage       키 커버리지만(key-coverage.ts). --audit에도 포함된다. BLK-003 항목만 있으면 종료 3
-//   --docs는 이후 단위에서 추가한다.
+//   --docs               문서 검사(docs-check.ts, AC-00-01·07). BLK-004 항목만 있으면 종료 3
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { audit } from "./audit.js";
+import { docsCheck } from "./docs-check.js";
 import { keyCoverage, type CoverageHit } from "./key-coverage.js";
 
 export const AC_RE = /AC-\d{2}-\d{2,3}[a-z]?/g;
@@ -162,6 +163,7 @@ function main(argv: string[]): number {
   const specDir = arg(argv, "--spec-dir") ?? join(root, "docs/spec/FINAL");
   const r = trace(root, specDir);
   if (argv.includes("--audit")) return auditMain(root, specDir, r);
+  if (argv.includes("--docs")) return docsMain(specDir);
   if (argv.includes("--key-coverage")) return coverageCode(printCoverage(root, specDir));
   const upto = arg(argv, "--upto");
   const k = upto ? Number(upto.replace(/^M/, "")) : 8;
@@ -179,6 +181,18 @@ function main(argv: string[]): number {
     );
   }
   return fails.length || tcFails.length || r.duplicated.length || r.unassigned.length ? 1 : 0;
+}
+
+function docsMain(specDir: string): number {
+  const hits = docsCheck(specDir);
+  for (const h of hits)
+    process.stdout.write(
+      `${h.blockedBy ? `BLOCKED ${h.blockedBy}` : "FAIL"} ${h.ac} ${h.where}: ${h.message}\n`,
+    );
+  process.stdout.write(
+    `qa:trace --docs: ${hits.length}건(blocked ${hits.filter((h) => h.blockedBy).length})\n`,
+  );
+  return hits.some((h) => !h.blockedBy) ? 1 : hits.length ? 3 : 0;
 }
 
 function printCoverage(root: string, specDir: string): CoverageHit[] {

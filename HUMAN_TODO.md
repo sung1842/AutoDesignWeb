@@ -18,3 +18,4 @@
 - [ ] (BLK-002) 자체 잠금된 m0 수용 테스트 1건의 정규식 오류(DECISIONS_LOG 경로 검사). BLOCKED.md BLK-002의 수정안대로 고치고 relock해 주세요
 - [ ] (AD-027) `docs/dependency-allowlist.md`의 zod 사용 범위에 루트 scripts(guard)를 추가할지 확인해 주세요
 - [ ] (BLK-003) 사양 상수 표(07장 7.12.1)에 96(골든 잡 수)·19(축별 A/B 최소 쌍)·0.00001(비용 합계 허용오차) 행 추가 여부를 결정하고 relock해 주세요(BLOCKED.md BLK-003)
+- [ ] (BLK-004) 01~09장에 00장 태그 규칙(`대상` 열, [P0]/[P2]/[P3]/[MVP 제외] 제목 태그)이 반영되지 않음. 문서 개정 또는 AC-00-01·07 개정 후 relock해 주세요(BLOCKED.md BLK-004, 해석 ASM-005)
