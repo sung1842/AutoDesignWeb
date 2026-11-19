@@ -21,7 +21,7 @@
 
 | 계층 | 이름 | 대상 | LLM 호출 | 실행 시점 | 차단력 |
 |---|---|---|---|---|---|
-| L1 | 결정론 로직 | 취향 벡터 갱신·종료 판정·유형 판정(→02장), L2 매핑·명세 컴파일러·레이아웃 컴파일러(→03·04장), 하드 게이트 G-01~G-12·조화 점수 H·취향 일치도 TM·AI 티 린터 AIL-*(→04장), 추출기(→04·05장), 결정론 폴백 시안, 비용 계산, 잡 상태 판정(R-15), 세션 상태 머신 | 없음 | 매 커밋(PR) | 실패 시 머지 불가 |
+| L1 | 결정론 로직 | 취향 벡터 갱신·종료 판정·유형 판정(→02장), L2 매핑·명세 컴파일러·레이아웃 컴파일러(→03·04장), 하드 게이트 G-01~G-13·조화 점수 H·취향 일치도 TM·AI 티 린터 AIL-*(→04장), 추출기(→04·05장), 결정론 폴백 시안, 비용 계산, 잡 상태 판정(R-15), 세션 상태 머신 | 없음 | 매 커밋(PR) | 실패 시 머지 불가 |
 | L2 | Mock·녹화 재생 | API 통합, 잡 큐 흐름, 생성 파이프라인 전 구간, E2E, 시각 회귀, 접근성, 장애 주입 | 없음(`LLM_MODE=mock` 기본, 실응답 형태 회귀는 `replay`, `NO_EXTERNAL_NETWORK=1`) | 매 커밋(PR) + 야간 전체 매트릭스 | 실패 시 머지 불가 |
 | L3 | 실모델 평가 | 골든 세트(→7.2), 사람 블라인드 평가(→7.8) | 실제 호출(`LLM_MODE=live`) | 프롬프트·모델·models.yaml·L2 매핑표 변경 시 필수, 출시 게이트 G2·G7 | 실패 시 승격·출시 불가 |
 
@@ -42,7 +42,7 @@
 | E2E | Playwright | 사용자 흐름 전 구간(01장 S01~S15), 생성은 `mock` | 핵심 시나리오 E2E-01~06 실패 0 | PR·마일스톤: chromium(09장 D-0911), 야간·M8: 9개 조합(→7.6) |
 | 시각 회귀(서비스 UI) | Playwright `toHaveScreenshot` | 01장 1.12.1 화면×상태 매트릭스(D-0109, `?__state=`로 재현) × 3뷰포트 | `maxDiffPixelRatio ≤ 0.01`. 기준 이미지는 렌더 환경 지문별 `e2e/__screenshots__/<RENDER_ENV_ID>/`에 단독 커밋으로 생성(09장 9.4.1·D-0910, S-02). Docker 이미지 기준선은 CI 전용(`visual-docker-baseline` needs_ci) | PR |
 | 시각 회귀(렌더러) | Playwright `toHaveScreenshot` | 고정 레이아웃 트리 픽스처: 프리셋 8 × 대표 페이지 3 = 24장(1280×800, 09장 D-0910) | 같은 기준 | PR |
-| 생성물 구조 검사 | Playwright + 04장 하드 게이트 모듈 | LLM 생성물(mock·replay·live) | G-01~G-12 통과 100%(픽셀 스냅샷은 쓰지 않음, 5개 뷰포트는 G-04~G-06이 검사) | PR, L3 |
+| 생성물 구조 검사 | Playwright + 04장 하드 게이트 모듈 | LLM 생성물(mock·replay·live) | R-13 하드 게이트 전부(현재 G-01~G-13) 통과 100%(픽셀 스냅샷은 쓰지 않음, 5개 뷰포트는 G-04~G-06이 검사) | PR, L3 |
 | 접근성 | `@axe-core/playwright`, Lighthouse CI, 키보드 전용 E2E | 서비스 UI 전 화면, 생성물(G-08), 내보낸 사이트 | → 7.7 | PR + 야간 |
 | 성능 | Lighthouse CI(`lighthouserc.json`), Playwright trace, k6 | 서비스 UI, 생성 파이프라인, 내보낸 사이트 | → 7.5 | 야간 + 릴리스 |
 | 보안 | Vitest + Playwright | 인젝션·XSS·sandbox·CSP(→7.4 TC-S), 08장 AC-08-50 인젝션 세트 20종 | 차단 100% | PR |
@@ -111,11 +111,14 @@ LLM 모드의 원천은 09장 9.6.1(D-0908)이다. 이 장의 사용 규칙:
 | `server_error` | TC-R-02 |
 | `injection_echo` | TC-S-11 |
 | `cost_spike` | TC-R-09 |
+| `cost_ramp` | TC-R-19 |
+| `usage_overrun` | TC-R-20 |
 | `budget_exhausted` | TC-C-01 |
 | `mixed`(`eval:golden --mode mock` 기본) | TC-R-15 |
 | `copy_schema_fail@gen_copy` | TC-R-16 |
 | `copy_timeout@gen_copy` | TC-R-17 |
 | `copy_refusal@gen_copy` | TC-R-18 |
+| `judge_position_bias@judge_vision` | 09장 AC-09-18(위치 편향 보정 결정론, T-18) |
 
 추가로 `timeout`을 1차·폴백 모델 모두에 적용하는 조합을 TC-R-07(`all_down`)로 둔다.
 
@@ -198,7 +201,9 @@ LLM 모드의 원천은 09장 9.6.1(D-0908)이다. 이 장의 사용 규칙:
 - seed = 케이스 번호(GS-01 → 1)로 고정한다. 재시도로 다른 seed를 고르지 않는다(운 좋은 로그 선택 금지).
 - 생성한 로그를 현재 엔진으로 재생해 typeId만 검사한다. 불일치하면 θ*의 오프셋 축을 (A1, A2)에서 (A3, A4)로 바꾸는 결정론 규칙을 1회 적용해 다시 만든다. 그래도 불일치하면 빌드 실패이고 BLOCKED다.
 - 통과하면 재생한 μ를 소수 6자리로 `expected.muRef`에 기록한다. `muRange`는 폐지한다.
-- 진단 알고리즘이 바뀌어도 로그는 바꾸지 않는다. 같은 로그에서 M1a가 깨지면 진단 회귀다. `engine_version` major가 바뀌면 02장 2.15 재생으로 muRef를 다시 만들고 사람 승인을 받는다(`manual`, HUMAN_TODO).
+- **생성 시점(T-04)**: M1에는 엔진이 없으므로 M1 ②는 골격 32행(`answers`·`expected.muRef`는 null)의 스키마 유효성만 본다. `build-answers`는 M4 종료 직전에 1회 실행한다(진단 `tuned` 확정(T-03) 뒤). `m4-done` 커밋에서 `data/golden/**`를 자체 잠금한다(09장 9.5.1).
+- 진단 알고리즘이 바뀌어도 로그는 바꾸지 않는다. 같은 로그에서 M1a가 깨지면 진단 회귀다.
+- **재생성 조건(T-04)**: `engine_version` major 변경 **또는** `diagnosis.tunable`(tuned 값, 7.12.1) 변경일 때만 02장 2.15 재생으로 muRef를 다시 만든다. tuned 변경과 새 muRef는 **같은 커밋**이어야 하고 사람 승인 기록이 필요하다(단계 `golden-muref-approval`, manual, HUMAN_TODO). 그 밖의 이유로 muRef를 바꾼 커밋은 guard FAIL이다. M1a 합격 기준은 바꾸지 않는다.
 
 ### 7.2.3 구성표
 
@@ -244,7 +249,7 @@ LLM 모드의 원천은 09장 9.6.1(D-0908)이다. 이 장의 사용 규칙:
 | ID | expected 요지 |
 |---|---|
 | GS-25 | μ·σ 사전값 유지(02장 AC-02-04) → `flags:["low_signal"]`, 유형은 02장 신호 부족 규칙, 시안 3개 정상 생성 |
-| GS-26/27 | μ ∈ [0,1], 04장 용도 허용 범위 처리 후 G-01~G-12 통과, `v_true` TM은 04장 정의대로 기록 |
+| GS-26/27 | μ ∈ [0,1], 04장 용도 허용 범위 처리 후 하드 게이트 전부(G-01~G-13) 통과, `v_true` TM은 04장 정의대로 기록 |
 | GS-28 | 평균 벡터로 생성하지 않음, `flags` ⊇ `conflict`, 생성 닻은 1순위 앵커 1개(02장 AC-02-19) |
 | GS-29 | 02장 동률 규칙의 결정론적 결과, 3회 실행 유형 동일, `flags` ⊇ `tie`, `is_boundary=true` |
 | GS-30 | 375px에서 G-04~G-06 통과(넘침·잘림·겹침 0) |
@@ -261,7 +266,7 @@ LLM 모드의 원천은 09장 9.6.1(D-0908)이다. 이 장의 사용 규칙:
 | M1b 진단 여유(기록) | \|μ − θ*\| ≤ `m1.marginZ`·σ_display인 축 비율. `m1.marginCoverageWarnMin` 미만이면 `margin_warning` |
 | M2 스키마 유효율(최초) | `gen_layout`·`gen_copy` 최초 응답이 스키마(G-01)를 통과한 비율(후보 단위) |
 | M3 스키마 유효율(수리 후) | 04장 repair 후 통과 비율(후보 단위) |
-| M4 노출 하드 통과 | 노출된 모든 시안이 G-01~G-12 전부 통과한 비율 |
+| M4 노출 하드 통과 | 노출된 모든 시안이 R-13 하드 게이트 전부(현재 G-01~G-13) 통과한 비율 |
 | M5 완전 성공률 | 잡 `status=succeeded`(비폴백 노출 3개, R-15) 비율 |
 | M6 최소 보장률 | 잡 `status ∈ {succeeded, partial, fallback}` 비율 |
 | M6b 폴백 비율 | 노출 시안 중 `fallback=true` 비율 |
@@ -299,7 +304,7 @@ R = Between / max(Within, 0.05)
 | M6 | 100% | D-23 최소 1개 보장 |
 | M6b | ≤15% | 04장 AC-04-39 |
 | M7 | 평균 ≥85, 최솟값 ≥80 | D-23 노출 조건 80 + 여유 |
-| M8 | `v_true` TM 평균 ≥82, 최솟값 ≥75, ≥80 비율 ≥90%, S_free 최솟값 ≥65 | D-23, AI-05, 04장 AC-04-20 |
+| M8 | `v_true` TM 평균 ≥82, 최솟값 ≥75, ≥80 비율 ≥90%, S_free 최솟값 ≥65(T-19: S_free = null인 시안은 최솟값 계산에서 빼고 null 개수와 경고 `SFREE_NA` 건수를 리포트 `metrics.M8.sFreeNullCount`에 적는다. null은 F = {A1, A4} ∩ reliable이 빈 집합이라 측정 불가라는 뜻이며 04장 4.10.4가 원천. 사람 라벨 G2가 이 상태를 확인한다) | D-23, AI-05, 04장 AC-04-20·45 |
 | M9 | error 0, 시안당 warn ≤2, warn 평균 ≤1.0 | D-23, 04장 D-0410 |
 | M10 | 금지어 0, G-10 충족 100%, 무근거 사실 0 | 04장, 08장 AC-08-28 |
 | M11 | R ≥2.0 | QA-12 |
@@ -381,6 +386,12 @@ G = 0.35·mean(M8 TM) + 0.25·mean(M7) + 0.15·(100·M5) + 0.15·(100·M12 렌�
 | 완료율 | `survey_start` → `survey_complete` | 이벤트 | ≥65%(00장 F2와 일치) | ≥80% | 모니터 |
 | 재검사 신뢰도 | 6~14일 후 재진단 유형 일치(경계 결과는 2순위 포함), 축별 Pearson r | 지인 n≥15 | ≥60%, r ≥0.6(02장, 00장 A1) | ≥70%(n≥50) | 공개 출시 조건(00장 §7.2 ②), 자동 게이트 아님. 표본 운영은 00장 §5.4(S-18) |
 | 결과 공감도 | `result_rating` 4~5점 비율 | 이벤트 | ≥70%, 평균 ≥3.8(00장 A1) | ≥80% | 모니터 |
+| V-MEAS 측정 불일치(비차단) | 가상 사용자는 `target_l1`(의도값)로 지각·응답하고 엔진은 `x_card`로 갱신(T-07) | `pnpm sim:survey` | RMSE·top-1 기록만 | — | 없음(기록) |
+| V-LAMBDA 축 민감도 차이(비차단) | 축별 β 배율이 다른 사용자(정의 02장 2.16.2, AI2-06) | 동일 | RMSE·top-1·포함률 기록만 | — | 없음(기록) |
+| V-POS 위치 편향(비차단) | 화면 위치 선호가 있는 사용자(02장 2.16.2) | 동일 | 기록만 | — | 없음(기록) |
+| V-MIX β 혼합 모집단(비차단) | β ∈ {2, 4, 8, 16} 혼합(02장 2.16.2) | 동일 | 기록만 | — | 없음(기록) |
+
+- **자극물 원천(T-07)**: 위 G2 행은 `survey_items`의 active `x_card`만 쓴다(provenance 무관). `--synthetic`(target_l1 + 잡음)은 M4 이전 단위 테스트 전용이고 리포트 `verdict: "n/a"`이며 `--synthetic --gate`는 종료 코드 1이다. 리포트에 `stimulus.source`(`x_card`\|`synthetic`)·`normalizer_version`·`normalizer.provenance`를 적는다(02장 AC-02-35). 비차단 행은 `release:check` 판정에 들어가지 않는다.
 
 ### 7.3.2 추출
 
@@ -492,14 +503,16 @@ ID 체계: TC-E(진단 입력) / TC-B(브랜드 입력) / TC-R(장애·복원력
 | TC-R-06 | `lint_error`(전 후보) | 재생성 최대 1회(D-23, 04장 D-0401) 후 결정론 폴백 시안 노출, `status=fallback` |
 | TC-R-07 | `timeout`을 1차·폴백 모델 모두에 적용 | 결정론 폴백 시안 ≥1개(E2E-06), `status=fallback` |
 | TC-R-08 | `slow` | 120초 시점 폴백 경로 진입, 180초 이전 종료(R-25), 비폴백 노출 수에 따라 `partial` 또는 `fallback` |
-| TC-R-09 | `cost_spike` | `JOB_COST_CAP_USD` 초과 예상 시 남은 호출 중단, 확보 후보 + 폴백, `cost_usd ≤0.30` |
+| TC-R-09 | `cost_spike`(단가 10배, 추정 반영. 정의 원천 06장 6.9.4 ⑦) | 06장 6.9.4 ⑦ 표의 기대 결과: 첫 판정에서 넘는 호출 `budget_skipped`(`COST_CAP`), `sum(llm_calls.cost_usd) ≤ capEff`, 상태 ∈ {partial, fallback}, DB 예외·`WORKER_LOST` 0(06장 AC-06-21) |
+| TC-R-19 | `cost_ramp`(단가 1.20배, 변형 B·C 수정 대상) | 06장 6.9.4 ⑦ 표: `judge_vision` 6건 `skip_vision` → 변형 B 수정 1건 `ok` → 변형 C 수정 `skip_repair` 순서, 상태 `partial`(06장 AC-06-61) |
+| TC-R-20 | `usage_overrun`(usage 3배, 추정 미반영) | 06장 6.9.4 ⑦ 표: DB 예외 0, `WORKER_LOST` 0, A11 정확히 1건, 초과 시점 이후 출발한 `ok` 호출 0, 합계 ≤ `capEff × 3`(06장 AC-06-61) |
 | TC-R-10 | 생성 중 탭 닫기 → 2분 후 S12 또는 `/g/[jobId]` 재방문 | 잡은 서버에서 계속, 완료면 S08, 진행 중이면 S07 |
 | TC-R-11 | 같은 사용자 동시 생성 요청 2개 | 1개만 실행, 2번째는 409 `JOB_IN_PROGRESS` + 진행 중 잡 화면으로 이동 |
 | TC-R-12 | 워커 프로세스 강제 종료(생성 중) | heartbeat 만료 후 pg-boss 재시도로 1회 재개 또는 `failed` + 재시도 화면, 중복 노출 시안 0 |
 | TC-R-13 | DB 연결 끊김 5초 | 503 + S15 재시도 안내, 복구 후 정상 |
 | TC-R-14 | `low_score@*` | 재생성 1회 → 여전히 미달 → 전 후보 폴백 시안 노출, 잡 상태는 R-15 규칙(비폴백 0 → `fallback`), 한도 차감 없음(환불). 09 9.6.2는 기대 결과를 따로 적지 않고 이 행을 참조한다(S-06 d·e) |
-| TC-R-15 | `mixed`(후보 0: ok, 1: 이웃 후보와 같은 block 시퀀스, 2: expression을 낮추는 variant → TM·S_free 미달, 3: 범위 밖 덱 index, 4: warn 3개, 5: ok) | `llm_calls.call_kind='repair_quality'` ≥1, 다양성 재호출 ≥1, mock 골든 전체에서 `status=partial` ≥1, 모든 노출 시안이 04 AC-04-20 충족, 재호출 후 AC-04-16 다양성 충족률 100% |
-| TC-R-16 | `copy_schema_fail@gen_copy` | `repair_schema` 1회 → 잡 경과 ≤60초면 fallback 모델 1회 → 템플릿 덱. `status=partial`(템플릿 덱이면 `succeeded` 금지), `generation_jobs.copy_source='template'`, 경고 `COPY_FALLBACK`, 노출 ≥1, `llm_calls`에 `gen_copy` initial 1 + repair_schema 1 + fallback 1. 한도 차감은 R-15 그대로 |
+| TC-R-15 | `mixed`(후보 0: ok, 1: 이웃 후보와 같은 block 시퀀스, 2: expression을 낮추는 variant → TM·S_free 미달, 3: 범위 밖 덱 index, 4: warn 3개, 5: ok) | `candidateIndex = variantIndex × 2 + slotIndex`(순서 `[v_true, v_fit, v_bal]`, T-18)로 위 할당이 정해진다. 잡 1건에서 `llm_calls.call_kind='repair_quality'` 정확히 1(후보 2), `call_kind='diversity'` 정확히 1(후보 1), 재호출 결과는 `initial`이 아니므로 장애 미적용(09장 9.6.2 시드 규칙), mock 골든 전체에서 `status=partial` ≥1, 모든 노출 시안이 04 AC-04-20 충족, 재호출 후 AC-04-16 다양성 충족률 100% |
+| TC-R-16 | `copy_schema_fail@gen_copy` | `repair_schema` 1회 → 잡 경과 ≤60초면 fallback 모델 1회 → 템플릿 덱. 상태 = R-15 값과 `partial` 중 낮은 쪽(S-12 문장, 템플릿 덱이면 `succeeded` 금지, QA3-12·T-26), `GenerationView.copySource='template'`, `generation_jobs.copy_source='template'`, 경고 `COPY_FALLBACK`, 노출 ≥1, `llm_calls`에 `gen_copy` initial 1 + repair_schema 1 + fallback 1. 한도 차감은 R-15 그대로 |
 | TC-R-17 | `copy_timeout@gen_copy`(가짜 시계) | 잡 경과 >60초면 fallback 모델을 건너뛰고 템플릿 덱. 첫 노출 ≤120초 |
 | TC-R-18 | `copy_refusal@gen_copy`(공급자 안전 거부) | 우회 재요청 0, 노출 0, `status=failed`, `BLOCKED_BRAND{reason:'content_policy'}`, 한도 차감 0(환불) |
 
@@ -553,7 +566,7 @@ ID 체계: TC-E(진단 입력) / TC-B(브랜드 입력) / TC-R(장애·복원력
 | TC-D-03 | 후보 카드 선택 | 03장 검증 조합 안의 값만 적용(원시 hex·px 입력 UI 0) |
 | TC-D-04 | 대비 미달이 되는 조합 | 03장 스냅 규칙으로 자동 보정 + 배너, 보정 불가면 미적용. 노출 상태 대비 위반 0 |
 | TC-D-05 | undo 50회 / redo | 생성 원본까지 복구, 상태 해시 일치(AC-01-37), `auto_fix`는 원인 op와 함께 취소 |
-| TC-D-06 | 저장 | 서버가 재컴파일·재검사(G-01~G-12), 실패 시 저장 거부 + 원인 안내(`GATE_FAILED:<id>`) |
+| TC-D-06 | 저장 | 서버가 재컴파일·재검사(04장 4.15.2 저장 게이트, G-13 `abuse_terms` 포함), 실패 시 저장 거부 + 원인 안내(`GATE_FAILED:<id>`) |
 | TC-D-07 | 슬롯 선택(미리보기 클릭) | 부모 오버레이 + `slotRects`로 선택, iframe 내부 스크립트 0 |
 | TC-D-08 | (T-35, S-32) S08 비교 화면 | `v_true` 외 카드에 보정 칩(`movedAxes` ≤ 2)·"취향 그대로와 다른 점" 행(`diffFromTrue` 상위 2)이 보이고 `v_true`에는 차이 행 0 → 01장 AC-01-54(M6, E2E) |
 | TC-D-09 | (T-35, S-33) `presets:lint-matrix` | 8개 프리셋 × 3.4.5 허용 값 1개 변경 리포트의 린터 error 0, CF 조합에 걸리는 값은 편집 선택지에서 `disabled` → 03장 AC-03-43(M3, CI) |
@@ -562,7 +575,7 @@ ID 체계: TC-E(진단 입력) / TC-B(브랜드 입력) / TC-R(장애·복원력
 
 | ID | 검사 | 기대 결과 |
 |---|---|---|
-| TC-X-01 | `html_zip` | `file://`로 열었을 때 미리보기 렌더와 1280px 픽셀 차이 ≤1%, html-validate error 0, G-01~G-12 재통과 |
+| TC-X-01 | `html_zip` | `file://`로 열었을 때 미리보기 렌더와 1280px 픽셀 차이 ≤1%, html-validate error 0, 하드 게이트 전부(G-01~G-13) 재통과 |
 | TC-X-02 | `react_zip` | 오프라인 캐시 상태에서 `pnpm i && pnpm build` 성공, `tsc --noEmit` 오류 0, ESLint 오류 0, 렌더 픽셀 차이 ≤1% |
 | TC-X-03 | `dtcg_json` | DTCG 스키마 검증 통과, 미리보기 token과 값 일치 100% |
 | TC-X-04 | 외부 의존 | HTML·CSS·TSX에서 `https?://` 참조 0(링크 슬롯 제외), CDN 0 |
@@ -645,7 +658,9 @@ ID 체계: TC-E(진단 입력) / TC-B(브랜드 입력) / TC-R(장애·복원력
 
 | 대상 | 범위 | 검증 뷰포트 |
 |---|---|---|
-| 서비스 UI | 360~1920px, 모바일 우선. S01~S08·S13은 360px에서 완주 가능. S09 편집은 1024px 이상 권장(모바일 편집 범위는 01장) | 시각 회귀: 375×812, 768×1024, 1280×800(01장 AC-01-46) |
+| 서비스 UI | 360~1920px, 모바일 우선. S01~S08·S13은 360px에서 완주 가능. S09 편집 허용 여부와 내보내기 표시는 **01장 1.3.1 편집 허용 기기 판정**(S09 마운트 시 1회, 세션 동안 고정)을 따른다. 뷰포트 폭으로 판정하지 않는다(T-24) | 시각 회귀: 375×812, 768×1024, 1280×800(01장 AC-01-46) |
+| S02 진단 카드(T-23) | 01장 1.4.3 크기 규칙(1열·토글 전환, mobile `card_h`, 회전 안내) | 360×640, 390×664, 412×780(safe-area 34 에뮬레이션 포함), 768×1024, 1024×768, 1280×720, 1366×657, 844×390(터치·가로) — 01장 AC-01-55 |
+| S09·S10 확대(T-24) | 200% 확대(1280×800에서 CSS 폭 640) 시 편집 허용 기기는 편집·내보내기 유지, 편집 불허 기기는 S08 주 CTA `drafts.mobile.cta` | 1280×800 @200%, 390×844 — 01장 AC-01-56 |
 | 생성 시안 | D-25 | 375, 768, 1024, 1280, 1920(폭) × 전체 페이지 |
 
 ### 7.6.3 테스트 조합
@@ -726,7 +741,8 @@ P-1b "AI 같다" 판정률(04장 AC-04-41, 00장 A3와 같은 데이터):
 
 ### 7.8.3 P-2 베이스라인 대비 선호율
 
-- 베이스라인: `pnpm eval:baseline`(00장 §5.2, 오프라인 전용)으로 같은 BrandInput을 `gen_layout` 역할의 운영 모델에 잠금 프롬프트 `eval/blind/baseline_prompt.md`("다음 브랜드 정보로 한국어 원페이지 랜딩 페이지 HTML을 만들어라" + 브랜드 데이터 블록)로 요청한 결과. 샌드박스 렌더 후 스크린샷만 보관(06장 보안). 렌더 실패 시 최대 2회 재요청, 그래도 실패하면 해당 브리프 제외(제외 수 기록, ≤2).
+- 베이스라인: `pnpm eval:baseline`(00장 §5.2, 오프라인 전용)으로 같은 BrandInput을 `gen_layout` 역할의 운영 모델에 잠금 프롬프트 `eval/blind/baseline_prompt.md`("다음 브랜드 정보로 한국어 원페이지 랜딩 페이지 HTML을 만들어라" + 브랜드 데이터 블록)로 요청한 결과. 샌드박스 렌더 후 스크린샷만 보관(06장 보안).
+- **자산 동등화(T-31, PD3-01)**: 베이스라인 프롬프트에는 잠금 파일 `eval/blind/baseline_assets_appendix.md`(이미지 팩 후보 ≤ 12개의 로컬 URL·설명, 본 시스템 폰트 팩의 `@font-face` 블록)를 부록으로 붙인다. 렌더는 본 시스템과 **같은 워커 렌더러·로컬 자산 서버·외부 네트워크 차단**으로 하고, 응답 HTML의 외부 URL은 결정론적으로 제거한다(같은 입력 → 같은 HTML). 적합성 = `imagesLoaded ≥ 1 ∧ systemFontFallback = 0`(CDP로 측정). 미달·렌더 실패면 최대 2회 재요청, 그래도 미달이면 해당 브리프 제외(제외 수 기록, ≤2, 기존 상한 유지). P-2s도 같은 하네스를 쓴다.
 - 쌍: 골든 핵심 20케이스(GS-01~20)의 `v_true` vs 베이스라인(04장 AC-04-40의 20쌍).
 - 질문: "이 브랜드의 랜딩 페이지로 실제로 쓰고 싶은 쪽은?" + 각 시안 "AI가 만든 것 같다" 체크(P-1b).
 - 합격선: 선호율 ≥0.70 그리고 Wilson 95% 하한 ≥0.60(5명 × 20쌍 = 100응답). Phase 2 ≥0.80. 00장 A2와 같은 값이다.
@@ -1273,7 +1289,7 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
 | ID | 수용 기준 |
 |---|---|
 | AC-07-01 | Given `NO_EXTERNAL_NETWORK=1`, When PR 파이프라인을 실행하면, Then 모든 잡이 실제 공급자 호출 0건으로 완료된다. `LLM_MODE=replay` 잡에서 녹화가 없는 요청은 `E_REPLAY_MISS`로 실패한다. |
-| AC-07-02 | Given 7.1.4의 13개 시나리오와 TC-R-07 조합, When 각각 생성 잡을 실행하면, Then 7.4.3 공통 기대(시안 ≥1개 또는 재시도 화면, 무한 로딩 0, 미처리 예외 0, 상태가 R-15와 일치)가 모두 충족된다. |
+| AC-07-02 | Given 09장 9.6.2 표의 전 시나리오(기대 결과는 7.4.3 TC-R, 수량을 문장에 쓰지 않는다. T-10)와 TC-R-07 조합, When 각각 생성 잡을 실행하면, Then 7.4.3 공통 기대(시안 ≥1개 또는 재시도 화면, 무한 로딩 0, 미처리 예외 0, 상태가 R-15와 일치)가 모두 충족된다. |
 | AC-07-03 | `pnpm eval:golden --mode live`는 32케이스 × 3회를 실행하고 7.2.7 스키마 리포트를 저장하며, 7.2.5 합격선·7.2.6 회귀 허용폭 판정과 실패 지표 목록을 출력한다. `--smoke`는 8케이스 × 1회. |
 | AC-07-04 | Given `config/thresholds.json` 값 하나를 바꾼 커밋, When `pnpm guard`, Then FAIL하고 경로를 출력한다. `config/lock/locked-hashes.json`까지 함께 바꿔도 CI에서 `QA_LOCK_DIGEST` 불일치로 FAIL한다. |
 | AC-07-05 | Given 판정 코드에 `tasteScore >= 75` 같은 리터럴 비교, When `pnpm guard`, Then FAIL. |
@@ -1295,6 +1311,7 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
 | AC-07-21 | (T-05, QA3-04) 메타 테스트 ① 클린 클론·`seed:temp`·키 없음·native에서 모든 자동 단계가 pass이면 `release:check` 종료 코드 2이고 `reports/release-check.json`에 카탈로그(`spec:test-policy.steps`)의 단계 ID가 전부, 그리고 그것만 있다 ② 카탈로그에 없는 단계 ID를 보고하는 가짜 단계를 넣거나 카탈로그 단계 1개를 빼면 1 ③ `sim-diagnosis-gate` fail + 결과의 `blockedBy`가 재현 명령 있는 open BLK를 가리키면 3, `blockedBy`가 없거나 BLK가 closed면 1 ④ blockable이 아닌 `coverage` fail에 BLK를 연결해도 1(그 BLK가 `locked-conflict`가 아니면) ⑤ 09장 AC-09-06과 G1 `data-provenance`를 같은 temp 픽스처로 실행하면 둘 다 "temp 묶음 있음 → 2"로 일치한다 ⑥ `LLM_MODE=live`에서 `golden-live` 리포트 `runsCompleted < 96`(예산 중단)이면 `golden-live` fail이고 종료 코드 1이다(T-21). |
 | AC-07-22 | (T-08, QA3-05) 메타 테스트: `tests/acceptance/` 안의 `expect(res.status).toBe(404)`와 `expect(list).toHaveLength(72)`는 `pnpm qa:trace --audit` PASS다. `expect(h).toBeGreaterThanOrEqual(80)`은 FAIL이고, 헬퍼 파일 `const H = 80` + `toBeGreaterThanOrEqual(H)`도 FAIL이며 둘 다 파일·줄을 출력한다. 사양 상수 표 밖의 수치를 비교 기준으로 쓰는 AC 문장 1개를 넣은 픽스처 문서에서 `qa:trace` 키 커버리지 검사가 FAIL한다. `config/forbidden-allowlist.json`에 숫자 리터럴 항목이 있으면 guard가 FAIL한다. |
 | AC-07-23 | (T-09, QA3-06) ① `pnpm qa:trace`가 00~09장 모든 AC ID(정규식 `AC-\d{2}-\d{2,3}[a-z]?`)에 대해 배정 마일스톤을 정확히 1개 출력하고 배정 없는 ID·중복 배정 ID가 0개다 ② 메타 테스트: M5 배정 AC를 `tests/unit/`에만 매핑하면 FAIL, `tests/acceptance/m4/`에만 매핑해도 FAIL, `tests/acceptance/m5/`에 매핑하면 PASS ③ `AC-06-03b`처럼 접미사가 붙은 ID가 범위 항목 `AC-06-01~07`로 배정된다 ④ 표에 없는 가짜 ID `AC-06-99`를 문서에 넣으면 경고 1건과 함께 M8로 출력된다. |
+| AC-07-26 | (T-31, PD3-01) `pnpm eval:baseline`을 Mock 공급자(외부 URL·웹폰트 링크가 든 고정 HTML 반환)로 실행하면 ① 렌더 요청 중 외부 호스트 요청 0건 ② 같은 입력 2회의 정리된 HTML이 바이트 동일 ③ 이미지 0장 HTML 픽스처는 적합성 미달로 재요청 2회 후 제외되고 제외 수가 리포트에 1로 기록 ④ 프롬프트에 `baseline_assets_appendix.md` 내용이 포함되고 그 파일이 `locked-hashes.json`에 있다. |
 | AC-07-24 | (T-02, QA3-08) 메타 테스트: FINAL `spec:thresholds` 블록의 값 1개를 `review-pass` 시점 블록과 다르게 만든 저장소에서 `spec-lock` 생성 절차(`pnpm spec:extract --from FINAL`·`--from review-pass` 대조)와 `pnpm guard` 6단계가 모두 FAIL한다. `review-pass` 태그가 없으면 guard가 FAIL한다. `spec:extract`·`qa:trace`의 입력 경로는 코드 상수 1개(`docs/spec/FINAL/07_quality.md`)이고 09장 9.8.1과 같다. |
 | AC-07-25 | (T-01, QA3-01) 메타 테스트: `spec-lock` 이후 `docs/spec/DECISIONS_LOG.md` 끝에 AD 1줄을 추가한 커밋에서 `pnpm guard`는 PASS다. 같은 파일의 기존 줄 1개를 수정하거나 삭제한 커밋, `docs/spec/FINAL/07_quality.md` 1바이트를 바꾼 커밋, `docs/spec/INDEX.md`를 바꾼 커밋에서는 FAIL이다. `rg 'DECISIONS_LOG'`로 CLAUDE.md·07·09를 검색하면 경로가 `docs/spec/DECISIONS_LOG.md` 하나로 나온다. |
 
@@ -1333,13 +1350,13 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
 | 유형 중심 벡터 | 03장 3.4.7 `anchor_l1` | 03 | 골든 θ*, TC-E-13, 추출기 왕복 |
 | 시뮬레이터 | 모집단 P-U·P-C, σ_display = 1.3σ | 02 | 7.3.1, `sim:survey` |
 | BrandInput | 01장 1.5.5.2 | 01 | TC-B, 골든 `brand` |
-| 하드 게이트·점수·리포트 | G-01~G-12, H, TM, S_free, `QualityReport` | 04 | 골든 M4·M7·M8, TC |
+| 하드 게이트·점수·리포트 | G-01~G-13(R-13·S-24), H, TM, S_free, `QualityReport` | 04 | 골든 M4·M7·M8, TC |
 | 린터 규칙 ID | AIL-* (error/warn) | 04 | M9, GS-32, P-6 |
 | 변형 거리 | `D(x,y)` L1 합, L2 7개 항목 차이 | 04 | M11, M12 |
 | 결정론 폴백 | `buildFallback` / `standardTree(typeId, purpose)` | 04, 03 | M6, TC-R |
 | 잡·후보·시안 테이블 | `generation_jobs`(status R-15, cost_usd, queued_at), `candidates`(quality_report, taste_score), `mockups`, `llm_calls` | 06 | M5·M14·M15, TC-R, TC-C |
 | 오류 코드 | `JOB_IN_PROGRESS`, `GEN_BUDGET_EXCEEDED`, `GEN_DISABLED`, `SEQ_CONFLICT`, `BLOCKED_BRAND`, `BRAND_ATTESTATION_REQUIRED`, `GATE_FAILED:<id>` | 06(`@tastefit/api-contract`, R-13) | TC |
-| LLM 모드·MockProvider 시나리오 | `LLM_MODE` 4종, 시나리오 13종, `fixtures/llm/<role>/<requestHash>.json`, `E_REPLAY_MISS` | 09 | 7.1.3~7.1.4 |
+| LLM 모드·MockProvider 시나리오 | `LLM_MODE` 4종, 시나리오 = 09장 9.6.2 전 행(기대 결과는 7.4.3 TC-R), `fixtures/llm/<role>/<requestHash>.json`, `E_REPLAY_MISS` | 09 | 7.1.3~7.1.4 |
 | models.yaml 역할·프롬프트 경로 | `gen_layout`, `gen_copy`, `judge_vision`, `ref_tagger`, `packages/llm/prompts/<role>@v<N>.md` | 06(R-12) | 녹화 키, 승격, 베이스라인 |
 | 승격 도구 | `eval:compare`(+`--finalize`), `eval_sets`, `eval_judgments`, ADM-09 | 06, 00 | 7.2.8, 7.8 |
 | 이벤트 | 00장 §8.3 + `survey_exit`, `ui_error_shown` | 00(R-23) | 7.3.4, 7.9 |
@@ -1398,6 +1415,13 @@ P-2s 강한 베이스라인(S-36, 기록 전용·출시 비차단):
 | T-02(QA3-08) | spec 고정점 = `review-pass`, 추출 원천 `docs/spec/FINAL/07_quality.md` 1개 | 7.12.1, 7.12.2 6단계·사람 없는 운영 표, 7.12.3, 7.1.7 경로, AC-07-24 |
 | T-03(QA3-02·AI3-05) | `diagnosis.tunable`·`config/diagnosis-tuned.json` 분리, 자체 잠금 | 7.12.1 블록·잠금 대상 표·옛 키 대응표, 7.12.2 3·8단계, 7.12.3 · 탐색 규칙·AC-02-36은 02장 |
 | T-08(QA3-05·AI3-06·PM3-08·QA3-10) | `qa:trace --audit` 재정의, 신규 키 8개, 사양 상수 표, `auditAllowLiterals` | 7.12.1 블록·대응표·사양 상수 표, 7.12.2 감사 정의 표, 7.5.1, TC-C-02, AC-07-22 |
+| T-04(QA3-03) | 골든 muRef 생성 시점(M1 골격·M4 build-answers·m4-done 잠금)·재생성 조건(major 또는 tuned, 같은 커밋, 사람 승인) | 7.2.2 |
+| T-07(AI3-03) | 비차단 행 V-MEAS·V-LAMBDA·V-POS·V-MIX, 자극물 원천 x_card·`--synthetic` | 7.3.1 |
+| T-10(QA3-07) | 수량 잔재 제거(시나리오 수 → 9.6.2 전 행), G-01~G-12 → G-01~G-13 | 7.1.2, 7.2.4 M4, GS-26/27, TC-D-06, TC-X-01, 7.15, AC-07-02 |
+| T-17·T-18·T-19·T-26 | TC-R-09 정의 고정·TC-R-19 `cost_ramp`·TC-R-20 `usage_overrun`, TC-R-15 개수·인덱스, `judge_position_bias`, TC-R-16 기대 상태(S-12 문장)·`copySource` | 7.1.4, 7.4.3 |
+| T-19(AI3-02) | 골든 M8 S_free null 처리·`sFreeNullCount` | 7.2.5 M8 |
+| T-23·T-24(UX3-01·02) | 7.6.2 S02 검증 뷰포트 8종, 편집 허용 판정 01장 1.3.1 참조, 200% 확대 행 | 7.6.2 |
+| T-31(PD3-01) | 베이스라인 자산 동등화·적합성·재요청 | 7.8.3, AC-07-26 |
 | T-35(PD3-05) | S-32~S-34 규칙 TC 등록: TC-B-20(AC-04-44), TC-D-08(AC-01-54), TC-D-09(AC-03-43), 배정표 반영 | 7.4 카탈로그, 7.12.1 배정표 |
 | T-09(QA3-06·PM3-04) | AC → 마일스톤 배정표(00~09장 425개 ID, 신규 T-36 ID 포함), `acMilestones`, `qa:trace` 배정 위치 강제·접미사 정규식, 06 6.17 표는 참조로 | 7.1.7, 7.12.1 배정표·블록, AC-07-23 |
 | T-05(QA3-04) | 단계 카탈로그 57단계·`spec:test-policy.steps`·`blockable`·`exitCodes`, 허용표 추가(temp `data-provenance`·`extractor-roundtrip`, manual 5종, needs_ci `ci-green-3x`·`supabase-rest-rls`·`gotrue-auth-tables`), 종료 코드 3, temp 묶음 대응, "9.8" → "9.2" | 7.11.2, 7.12.1 블록, AC-07-21 |
