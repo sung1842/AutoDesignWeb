@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T17:08Z, since: 2026-11-19T17:32Z}
+- lock: {owner: 2026-11-19T17:08Z, since: 2026-11-19T17:53Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-20 07:08
-- 마지막 갱신: 2026-11-20 02:32 KST (예약 세션: M1-10 완료, 다음 M1-11 verify:m1)
+- 마지막 갱신: 2026-11-20 02:53 KST (예약 세션: M1 완료, 다음 M2 하위 단위 계획)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -69,7 +69,7 @@
 | M | 상태 | 시작 | 종료 | 태그 | verify | 미해결 BLOCKED | 가정 수 |
 |---|---|---|---|---|---|---|---|
 | M0 | done | 2026-11-19T12:50Z | 2026-11-19T14:46Z | m0-done | pass_blocked | 5 | 7 |
-| M1 | in_progress | 2026-11-19T14:47Z | – | – | – | – | – |
+| M1 | done | 2026-11-19T14:47Z | 2026-11-19T17:53Z | m1-done | pass_blocked | 6 | 15 |
 | M2 | todo | – | – | – | – | – | – |
 | M3 | todo | – | – | – | – | – | – |
 | M4 | todo | – | – | – | – | – | – |
@@ -79,7 +79,7 @@
 | M8 | todo | – | – | – | – | – | – |
 상태 ∈ todo | in_progress | blocked | done | halted
 
-데이터 provenance: (M1 data:validate 후 기록)
+데이터 provenance: B1~B25 전부 temp(seed:temp, human 0). B15 골격·B18 부트스트랩은 M3에서 교체(ASM-020·021)
 
 - P3 완료(spec-lock은 AD-025로 보완 커밋에 재생성). 다음: M0 하위 단위 계획(09장 9.4.2) 작성 후 착수
 - M0 계획(9.4.2, 9.5.1. 코드는 저장소 루트에 9.1.2 트리로):
@@ -108,14 +108,15 @@
   - [x] 08 `db:seed` 멱등(⑥)·temp 라벨 유도(AC-05-02, ASM-022)
   - [x] 09 `db:types`(kysely-codegen ^0.20, AD-030) + web·worker 컴파일(⑧) 녹색
   - [x] 10 `db:schema-parity`(⑨ 차이 0, 이름 잠금 충돌 BLK-006) + `db:grants-snapshot`(6.3.5, 허용 6항목 일치·위반 검출 확인)
-  - [ ] 11 verify:m1 녹색 → m1-done(tags 맵)
+  - [x] 11 verify:m1 pass_blocked(BLK-001~006) → m1-done. AC-06-32(m0 stack) 1회 간헐 실패 후 재실행 통과
 - M3 이월: B18 정규화기를 추출기로 재생성(9.2.4 코퍼스 200 렌더, ASM-020), B15 골격을 실제 예시로 교체 후 자체 잠금(ASM-021)
-- [x] M0 [ ] M1 [ ] M2 [ ] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
+- [x] M0 [x] M1 [ ] M2 [ ] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
 
 ## P5. 완료
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-20 02:53 | M1 완료: verify:m1 pass_blocked(BLK-001~006), m1-done → 다음: M2 계획(09장 9.4.4)
 - 2026-11-20 02:32 | M1-10 db:schema-parity 차이 0·db:grants-snapshot 일치, BLK-006 → 다음: M1-11 verify:m1·m1-done
 - 2026-11-20 02:29 | M1-09 db:types(kysely-codegen)·types.gen.ts 51테이블, ⑧ 녹색, guard deps ok → 다음: M1-10 schema-parity
 - 2026-11-20 02:28 | M1-08 db:seed(8테이블 upsert, temp 라벨 유도 ASM-022), ⑥·AC-05-02 녹색 → 다음: M1-09 db:types
@@ -130,4 +131,3 @@
 - 2026-11-20 01:27 | M1-04b2 ab_plan 120(ABP·AB ID, focus_region)·approvals 168(temp 게이트 미실행 rejected) → 다음: b3 레퍼런스·골든
 - 2026-11-20 01:26 | M1-04b1 templates.json(한결 고정 문안)·card_plan 48(브리지 L2 오버라이드·alt), ASM-016 → 다음: b2 A/B·승인
 - 2026-11-20 01:24 | M1-04b0 @tastefit/taxonomy mapL1toL2(앵커 재현 8/8·160 허용·단조), ASM-015 → 다음: b1 템플릿·카드
-- 2026-11-20 01:23 | 폰트·이미지 temp에 9.2.4 S-10 표기(verified_by temp-agent·LicenseRef-TasteFit-Generated) → 다음: 04b mapL1toL2+카드
