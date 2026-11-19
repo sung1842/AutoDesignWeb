@@ -907,7 +907,7 @@ pnpm seed:temp | pnpm db:seed | pnpm survey:build | pnpm eval:golden --mode mock
 | D-0905 | ~~골든 세트 30~~ → R-11로 대체(32 = 유형 8 × 용도 3 + 엣지 8). 지표·합격선은 07장. | 07 |
 | D-0906 | 모든 데이터 묶음에 `provenance`(human/temp) 봉투를 두고, temp가 하나라도 있으면 출시 판정 불가(`release:check` 종료 코드 2). | 05, 07, 08 |
 | D-0907 | → R-09로 채택(잠금 파일 `config/lock/locked-hashes.json` + `QA_LOCK_DIGEST`). 품질·SLO·진단 임계값의 단일 원천을 `config/thresholds.json`으로 하고 해시 잠금한다. 07장 출시 임계값도 같은 파일의 `release` 객체에 둔다. | 04, 06, 07 |
-| D-0908 | `LLM_MODE` = mock / replay / record / live, `NODE_ENV=production`에서는 live만 허용. Mock 장애 시나리오 13종(9.6.2)을 표준 테스트 세트로 한다. | 04, 06, 07 |
+| D-0908 | `LLM_MODE` = mock / replay / record / live, `NODE_ENV=production`에서는 live만 허용. Mock 장애 시나리오(9.6.2 표 전 행, 수량은 표가 원천, T-10)을 표준 테스트 세트로 한다. | 04, 06, 07 |
 | D-0909 | 테스트 전용 로그인 라우트를 두지 않고, E2E 로그인은 같은 매직링크 흐름으로 한다(supabase = Mailpit, native = `dev_mail_outbox` 픽스처 함수, S-01). | 06, 08 |
 | D-0910 | 시각 회귀 기준선은 `chore(visual):` 단독 커밋으로만 갱신한다. M2 렌더러 기준선 = 프리셋 8 × 대표 페이지 3 = 24장. 기준선 위치는 렌더 환경 지문별 `e2e/__screenshots__/<RENDER_ENV_ID>/`(S-02로 갱신, Docker 이미지 전용 규칙 폐지) | 07 |
 | D-0911 | 마일스톤 게이트(M0~M7)의 E2E는 chromium만 사용하고, 브라우저 매트릭스는 M8에서 07장 기준으로 실행한다. | 07 |

@@ -1987,7 +1987,7 @@ stageSkip(role, callKind):
 
 ### 6.9.6 MockProvider
 
-명세 원본은 →09장 9.6(합성 규칙, 장애 시나리오 13종, `MOCK_LLM_SCENARIO`, `x-mock-scenario`, `MOCK_LLM_LATENCY_MS`)이다. 이 장의 추가 요구:
+명세 원본은 →09장 9.6(합성 규칙, 장애 시나리오 = 9.6.2 표 전 행, `MOCK_LLM_SCENARIO`, `x-mock-scenario`, `MOCK_LLM_LATENCY_MS`)이다. 이 장의 추가 요구:
 
 - Mock은 `processor_id='mock'`이며 승인 검사를 건너뛴다. `NODE_ENV=production`에서 `LLM_MODE≠live`이면 기동 거부.
 - Mock usage·비용은 `pricing["mock/mock-page"]`로 계산해 예산 가드·킬 스위치 테스트(00장 AC-00-14·17)를 실제와 같은 코드 경로로 통과시킨다.
@@ -2246,7 +2246,7 @@ Sentry(web·preview·worker), `release = git sha`, `environment = APP_ENV`, `sen
 | 뷰 | 지표 | 원천 |
 |---|---|---|
 | `v_gen_hourly` | 잡 수, 상태별 비율, 대기 p50/p95, 처리 p50/p95, 3번째 노출까지 p50/p95, 재생성 발생률, 폴백 노출 비율 | generation_jobs, mockups |
-| `v_gen_failures` | `error_code`별 건수, 하드 게이트 실패 ID 분포(G-01~G-12), 린트 규칙 상위 10 | generation_jobs, candidates.quality_report |
+| `v_gen_failures` | `error_code`별 건수, 하드 게이트 실패 ID 분포(G-01~G-13), 린트 규칙 상위 10 | generation_jobs, candidates.quality_report |
 | `v_llm_daily` | 역할·공급자·모델별 호출 수, 상태 분포, p95 지연, 토큰, 원가, 캐시 적중률, 폴백 비율 | llm_calls |
 | `v_spend` | 오늘·이번 달 원가, 상한 대비 %, 계정별 원가 상위 20(ADM-02) | llm_calls |
 | `v_survey_funnel` | 시작→완료, 평균 문항 수, 문항별 이탈, `cant_tell`·`none_of_these` 비율 | events, survey_* |
@@ -2572,7 +2572,7 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 | `processors.yaml` | 6.9.2 | 08 | `email-sender` = Resend(R-29) 확정, `effective_from` |
 | `DbPort`·`AuthPort`·`StoragePort`(T-11) | 6.1.2 R-3·R-5, 6.3.5, 6.13.1, 6.13.2 | 07, 08, 09 | 09장 9.1.2·9.1.3 db 패키지 의존(`supabase-js` → Kysely + `pg`), M1 `supabase gen types` → `pnpm db:types`, M0 native 기동, guard(R-3·R-5·`db:grants-snapshot`). 07장 needs_ci `supabase-rest-rls`. 08장 8.7.5 "서버 경유" 참조 |
 | 관리자 권한 원천·`provision_user`(T-12) | 6.5.4, 6.11.2 | 00, 08 | ADM-06 수동 승격 삭제, 08장 8.15 참조 문구 |
-| 09장 마일스톤 표기 | — | 09 | 미해결: 09 M3 범위 `V-TRUE/V-FIT/V-BAL`·M5 범위 `prompts/{role}.v{N}.md`가 남음 → R-03(`v_true` 코드값)·R-12(`<role>@v<N>.md`)로, 진단 p95는 `perf.surveyServerP95Ms`·`perf.surveyApiP95Ms` 키(D-0608·T-08)로. 09-b 단위에서 정리 |
+| 09장 마일스톤 표기 | — | 09 | 반영 완료(09-b, 2026-11-19): M3 `v_true` 코드값, M5 `prompts/<role>@v<N>.md`, M4 ⑦ `perf.surveyServerP95Ms`·`perf.surveyApiP95Ms` |
 | 원가·Mock 시나리오(T-17) | 6.9.4 ①~⑦ | 04, 07, 09, 00 | 04 4.17.2 표·AC-04-37, 07 TC-R-09, 09 9.6.2 `cost_spike` 정의·Mock usage 규칙·`cost_ramp`·`usage_overrun`, 00 §9.2·AC-00-14가 6.9.4를 참조하도록(각 장 단위) |
 | 취소·계정 원가(T-20)·평가 예산(T-21) | 6.2.3, 6.10.3, 6.10.4 | 00, 01, 07, 09 | 00 §9.3 `canceled` 행·§9.4 비사용자 지출 표, 01 1.6.5 `gen.cancel.noRefund`, 07 G2 `runsCompleted`, 09 M5 |
 | 화면 데이터(T-22·T-25·T-26·T-16) | 6.4.3 `MeView`·`ResultView.notice`·`MockupCard.photoSubstituted`·`GenerationView.copySource`·`shareStatus` | 01, 02, 04 | 01 S03·S08·S12 표시 규칙, 02 2.13.1 `pickNotice`, 04 4.9.4 `photoSubstituted` 산출 |
