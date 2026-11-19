@@ -15,3 +15,4 @@ export {
   type Row,
   type Tx,
 } from "./port.js";
+export type { DB } from "./types.gen.js";

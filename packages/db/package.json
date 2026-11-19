@@ -17,9 +17,11 @@
   },
   "dependencies": {
     "@tastefit/config": "workspace:^",
+    "kysely": "^0.29.0",
     "pg": "^8.0.0"
   },
   "devDependencies": {
-    "@types/pg": "^8.0.0"
+    "@types/pg": "^8.0.0",
+    "kysely-codegen": "^0.20.0"
   }
 }
