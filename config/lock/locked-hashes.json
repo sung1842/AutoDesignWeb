@@ -55,6 +55,144 @@
       "lockedBy": "agent",
       "lockedAt": "2026-11-19T13:20:56Z",
       "commit": "6351f50"
+    },
+    "scripts/verify/plan.ts": {
+      "sha256": "3c418838621f6b4e822759c71c10e4977bfea2585ba7295341e3e52cfb403f71",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
+    },
+    "scripts/verify/run.ts": {
+      "sha256": "47eaeec3c271364182963cfd0df1afd72031b5f80df1a8cd54222c0a6c810a6e",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
+    },
+    "scripts/guard/ast.ts": {
+      "sha256": "40ddc0b919d517c89947aeac5731310be82afdd5e92460f9f3badfaa37d33c87",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
+    },
+    "scripts/guard/index.ts": {
+      "sha256": "42388e1a46ddc6f4f9fbaafa3ef2e098232465654d70858ae618d294d9128f7a",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
+    },
+    "scripts/guard/lib.ts": {
+      "sha256": "617c9172503e55e29839a7b26307ba2394a25f609883e33dbf62cad02008d3c7",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
+    },
+    "scripts/guard/self-lock.ts": {
+      "sha256": "386fc382cae78c1765d8425d717100e4794881bbf9377b0de2f267d0353d18bf",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
+    },
+    "scripts/guard/stages/count.ts": {
+      "sha256": "a98c0e9a10248e0eb46b8bde4e695bff7626583277867cd6ab4f7982f3d2da9c",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
+    },
+    "scripts/guard/stages/data.ts": {
+      "sha256": "b4b326b69248fce8855a78811d5bf5bf595f5b62fd9df45bc49df15c37d79f4c",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
+    },
+    "scripts/guard/stages/deps.ts": {
+      "sha256": "56dafed0682d3bb380d60c3487e384466c4e8e433a7a4817029df9531bf11198",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
+    },
+    "scripts/guard/stages/lock.ts": {
+      "sha256": "8ce034360129679f7c1869d26fed4b1d8e30b41d373d9f01f52806976f5d19d5",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
+    },
+    "scripts/guard/stages/patterns.ts": {
+      "sha256": "3da206e40588a11dbf9d5d77280a9cb7fe92c789166282b4a2209f6190bec15d",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
+    },
+    "scripts/guard/stages/qa-audit.ts": {
+      "sha256": "08fc763f9ce8faa66c0b6cd65822039c06126eb41079e246e0eaca5552eddbab",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
+    },
+    "scripts/guard/stages/spec.ts": {
+      "sha256": "b5b8a80a1966c87b5d93f114c46c1d879606eb5ece0b59dbca3a72eb68282218",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
+    },
+    "scripts/guard/stages/tuned.ts": {
+      "sha256": "9a3297d29dbcf74f79dd3d16dfaf3f92a61bcc9298d8ca73d834b27327005ba3",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
+    },
+    "scripts/guard/stages/verify-scripts.ts": {
+      "sha256": "40b07fbfdd080aca8872096861f200813c6e4c8280e4eaf884689441e37e15ed",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
+    },
+    "scripts/guard/thresholds-schema.ts": {
+      "sha256": "08e648075c82abb85f79fd47ecec2129e566e7e8e40c26a185abb38a37915293",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
+    },
+    ".guard/verify-scripts.json": {
+      "sha256": "f4cd96a6833f5a7ae31b897c6687a0a3c3379961a5fffe4062f2ddd5b321b785",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
+    },
+    "scripts/qa/audit.ts": {
+      "sha256": "a17fa62dd26b5e6e190f25a51ac712dcaf0b2f5d0f13729142f9b1552fed1121",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
+    },
+    "scripts/qa/docs-check.ts": {
+      "sha256": "5f0e68daaae5437f3c77cc5f92e1df1b173ac60803677aab2100b82c440b84c2",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
+    },
+    "scripts/qa/key-coverage.ts": {
+      "sha256": "bd4e42f004ea555dde45922b97d77cd9f7e66e8a3e6c8e0a1a73d49106a595c1",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
+    },
+    "scripts/qa/trace.ts": {
+      "sha256": "b3c4e586277b1a001e1cca0087a4febcce94ba17ca3f9ecbd57f9ac532d9e092",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
+    },
+    "scripts/spec/extract.ts": {
+      "sha256": "f3de1d7f38efb1a80cbdda6bedfaf764221b9c474b79ff847e845227f0f8354d",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
+    },
+    "docs/dependency-allowlist.md": {
+      "sha256": "3bfe559b2018d18e5863be1f56cec1a8c5c18128162e3842afa8d43b5698ec8a",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T14:41:47Z",
+      "commit": "4cc1735"
     }
   }
 }
