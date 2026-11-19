@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T17:08Z, since: 2026-11-19T17:08Z}
+- lock: {owner: 2026-11-19T17:08Z, since: 2026-11-19T17:13Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-20 07:08
-- 마지막 갱신: 2026-11-20 01:31 KST (예약 세션: M1-04 a2~c1 완료, 다음 c2)
+- 마지막 갱신: 2026-11-20 02:13 KST (예약 세션: M1-04 c2a 완료, 다음 c2b)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -101,7 +101,7 @@
   - [x] 01 M1 수용 테스트(acMilestones M1 + 9.4.3 ①~⑨) `test(acc)` 커밋 → qa:trace --audit → 자체 잠금, traceability.yaml M1 행
   - [x] 02 packages/data-contracts B1~B17 zod(09장 9.2 묶음 정의)
   - [x] 03 `data:validate`(25묶음, B19 0개 허용, 교차 참조 고아 0) — todo 자리표시 교체
-  - [ ] 04 `seed:temp` 결정적 PRNG(provenance temp, tmp_ 접두사, 2회 바이트 동일): [x] a1 골격·B1 축·B2 유형·B4 용도(장 표 파싱) [x] a2a taxonomy·mapping [x] a2b presets 8종 [x] a2b2 palettes 32벌(OKLCH→hex·색역·대비 재검사, ASM-011) [x] a2c1 text-roles(B25)·icons [x] a2c2 signatures·harmony [x] a2c3a components [x] a2c3b blocks(20블록·53 variant, ASM-012) [x] a2c3c tokens/schema [x] a3a 폰트 26·페어링 20(code 참조, ASM-013) [x] a3b 이미지 192(무늬 SVG placeholder, ASM-014) [x] b0 taxonomy mapL1toL2(purpose=null, AC-03-09~11 단위, ASM-015) [x] b1 템플릿(B9)·카드 48(B10, mapL1toL2 오버라이드, ASM-016) [x] b2 A/B 120·승인 168(전부 rejected: 게이트 미실행) [x] b3 레퍼런스 60·골든 32 골격(muRef·answers null, T-04) [x] c1 B14 금지어 48·28·B17 법무 골격·B23 처리위탁(ASM-017) [ ] c2 B18 정규화기·B20 카피·B21·B22·B24 [ ] c3 B15 린터 예시(M3 자체 잠금 대상, 최소 골격)
+  - [ ] 04 `seed:temp` 결정적 PRNG(provenance temp, tmp_ 접두사, 2회 바이트 동일): [x] a1 골격·B1 축·B2 유형·B4 용도(장 표 파싱) [x] a2a taxonomy·mapping [x] a2b presets 8종 [x] a2b2 palettes 32벌(OKLCH→hex·색역·대비 재검사, ASM-011) [x] a2c1 text-roles(B25)·icons [x] a2c2 signatures·harmony [x] a2c3a components [x] a2c3b blocks(20블록·53 variant, ASM-012) [x] a2c3c tokens/schema [x] a3a 폰트 26·페어링 20(code 참조, ASM-013) [x] a3b 이미지 192(무늬 SVG placeholder, ASM-014) [x] b0 taxonomy mapL1toL2(purpose=null, AC-03-09~11 단위, ASM-015) [x] b1 템플릿(B9)·카드 48(B10, mapL1toL2 오버라이드, ASM-016) [x] b2 A/B 120·승인 168(전부 rejected: 게이트 미실행) [x] b3 레퍼런스 60·골든 32 골격(muRef·answers null, T-04) [x] c1 B14 금지어 48·28·B17 법무 골격·B23 처리위탁(ASM-017) [x] c2a B20 카피·축 힌트·B21 87·B22 6×≥10·B24 62(ASM-018·019) [ ] c2b B18 정규화기(합성 부트스트랩 2026-S0) [ ] c3 B15 린터 예시(M3 자체 잠금 대상, 최소 골격)
   - [ ] 05 packages/taxonomy 로더 + centroid(03장 3.4.7) 일치·최소 거리 검사
   - [ ] 06 packages/db 마이그레이션 SQL(06장 DDL, MVP분) + native 빈 DB 2회 적용(ON_ERROR_STOP)
   - [ ] 07 RLS 정책·DbPort(withAnon) + RLS 테스트(⑦, AC-06-03b)
@@ -115,6 +115,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-20 02:13 | M1-04c2a B20 copy_templates 44·axis_hints 10·B21 87·B22 6·B24 62, validate 교차 참조 → 다음: c2b B18
 - 2026-11-20 01:31 | M1-04c1 cliche ko48·en28·legal md 3·processors/data-flows(스텁 3, ASM-017) → 다음: c2 B18·B20·B21·B22·B24
 - 2026-11-20 01:29 | M1-04b3 references 60(쿼터·[임시])·golden 32 골격(7.2.3 θ*·브랜드 경계값) → 다음: c1 B14·B17·B23
 - 2026-11-20 01:27 | M1-04b2 ab_plan 120(ABP·AB ID, focus_region)·approvals 168(temp 게이트 미실행 rejected) → 다음: b3 레퍼런스·골든
@@ -129,4 +130,3 @@
 - 2026-11-20 01:16 | M1-04a2c2 signatures.json(장식 8+시그니처 12)·harmony.json(상수·H1~H12 합 100·CF 12) → 다음: a2c3
 - 2026-11-20 01:15 | M1-04a2c1 text-roles.json 33역할(기본 단계·행간·자간 분류)·icons/map.json 40개 → 다음: a2c2 signatures·harmony
 - 2026-11-20 01:14 | M1-04a2b2 palettes.json 32벌(표 hex 전부 일치·대비 실패 0)·taxonomy/color.ts, ASM-011 → 다음: a2c
-- 2026-11-20 01:12 | M1-04a2b presets 8종(3.4.1·3.4.4~3.4.7·3.6.6, 기본값⊂허용 확인) → 다음: a2b2 palettes.json
