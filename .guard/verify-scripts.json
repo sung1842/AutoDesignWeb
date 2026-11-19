@@ -1,0 +1,12 @@
+{
+  "verify:fast": "tsx scripts/verify/run.ts fast",
+  "verify:m0": "tsx scripts/verify/run.ts m0",
+  "verify:m1": "tsx scripts/verify/run.ts m1",
+  "verify:m2": "tsx scripts/verify/run.ts m2",
+  "verify:m3": "tsx scripts/verify/run.ts m3",
+  "verify:m4": "tsx scripts/verify/run.ts m4",
+  "verify:m5": "tsx scripts/verify/run.ts m5",
+  "verify:m6": "tsx scripts/verify/run.ts m6",
+  "verify:m7": "tsx scripts/verify/run.ts m7",
+  "verify:m8": "tsx scripts/verify/run.ts m8"
+}

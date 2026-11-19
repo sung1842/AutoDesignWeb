@@ -41,3 +41,4 @@
 - 제안 수정안(사람): 각 장 기능 표에 `대상` 열 추가, 기능 절 제목에 [P0]/[P2]/[P3]/[MVP 제외] 태그 부여(08장 [MVP]→[P0]) 후 spec relock(`human-lock`). 또는 AC-00-01·07을 문서 검사 범위를 좁혀 개정
 - 처리: --docs는 01~09장 항목을 `blockedBy: BLK-004`(종료 3)로 보고. m0 qa-trace.test.ts "AC-00-01 / AC-00-07: 문서 검사 통과"(종료 0 기대) 1건은 문서 개정 전까지 미충족
 - 상태: open
+- 재현(테스트): pnpm vitest run tests/acceptance/m0/qa-trace.test.ts -t "문서 검사"
