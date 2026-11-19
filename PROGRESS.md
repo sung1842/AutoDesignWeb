@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T14:10Z, since: 2026-11-19T14:22Z}
+- lock: {owner: 2026-11-19T14:10Z, since: 2026-11-19T14:24Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
@@ -91,7 +91,7 @@
   - [x] 06 native 스택: PG16(:54322, runuser postgres) + packages/db/shim, `pnpm dev:stack`·`db:native` (web·worker `dev` 스크립트·local 드라이버는 07·M1)
   - [x] 07 web `/api/health`(Next 16, tsconfig.next.json), worker `/health`(:8081, pg-boss migrate), 필수 env 누락 시 종료 1 — stack.test 8/8 녹색
   - [x] 08 guard 1~4단계(잠금 해시·금지 패턴·테스트 수·deps/라이선스) — guard.test 15/24 녹색, 남은 8건은 09(spec 대조·6단계), 1건 BLK-002
-  - [~] 09 guard 5~7단계: [x] 5·6단계 spec 대조(guard:spec, guard.test 23/24, 남은 1=BLK-002) [x] qa:trace 추적·배정(5/9) [x] --audit 리터럴(7/9) [x] --key-coverage(8/9, BLK-003) [x] --docs(BLK-004, qa-trace.test 8/9) [ ] 8단계 tuned
+  - [x] 09 guard 5~8단계: [x] 5·6단계 spec 대조(guard:spec, guard.test 23/24, 남은 1=BLK-002) [x] qa:trace 추적·배정(5/9) [x] --audit 리터럴(7/9) [x] --key-coverage(8/9, BLK-003) [x] --docs(BLK-004, qa-trace.test 8/9) [x] 8단계 tuned(guard:tuned)
   - [ ] 10 tests/guard 메타 테스트(⑥⑦)
   - [ ] 11 verify:fast·verify:m0~m8 + reports/verify-mN.json
   - [ ] 12 CI 워크플로·docker/ 파일(실행은 needs_ci)
@@ -102,6 +102,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 23:24 | M0-09f guard:tuned(8단계 a~e), M0-09 완료(guard 23/24·qa-trace 8/9, 나머지 BLK) → 다음: M0-10 guard 메타
 - 2026-11-19 23:22 | M0-09e qa:trace --docs(ASM-005), 01~09장 태그 규칙 미반영 BLK-004 → 다음: guard 8단계 tuned
 - 2026-11-19 23:20 | M0-09d key-coverage, 표 밖 수치 4건 BLK-003(exit 3) → 다음: qa:trace --docs
 - 2026-11-19 23:19 | M0-09c qa:trace --audit(import 그래프·const 추적·SC 예외), 실제 테스트 리터럴 0 → 다음: --key-coverage
