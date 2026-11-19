@@ -330,6 +330,8 @@ SectionRaw = {
   pad: -1 | 0 | 1,                        // 밀도 프리셋 대비 패딩 단계
   slots: Record<SlotId, SlotValueRaw>     // 블록별 discriminated union, 03장 슬롯 스키마
 }
+// 확정 트리(LayoutTree)의 섹션 노드에만 추가(LLM 출력에는 없음, T-30):
+//   role_overrides?: Record<SlotId, TypeStep>   // 줄 예산 하향 결과(4.10.2 넘침 처리 ②). 편집 저장 시 재계산(01장 1.8.4)
 SlotValueRaw =
   | { copy: DeckRef }                                     // "deck:<key>#<index>"
   | { list: { copy: DeckRef }[] }                         // 반복 항목
@@ -386,7 +388,7 @@ SlotValueRaw =
 
 | 키 | 개수 | 길이 | 용도 | 비고 |
 |---|---|---|---|---|
-| `hero.headline` | 3 | 8–24 | 공통 | 각 항목에 `kind: factual|benefit|emotive` 필수, 3개 kind 모두 달라야 함. 3개 중 ≥1개는 `headlineBudget(presetTokens, variant, viewport)`(03장, 1280·375 중 작은 값)의 `maxChars` 이하여야 하고 G-01이 검사한다(S-39). 프롬프트에 `maxChars`를 변수로 넣는다 |
+| `hero.headline` | 3 | 8–24 | 공통 | 각 항목에 `kind: factual|benefit|emotive` 필수, 3개 kind 모두 달라야 함. 3개 중 ≥1개는 **`maxChars_job`** 이하여야 하고 G-01이 검사한다(S-39·T-30). `maxChars_job = min over (변형 3 × 각 변형 `spec.hero_variants` 허용 목록 × {1280, 375}) headlineBudget(presetTokens, heroVariant, viewport).maxChars`(03장 3.8.1, `VariantDef.text_cols` 사용). S1(명세 3개) 확정 후 S2(덱 호출) 전에 계산하므로 결정론적으로 1개 값이다. 프롬프트에 `maxChars_job`을 변수로 넣는다. 후보별 옵션 선택(넘침 처리 ①)은 그 후보의 `maxChars`로 한다 |
 | `hero.sub` | 2 | 30–80 | 공통 | |
 | `hero.eyebrow` | 2 | 2–14 | 공통 | "New/신규/출시/✨" 금지(AIL-04) |
 | `cta.primary` | 3 | 2–10 | 공통 | 동사 종결, 용도별 권장 동사 목록에서 시작 |
@@ -435,6 +437,7 @@ SlotValueRaw =
 
 **AC-04-12** 금지 사전의 모든 항목에 양성 픽스처 1개(활용형 포함)와, 오탐 방지 음성 픽스처 20개(예: "혁신학교", "놀이터")가 있고 테스트가 전부 통과한다.
 **AC-04-13** 골든 세트 노출 시안에서 CP-01~CP-12 위반 0건(CP-06은 비율 기준).
+**AC-04-46**(T-30, UI3-04) ① 덱 G-01 단위 테스트: 같은 잡의 변형 3 × hero variant 허용 목록에 대해 `maxChars_job`이 결정론적으로 1개 값이고 덱 3옵션 중 ≥ 1개가 그 이하다 ② 브랜드명 1·14·30자 × 프리셋 8 × {375, 1280} 렌더에서 nav·footer 워드마크 G-04·G-06 위반 0건 ③ 골든 세트 cta big-type 헤드라인 1280 ≤ 2줄, 375 ≤ 3줄 100% ④ S09에서 hero 제목을 24자로 바꾼 뒤 클라이언트 미리보기와 서버 재컴파일의 `role_overrides`가 같다(E2E 1케이스) ⑤ `spec.render_adjustments` 필드가 스키마·코드에 0건.
 
 ---
 
@@ -662,10 +665,10 @@ portfolio work.items·showcase 이미지 슬롯 → placeholder: true
 | G-09 | AI 티 린터 error | §4.13 규칙, 단계 S·C·T·D·P 합산 | 0건 | 수정 루프 |
 | G-10 | 브랜드명 존재 | 브랜드명(NFC)이 nav(워드마크)·hero·footer 텍스트에 각각 ≥ 1회 | 3곳 모두 | 수정 루프 |
 | G-11 | 원본 유사도 가드(R-20) | §4.10.6(08장 8.3 G1·G2·G3·G5) | 위반 0 | 하드 게이트 실패. 수정 루프(다른 패턴·hero 강제) → 폐기 |
-| G-12 | 명세 무결성 | `deriveTokens(l2) == tokens`, 렌더 computed style의 색·font-size·spacing·radius가 토큰 집합 안(AIL-17) | 불일치 0 | 컴파일러 버그, 후보 폐기 + 알림 |
+| G-12 | 명세 무결성 | `deriveTokens(l2) == tokens`, 렌더 computed style의 색·radius가 토큰 집합 안, font-size = 03장 `expectedSize(step, vw)`(뷰포트별 clamp 기대값), spacing(padding·gap·토큰 margin, `data-layout-auto` 요소 제외)이 토큰 집합 안(AIL-17과 같은 판정, T-28) | 불일치 0(허용 오차 0.5px) | 컴파일러 버그, 후보 폐기 + 알림 |
 | G-13 | 남용 문구(`abuse_terms`, S-24) | 최종 트리의 모든 텍스트(LLM 출력 + 편집 결과)를 `packages/compliance/abuse.ts`(브리프 판정과 같은 함수, 08장 8.9.2)로 판정: 고위험 브랜드(B21)·피싱 문구·금지 업종(B22) | 0건 | 생성 후보: 수정 루프 없이 폐기. 편집 저장: 422 `EDIT_GATE_FAILED`(`GATE_FAILED:G-13`, `violations[].reason`) |
 
-**헤드라인 줄 넘침 처리(S-39)**: 렌더 측정에서 hero 헤드라인이 줄 예산(03장 3.8.1)을 넘으면 결정론 순서로 처리한다. ① 짧은 덱 옵션으로 교체 → ② 해당 role의 단계를 한 단계 내림(display → t-1 → t-2, 최대 1회, `spec.render_adjustments[]`에 기록, H6 위반 아님) → ③ 그래도 넘치면 AIL-24 warn. 골든에서 ③은 0건이어야 하고 ② 비율(≤ 25%)은 기록한다(03장 AC-03-26).
+**헤드라인 줄 넘침 처리(S-39·T-30)**: 컴파일 시 **토큰 계산**으로 판정한다(`len(text) > headlineBudget(presetTokens, heroVariant, viewport).maxChars`). 렌더 측정은 검증(03장 AC-03-26)에만 쓴다. 그래서 클라이언트 편집 미리보기와 서버 재컴파일이 같은 결과를 낸다. 순서: ① 그 후보의 `maxChars` 이하인 덱 옵션으로 교체 → ② 해당 텍스트 역할의 단계를 한 단계 내림(`t-display` → `t-1` → `t-2`, 최대 1회, H6 위반 아님). 결과는 확정 트리 섹션 노드의 `role_overrides: {slot_id: step}`에 둔다(4.5.2) → ③ 그래도 넘치면 AIL-24 warn. 골든에서 ③은 0건이어야 하고 ② 비율(≤ 25%)은 기록한다. 같은 함수를 다음에도 적용한다: `cta.headline`(big-type: 1280 2줄·375 3줄 예산, 가장 짧은 미사용 옵션 → 넘치면 1단 하향), `footer.wordmark`(big-type, 넘치면 `t-1`), `nav.wordmark`(`t-lead` 기본 → maxChars 초과 시 `t-body` → 그래도 넘치면 375에서 2줄 허용, nav 높이 auto). 옛 `spec.render_adjustments[]` → T-30으로 폐지(`role_overrides`로 대체).
 
 ### 4.10.3 조화 점수 H (0~100)
 
@@ -816,6 +819,8 @@ QualityReport = {
 
 자동 보정 결과는 `auto_fixes`에 기록하고, 보정된 토큰은 명세서 사본(`spec_id` 신규)으로 저장한다.
 
+- 반전 면(`bg: inverse`)·이미지 오버레이 위의 버튼·링크는 `deriveTokens`가 결정론으로 정한 `tokens.inverseButtonMode`(`primary`|`invert`)의 `@inverse` 매핑을 쓰고, accent 텍스트는 `tokens.accentTextSafe = true`일 때만 쓴다(03장 3.1.3·3.13.2/3.13.3, T-27). 이 두 규칙으로 해결되는 대비는 위 G-02/G-03 자동 보정 대상이 아니며, 자동 보정은 팔레트 프리셋 값(03장 3.4.2)을 바꾸지 않고 시안 사본의 토큰만 바꾼다.
+
 ### 4.11.2 수정 루프 (LLM)
 
 - 대상: 자동 보정 후에도 G-01·G-04~G-06·G-08(대비 외 원인 중 트리 원인)·G-09·G-10·G-11 실패, 또는 TM < 75·S_free < 65·H < 80·warn > 2인 후보.
@@ -927,14 +932,14 @@ S→C→T에서 error가 나오면 렌더하지 않고 바로 수정 루프로 �
 | AIL-14 | 브랜드 미반영 | C | (a) hero 슬롯에 브랜드명·입력 키워드 0회 → error, (b) 브랜드명·키워드·숫자·고유명사가 없는 문장 비율 > 60% → warn | error / warn | M | "한결로스터리, 핸드드립 원두 정기배송" | "당신의 일상을 바꾸는 커피" |
 | AIL-15 | 상투 CTA 반복 | C | {지금 시작하기, 자세히 보기, 더 알아보기, Get started, Learn more}가 페이지 내 ≥ 3회 | warn | M, U | "원두 고르기", "매장 위치 보기" | "자세히 보기" ×4 |
 | AIL-16 | 기본값 잔존 | D | shadcn/Tailwind 기본값 일치: `--radius: 0.625rem`, shadcn 기본 neutral oklch 변수값 세트, Tailwind `shadow-sm/md/lg` 정확값 문자열, indigo-500 `#6366f1`, violet-500 `#8b5cf6` 등(`linter/data/defaults.json`) | error | M, U | 서비스 토큰으로 전부 덮어쓴 버튼 | shadcn Button 기본 스타일 |
-| AIL-17 | 스케일 밖 값 | D | 색·font-size·spacing·radius computed 값이 토큰 집합 밖(허용 오차 0.5px, ΔE_OK 0.01) | error | M, U(서비스 토큰 기준) | 토큰 값만 | `padding: 13px` |
+| AIL-17 | 스케일 밖 값 | D | 색·radius computed 값이 토큰 집합 밖(ΔE_OK 0.01), font-size ≠ `expectedSize(step, vw)`, spacing(padding·gap·토큰 margin, `data-layout-auto` 제외)이 토큰 집합 밖(허용 오차 0.5px, T-28). clamp 보간값·중앙 정렬 자동 여백(`margin: auto`)·워드마크(`nav.wordmark` = `t-lead`)는 위반이 아니다 | error | M, U(서비스 토큰 기준) | 토큰 값만 | `padding: 13px`, `font-size: 15px`(모든 뷰포트에서 검출) |
 | AIL-18 | 기본 아이콘 무조정 | T, D | 아이콘 세트 ∉ {phosphor, tabler, iconoir} ∨ (Lucide stroke 2·24px 그대로) → error / 섹션당 아이콘 > 4 → warn | error / warn | M, U | Phosphor 1.5 stroke 3개 | Lucide 기본 아이콘 8개 |
 | AIL-19 | 권유형 종결 반복 | C | "~해 보세요/해보세요" 종결 페이지당 ≥ 3 | warn | M, U | 종결 다양 | 섹션마다 "~해보세요" |
 | AIL-20 | 느낌표 과다 | C | 헤드라인 느낌표 ≥ 1(T-PLAYFUL 제외) ∨ 페이지 합계 > spec.exclaim_max | warn | M, U | 느낌표 0 | "지금 만나보세요!!" |
 | AIL-21 | 근거 없는 주장 | C | `[예시]` 접두 없이 숫자+단위(명·%·건·년 연속·위)·최상급(최고·최초·1위·유일·100%·보장)·수상·평점·고객 수가 나오고 그 값이 `BrandInput`에 없음(08장 AC-08-28과 같은 정규식) | error | M | 입력된 "2019년 개업" 사용 | "고객 만족도 99.9%" |
 | AIL-22 | 가짜 후기 | C | proof 인용에 `[예시]` 접두가 없음 ∨ 이름이 "성○○" 형식이 아님 | error | M | "[예시] 고객 후기가 들어갈 자리 — 김○○" | "정말 최고예요! — 김지훈 대표" |
 | AIL-23 | 템플릿 잔여물 | C, D | `/lorem ipsum|your company|텍스트를 입력|placeholder/i`(CP-10 예시값·`[예시]` 접두 문구 제외) | error | M, U | — | "Lorem ipsum dolor" |
-| AIL-24 | 헤드라인 줄 문제 | D | 375px에서 hero 헤드라인 > 3줄 ∨ 헤드라인 마지막 줄 ≤ 2글자(고아) | warn | M, U | 2줄, 균형 줄바꿈 | 마지막 줄 "다" |
+| AIL-24 | 헤드라인 줄 문제 | D | 375px에서 hero 헤드라인 > 3줄 ∨ **1280px에서 > 2줄**(T-30) ∨ 헤드라인 마지막 줄 ≤ 2글자(고아) | warn | M, U | 2줄, 균형 줄바꿈 | 마지막 줄 "다" |
 
 ### 4.13.3 서비스 UI 적용 (D-28)
 
@@ -1056,7 +1061,7 @@ H < 80과 TM은 저장·내보내기 차단 사유가 아니다(사용자 선택
 
 생성 방법: 정적 HTML은 §4.9 컴파일러 출력 그대로. React는 같은 블록 템플릿의 TSX 판(`packages/blocks/<block>/<variant>.tsx`, 사람 작성)에 확정 트리 슬롯을 props로 넣어 생성한다. LLM 호출 0.
 
-`styleguide.html`은 `deriveTokens` 결과와 03장 컴포넌트 템플릿만으로 컴파일한다. 서체·팔레트 표기는 결과 화면 ⑤ 디자인 가이드 카드와 같은 함수(`ResultView.guide`, 01장 D-001)를 쓴다. 파일 목록은 03장 3.18과 같다.
+`styleguide.html`은 **그 버전의** `tokens`·`l2`(`deriveTokens` 결과)와 03장 컴포넌트 템플릿만으로 컴파일한다(T-32). 서체·팔레트 표기는 결과 화면 ⑤ 디자인 가이드 카드와 같은 포맷터 `formatGuide(tokens)`(06장 `ResultView.guide`)를 쓰되 입력이 다르다: 결과 화면은 앵커(또는 override) 프리셋 토큰, styleguide는 그 버전 토큰. 앵커 프리셋 값은 "유형 기본값" 참고 행으로만 붙인다. 06장 스토리지 표 `exports` 공통 파일에 포함된다. 파일 목록은 03장 3.18과 같다.
 
 폰트(S-40, 원천 03장 3.7.5 맥락별 서브셋 표): 내보내기는 `page` 서브셋을 기본으로 넣고 `fonts/extended/`에 `ks-x-1001` 파일을 함께 넣는다. 두 번째 `@font-face`를 `unicode-range: U+AC00-D7A3`로 선언해 문구를 바꿔도 2,350자 안에서는 같은 서체가 유지된다. README "문구를 바꿀 때" 절에 안내한다.
 
@@ -1077,12 +1082,12 @@ H < 80과 TM은 저장·내보내기 차단 사유가 아니다(사용자 선택
 | E-11 | 고지·라이선스 | LICENSES.md·CREDITS.md·AI_NOTICE.md 존재, 사용 에셋 100%가 CREDITS에 기재 | 매니페스트 대조 |
 | E-12 | placeholder | `placeholder=true` 항목이 있으면 다운로드 전 경고 모달(→ 01장) + README 목록 일치. `[예시]` 접두는 내보내기에서도 유지 | 대조 |
 | E-13 | 크기 | zip ≤ 15MB | 크기 검사 |
-| E-14 | styleguide(S-35) | `styleguide.html` vnu 오류 0, axe serious/critical 0, 외부 참조 0, 시안에 쓰인 전경/배경 색 쌍 100%가 대비값(G-02 계산값, 소수 1자리)과 함께 표기 | 내보내기 요청마다 |
+| E-14 | styleguide(S-35) | `styleguide.html` vnu 오류 0, axe serious/critical 0, 외부 참조 0, 시안에 쓰인 전경/배경 색 쌍 100%가 대비값(G-02 계산값, 소수 1자리)과 함께 표기 · 팔레트 HEX·페어링 ID·radius 계열이 같은 버전 `tokens.json`과 100% 일치(T-32, AC-04-34 확장) | 내보내기 요청마다 |
 | E-15 | 확장 폰트 폴백(S-40) | 내보낸 HTML·React에서 2,350자(KS X 1001) 범위 한글 텍스트 노드의 폰트 폴백 0(`document.fonts` 검사, 시스템 폰트로 떨어진 노드 0) | Playwright |
 
 시점: E-01·03·07·09·11·12·13은 내보내기 요청마다(p95 ≤ 20s). E-02(React)·04·05·06·08은 골든 5케이스로 야간 CI(07장 TC-X, 요청마다 실행하지 않음). 결과 이벤트는 `export_complete`/`export_failed`(00장 8.3), 실패 시 `exports.error_code = EXPORT_ERROR`.
 
-**AC-04-34** 골든 5케이스의 3형식 내보내기가 야간 CI에서 E-01~E-15를 모두 통과한다.
+**AC-04-34**(T-32로 확장) 골든 5케이스의 3형식 내보내기가 야간 CI에서 E-01~E-15를 모두 통과한다. E-14에는 `styleguide.html`의 팔레트 HEX·페어링 ID·radius 계열이 같은 버전 `tokens.json`과 100% 일치하는 검사가 포함된다.
 **AC-04-35** `gate_status ≠ passed`인 버전의 내보내기 요청은 409 `VERSION_GATE_NOT_PASSED`(`details.gateStatus`)로 거부된다(R-13).
 
 ---
@@ -1266,6 +1271,10 @@ H < 80과 TM은 저장·내보내기 차단 사유가 아니다(사용자 선택
 | T-18(04) | 4.8 후보 인덱스·diversity 기록·재호출 위반 시 `DIVERSITY`, AC-04-16 노출 집합 기준·AC-04-23 카피 패치 정의, AC-04-47 | |
 | T-19(04) | 4.10.4 `m_k`·reliable 마스크·S_free null·`SFREE_NA`, 4.11.2 `axis_gaps` reliable만, AC-04-45 | |
 | T-34·T-26(04) | 4.2.1 `image_tags_allowed`, 4.9.4 단계형 선택·`pageTone`·업종 처리 단일화·`photoSubstituted`, AC-04-44 | |
+| T-30(04) | 4.6.2 `maxChars_job`, 4.10.2 넘침 처리 토큰 판정·`role_overrides`·cta/워드마크, 4.5.2 `role_overrides`, AIL-24 1280 > 2줄, AC-04-46 | `render_adjustments` 폐지 |
+| T-28(04) | G-12·AIL-17 뷰포트별 `expectedSize`·spacing 대상, 허용 오차 유지 | 정의 변경(정상 시안 오탐 제거), 스케일 밖 값은 계속 검출 |
+| T-32(04) | 4.16.1 styleguide 입력 = 그 버전 토큰·`formatGuide`, E-14·AC-04-34 확장 | |
+| T-27(04) | 4.11.1 반전 면·accent 텍스트 규칙 주석 | |
 | S-16(04) | 4.12 취소 한도 규칙 | 원천 06 6.2.3 |
 | S-24(04) | 4.10.2 G-13 `abuse_terms`, 게이트 범위 G-01~G-13, 4.15.2 저장·렌더 게이트 | |
 | S-33(04) | AIL-06 `allowSoftRoundShadow`, 4.15.2 클라이언트 S 단계 규칙 | |
