@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P2
-- lock: {owner: 2026-11-19T11:08Z, since: 2026-11-19T11:35Z}
+- lock: {owner: 2026-11-19T11:08Z, since: 2026-11-19T11:42Z}
 - limit.next_reset_kst: 2026-11-20 01:08
 - 마지막 갱신: 2026-11-19 16:10 KST (예약 세션: decisions_v5 작성)
 
@@ -31,8 +31,9 @@
 - 라운드 3 반영 단위(decisions_v4.md "반영 순서" 참고): [x] 06-a [x] 06-b [x] 06-c [x] 06-d [x] 07-a [x] 07-b [x] 07-c [x] 07-d [x] 09-a [x] 09-b [x] 09-c [x] 01-a [x] 01-b [x] 04-a [x] 04-b [x] 03-a [x] 03-b [x] 08-a [x] 02-a [x] 05-a [x] 00-a [x] 잔여 표기 grep
 - 라운드 4(1.1 규칙: 리뷰어 3명·패킷 `docs/reviews/round4/packet.md`): [x] R-A 제품·경험 [x] R-B 기술·품질 [x] R-C 법무 → [x] decisions_v5(U-01~U-13) [x] 반영(아래 9단위)
 - 라운드 4 반영 단위(decisions_v5.md "반영 순서"): [x] 06-a [x] 06-b [x] 07-a [x] 09-a [x] 02-a [x] 04-a+03-a [x] 01-a [x] 08-a [x] 잔여 grep
-- 라운드 5(패킷 `docs/reviews/round5/packet.md`): [x] 패킷 [x] R-A [ ] R-B [ ] R-C → [ ] decisions_v6 [ ] 반영
+- 라운드 5(패킷 `docs/reviews/round5/packet.md`): [x] 패킷 [x] R-A [x] R-B [ ] R-C → [ ] decisions_v6 [ ] 반영
 - 판정 기록(라운드별 C1/C2/C3):
+  - R5 R-B: TL·AI·QA 모두 FAIL/FAIL/PASS (B0·M4·m5: t1 비스트리밍 추정, usage_overrun 기대 상태, tuning-log 캐시 필드, AC-09-19 배정)
   - R5 R-A: PM·PD·UX·UI 모두 PASS/PASS/PASS (B0·M0·m3)
   - R2 PM: FAIL/FAIL/FAIL (Blocker 0, Major 5: 예산-목표 불일치, 취소 시 한도 규칙 충돌, KPI 쿼리 분모, 검증 표본 확보, 00↔07·09 불일치)
   - R2 UX: FAIL/FAIL/FAIL (1라운드 19/19 해결, Blocker 0, Major 3: 결과 신뢰 문구 01↔02 불일치, 진단 카드 크기 규칙이 실제 화면에서 불성립, 편집 가능 판정을 화면 폭으로 해 200% 확대 시 편집 소실)
@@ -64,6 +65,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 20:42 | R5 R-B 리뷰: B0·M4·m5. TL·AI·QA C1·C2 FAIL, C3 PASS(RB5-01~04) → 다음: R-C
 - 2026-11-19 20:35 | R5 R-A 리뷰: B0·M0·m3. RA4-01~03 해결, PM·PD·UX·UI PASS×3 → 다음: R-B
 - 2026-11-19 20:30 | r5 패킷 작성(기준 dc8ffe2, 9파일 +113/−70), tools/changed_sections.py 추가 → 다음: R-A
 - 2026-11-19 20:25 | 잔여 grep: 옛 표기 6종 대체 문맥뿐, 신규 AC 정의 각 1건. 라운드 4 반영 완료 → 다음: r5 패킷
