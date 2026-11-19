@@ -6,6 +6,7 @@ import { depsStage } from "./stages/deps.js";
 import { lockStage } from "./stages/lock.js";
 import { patternStage } from "./stages/patterns.js";
 import { specStage } from "./stages/spec.js";
+import { tunedStage } from "./stages/tuned.js";
 import { verifyScriptsStage } from "./stages/verify-scripts.js";
 import type { Finding } from "./lib.js";
 
@@ -17,6 +18,7 @@ export const STAGES: ReadonlyArray<[string, () => Finding[]]> = [
   ["guard:data", () => dataStage()],
   ["guard:deps", () => depsStage()],
   ["guard:count", () => countStage()],
+  ["guard:tuned", () => tunedStage()],
 ];
 
 export function exitCodeOf(fs: readonly Finding[]): number {
