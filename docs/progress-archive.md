@@ -138,3 +138,4 @@
 - 2026-11-20 01:22 | M1-04a3b images manifest 192+무늬 SVG(실제 sha256), 톤 기준 모순 ASM-014 → 다음: 04b 카드·A/B·승인·레퍼런스·골든
 - 2026-11-20 01:23 | 폰트·이미지 temp에 9.2.4 S-10 표기(verified_by temp-agent·LicenseRef-TasteFit-Generated) → 다음: 04b mapL1toL2+카드
 - 2026-11-20 01:24 | M1-04b0 @tastefit/taxonomy mapL1toL2(앵커 재현 8/8·160 허용·단조), ASM-015 → 다음: b1 템플릿·카드
+- 2026-11-20 01:26 | M1-04b1 templates.json(한결 고정 문안)·card_plan 48(브리지 L2 오버라이드·alt), ASM-016 → 다음: b2 A/B·승인

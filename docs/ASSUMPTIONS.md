@@ -157,3 +157,10 @@
 - 선택: 대상 = taxonomy_releases(envelope taxonomyVersion, active, 공개일 = 분기 첫 월요일)·types·presets·sources('direct' 1행)·reference_sites·reference_labels·normalizers·blocked_brands, 전부 upsert. temp B13이면 primary 라벨을 유도: axes = round(1+4·l1)(1..5), l2 = 같은 유형 앵커 프리셋 l2, type_primary = typeId, checklist S-04/05/08/10 = "temp", rater op·session `seed:temp`, reference_sites.flags = ['temp']. human B13이면 라벨을 만들지 않는다(라벨 도구 몫). 프리셋은 status approved(앱이 읽을 수 있게, provenance jsonb에 temp 표시가 그대로 남음), 정규화기는 status draft(temp는 released 금지, 이미 released면 덮지 않음)
 - 영향 범위: scripts/data/db-seed.ts, M4 닮은 사이트·survey:build
 - 되돌리기 비용: 낮음
+
+## ASM-023 · M2 · gap · 2026-11-19T18:40Z
+- 질문: M2 수용 테스트를 쓰려면 design-spec·renderer·data-contracts의 공개 API 계약과 AC-03-02·03·04·08의 측정 대상이 정해져야 하는데 장에 함수 이름만 있음
+- 근거 탐색: 03장 3.1.2~3.1.7·3.1.12·3.2.2·3.2.4·3.4.7, 04장 4.2.1·4.9.2 CM-02·4.14
+- 선택: ① `@tastefit/design-spec`: `loadDesignData(root)`(MapData 호환 + `presets`·`palettes[].roles`·`signatures`·`taxonomyVersion`), `deriveTokens({presetId,l2,brand?}, data) → {tokenSet, accentTextSafe, inverseButtonMode}`(TokenSet은 schema.json 그대로, 두 플래그는 바깥), `exportTokens(derived,{presetId,l2,taxonomyVersion}) → {경로: 문자열}` 3파일, `predictL1(l2,data) → {expression..depth}`(기본 L2만, 시그니처 인자 없음), `signatureEligible(id, SigCtx)`(SigCtx = 3.2.4 요구·충돌 열을 그대로 필드로), `DesignSpecSchema`(zod, `.shape.l2`가 18키 enum 객체) ② `@tastefit/data-contracts`: `validateTokenSet(x) → {ok, errors}`(schema.json, zod fromJSONSchema 허용) ③ `@tastefit/renderer`: `rendererCssSources() → {path, css}[]`(base·blocks·signatures 층), `cssLiteralViolations(css)`(CM-02 허용 목록) ④ AC-03-02 13쌍 = 3.1.3 "하드" 표기 쌍(fg·fg-muted 각 2, fg-inverse, border-strong, primary, on-primary 3, on-accent, focus 2), accent 없으면 on-accent 쌍 생략, 리포트 `reports/m2/contrast-pairs.json` ⑤ AC-03-04 크기 = `type.display`·`type.body` typography 토큰의 데스크톱 fontSize ⑥ AC-03-08 SIG-05는 예약이라 항상 불가, SIG-09는 조건·충돌이 없어 음성 픽스처 대신 "모든 음성 문맥에서도 가능"을 검사 ⑦ AC-03-09~11은 taxonomy `mapL1toL2`(purpose=null)에 design-spec 데이터를 넣어 검사, 단조성은 ASM-015 해석
+- 영향 범위: tests/acceptance/m2/**, packages/design-spec·renderer·data-contracts
+- 되돌리기 비용: 중간(잠긴 테스트라 바꾸려면 사람 relock)
