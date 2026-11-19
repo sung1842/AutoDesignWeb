@@ -110,7 +110,7 @@ TokenSet 최상위 그룹(필수): `color`, `font`, `type`, `space`, `radius`, `
 | `color.on-primary` | primary 위 텍스트 | 대 primary, primary-hover, primary-active 각각 ≥ 4.5:1(하드) |
 | `color.primary-hover` | hover | 파생: L(primary) ∓ 0.06(밝은 primary는 +, 어두운 primary는 −; 기준 L 0.6) |
 | `color.primary-active` | active | 파생: hover에서 같은 방향 0.04 추가 |
-| `color.accent` | 강조(선택, 0~1색) | 화면 면적 ≤ 10%(04장 렌더 측정). 없을 수 있음 |
+| `color.accent` | 강조(선택, 0~1색) | 화면 면적 ≤ 10%(04장 렌더 측정). 없을 수 있음. **텍스트(링크·라벨) 사용은 `tokens.accentTextSafe`(= accent 대 bg ≥ 4.5:1 ∧ 대 surface ≥ 4.5:1)일 때만**. 미달이면 accent는 채움(+`on-accent`)·괘선·장식 아이콘에만 쓴다(대 bg ≥ 3:1이 필요한 정보 아이콘 제외, T-27) |
 | `color.on-accent` | accent 위 텍스트 | ≥ 4.5:1(하드) |
 | `color.focus` | 포커스 링 | 대 bg, 대 surface ≥ 3:1(하드) |
 | `color.focus-inverse` | 반전 섹션 위 포커스 링 | 파생: = `color.fg-inverse`. 대 surface-inverse ≥ 3:1 |
@@ -119,6 +119,18 @@ TokenSet 최상위 그룹(필수): `color`, `font`, `type`, `space`, `radius`, `
 | `color.overlay` | 이미지 위 텍스트 오버레이 | = neutral.950, alpha 0.35~0.60(04장 §4.11 자동 보정이 결정) |
 
 대비 계산: WCAG 2.x 상대 휘도 공식, hex 반올림 후 값 기준, 소수 둘째 자리 내림 비교(4.49 → 실패).
+
+**반전 면·이미지 오버레이 위 컴포넌트 매핑(T-27, UI3-01)** — 파생 토큰이며 팔레트 값은 추가·변경하지 않는다. `deriveTokens`가 결정론으로 정한다.
+
+| 요소 | `inverseButtonMode = 'invert'`(기본) | `inverseButtonMode = 'primary'` |
+|---|---|---|
+| `button.primary@inverse` | bg = `fg-inverse`, 글자 = `surface-inverse`(대비 = fg-inverse 대 surface-inverse ≥ 4.5, 이미 보장), hover = bg α 0.88 | 일반 primary 그대로 |
+| `button.secondary@inverse` | 투명 bg + 1px(`depth.border_weight = bold`면 2px) `fg-inverse` 테두리, 글자 `fg-inverse` | 같음 |
+| 링크@inverse | `fg-inverse` + 밑줄 | 같음 |
+
+- `inverseButtonMode = 'primary'` ⇔ primary 대 surface-inverse ≥ 3:1 ∧ on-primary 대 primary ≥ 4.5:1(예: T5·T6). 그 밖은 `'invert'`.
+- 이미지 오버레이(`text_over_image`) 위 버튼·링크도 `@inverse` 매핑을 쓴다.
+- `tokens.accentTextSafe: boolean`, `tokens.inverseButtonMode: 'primary'|'invert'`는 TokenSet에 저장되고 컴파일러(04장 4.9.2)가 이 값으로 분기한다.
 
 ### 3.1.4 neutral 램프와 상태색
 
@@ -143,7 +155,7 @@ TokenSet 최상위 그룹(필수): `color`, `font`, `type`, `space`, `radius`, `
 | 단계 n | `t-caption` −2, `t-small` −1, `t-body` 0, `t-lead` 1, `t-4` 2, `t-3` 3, `t-2` 4, `t-1` 5, `t-display` 6. **단계 이름은 시맨틱 수준(h1~h6 요소)과 무관하다**(S-38). 어떤 요소에 어느 단계를 쓰는지는 3.1.5a 역할 표가 정한다. 아래 식의 h1·display는 각각 `t-1`·`t-display` 단계를 뜻한다 | — |
 | 데스크톱 크기 | `size(n) = base × ratio^n × (n ≥ 5 ? boost : 1)`. 상한: h1 ≤ 6×base, display ≤ 8×base. 하한: 음수 단계 ≥ 12px. 정수 px 반올림 | — |
 | 모바일 크기(375) | `base_m = max(16, base − 1)`, `ratio_m` = 한 단계 낮춤(1.333→1.25, 1.25→1.2, 1.2→1.15), `boost_m = 1 + (boost − 1)/2`. 상한: h1 ≤ 44px, display ≤ 52px(= 375×0.14). 음수 단계는 데스크톱 값 그대로 | — |
-| 보간 | `font-size: clamp(m, calc(A + B·vw), d)`, B = (d − m)/9.05 (단위 vw), A = m − B×3.75 (px). 375에서 m, 1280에서 d | — |
+| 보간 | `font-size: clamp(m, calc(A + B·vw), d)`, B = (d − m)/9.05 (단위 vw), A = m − B×3.75 (px). 375에서 m, 1280에서 d. **순수 함수 `expectedSize(tokens, step, vw) = clamp(m, A + B·vw/100, d)`**(px, 반올림 없음)를 `packages/design-spec`이 내보내고 04장 G-12·AIL-17이 뷰포트별 기대값으로 쓴다(허용 오차 0.5px, T-28) | — |
 | `type.leading.body` | 1.6 / 1.7 / 1.8(한글). 영문 전용 라벨 1.5 | `type.body_leading` |
 | `type.leading.heading` | 크기별: < 32px 1.35, 32~47px 1.3, 48~71px 1.2, ≥ 72px 1.1 | 파생 |
 | `type.tracking` | 3.8.2 표(크기·서체 분류별) | 파생 |
@@ -168,14 +180,32 @@ TokenSet 최상위 그룹(필수): `color`, `font`, `type`, `space`, `radius`, `
 | `caption` | `t-caption` | body | p·figcaption | ≥ 12px 하한 |
 | `eyebrow` | `t-small` | emphasis | p | 라벨 자간(3.8.2) |
 | `stat.value` | `t-2` | heading | p | `font-variant-numeric: tabular-nums` |
-| `price` | `t-3` | heading | p | |
+| `pricing.price` | `t-3` | heading | p | pricing 블록 전용(옛 `price` → T-29로 이름 변경) |
 | `quote` | `t-3` | body | blockquote | |
 | `cta.headline` | band = `t-2`, big-type = `t-display` | heading | h2 | |
 | `footer.wordmark` | big-type = `t-display`, 그 외 `t-3` | heading | p | |
-| `nav.wordmark` | 20~24px 고정(단계 밖) | heading | a | 3.13.4 |
+| `nav.wordmark` | `t-lead`(데스크톱 19~22px, 3.4.6) → 줄 예산 초과 시 `t-body` → 375에서 2줄 허용(04장 4.10.2, T-28·T-30) | heading | a | 3.13.4. 옛 "20~24px 고정(단계 밖)" → T-28로 대체 |
+| `button.label` | sm `t-small`, md·lg `t-body` | emphasis | span | T-29 |
+| `nav.link` | `t-small`(데스크톱 15px 미만이면 `t-body`) | body | a | T-29 |
+| `tag.label` | `t-caption` | emphasis | span | T-29 |
+| `form.label` | `t-small` | emphasis | label | T-29 |
+| `form.input` | `t-body`(≥ 16px 하한, iOS 확대 방지) | body | input | T-29 |
+| `form.help`, `form.error` | `t-caption` | body | p | T-29 |
+| `accordion.question` | `t-lead` | heading | button | T-29 |
+| `menu.item` | `t-body` | emphasis | p | T-29 |
+| `menu.desc` | `t-small` | body | p | T-29 |
+| `menu.price` | `t-body` | emphasis | p | `tabular-nums`, 항목명 크기 이하(T-29) |
+| `pricing.plan` | `t-4` | heading | h3 | T-29 |
+| `stat.label`, `list.index` | `t-small` | emphasis | p·span | `list.index` = 01/02/03(T-29) |
+| `proof.name`, `avatar.initials` | `t-small` | emphasis | p·span | T-29 |
+| `info.row` | `t-body` | body | p | location 블록(T-29) |
+| `footer.link` | `t-small` | body | a | T-29 |
+| `footer.legal` | `t-caption` | body | p | T-29 |
 
 - 모바일 단계는 3.1.5 모바일 식을 그대로 쓴다(`step_mobile` = `step_desktop`, 크기만 모바일 값).
-- **AC-03-38** 블록 템플릿 전체에서 font-size 리터럴·`text-*` 크기 클래스 0건(정적 grep), 모든 텍스트 노드에 `data-role`이 있고 이 표의 키다. `text-roles.json`이 zod 검증을 통과한다.
+- **AC-03-42**(T-10으로 번호 변경, 옛 이 절의 AC-03-38) 블록 템플릿 전체에서 font-size 리터럴·`text-*` 크기 클래스 0건(정적 grep), 모든 텍스트 노드에 `data-role`이 있고 이 표의 키다. `text-roles.json`이 zod 검증을 통과한다. (조화 배점의 AC-03-38은 3.14.5에 그대로 둔다.)
+- **AC-03-46**(T-29, UI3-03) ① `components.json`·`blocks.json`의 모든 텍스트 슬롯과 컴포넌트 텍스트 요소에 역할 키가 있다(정적 교차 검사, 누락 0) ② 같은 프리셋·뷰포트에서 `button.label` md의 computed font-size가 1종이다 ③ menu.leader 렌더에서 `menu.price` font-size ≤ `menu.item` font-size다 ④ `price` 키 0건(`pricing.price`만).
+- **AC-03-45**(T-28, UI3-02) ① `expectedSize` 단위 테스트: 프리셋 8 × 단계 9 × {375, 768, 1024, 1280, 1920}의 기대값이 브라우저 computed 값과 ±0.5px 안 ② 표준 트리 24개 × 뷰포트 5 렌더에서 04장 G-12·AIL-17 위반 0건 ③ 스케일 밖 값 픽스처(`padding: 13px`, `font-size: 15px`)는 모든 뷰포트에서 검출된다 ④ `nav.wordmark`의 computed font-size가 `expectedSize(t-lead)` 또는 하향 단계 값이다.
 
 ### 3.1.6 spacing (4pt) [P0]
 
@@ -273,6 +303,7 @@ TokenSet 최상위 그룹(필수): `color`, `font`, `type`, `space`, `radius`, `
 시안 렌더러는 shadcn/ui를 쓰지 않는다(D-28). Tailwind 기본 토큰(`--color-zinc-*`, `--radius` 0.5/0.625rem, `shadow-sm/md` 기본값, Inter/Geist 계열)은 `theme.css`에서 초기화하므로 출력 CSS에 나타나면 안 된다. 금지 값 목록은 `data/taxonomy/harmony.json.defaultsBlacklist`에 두고 04장 린터(AIL-16 계열)가 사용한다: `oklch(0.141 0.005 285.823)`, `oklch(0.985 0 0)`(shadcn 기본 fg/bg 쌍이 동시에 쓰일 때), `0.625rem`, `0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)`, font-family 첫 항목 `Inter`/`Geist`/`Roboto`/`system-ui`.
 
 **AC-03-02** 프리셋 8종 × 팔레트 4벌 = 32개 TokenSet이 `data/tokens/schema.json` 검증을 통과하고, 3.1.3의 하드 대비 조건 13쌍을 전부 만족한다(단위 테스트, 쌍별 결과 리포트 저장).
+**AC-03-44**(T-27, UI3-01) 32 TokenSet에서 반전 면 3쌍(버튼 경계 대 surface-inverse ≥ 3:1, 버튼 글자 ≥ 4.5:1, 링크 ≥ 4.5:1)을 `inverseButtonMode`에 따라 계산해 100% 통과하고(AC-03-02 쌍 목록 13 + 3), `accentTextSafe = false`인 TokenSet 렌더에서 accent 색 텍스트 노드가 0건이다. 팔레트 표(3.4.2·3.4.3) 값은 변하지 않는다.
 **AC-03-03** `deriveTokens`는 순수 함수이며 같은 입력 1,000회 호출 시 출력 SHA-256이 1종이다. 출력 TokenSet의 모든 margin·padding·gap 후보 값이 3.1.6의 15개 집합에, 모든 radius 값이 3.1.7의 family 집합에 속한다.
 **AC-03-04** 모든 프리셋 기본 TokenSet에서 display/body 비가 2.5~8.0, 페이지 font-weight 고유값 ≤ 3이다.
 **AC-03-05** 내보낸 `tokens.json`이 DTCG 2025.10 형식 검사(자체 스키마 + `$type` 집합 검사)를 통과하고, `tokens.css`·`theme.css` 이외 CSS 파일에 색·px 리터럴이 0건이다(04장 CM-02 리터럴 검사와 동일 도구).
@@ -684,7 +715,7 @@ JSON 키는 R-01을 따른다(A1 `expression`, A2 `temperature`, A3 `shape`, A4 
 | C15 | Stat | value+label / value+label+note | — | 값은 브랜드 입력 숫자만(04장 CP-03). `tabular-nums` |
 | C16 | Accordion | bordered / plain | — | `<details><summary>`, 키보드 Enter/Space, 아이콘 회전 fast |
 | C17 | Divider | line / space / ornament(SIG-01 전용) | — | |
-| C18 | Wordmark | text | nav 20~24px / footer 20px / big-type = display | 브랜드명을 `font.heading`으로 조판. 로고 업로드 MVP 제외(D-0803). 심볼 생성 금지 |
+| C18 | Wordmark | text | nav `t-lead`(3.1.5a) / footer `t-3` / big-type = `t-display`(T-28) | 브랜드명을 `font.heading`으로 조판. 로고 업로드 MVP 제외(D-0803). 심볼 생성 금지 |
 | — | Icon | (3.9) | 16 / 20 / 24 / 32 | 컴포넌트가 아니라 자산 참조 |
 
 MVP 제외: Rating(별점, 가상 평점 노출 위험 → 08장), Tabs, Carousel, Modal, Toast, Table, 지도 임베드, 예약 위젯, 사진 Avatar, 로고 클라우드의 실제 로고.
@@ -900,7 +931,7 @@ interface SlotDef {
 
 **AC-03-18** `blocks.json`의 50개 variant 각각이 3개 용도 중 허용되는 모든 용도 × 프리셋 8종 × 검증 뷰포트 5종(D-25)에서 슬롯 상한 길이 카피로 렌더될 때 G-04(가로 넘침)·G-05(잘림)·G-06(겹침) 0건이다.
 **AC-03-19** 모든 슬롯의 `maxLength`가 04장 카피 덱 상한 이상이다(정적 비교 테스트). 덱에 없는 키를 참조하는 슬롯은 0개다.
-**AC-03-20** `standardTree`가 8유형 × 3용도 = 24개 트리를 만들고, 24개 모두 04장 G-01·LT-01~08·RH-01~02 위반 0건, 조화 점수 H = 100이다.
+**AC-03-20** `standardTree`가 8유형 × 3용도 = 24개 트리를 만들고, 24개 모두 04장 G-01·G-02·G-03(T-27)·LT-01~08·RH-01~02 위반 0건, 조화 점수 H = 100이다.
 **AC-03-21** `fallback_variant` 체인이 순환하지 않고, 모든 체인이 이미지 0장 variant 또는 "블록 제거"로 끝난다(그래프 검사).
 
 ---
@@ -1300,7 +1331,7 @@ else:
 # 사전 가능성 판정과 종료 순서(S-37, UI2-01). 위 루프 전에 먼저 실행한다. 예외 없이 반드시 끝난다.
 feasible_primary = 시작 L에서 ±0.25 경계 2점 중 하나라도 두 대비 조건을 만족(대비는 L에 단조)
 if not feasible_primary:
-    (a) accent 경로: accent는 괘선·라벨·아이콘에만 쓰므로 accent 대 bg 비텍스트 ≥ 3:1만 요구,
+    (a) accent 경로: accent는 괘선·장식 아이콘에만 쓰고 텍스트(라벨·링크)는 accentTextSafe일 때만 쓰므로(3.1.3, T-27) accent 대 bg 비텍스트 ≥ 3:1만 요구,
         on-accent 쓰임(배지 채움) 금지 → 성공하면 brand_color_notice = "demoted_to_accent"
     (b) 실패하면 tint 경로: surface 틴트(hue = h_b, C ≤ 0.035, 3.1.3 bg 조건 안) 또는
         shape-graphic 색면 1개에만 적용 → brand_color_notice = "used_as_tint"
@@ -1314,12 +1345,12 @@ VIVID_FORBIDDEN = {T1, T2, T3, T4, T7, T8}   # 허용 팔레트 중 vivid가 없
 ### 3.13.3 두 번째 색·강등된 색 → accent
 
 - accent는 primary와의 hue 차가 3.14.1 관계 범위(15~45°, 135~165°, 160~200°) 안일 때만 쓴다. 밖이면 무시하고 사유 기록.
-- accent 대비: on-accent ≥ 4.5:1이 되도록 같은 L 보정. 면적 ≤ 10%(컴파일러가 accent를 CTA 보조·링크·라벨·괘선에만 사용).
+- accent 대비: on-accent ≥ 4.5:1이 되도록 같은 L 보정. 면적 ≤ 10%(컴파일러가 accent를 CTA 보조·괘선·장식 아이콘에 사용하고, 링크·라벨 텍스트는 `accentTextSafe`일 때만 사용, T-27). 보정 후 `accentTextSafe`를 다시 파생한다.
 - accent C > primary C × 1.3이면 accent C를 primary C × 1.3으로 낮춘다(04장 H3).
 
 ### 3.13.4 로고
 
-- 로고 업로드는 **MVP 제외**(D-0803). 로고 자리는 Wordmark(C18): 브랜드명을 `font.heading`, heading 웨이트, nav 20~24px로 조판한다. 가짜 심볼·이니셜 마크 생성 금지.
+- 로고 업로드는 **MVP 제외**(D-0803). 로고 자리는 Wordmark(C18): 브랜드명을 `font.heading`, heading 웨이트, nav = `t-lead` 단계(3.1.5a, 줄 예산 하향 규칙 04장 4.10.2)로 조판한다(T-28). 가짜 심볼·이니셜 마크 생성 금지.
 - [P2] 로고 업로드 도입 시 규칙(기록만): SVG(새니타이즈)·PNG, ≤ 2MB, nav 표시 높이 24~40px, 최대 폭 160px, 로고 평균 휘도 대 nav 배경 대비 ≥ 3:1 미달 시 nav 배경을 surface/inverse 중 통과하는 쪽으로 전환, 로고 색 변경은 사용자 동의 시에만.
 
 **AC-03-36** 브랜드 hex 24개(순흑·순백·형광 핑크 #FF00FF·형광 연두 #39FF14·저채도 회청·노랑 #FFFF00 등 극단값 + 밝은 색 픽스처 `#FFFF00`·`#FDFD96`·`#AAF0D1`·`#FFF5CC`, S-37 — 모든 결과가 primary 적용·accent 강등·`used_as_tint`·`ignored` 중 하나로 종료, 예외·타임아웃 0, 1회 호출 ≤ 5ms) × 8유형 = 160건에서 결과 TokenSet 100%가 3.1.3 하드 대비를 통과하고, 강등되지 않은 경우 primary hue 오차 ≤ 5°다(04장 AC-04-03과 같은 픽스처 사용).
@@ -1525,6 +1556,10 @@ AC-03-01~39는 L1 결정론 테스트 또는 렌더 테스트로 매 PR에서 �
 | S-34(03) | — | 3.10 톤 일치, D-0309 반영 | |
 | S-35(03) | — | 3.1.12 styleguide.html | |
 | S-37 | — | 3.13.2 사전 가능성 판정·종료 순서·notice 5값, AC-03-36 픽스처 | |
-| S-38 | — | 3.1.5 단계 이름 t-*, 3.1.5a 텍스트 역할 표(B25), H7 정의, AC-03-38 | |
+| S-38 | — | 3.1.5 단계 이름 t-*, 3.1.5a 텍스트 역할 표(B25), H7 정의, AC-03-42(옛 3.1.5a의 AC-03-38, T-10) | |
 | S-39 | — | 3.8.1 넘침 처리 순서, headlineBudget, AC-03-26 | |
 | S-40 | — | 3.7.5 subset enum·맥락별 서브셋·측정 규칙 | |
+| T-27(UI3-01) | — | 3.1.3 accent 텍스트 조건·반전 면 매핑·`inverseButtonMode`·`accentTextSafe`, 3.13.2 (a)·3.13.3 라벨 조건, AC-03-20 G-02·03, AC-03-44 | 팔레트 값 불변 |
+| T-28(UI3-02) | — | 3.1.5 `expectedSize`, 3.1.5a `nav.wordmark` = `t-lead`, C18·3.13.4, AC-03-45 | |
+| T-29(UI3-03) | — | 3.1.5a 역할 17행 추가·`price` → `pricing.price`, AC-03-46 | B25 갱신 |
+| T-10(QA3-07) | — | 3.1.5a AC-03-38 → AC-03-42(조화 쪽 AC-03-38 유지) | ID 정의 1건 |
