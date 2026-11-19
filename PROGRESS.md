@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T15:09Z, since: 2026-11-19T15:09Z}
+- lock: {owner: 2026-11-19T15:09Z, since: 2026-11-19T15:15Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
@@ -98,7 +98,7 @@
   - [x] 12 CI 워크플로(.github/workflows/ci.yml, 전 잡 NO_EXTERNAL_NETWORK=1·LLM_MODE=mock, AC-07-01)·docker/ 파일(실행은 needs_ci)
   - [x] 13 자체 잠금(--m0-end, ASM-007) → verify:m0 pass_blocked(BLK-001~005) → m0-done 태그
 - M1 계획(9.4.3, AC: 02-01·12, 03-01, 05-02~04, 06-01~07·51, 09-04·05. 읽을 장은 CLAUDE.md 구현 규칙 3절):
-  - [ ] 01 M1 수용 테스트(acMilestones M1 + 9.4.3 ①~⑨) `test(acc)` 커밋 → qa:trace --audit → 자체 잠금, traceability.yaml M1 행
+  - [x] 01 M1 수용 테스트(acMilestones M1 + 9.4.3 ①~⑨) `test(acc)` 커밋 → qa:trace --audit → 자체 잠금, traceability.yaml M1 행
   - [ ] 02 packages/data-contracts B1~B17 zod(09장 9.2 묶음 정의)
   - [ ] 03 `data:validate`(25묶음, B19 0개 허용, 교차 참조 고아 0) — todo 자리표시 교체
   - [ ] 04 `seed:temp` 결정적 PRNG(provenance temp, tmp_ 접두사, 2회 바이트 동일): a 택소노미·프리셋·폰트·페어링 b 카드·A/B·레퍼런스·골든 골격
@@ -115,6 +115,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-20 00:45 | M1-01 수용 테스트 2파일(7ac566c) 자체 잠금, trace M1 17행, ASM-008 → 다음: M1-02 data-contracts
 - 2026-11-19 23:47 | M1 계획 11단위 작성, 세션 종료 unlock → 다음: M1-01 수용 테스트
 - 2026-11-19 23:46 | M0 완료: 종료 잠금 23파일, verify:m0 pass_blocked(BLK-001~005), m0-done → 다음: M1 하위 단위 계획(09장 9.4.3)
 - 2026-11-19 23:35 | M0-11 verify 실행기, verify:m0 fail 남음(AC-07-01 llm·ci.yml), BLK-005(커밋 scope) → 다음: 11b llm gateway
@@ -129,4 +130,3 @@
 - 2026-11-19 23:15 | BLK-001 라이선스 규칙 locked-conflict 기록(HUMAN_TODO) → 다음: M0-08 guard 1~4
 - 2026-11-19 23:10 | M0-07 web·worker health, env 종료 1, m0 stack.test 8/8 녹색 → 다음: M0-08 guard 1~4
 - 2026-11-19 22:55 | M0-06 native PG+shim 기동 확인(tastefit_app 접속), dev:stack 골격 → 다음: M0-07 health
-- 2026-11-19 22:45 | M0-05 spec:extract, review-pass=FINAL 바이트 동일 확인, config 3파일 잠금 → 다음: M0-06 native 스택

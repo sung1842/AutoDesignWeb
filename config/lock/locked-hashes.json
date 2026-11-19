@@ -193,6 +193,18 @@
       "lockedBy": "agent",
       "lockedAt": "2026-11-19T14:41:47Z",
       "commit": "4cc1735"
+    },
+    "tests/acceptance/m1/data.test.ts": {
+      "sha256": "502c8b20542cb5d6abbdd981a3f632e1278840b55c38b647d9041b1cfbbce8b8",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T15:15:25Z",
+      "commit": "7ac566c"
+    },
+    "tests/acceptance/m1/db.test.ts": {
+      "sha256": "4a8c5387a8fc06c96f9568be76c149e15b924a77b65b293e75ad36f5103c2e2f",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-19T15:15:25Z",
+      "commit": "7ac566c"
     }
   }
 }
