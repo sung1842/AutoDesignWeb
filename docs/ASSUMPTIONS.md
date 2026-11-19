@@ -214,3 +214,10 @@
 - 선택: data-contracts에 사용 키워드만 지원하는 최소 검증기(MiniValidator)를 둔다. 스키마 원본은 그대로 읽는다(zod로 옮겨 쓰지 않음 → 이중 원천 방지). ajv 추가는 사람 결정(HUMAN_TODO)
 - 영향 범위: packages/data-contracts(json-schema.ts·m2.ts)
 - 되돌리기 비용: 낮음
+
+## ASM-031 · M2 · gap · 2026-11-19T19:40Z
+- 질문: 03장 3.1 TokenSet의 그룹 안 토큰 이름·DTCG 타입이 없는 값(media.treatment·glass·motion.level)의 표현, 모바일 pad, 팔레트에 없는 역할
+- 근거 탐색: 03장 3.1.2~3.1.11·3.7.4·3.11.1·3.12, data/tokens/schema.json(tokens-1), AC-03-02~05·44
+- 선택: ① type 그룹 토큰 이름 = caption·small·body·lead·h4·h3·h2·h1·display(단계 이름 t-…는 `$extensions.app.tastefit.step`, 모바일 크기는 `mobileSize`). h4~display = heading 서체·웨이트·3.8.2 자간, 나머지 = body·400 ② 단계 크기는 3.4.6 표가 아니라 3.1.5 공식으로 계산(기본 L2에서 표와 일치). 모바일 값은 데스크톱 이하로 자름 ③ media = grayscale·contrast·sepia·saturate number + duotone일 때 duotone-shadow·highlight 색, motion.enter = subtle이면 base(200ms) 아니면 0, glass는 shadow.glass.alpha-n·blur-n ④ 모바일 pad ±1 = 한 단계 조밀한 밀도의 데스크톱 값(3.1.6 예시 regular +1 → 80과 일치), compact는 스케일 한 단계 아래 ⑤ primary-active가 팔레트에 없으면 hover에서 같은 방향 0.04(방향 = hover−primary 부호), focus-inverse = fg-inverse ⑥ 다크(T7)는 그림자 층 비움(3.12) ⑦ 팔레트에 없는 역할(accent·on-accent)은 palettes.json에서 null 대신 키 생략(seed:temp 수정, AC-03-44 테스트가 roles 값을 모두 hex로 읽음) ⑧ 브랜드 색은 M2-03c applyBrandColor에서 반영
+- 영향 범위: packages/design-spec(tokens.ts·data.ts), scripts/data/seed-temp.ts, data/taxonomy/palettes.json(temp)
+- 되돌리기 비용: 중간

@@ -127,6 +127,9 @@ importers:
 
   packages/design-spec:
     dependencies:
+      '@tastefit/config':
+        specifier: workspace:^
+        version: link:../config
       '@tastefit/data-contracts':
         specifier: workspace:^
         version: link:../data-contracts

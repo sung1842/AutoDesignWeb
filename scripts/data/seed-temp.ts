@@ -599,13 +599,13 @@ function genPalettes(ctx: Ctx): Out[] {
       for (const role of PAL_ROLES) {
         const v = res[role];
         const rv = roles[role];
-        out[role] = v
-          ? {
-              oklch: [v.l, Math.round(v.c * 1e4) / 1e4, v.h],
-              hex: hex[role] ?? "",
-              ...(rv?.link ? { link: rv.link } : {}),
-            }
-          : null;
+        // 없는 역할(accent·on-accent, 3.1.3 "0~1색")은 키를 두지 않는다(ASM-031 ⑦)
+        if (v)
+          out[role] = {
+            oklch: [v.l, Math.round(v.c * 1e4) / 1e4, v.h],
+            hex: hex[role] ?? "",
+            ...(rv?.link ? { link: rv.link } : {}),
+          };
       }
       const ratios: Obj = {};
       const failures: string[] = [];

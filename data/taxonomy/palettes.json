@@ -676,8 +676,6 @@
           ],
           "hex": "#104A97"
         },
-        "accent": null,
-        "on-accent": null,
         "focus": {
           "oklch": [
             0.48,
@@ -804,8 +802,6 @@
           ],
           "hex": "#89221A"
         },
-        "accent": null,
-        "on-accent": null,
         "focus": {
           "oklch": [
             0.48,
@@ -933,8 +929,6 @@
           ],
           "hex": "#095C34"
         },
-        "accent": null,
-        "on-accent": null,
         "focus": {
           "oklch": [
             0.48,
@@ -1062,8 +1056,6 @@
           ],
           "hex": "#7B3702"
         },
-        "accent": null,
-        "on-accent": null,
         "focus": {
           "oklch": [
             0.48,
@@ -1191,8 +1183,6 @@
           ],
           "hex": "#005656"
         },
-        "accent": null,
-        "on-accent": null,
         "focus": {
           "oklch": [
             0.47,
@@ -1319,8 +1309,6 @@
           ],
           "hex": "#2C5536"
         },
-        "accent": null,
-        "on-accent": null,
         "focus": {
           "oklch": [
             0.47,
@@ -1448,8 +1436,6 @@
           ],
           "hex": "#2F4C70"
         },
-        "accent": null,
-        "on-accent": null,
         "focus": {
           "oklch": [
             0.47,
@@ -1577,8 +1563,6 @@
           ],
           "hex": "#6A3C2C"
         },
-        "accent": null,
-        "on-accent": null,
         "focus": {
           "oklch": [
             0.47,
@@ -3426,8 +3410,6 @@
           ],
           "hex": "#7DEABD"
         },
-        "accent": null,
-        "on-accent": null,
         "focus": {
           "oklch": [
             0.8,
@@ -3554,8 +3536,6 @@
           ],
           "hex": "#FDC678"
         },
-        "accent": null,
-        "on-accent": null,
         "focus": {
           "oklch": [
             0.8,
@@ -3683,8 +3663,6 @@
           ],
           "hex": "#96DCFE"
         },
-        "accent": null,
-        "on-accent": null,
         "focus": {
           "oklch": [
             0.8,
@@ -3812,8 +3790,6 @@
           ],
           "hex": "#FFBFB8"
         },
-        "accent": null,
-        "on-accent": null,
         "focus": {
           "oklch": [
             0.8,

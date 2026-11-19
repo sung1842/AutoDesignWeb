@@ -3,6 +3,7 @@ import type { L1, L2 } from "@tastefit/taxonomy";
 import type { DesignData } from "./data.js";
 import { todo } from "./todo.js";
 import { predictL1Vec } from "./predict.js";
+import { deriveTokensImpl, expectedSizeImpl } from "./tokens.js";
 import { letterSpacingEmImpl, signatureEligibleImpl } from "./signature.js";
 import type {
   DerivedTokens,
@@ -20,10 +21,9 @@ export interface DeriveInput {
   l2: L2;
   brand?: { hex: string } | null;
 }
-/** M2-03 전 자리표시: 빈 TokenSet(수용 테스트가 상위 수준에서 호출하므로 던지지 않는다). */
-export function deriveTokens(_input: DeriveInput, _data: DesignData): DerivedTokens {
-  void [_input, _data];
-  return { tokenSet: {}, accentTextSafe: false, inverseButtonMode: "invert" };
+/** 03장 3.1(ASM-031). 브랜드 색 반영은 M2-03c(applyBrandColor). */
+export function deriveTokens(input: DeriveInput, data: DesignData): DerivedTokens {
+  return deriveTokensImpl(input, data);
 }
 export function exportTokens(
   _d: DerivedTokens,
@@ -60,9 +60,8 @@ export function applyBrandColor(
   void [_input, _data];
   return todo("M2-03", "applyBrandColor");
 }
-export function expectedSize(_tokens: Record<string, unknown>, _step: string, _vw: number): number {
-  void [_tokens, _step, _vw];
-  return todo("M2-03", "expectedSize");
+export function expectedSize(tokens: Record<string, unknown>, step: string, vw: number): number {
+  return expectedSizeImpl(tokens, step, vw);
 }
 export function letterSpacingEm(px: number, cls: "sans" | "serif" | "latin-heading"): number {
   return letterSpacingEmImpl(px, cls);

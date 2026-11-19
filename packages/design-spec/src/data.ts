@@ -27,6 +27,28 @@ export interface ColorNameEntry {
   h: [number, number];
 }
 export type JsonObj = { [k: string]: unknown };
+export interface FontEntry {
+  id: string;
+  code: string;
+  family: string;
+  script: string;
+  classification: string;
+  subsetFamily: string;
+}
+export interface PairingFull {
+  code: string;
+  headingFontId: string;
+  bodyFontId: string;
+  headingLatinFontId?: string | null;
+  labelFontId?: string | null;
+  headlineWeights: string[];
+  defaultHeadlineWeight: string;
+  emphasisWeight: number;
+  classHeading: string;
+  classBody: string;
+  contrastSerif: boolean;
+  sig: { temp: number; expr: number; soft: number };
+}
 export interface DesignData extends MapData {
   taxonomyVersion: string;
   taxonomy: TaxKey[];
@@ -36,6 +58,8 @@ export interface DesignData extends MapData {
   harmony: JsonObj[];
   purposes: JsonObj[];
   colorNames: ColorNameEntry[];
+  fonts: FontEntry[];
+  pairingsFull: PairingFull[];
 }
 
 interface Envelope<T> {
@@ -64,5 +88,7 @@ export function loadDesignData(root: string): DesignData {
     harmony: read<JsonObj>(root, "data/taxonomy/harmony.json").items,
     purposes: read<JsonObj>(root, "data/taxonomy/purposes.json").items,
     colorNames: [],
+    fonts: read<FontEntry>(root, "data/fonts/registry.json").items,
+    pairingsFull: read<PairingFull>(root, "data/fonts/pairings.json").items,
   };
 }
