@@ -1,3 +1,5 @@
 # ASSUMPTIONS (09장 9.5.4 형식, append)
 
+운영·환경 결정은 docs/spec/DECISIONS_LOG.md
+
 에이전트가 문서에 없는 결정을 가장 보수적으로 내린 기록. 형식은 FINAL 09장 9.5.4.

@@ -1,5 +1,7 @@
 # 자율 세션 결정 기록
 
+제품 공백은 docs/ASSUMPTIONS.md. 이 파일은 운영·환경 결정만 적고 append-only다(T-01).
+
 | ID | 날짜 | 결정 | 이유 |
 |---|---|---|---|
 | AD-001 | 2026-11-19 | 라운드 2 리뷰 8개(Blocker 3·Major 37)를 decisions_v3.md(S-01~S-41)로 통합. 장별 반영은 v3 "반영 순서" 20단위를 따른다 | CLAUDE.md P2: 장 사이 충돌은 v3로 먼저 정리 |
@@ -26,3 +28,4 @@
 | AD-022 | 2026-11-19 | 원격 태그 푸시가 계속 막혀(재시도도 disconnect) PROGRESS.md `tags:` 맵(이름→커밋)을 원천으로 두고 세션 시작 때 로컬 주석 태그를 같은 커밋에 다시 만든다(CLAUDE.md I-2 ②). guard는 git 태그를 그대로 읽는다 | 컨테이너가 매번 새로 받아 로컬 태그가 사라진다. 같은 커밋에 재생성은 태그 이동이 아니고 guard 판정식도 바꾸지 않는다(AD-020의 "태그 없으면 FAIL" 유지). 사람이 원격 태그를 만들면 그것과 일치해야 한다 |
 | AD-023 | 2026-11-19 | P3 docs 배치: `docs/dependency-allowlist.md` 초안(temp, M0 종료 시 잠금, 사람 확인은 HUMAN_TODO)·`docs/ASSUMPTIONS.md`·`BLOCKED.md` 생성. `@playwright/test`는 설치된 chromium-1243과 짝인 **1.63.0** 정확 고정(9.1.1). 임시 시드 묶음 B1~B25는 P3에서 손으로 만들지 않고 M1 `pnpm seed:temp`(9.2.4, 결정적 PRNG)가 만든다 | 9.2.4가 "두 번 실행 바이트 동일"과 생성 스크립트를 요구해 손 작성본은 M1 ④를 못 지킨다. P3는 사람 확인 목록(9.2.5)만 HUMAN_TODO로 넘긴다. 컨테이너 pnpm은 10.x라 M0에서 `packageManager: pnpm@9.x`+corepack으로 맞춘다 |
 | AD-024 | 2026-11-19 | P3 끝 `spec-lock` 태그를 커밋 ca6b1de에 만든다. `spec:extract`가 아직 없어 대조는 AD-019 원문 블록 SHA-256으로 대신했고 FINAL/07과 review-pass v2/07의 thresholds·test-policy 해시가 `review_pass_hashes`와 같았다. M0의 guard 6단계가 `spec:extract` 바이트 대조를 다시 하고, 다르면 BLOCKED | 9.5.6은 P3 끝에 태그를 요구하지만 추출기는 M0 산출물이다. 원문 블록이 같으면 같은 추출기 출력도 같으므로 판정을 앞당겨도 기준이 느슨해지지 않는다 |
+| AD-025 | 2026-11-19 | P3 산출물 중 09장 9.5.7 매핑 항목(DECISIONS_LOG·ASSUMPTIONS 맨 위 1줄, CLAUDE.md "세션 운영"+"구현 규칙" 두 절 구조와 9.8.2 절 이름, P4 절 9.7 상태 표)이 빠진 채 `spec-lock`(ca6b1de)을 만들었다. 보완 커밋 뒤 `spec-lock`을 그 커밋으로 **한 번** 다시 만든다(원격에 없고 guard 미구현이라 의존 0). 이후 태그 이동 금지 그대로. CLAUDE.md 세션 운영 하위 절은 제목 단계만 내리고 내용은 그대로 | spec-lock은 "P3 끝" 시점이어야 하는데 P3가 덜 끝났다. DECISIONS_LOG 맨 위 줄은 lock 뒤엔 append-only 위반이라 lock 전에 넣어야 한다 |

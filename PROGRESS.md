@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T12:09Z, since: 2026-11-19T12:13Z}
+- lock: {owner: 2026-11-19T12:09Z, since: 2026-11-19T12:15Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: ca6b1de}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
@@ -65,7 +65,23 @@
 - [x] FINAL 정리 [x] 구현 규칙 추가 [x] 임시 시드 데이터(→ M1 seed:temp, AD-023) [x] HUMAN_TODO 정리
 
 ## P4. 구현
-- P3 완료(spec-lock=ca6b1de, AD-024). 다음: M0 하위 단위 계획(09장 9.4.2) 작성 후 착수
+### 상태(09장 9.7. 표는 덮어쓰고 아래 기록은 append)
+| M | 상태 | 시작 | 종료 | 태그 | verify | 미해결 BLOCKED | 가정 수 |
+|---|---|---|---|---|---|---|---|
+| M0 | in_progress | 2026-11-19T12:50Z | – | – | – | 0 | 0 |
+| M1 | todo | – | – | – | – | – | – |
+| M2 | todo | – | – | – | – | – | – |
+| M3 | todo | – | – | – | – | – | – |
+| M4 | todo | – | – | – | – | – | – |
+| M5 | todo | – | – | – | – | – | – |
+| M6 | todo | – | – | – | – | – | – |
+| M7 | todo | – | – | – | – | – | – |
+| M8 | todo | – | – | – | – | – | – |
+상태 ∈ todo | in_progress | blocked | done | halted
+
+데이터 provenance: (M1 data:validate 후 기록)
+
+- P3 완료(spec-lock은 AD-025로 보완 커밋에 재생성). 다음: M0 하위 단위 계획(09장 9.4.2) 작성 후 착수
 - M0 계획(9.4.2, 9.5.1. 코드는 저장소 루트에 9.1.2 트리로):
   - [x] 01 루트 스캐폴드: pnpm@9(corepack)·turbo·tsconfig strict·eslint·prettier·vitest·.nvmrc, lockfile
   - [x] 02 9.1.2 패키지·앱 빈 골격(index.ts), lint·typecheck 녹색
@@ -86,6 +102,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 22:10 | 9.5.7 누락 보완(CLAUDE 두 절·절 이름, 로그 머리줄, 9.7 표), AD-025 spec-lock 재생성 → 다음: M0-03
 - 2026-11-19 22:00 | M0-02 패키지 21·앱 2 골격(tsc -b 참조), lint·typecheck 녹색 → 다음: M0-03 수용 테스트
 - 2026-11-19 21:55 | M0-01 루트 스캐폴드(pnpm 9.15.9 corepack, TS 5.9, eslint 9, vitest 3), lint 녹색 → 다음: M0-02 골격
 - 2026-11-19 21:45 | M0 계획 13단위 작성 → 다음: M0-01 루트 스캐폴드
