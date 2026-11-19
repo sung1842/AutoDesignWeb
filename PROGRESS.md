@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T12:09Z, since: 2026-11-19T12:12Z}
+- lock: {owner: 2026-11-19T12:09Z, since: 2026-11-19T12:13Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: ca6b1de}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
@@ -66,12 +66,27 @@
 
 ## P4. 구현
 - P3 완료(spec-lock=ca6b1de, AD-024). 다음: M0 하위 단위 계획(09장 9.4.2) 작성 후 착수
+- M0 계획(9.4.2, 9.5.1. 코드는 저장소 루트에 9.1.2 트리로):
+  - [ ] 01 루트 스캐폴드: pnpm@9(corepack)·turbo·tsconfig strict·eslint·prettier·vitest·.nvmrc, lockfile
+  - [ ] 02 9.1.2 패키지·앱 빈 골격(index.ts), lint·typecheck 녹색
+  - [ ] 03 M0 수용 테스트(acMilestones M0) `test(acc)` 커밋 + 자체 잠금
+  - [ ] 04 packages/config: env zod(06장 env 목록)·thresholds 로더·네트워크 가드, .env.example
+  - [ ] 05 spec:extract(--from FINAL/review-pass/--init-tuned) → config/thresholds.json·test-policy.json
+  - [ ] 06 native 스택: PG16 + packages/db/shim + local 드라이버, `pnpm dev:stack`
+  - [ ] 07 web `/api/health`, worker `/health`, 필수 env 누락 시 종료 1
+  - [ ] 08 guard 1~4단계(잠금 해시·금지 패턴·테스트 수·deps/라이선스)
+  - [ ] 09 guard 5~7단계(spec 대조·baseRef·DECISIONS_LOG append-only·qa:trace --audit)
+  - [ ] 10 tests/guard 메타 테스트(⑥⑦)
+  - [ ] 11 verify:fast·verify:m0~m8 + reports/verify-mN.json
+  - [ ] 12 CI 워크플로·docker/ 파일(실행은 needs_ci)
+  - [ ] 13 verify:m0 녹색 → 자체 잠금(verify/guard) → m0-done 태그(tags 맵)
 - [ ] M0 [ ] M1 [ ] M2 [ ] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
 
 ## P5. 완료
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 21:45 | M0 계획 13단위 작성 → 다음: M0-01 루트 스캐폴드
 - 2026-11-19 21:40 | spec-lock 태그(ca6b1de, 원문 블록 해시 일치, AD-024), P3 완료 → 다음: M0 단위 계획
 - 2026-11-19 21:35 | docs 배치(allowlist 초안·ASSUMPTIONS·BLOCKED), seed:temp는 M1(AD-023), HUMAN_TODO 4건 → 다음: spec-lock 판단·M0 계획
 - 2026-11-19 21:25 | CLAUDE.md 구현 규칙 I-0~I-8(9.8.2 골격), tags 맵·로컬 태그 복원 AD-022 → 다음: docs 배치·임시 시드
