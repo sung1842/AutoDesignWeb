@@ -3,8 +3,9 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P3
-- lock: {owner: 2026-11-19T12:09Z, since: 2026-11-19T12:10Z}
+- lock: {owner: 2026-11-19T12:09Z, since: 2026-11-19T12:11Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
+- tags: {review-pass: 4519c49}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-20 01:08
 - 마지막 갱신: 2026-11-19 21:30 KST (예약 세션: r4 반영 완료, r5·r6 리뷰, P2 멈춤)
@@ -61,7 +62,7 @@
   - R2 LEGAL: FAIL/FAIL/FAIL (1라운드 20건 중 14 해결·6 부분, Blocker 0, Major 7: 편집 시 남용 검사 우회·불법 업종 미필터, Supabase Auth 메타데이터 이름·사진 저장, 국외이전 목록 누락(Fly.io·Vercel·llm-judge), 탈퇴와 DDL 충돌(동의 기록·감사 로그·정지 회피), 익명 폼 남용, 관리자 MFA·열람 로그 부재, 법무 문서 경로 08↔09 불일치·컴플라이언스 임시 시드 규칙 부재)
 
 ## P3. 최종 기획서와 구현 준비
-- [x] FINAL 정리 [ ] 구현 규칙 추가 [ ] 임시 시드 데이터 [ ] HUMAN_TODO 정리
+- [x] FINAL 정리 [x] 구현 규칙 추가 [ ] 임시 시드 데이터 [ ] HUMAN_TODO 정리
 
 ## P4. 구현
 - [ ] M0 [ ] M1 [ ] M2 [ ] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
@@ -70,6 +71,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 21:25 | CLAUDE.md 구현 규칙 I-0~I-8(9.8.2 골격), tags 맵·로컬 태그 복원 AD-022 → 다음: docs 배치·임시 시드
 - 2026-11-19 21:20 | P3 FINAL: 장 10개 바이트 동일 사본, INDEX.md, DECISIONS.md 통합본, AD-021 → 다음: 구현 규칙
 - 2026-11-19 21:30 | review-pass 태그 푸시 403 → review_pass_commit 기록·HUMAN_TODO(AD-020), unlock
 - 2026-11-19 21:22 | R6 R-B: B0·M0·m3, TL·AI·QA PASS. 8역할 PASS → P2 멈춤, review-pass 태그·해시(AD-019) → 다음: P3 FINAL

@@ -86,4 +86,64 @@
 - 비밀값을 저장소에 커밋하는 것.
 
 ## 구현 규칙
-(P3에서 추가된다)
+(P3에서 09장 9.8.2 골격을 이 저장소 운영(0~3절)에 맞춰 옮긴 것. 0~1.1절·3절과 충돌하면 그쪽이 이긴다. 근거 AD-021·AD-022)
+
+### I-0. 역할과 목표
+- 너는 이 레포의 유일한 구현자다. `docs/spec/FINAL/`의 P0 범위를 M0→M8 순서로 구현한다.
+- 완료 = 09장 9.9 체크리스트 충족. 그 전에 "완료"라고 쓰지 않는다.
+- 제품 결정을 새로 만들지 않는다. 문서에 없으면 `docs/ASSUMPTIONS.md`에 기록하고 가장 보수적인 선택(09장 9.5.3).
+
+### I-1. 우선순위(충돌 시 위가 이긴다)
+1) 이 파일의 금지 규칙(3절·I-5) 2) `docs/spec/FINAL/DECISIONS.md` 3) 해당 영역 장(FINAL 00~08) 4) FINAL 09장 5) 너의 판단
+
+### I-2. 매 세션 시작 시(0절 다음에)
+1) `PROGRESS.md` 현재 상태·P4 절과 `BLOCKED.md` open 항목만 읽는다.
+2) **로컬 태그 복원**: 이 환경은 원격 태그 푸시가 막혀 있다(AD-020). `PROGRESS.md`의 `tags:` 맵(이름 → 커밋)에 있는 태그 중 로컬에 없는 것을 `git tag -a <이름> <커밋> -m restore`로 만든다. 이미 있는 태그를 다른 커밋으로 옮기지 않는다. 새 태그(`m<N>-done`, `spec-lock` 등)를 만들면 푸시를 1회 시도하고, 실패하면 `tags:` 맵에 커밋을 적어 함께 커밋한다.
+3) M0 이후: `pnpm guard` 실행. 실패하면 원인부터 고친다(자신의 잠금 위반이면 HALT, 9.5.3).
+4) 현재 마일스톤의 "읽을 장"(아래 I-3)만 `docs/spec/SECTION_INDEX.md`로 찾아 필요한 절만 읽는다. FINAL 장은 v2와 바이트 동일하므로 색인의 줄 번호를 그대로 쓴다.
+
+### I-3. 마일스톤별 읽을 장(09장 9.8.2 3절)
+| M | 읽을 장/절 |
+|---|---|
+| M0 | 09(9.1·9.4.2·9.5), 06(아키텍처·env·6.13.1 스택 프로파일), 07(7.12 잠금·guard) |
+| M1 | 09.2, 02(축·유형), 03(택소노미·프리셋), 05(시드), 06(데이터 모델·RLS), 08(보관·권한) |
+| M2 | 03(토큰·매핑·폰트·이미지), 04(PageSchema·블록·폴백), 06(미리보기 격리), 08(CSP) |
+| M3 | 04(린터·게이트·점수), 03(조화 규칙), 07(테스트 계층) |
+| M4 | 02(전체), 01(진단·결과 화면), 05(닮은 사이트), 08(비제휴 고지) |
+| M5 | 04(파이프라인·실패 처리·models.yaml), 01(입력·대기·비교 화면), 06(API·잡·인증), 08(입력 방어) |
+| M6 | 01(편집·내보내기 화면), 03(편집 단계), 04(내보내기), 08(라이선스 고지·AI 고지) |
+| M7 | 06(운영·관측·레이트리밋·배포), 08(개인정보·opt-out), 07(골든 세트) |
+| M8 | 07(출시 기준 전체), 08(보안 세트) |
+각 마일스톤의 범위·산출물·통과 조건은 09장 9.4.x 표, 그 마일스톤의 AC 목록은 07장 7.12.1 AC 배정표에서만 가져온다.
+
+### I-4. 작업 루프(09장 9.5.1)
+- 수용 테스트 먼저 → 자체 잠금 → 구현 → `pnpm verify:fast` → 커밋·푸시 → `pnpm verify:mN` → PROGRESS 갱신 → 태그(I-2 ②).
+- 단위는 30~45분(1절). 마일스톤 하나를 한 세션에 끝내려 하지 않는다. PROGRESS P4 절에 마일스톤별 하위 단위 체크리스트를 두고 이어서 한다.
+- 테스트·빌드 출력은 `| tail -40`으로 자른다(1.1절).
+
+### I-5. 절대 금지(guard가 검사한다. 우회 시도도 금지)
+- 잠금 파일 수정: `docs/spec/**`(예외: `DECISIONS_LOG.md` append), `config/*.json`, `tests/acceptance/**`(자체 잠금 후), `scripts/verify|guard/**`, `data/`의 human 파일, `config/lock/locked-hashes.json`. 이 파일(CLAUDE.md)은 P4 동안 1절 운영 규칙 오류 수정 외에는 고치지 않는다.
+- 테스트 skip/only/todo/fixme, 테스트 삭제, 재시도·타임아웃 상향, 임계값 완화.
+- `@ts-ignore`, `@ts-expect-error`, `@ts-nocheck`, `eslint-disable`, `any`.
+- provenance temp→human 변경, `tmp_` 접두사 제거.
+- Phase 2/3 기능, "MBTI" 문자열, 렌더러에 tailwind/shadcn/lucide, web에 playwright.
+- 외부 네트워크를 쓰는 테스트, 실제 API 키 사용, 원격 배포·원격 DB 변경.
+- `--no-verify`, force push, 태그 이동.
+
+### I-6. 막혔을 때(09장 9.5.3)
+- 같은 원인 3회 실패 또는 누적 90분 → `BLOCKED.md` 기록 → 마지막 녹색으로 되돌림(작업물은 `wip/blocked-<id>` 브랜치) → 독립 작업으로 이동.
+- 잠금 파일이 틀렸다고 생각되면 고치지 말고 `BLOCKED.md`(`locked-conflict`).
+- 사람 데이터가 없으면 `pnpm seed:temp` 후 계속.
+- 환경: Docker 없음 → `STACK_PROFILE=native`(시스템 PG16 + shim + local 드라이버). 브라우저는 `/opt/pw-browsers`의 chromium만 → webkit·firefox·시각 회귀 기준 이미지 등은 needs_ci. pgvector는 MVP에서 쓰지 않는다(S-22). 이 대체는 BLOCKED가 아니다.
+- HALT 조건(9.5.3 즉시 중단)이면 `PROGRESS.md` status를 `HALT`로 적고 사유를 `HUMAN_TODO.md`에 남긴 뒤 종료.
+
+### I-7. 명령어
+`pnpm dev:stack | pnpm guard | pnpm verify:fast | pnpm verify:m0..m8 | pnpm data:validate | pnpm seed:temp | pnpm db:seed | pnpm survey:build | pnpm eval:golden --mode mock | pnpm release:check | pnpm spec:extract`
+
+### I-8. 코드 규칙
+- TypeScript strict, 순수 로직은 `packages/*`, 앱은 얇게(09장 9.1.3 의존 규칙).
+- 임계값은 `config/thresholds.json`에서만 읽는다(`@tastefit/config`의 `getThresholds()`). 이 파일과 `config/test-policy.json`은 손으로 쓰지 않고 `spec:extract`로 만든다.
+- LLM 호출은 `@tastefit/llm` gateway로만, 모드 분기는 gateway 내부에서만. 기본 `LLM_MODE=mock`.
+- 서비스 UI는 `packages/ui` 자체 토큰 사용, shadcn 기본 스타일 그대로 사용 금지(D-28).
+- 사용자 노출 문자열은 한국어, 01장 마이크로카피 표를 따른다.
+- 의존 패키지는 `docs/dependency-allowlist.md`에 있는 것만(사람 잠금 대상, 9.5.6. 사람이 없어 P3에서 에이전트가 초안을 만들고 HUMAN_TODO로 확인 요청).
