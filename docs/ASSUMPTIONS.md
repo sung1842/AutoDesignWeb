@@ -122,3 +122,17 @@
 - 선택: 8.7.6 YAML을 그대로 옮기되 items는 원문 P코드 ∪ 흐름표 행(원문은 `items_note`), 흐름표에만 있는 id는 `stub: true` 항목으로 추가, `cloudflare-turnstile`은 원문대로 두고 `turnstile` 스텁을 별도로 둔다. 전부 approved:false. 장 간 id 정리는 HUMAN_TODO
 - 영향 범위: legal/processors.yaml·data-flows.yaml, M7 compliance:flows
 - 되돌리기 비용: 낮음
+
+## ASM-018 · M1 · gap · 2026-11-19T17:12Z
+- 질문: B20 copy_templates.json·axis_hints.json의 항목 구조가 장에 없다(4.6.2는 키·개수·길이만, 4.11은 "방향 2종 × 5축"만)
+- 근거 탐색: 04장 4.6.2·4.7(buildTemplateDeck)·4.11 repair, 09장 9.2.4 B20
+- 선택: copy_templates 항목 = (용도 × 4.6.2 키) 1개, id `<purpose>:<key>`, count·length(또는 항목 필드별 lengths)·values(개수 상한만큼). 값은 `[임시]` 문장으로 길이 하한을 맞추고, cta.primary는 4.6.2 용도별 권장 동사 그대로, proof는 `[예시]`·김○○·placeholder, menu 가격 `[예시] 0,000원`, stats는 빈 배열, contact.*는 제외. 일부 첫 값은 치환 토큰(`{name}`·`{description}`·`{key_points.0}`)이며 길이 검사는 치환 후(M5 buildTemplateDeck)에 한다. axis_hints 항목 = `<axis>:up|down` 10개
+- 영향 범위: config/copy_templates.json·axis_hints.json, M5 buildTemplateDeck·repair 프롬프트
+- 되돌리기 비용: 낮음
+
+## ASM-019 · M1 · gap · 2026-11-19T17:12Z
+- 질문: B21·B22·B24 temp 시드의 구체 항목(장에는 범주·하한만)
+- 근거 탐색: 08장 8.9.2(HighRiskBrand 스키마·범주·판정 규칙), 04장 4.9.4, 03장 3.10.2, 09장 9.2.4 B21·B22·B24
+- 선택: B21 공개적으로 알려진 국내 금융·통신·포털·커머스·물류·공공기관 87개(domains 빈 배열). 8.9.2 (b) 부분 포함 규칙의 오탐을 피하려고 일반 영단어 부분열이 되는 짧은 alias(SKT·nts·nps·apple)는 넣지 않았다. B22 범주 6 × 키워드 10~12(일반 단어 부분열 오탐 우려 단어 제외). B24 키워드 62개, 각 1태그(03장 3.10.2 ImageTag만, data:validate 교차 참조 추가). 적정성은 사람 확인(HUMAN_TODO, 08장 Q13)
+- 영향 범위: config/high_risk_brands.json·prohibited_categories.json·image_tag_keywords.json, M5 compliance/abuse·industryTags
+- 되돌리기 비용: 낮음

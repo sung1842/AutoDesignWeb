@@ -1,0 +1,444 @@
+{
+  "bundle": "image-tag-keywords",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "ikw-001",
+      "keyword": "협업",
+      "tags": [
+        "saas.workspace"
+      ]
+    },
+    {
+      "id": "ikw-002",
+      "keyword": "업무",
+      "tags": [
+        "saas.workspace"
+      ]
+    },
+    {
+      "id": "ikw-003",
+      "keyword": "생산성",
+      "tags": [
+        "saas.workspace"
+      ]
+    },
+    {
+      "id": "ikw-004",
+      "keyword": "사무실",
+      "tags": [
+        "saas.workspace"
+      ]
+    },
+    {
+      "id": "ikw-005",
+      "keyword": "재택",
+      "tags": [
+        "saas.workspace"
+      ]
+    },
+    {
+      "id": "ikw-006",
+      "keyword": "앱",
+      "tags": [
+        "saas.hands-device"
+      ]
+    },
+    {
+      "id": "ikw-007",
+      "keyword": "모바일",
+      "tags": [
+        "saas.hands-device"
+      ]
+    },
+    {
+      "id": "ikw-008",
+      "keyword": "결제",
+      "tags": [
+        "saas.hands-device"
+      ]
+    },
+    {
+      "id": "ikw-009",
+      "keyword": "메신저",
+      "tags": [
+        "saas.hands-device"
+      ]
+    },
+    {
+      "id": "ikw-010",
+      "keyword": "플랫폼",
+      "tags": [
+        "saas.architecture"
+      ]
+    },
+    {
+      "id": "ikw-011",
+      "keyword": "인프라",
+      "tags": [
+        "saas.architecture"
+      ]
+    },
+    {
+      "id": "ikw-012",
+      "keyword": "클라우드",
+      "tags": [
+        "saas.architecture"
+      ]
+    },
+    {
+      "id": "ikw-013",
+      "keyword": "보안",
+      "tags": [
+        "saas.architecture"
+      ]
+    },
+    {
+      "id": "ikw-014",
+      "keyword": "문서",
+      "tags": [
+        "saas.material"
+      ]
+    },
+    {
+      "id": "ikw-015",
+      "keyword": "데이터",
+      "tags": [
+        "saas.material"
+      ]
+    },
+    {
+      "id": "ikw-016",
+      "keyword": "분석",
+      "tags": [
+        "saas.material"
+      ]
+    },
+    {
+      "id": "ikw-017",
+      "keyword": "회의",
+      "tags": [
+        "saas.meeting-back"
+      ]
+    },
+    {
+      "id": "ikw-018",
+      "keyword": "팀",
+      "tags": [
+        "saas.meeting-back"
+      ]
+    },
+    {
+      "id": "ikw-019",
+      "keyword": "고객관리",
+      "tags": [
+        "saas.meeting-back"
+      ]
+    },
+    {
+      "id": "ikw-020",
+      "keyword": "채용",
+      "tags": [
+        "saas.meeting-back"
+      ]
+    },
+    {
+      "id": "ikw-021",
+      "keyword": "디자인",
+      "tags": [
+        "portfolio.studio"
+      ]
+    },
+    {
+      "id": "ikw-022",
+      "keyword": "스튜디오",
+      "tags": [
+        "portfolio.studio"
+      ]
+    },
+    {
+      "id": "ikw-023",
+      "keyword": "작업실",
+      "tags": [
+        "portfolio.studio"
+      ]
+    },
+    {
+      "id": "ikw-024",
+      "keyword": "브랜딩",
+      "tags": [
+        "portfolio.studio"
+      ]
+    },
+    {
+      "id": "ikw-025",
+      "keyword": "일러스트",
+      "tags": [
+        "portfolio.tools"
+      ]
+    },
+    {
+      "id": "ikw-026",
+      "keyword": "그림",
+      "tags": [
+        "portfolio.tools"
+      ]
+    },
+    {
+      "id": "ikw-027",
+      "keyword": "도구",
+      "tags": [
+        "portfolio.tools"
+      ]
+    },
+    {
+      "id": "ikw-028",
+      "keyword": "사진",
+      "tags": [
+        "portfolio.still-life"
+      ]
+    },
+    {
+      "id": "ikw-029",
+      "keyword": "제품촬영",
+      "tags": [
+        "portfolio.still-life"
+      ]
+    },
+    {
+      "id": "ikw-030",
+      "keyword": "정물",
+      "tags": [
+        "portfolio.still-life"
+      ]
+    },
+    {
+      "id": "ikw-031",
+      "keyword": "인테리어",
+      "tags": [
+        "portfolio.interior"
+      ]
+    },
+    {
+      "id": "ikw-032",
+      "keyword": "공간",
+      "tags": [
+        "portfolio.interior"
+      ]
+    },
+    {
+      "id": "ikw-033",
+      "keyword": "건축",
+      "tags": [
+        "portfolio.interior"
+      ]
+    },
+    {
+      "id": "ikw-034",
+      "keyword": "풍경",
+      "tags": [
+        "portfolio.nature"
+      ]
+    },
+    {
+      "id": "ikw-035",
+      "keyword": "여행",
+      "tags": [
+        "portfolio.nature"
+      ]
+    },
+    {
+      "id": "ikw-036",
+      "keyword": "카페",
+      "tags": [
+        "local_business.cafe-interior"
+      ]
+    },
+    {
+      "id": "ikw-037",
+      "keyword": "디저트카페",
+      "tags": [
+        "local_business.cafe-interior"
+      ]
+    },
+    {
+      "id": "ikw-038",
+      "keyword": "커피",
+      "tags": [
+        "local_business.coffee"
+      ]
+    },
+    {
+      "id": "ikw-039",
+      "keyword": "원두",
+      "tags": [
+        "local_business.coffee"
+      ]
+    },
+    {
+      "id": "ikw-040",
+      "keyword": "로스터리",
+      "tags": [
+        "local_business.coffee"
+      ]
+    },
+    {
+      "id": "ikw-041",
+      "keyword": "음료",
+      "tags": [
+        "local_business.coffee"
+      ]
+    },
+    {
+      "id": "ikw-042",
+      "keyword": "빵",
+      "tags": [
+        "local_business.bakery"
+      ]
+    },
+    {
+      "id": "ikw-043",
+      "keyword": "베이커리",
+      "tags": [
+        "local_business.bakery"
+      ]
+    },
+    {
+      "id": "ikw-044",
+      "keyword": "케이크",
+      "tags": [
+        "local_business.bakery"
+      ]
+    },
+    {
+      "id": "ikw-045",
+      "keyword": "제과",
+      "tags": [
+        "local_business.bakery"
+      ]
+    },
+    {
+      "id": "ikw-046",
+      "keyword": "음식",
+      "tags": [
+        "local_business.food"
+      ]
+    },
+    {
+      "id": "ikw-047",
+      "keyword": "한식",
+      "tags": [
+        "local_business.food"
+      ]
+    },
+    {
+      "id": "ikw-048",
+      "keyword": "양식",
+      "tags": [
+        "local_business.food"
+      ]
+    },
+    {
+      "id": "ikw-049",
+      "keyword": "도시락",
+      "tags": [
+        "local_business.food"
+      ]
+    },
+    {
+      "id": "ikw-050",
+      "keyword": "식당",
+      "tags": [
+        "local_business.restaurant-interior"
+      ]
+    },
+    {
+      "id": "ikw-051",
+      "keyword": "레스토랑",
+      "tags": [
+        "local_business.restaurant-interior"
+      ]
+    },
+    {
+      "id": "ikw-052",
+      "keyword": "주점",
+      "tags": [
+        "local_business.restaurant-interior"
+      ]
+    },
+    {
+      "id": "ikw-053",
+      "keyword": "공방",
+      "tags": [
+        "local_business.craft"
+      ]
+    },
+    {
+      "id": "ikw-054",
+      "keyword": "도자기",
+      "tags": [
+        "local_business.craft"
+      ]
+    },
+    {
+      "id": "ikw-055",
+      "keyword": "가죽",
+      "tags": [
+        "local_business.craft"
+      ]
+    },
+    {
+      "id": "ikw-056",
+      "keyword": "목공",
+      "tags": [
+        "local_business.craft"
+      ]
+    },
+    {
+      "id": "ikw-057",
+      "keyword": "꽃",
+      "tags": [
+        "local_business.flower"
+      ]
+    },
+    {
+      "id": "ikw-058",
+      "keyword": "꽃집",
+      "tags": [
+        "local_business.flower"
+      ]
+    },
+    {
+      "id": "ikw-059",
+      "keyword": "식물",
+      "tags": [
+        "local_business.flower"
+      ]
+    },
+    {
+      "id": "ikw-060",
+      "keyword": "가게",
+      "tags": [
+        "local_business.storefront"
+      ]
+    },
+    {
+      "id": "ikw-061",
+      "keyword": "상점",
+      "tags": [
+        "local_business.storefront"
+      ]
+    },
+    {
+      "id": "ikw-062",
+      "keyword": "매장",
+      "tags": [
+        "local_business.storefront"
+      ]
+    }
+  ]
+}

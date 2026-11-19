@@ -1,0 +1,917 @@
+{
+  "bundle": "high-risk-brands",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "hrb-001",
+      "canonical": "국민은행",
+      "aliases": [
+        "KB국민은행",
+        "kookmin bank",
+        "kbstar"
+      ],
+      "category": "bank",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-002",
+      "canonical": "신한은행",
+      "aliases": [
+        "shinhan bank"
+      ],
+      "category": "bank",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-003",
+      "canonical": "우리은행",
+      "aliases": [
+        "woori bank"
+      ],
+      "category": "bank",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-004",
+      "canonical": "하나은행",
+      "aliases": [
+        "KEB하나은행",
+        "hana bank"
+      ],
+      "category": "bank",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-005",
+      "canonical": "농협은행",
+      "aliases": [
+        "NH농협은행",
+        "NH농협"
+      ],
+      "category": "bank",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-006",
+      "canonical": "기업은행",
+      "aliases": [
+        "IBK기업은행",
+        "IBK"
+      ],
+      "category": "bank",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-007",
+      "canonical": "SC제일은행",
+      "aliases": [
+        "제일은행",
+        "standard chartered"
+      ],
+      "category": "bank",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-008",
+      "canonical": "씨티은행",
+      "aliases": [
+        "한국씨티은행",
+        "citibank"
+      ],
+      "category": "bank",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-009",
+      "canonical": "카카오뱅크",
+      "aliases": [
+        "kakaobank"
+      ],
+      "category": "bank",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-010",
+      "canonical": "케이뱅크",
+      "aliases": [
+        "kbank"
+      ],
+      "category": "bank",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-011",
+      "canonical": "토스뱅크",
+      "aliases": [
+        "tossbank"
+      ],
+      "category": "bank",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-012",
+      "canonical": "수협은행",
+      "aliases": [
+        "Sh수협은행"
+      ],
+      "category": "bank",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-013",
+      "canonical": "부산은행",
+      "aliases": [
+        "BNK부산은행"
+      ],
+      "category": "bank",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-014",
+      "canonical": "대구은행",
+      "aliases": [
+        "iM뱅크",
+        "DGB대구은행"
+      ],
+      "category": "bank",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-015",
+      "canonical": "새마을금고",
+      "aliases": [
+        "MG새마을금고"
+      ],
+      "category": "bank",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-016",
+      "canonical": "우체국예금",
+      "aliases": [
+        "우체국은행"
+      ],
+      "category": "bank",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-017",
+      "canonical": "산업은행",
+      "aliases": [
+        "KDB산업은행"
+      ],
+      "category": "bank",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-018",
+      "canonical": "신한카드",
+      "aliases": [
+        "shinhan card"
+      ],
+      "category": "card",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-019",
+      "canonical": "삼성카드",
+      "aliases": [
+        "samsung card"
+      ],
+      "category": "card",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-020",
+      "canonical": "현대카드",
+      "aliases": [
+        "hyundai card"
+      ],
+      "category": "card",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-021",
+      "canonical": "KB국민카드",
+      "aliases": [
+        "국민카드"
+      ],
+      "category": "card",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-022",
+      "canonical": "롯데카드",
+      "aliases": [
+        "lotte card"
+      ],
+      "category": "card",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-023",
+      "canonical": "하나카드",
+      "aliases": [
+        "hana card"
+      ],
+      "category": "card",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-024",
+      "canonical": "우리카드",
+      "aliases": [
+        "woori card"
+      ],
+      "category": "card",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-025",
+      "canonical": "BC카드",
+      "aliases": [
+        "비씨카드"
+      ],
+      "category": "card",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-026",
+      "canonical": "미래에셋증권",
+      "aliases": [
+        "미래에셋"
+      ],
+      "category": "securities",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-027",
+      "canonical": "삼성증권",
+      "aliases": [
+        "samsung securities"
+      ],
+      "category": "securities",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-028",
+      "canonical": "NH투자증권",
+      "aliases": [
+        "나무증권"
+      ],
+      "category": "securities",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-029",
+      "canonical": "한국투자증권",
+      "aliases": [
+        "한투"
+      ],
+      "category": "securities",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-030",
+      "canonical": "키움증권",
+      "aliases": [
+        "kiwoom"
+      ],
+      "category": "securities",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-031",
+      "canonical": "KB증권",
+      "aliases": [
+        "kb securities"
+      ],
+      "category": "securities",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-032",
+      "canonical": "토스증권",
+      "aliases": [
+        "toss securities"
+      ],
+      "category": "securities",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-033",
+      "canonical": "삼성생명",
+      "aliases": [
+        "samsung life"
+      ],
+      "category": "insurance",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-034",
+      "canonical": "삼성화재",
+      "aliases": [
+        "samsung fire"
+      ],
+      "category": "insurance",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-035",
+      "canonical": "한화생명",
+      "aliases": [
+        "hanwha life"
+      ],
+      "category": "insurance",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-036",
+      "canonical": "교보생명",
+      "aliases": [
+        "kyobo life"
+      ],
+      "category": "insurance",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-037",
+      "canonical": "현대해상",
+      "aliases": [
+        "hyundai marine"
+      ],
+      "category": "insurance",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-038",
+      "canonical": "DB손해보험",
+      "aliases": [
+        "DB손보"
+      ],
+      "category": "insurance",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-039",
+      "canonical": "KB손해보험",
+      "aliases": [
+        "KB손보"
+      ],
+      "category": "insurance",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-040",
+      "canonical": "카카오페이",
+      "aliases": [
+        "kakaopay"
+      ],
+      "category": "payment",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-041",
+      "canonical": "네이버페이",
+      "aliases": [
+        "naverpay",
+        "N페이"
+      ],
+      "category": "payment",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-042",
+      "canonical": "토스",
+      "aliases": [
+        "toss",
+        "비바리퍼블리카"
+      ],
+      "category": "payment",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-043",
+      "canonical": "페이코",
+      "aliases": [
+        "payco"
+      ],
+      "category": "payment",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-044",
+      "canonical": "삼성페이",
+      "aliases": [
+        "samsung pay"
+      ],
+      "category": "payment",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-045",
+      "canonical": "PASS",
+      "aliases": [
+        "패스 인증"
+      ],
+      "category": "payment",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-046",
+      "canonical": "업비트",
+      "aliases": [
+        "upbit",
+        "두나무"
+      ],
+      "category": "crypto",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-047",
+      "canonical": "빗썸",
+      "aliases": [
+        "bithumb"
+      ],
+      "category": "crypto",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-048",
+      "canonical": "코인원",
+      "aliases": [
+        "coinone"
+      ],
+      "category": "crypto",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-049",
+      "canonical": "코빗",
+      "aliases": [
+        "korbit"
+      ],
+      "category": "crypto",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-050",
+      "canonical": "SK텔레콤",
+      "aliases": [
+        "sk telecom",
+        "T world"
+      ],
+      "category": "telecom",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-051",
+      "canonical": "KT",
+      "aliases": [
+        "케이티",
+        "olleh"
+      ],
+      "category": "telecom",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-052",
+      "canonical": "LG유플러스",
+      "aliases": [
+        "LGU+",
+        "유플러스"
+      ],
+      "category": "telecom",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-053",
+      "canonical": "네이버",
+      "aliases": [
+        "naver"
+      ],
+      "category": "portal",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-054",
+      "canonical": "카카오",
+      "aliases": [
+        "kakao",
+        "카카오톡",
+        "kakaotalk"
+      ],
+      "category": "portal",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-055",
+      "canonical": "다음",
+      "aliases": [
+        "daum"
+      ],
+      "category": "portal",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-056",
+      "canonical": "구글",
+      "aliases": [
+        "google"
+      ],
+      "category": "portal",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-057",
+      "canonical": "애플",
+      "aliases": [
+        "icloud"
+      ],
+      "category": "portal",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-058",
+      "canonical": "마이크로소프트",
+      "aliases": [
+        "microsoft",
+        "outlook"
+      ],
+      "category": "portal",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-059",
+      "canonical": "쿠팡",
+      "aliases": [
+        "coupang"
+      ],
+      "category": "commerce",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-060",
+      "canonical": "11번가",
+      "aliases": [
+        "11st"
+      ],
+      "category": "commerce",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-061",
+      "canonical": "G마켓",
+      "aliases": [
+        "gmarket",
+        "지마켓"
+      ],
+      "category": "commerce",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-062",
+      "canonical": "옥션",
+      "aliases": [
+        "auction"
+      ],
+      "category": "commerce",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-063",
+      "canonical": "SSG닷컴",
+      "aliases": [
+        "쓱닷컴",
+        "ssg"
+      ],
+      "category": "commerce",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-064",
+      "canonical": "무신사",
+      "aliases": [
+        "musinsa"
+      ],
+      "category": "commerce",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-065",
+      "canonical": "당근마켓",
+      "aliases": [
+        "당근",
+        "daangn"
+      ],
+      "category": "commerce",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-066",
+      "canonical": "배달의민족",
+      "aliases": [
+        "배민",
+        "baemin"
+      ],
+      "category": "delivery",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-067",
+      "canonical": "요기요",
+      "aliases": [
+        "yogiyo"
+      ],
+      "category": "delivery",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-068",
+      "canonical": "쿠팡이츠",
+      "aliases": [
+        "coupang eats"
+      ],
+      "category": "delivery",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-069",
+      "canonical": "우체국택배",
+      "aliases": [
+        "우체국",
+        "인터넷우체국",
+        "epost"
+      ],
+      "category": "logistics",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-070",
+      "canonical": "CJ대한통운",
+      "aliases": [
+        "대한통운",
+        "cj logistics"
+      ],
+      "category": "logistics",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-071",
+      "canonical": "한진택배",
+      "aliases": [
+        "한진",
+        "hanjin"
+      ],
+      "category": "logistics",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-072",
+      "canonical": "롯데택배",
+      "aliases": [
+        "롯데글로벌로지스"
+      ],
+      "category": "logistics",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-073",
+      "canonical": "로젠택배",
+      "aliases": [
+        "로젠",
+        "logen"
+      ],
+      "category": "logistics",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-074",
+      "canonical": "국세청",
+      "aliases": [
+        "홈택스",
+        "hometax"
+      ],
+      "category": "government",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-075",
+      "canonical": "경찰청",
+      "aliases": [
+        "사이버수사대",
+        "police"
+      ],
+      "category": "government",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-076",
+      "canonical": "검찰청",
+      "aliases": [
+        "대검찰청",
+        "중앙지검"
+      ],
+      "category": "government",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-077",
+      "canonical": "법원",
+      "aliases": [
+        "대법원",
+        "전자소송"
+      ],
+      "category": "government",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-078",
+      "canonical": "정부24",
+      "aliases": [
+        "gov24",
+        "민원24"
+      ],
+      "category": "government",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-079",
+      "canonical": "금융감독원",
+      "aliases": [
+        "금감원",
+        "fss"
+      ],
+      "category": "government",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-080",
+      "canonical": "금융위원회",
+      "aliases": [
+        "금융위"
+      ],
+      "category": "government",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-081",
+      "canonical": "행정안전부",
+      "aliases": [
+        "행안부"
+      ],
+      "category": "government",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-082",
+      "canonical": "관세청",
+      "aliases": [
+        "유니패스",
+        "unipass"
+      ],
+      "category": "government",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-083",
+      "canonical": "국민건강보험공단",
+      "aliases": [
+        "건강보험공단",
+        "건보공단",
+        "nhis"
+      ],
+      "category": "public",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-084",
+      "canonical": "국민연금공단",
+      "aliases": [
+        "국민연금"
+      ],
+      "category": "public",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-085",
+      "canonical": "근로복지공단",
+      "aliases": [
+        "comwel"
+      ],
+      "category": "public",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-086",
+      "canonical": "한국전력공사",
+      "aliases": [
+        "한전",
+        "kepco"
+      ],
+      "category": "public",
+      "domains": [],
+      "provenance": "temp"
+    },
+    {
+      "id": "hrb-087",
+      "canonical": "건강보험심사평가원",
+      "aliases": [
+        "심평원",
+        "hira"
+      ],
+      "category": "public",
+      "domains": [],
+      "provenance": "temp"
+    }
+  ]
+}

@@ -231,6 +231,19 @@ function checkCrossRefs(root: string, out: Issue[]): void {
   const keys = axes.map((a) => a.key).sort();
   if (JSON.stringify(keys) !== JSON.stringify([...AXIS_KEYS].sort()))
     out.push({ bundle: "B1 axes", path: "(교차 참조)", message: "축 key가 R-01 키 5개와 다름" });
+
+  // T-34: B24 태그 ⊆ 03장 3.10.2 ImageTag(이미지 팩 태그 중 tone.·orient. 제외)
+  const imageTags = new Set(
+    images
+      .flatMap((i) => (Array.isArray(i.tags) ? (i.tags as unknown[]).map(String) : []))
+      .filter((t) => !/^(tone|orient)\./.test(t)),
+  );
+  for (const k of items("B24"))
+    for (const t of Array.isArray(k.tags) ? k.tags : [k.tags])
+      ref("B24 image-tag-keywords", `${String(k.id)}.tags`, t, imageTags);
+  // 03장 3.6.5: defaultImageTag는 이미지 팩 태그여야 한다
+  for (const p of items("B4"))
+    ref("B4 purposes", `${String(p.id)}.defaultImageTag`, p.defaultImageTag, imageTags);
 }
 
 function checkCounts(root: string, out: Issue[]): void {
@@ -240,6 +253,28 @@ function checkCounts(root: string, out: Issue[]): void {
     if (got !== n)
       out.push({ bundle: label(def), path: def.paths.join(","), message: `수량 ${got} ≠ ${n}` });
   }
+  // 9.2.2 하한: B21 ≥80, B22 범주 6 × 키워드 ≥10, B20 축 힌트 2방향 × 5축
+  const brands = bundleItems(root, byId("B21")).length;
+  if (brands < 80)
+    out.push({
+      bundle: "B21 high-risk-brands",
+      path: "config/high_risk_brands.json",
+      message: `수량 ${brands} < 80`,
+    });
+  const cats = bundleItems(root, byId("B22"));
+  if (cats.length !== 6 || cats.some((c) => !Array.isArray(c.keywords) || c.keywords.length < 10))
+    out.push({
+      bundle: "B22 prohibited-categories",
+      path: "config/prohibited_categories.json",
+      message: "범주 6 × 키워드 ≥10 아님",
+    });
+  const hints = bundleItems(root, byId("B20")).filter((h) => typeof h.axis === "string");
+  if (hints.length !== AXIS_KEYS.length * 2)
+    out.push({
+      bundle: "B20 copy-templates",
+      path: "config/axis_hints.json",
+      message: `축 힌트 ${hints.length} ≠ 10`,
+    });
   const fonts = bundleItems(root, byId("B6"));
   for (const [script, n] of Object.entries(FONT_COUNTS)) {
     const got = fonts.filter((f) => f.script === script).length;

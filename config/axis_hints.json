@@ -1,0 +1,70 @@
+{
+  "bundle": "copy-templates",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "expression:up",
+      "axis": "expression",
+      "direction": "up",
+      "hint": "[임시] asymmetric variant 또는 signature 적용 블록을 늘린다"
+    },
+    {
+      "id": "expression:down",
+      "axis": "expression",
+      "direction": "down",
+      "hint": "[임시] 대칭 variant로 바꾸고 signature 적용 블록을 줄인다"
+    },
+    {
+      "id": "temperature:up",
+      "axis": "temperature",
+      "direction": "up",
+      "hint": "[임시] 따뜻한 톤 팔레트 역할과 warm 톤 이미지를 우선한다"
+    },
+    {
+      "id": "temperature:down",
+      "axis": "temperature",
+      "direction": "down",
+      "hint": "[임시] 차가운 톤 팔레트 역할과 cool 톤 이미지를 우선한다"
+    },
+    {
+      "id": "shape:up",
+      "axis": "shape",
+      "direction": "up",
+      "hint": "[임시] 모서리 반경 토큰이 큰 variant를 고른다"
+    },
+    {
+      "id": "shape:down",
+      "axis": "shape",
+      "direction": "down",
+      "hint": "[임시] 모서리 반경 토큰이 작은 variant를 고른다"
+    },
+    {
+      "id": "density:up",
+      "axis": "density",
+      "direction": "up",
+      "hint": "[임시] 섹션당 항목 수를 늘리거나 pad=-1 섹션을 늘린다"
+    },
+    {
+      "id": "density:down",
+      "axis": "density",
+      "direction": "down",
+      "hint": "[임시] 섹션 수를 줄이거나 pad=+1 섹션을 늘린다"
+    },
+    {
+      "id": "depth:up",
+      "axis": "depth",
+      "direction": "up",
+      "hint": "[임시] 그림자·겹침이 있는 variant를 늘린다"
+    },
+    {
+      "id": "depth:down",
+      "axis": "depth",
+      "direction": "down",
+      "hint": "[임시] 평면 variant로 바꾸고 그림자를 줄인다"
+    }
+  ]
+}

@@ -1,0 +1,1031 @@
+{
+  "bundle": "copy-templates",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "saas:hero.headline",
+      "purpose": "saas",
+      "key": "hero.headline",
+      "count": {
+        "min": 3,
+        "max": 3
+      },
+      "length": {
+        "min": 8,
+        "max": 24
+      },
+      "values": [
+        {
+          "kind": "factual",
+          "text": "{name}"
+        },
+        {
+          "kind": "benefit",
+          "text": "[임시] 문구 2"
+        },
+        {
+          "kind": "emotive",
+          "text": "[임시] 문구 3"
+        }
+      ]
+    },
+    {
+      "id": "local_business:hero.headline",
+      "purpose": "local_business",
+      "key": "hero.headline",
+      "count": {
+        "min": 3,
+        "max": 3
+      },
+      "length": {
+        "min": 8,
+        "max": 24
+      },
+      "values": [
+        {
+          "kind": "factual",
+          "text": "{name}"
+        },
+        {
+          "kind": "benefit",
+          "text": "[임시] 문구 2"
+        },
+        {
+          "kind": "emotive",
+          "text": "[임시] 문구 3"
+        }
+      ]
+    },
+    {
+      "id": "portfolio:hero.headline",
+      "purpose": "portfolio",
+      "key": "hero.headline",
+      "count": {
+        "min": 3,
+        "max": 3
+      },
+      "length": {
+        "min": 8,
+        "max": 24
+      },
+      "values": [
+        {
+          "kind": "factual",
+          "text": "{name}"
+        },
+        {
+          "kind": "benefit",
+          "text": "[임시] 문구 2"
+        },
+        {
+          "kind": "emotive",
+          "text": "[임시] 문구 3"
+        }
+      ]
+    },
+    {
+      "id": "saas:hero.sub",
+      "purpose": "saas",
+      "key": "hero.sub",
+      "count": {
+        "min": 2,
+        "max": 2
+      },
+      "length": {
+        "min": 30,
+        "max": 80
+      },
+      "values": [
+        "{description}",
+        "[임시] 문구 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      ]
+    },
+    {
+      "id": "local_business:hero.sub",
+      "purpose": "local_business",
+      "key": "hero.sub",
+      "count": {
+        "min": 2,
+        "max": 2
+      },
+      "length": {
+        "min": 30,
+        "max": 80
+      },
+      "values": [
+        "{description}",
+        "[임시] 문구 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      ]
+    },
+    {
+      "id": "portfolio:hero.sub",
+      "purpose": "portfolio",
+      "key": "hero.sub",
+      "count": {
+        "min": 2,
+        "max": 2
+      },
+      "length": {
+        "min": 30,
+        "max": 80
+      },
+      "values": [
+        "{description}",
+        "[임시] 문구 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      ]
+    },
+    {
+      "id": "saas:hero.eyebrow",
+      "purpose": "saas",
+      "key": "hero.eyebrow",
+      "count": {
+        "min": 2,
+        "max": 2
+      },
+      "length": {
+        "min": 2,
+        "max": 14
+      },
+      "values": [
+        "[임시] 문구 1",
+        "[임시] 문구 2"
+      ]
+    },
+    {
+      "id": "local_business:hero.eyebrow",
+      "purpose": "local_business",
+      "key": "hero.eyebrow",
+      "count": {
+        "min": 2,
+        "max": 2
+      },
+      "length": {
+        "min": 2,
+        "max": 14
+      },
+      "values": [
+        "[임시] 문구 1",
+        "[임시] 문구 2"
+      ]
+    },
+    {
+      "id": "portfolio:hero.eyebrow",
+      "purpose": "portfolio",
+      "key": "hero.eyebrow",
+      "count": {
+        "min": 2,
+        "max": 2
+      },
+      "length": {
+        "min": 2,
+        "max": 14
+      },
+      "values": [
+        "[임시] 문구 1",
+        "[임시] 문구 2"
+      ]
+    },
+    {
+      "id": "saas:cta.primary",
+      "purpose": "saas",
+      "key": "cta.primary",
+      "count": {
+        "min": 3,
+        "max": 3
+      },
+      "length": {
+        "min": 2,
+        "max": 10
+      },
+      "values": [
+        "무료로 써보기",
+        "데모 신청",
+        "가격 보기"
+      ]
+    },
+    {
+      "id": "local_business:cta.primary",
+      "purpose": "local_business",
+      "key": "cta.primary",
+      "count": {
+        "min": 3,
+        "max": 3
+      },
+      "length": {
+        "min": 2,
+        "max": 10
+      },
+      "values": [
+        "예약하기",
+        "오시는 길",
+        "메뉴 보기"
+      ]
+    },
+    {
+      "id": "portfolio:cta.primary",
+      "purpose": "portfolio",
+      "key": "cta.primary",
+      "count": {
+        "min": 3,
+        "max": 3
+      },
+      "length": {
+        "min": 2,
+        "max": 10
+      },
+      "values": [
+        "작업 보기",
+        "문의하기",
+        "이력 보기"
+      ]
+    },
+    {
+      "id": "saas:cta.secondary",
+      "purpose": "saas",
+      "key": "cta.secondary",
+      "count": {
+        "min": 2,
+        "max": 2
+      },
+      "length": {
+        "min": 2,
+        "max": 10
+      },
+      "values": [
+        "[임시] 문구 1",
+        "[임시] 문구 2"
+      ]
+    },
+    {
+      "id": "local_business:cta.secondary",
+      "purpose": "local_business",
+      "key": "cta.secondary",
+      "count": {
+        "min": 2,
+        "max": 2
+      },
+      "length": {
+        "min": 2,
+        "max": 10
+      },
+      "values": [
+        "[임시] 문구 1",
+        "[임시] 문구 2"
+      ]
+    },
+    {
+      "id": "portfolio:cta.secondary",
+      "purpose": "portfolio",
+      "key": "cta.secondary",
+      "count": {
+        "min": 2,
+        "max": 2
+      },
+      "length": {
+        "min": 2,
+        "max": 10
+      },
+      "values": [
+        "[임시] 문구 1",
+        "[임시] 문구 2"
+      ]
+    },
+    {
+      "id": "saas:about.title",
+      "purpose": "saas",
+      "key": "about.title",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "length": {
+        "min": 6,
+        "max": 20
+      },
+      "values": [
+        "[임시] 문구 1"
+      ]
+    },
+    {
+      "id": "local_business:about.title",
+      "purpose": "local_business",
+      "key": "about.title",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "length": {
+        "min": 6,
+        "max": 20
+      },
+      "values": [
+        "[임시] 문구 1"
+      ]
+    },
+    {
+      "id": "portfolio:about.title",
+      "purpose": "portfolio",
+      "key": "about.title",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "length": {
+        "min": 6,
+        "max": 20
+      },
+      "values": [
+        "[임시] 문구 1"
+      ]
+    },
+    {
+      "id": "saas:about.body",
+      "purpose": "saas",
+      "key": "about.body",
+      "count": {
+        "min": 2,
+        "max": 2
+      },
+      "length": {
+        "min": 80,
+        "max": 240
+      },
+      "values": [
+        "{description}",
+        "[임시] 문구 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다. 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      ]
+    },
+    {
+      "id": "local_business:about.body",
+      "purpose": "local_business",
+      "key": "about.body",
+      "count": {
+        "min": 2,
+        "max": 2
+      },
+      "length": {
+        "min": 80,
+        "max": 240
+      },
+      "values": [
+        "{description}",
+        "[임시] 문구 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다. 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      ]
+    },
+    {
+      "id": "portfolio:about.body",
+      "purpose": "portfolio",
+      "key": "about.body",
+      "count": {
+        "min": 2,
+        "max": 2
+      },
+      "length": {
+        "min": 80,
+        "max": 240
+      },
+      "values": [
+        "{description}",
+        "[임시] 문구 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다. 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      ]
+    },
+    {
+      "id": "saas:footer.tagline",
+      "purpose": "saas",
+      "key": "footer.tagline",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "length": {
+        "min": 1,
+        "max": 30
+      },
+      "values": [
+        "{name}"
+      ]
+    },
+    {
+      "id": "local_business:footer.tagline",
+      "purpose": "local_business",
+      "key": "footer.tagline",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "length": {
+        "min": 1,
+        "max": 30
+      },
+      "values": [
+        "{name}"
+      ]
+    },
+    {
+      "id": "portfolio:footer.tagline",
+      "purpose": "portfolio",
+      "key": "footer.tagline",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "length": {
+        "min": 1,
+        "max": 30
+      },
+      "values": [
+        "{name}"
+      ]
+    },
+    {
+      "id": "saas:meta.title",
+      "purpose": "saas",
+      "key": "meta.title",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "length": {
+        "min": 1,
+        "max": 60
+      },
+      "values": [
+        "{name}"
+      ]
+    },
+    {
+      "id": "local_business:meta.title",
+      "purpose": "local_business",
+      "key": "meta.title",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "length": {
+        "min": 1,
+        "max": 60
+      },
+      "values": [
+        "{name}"
+      ]
+    },
+    {
+      "id": "portfolio:meta.title",
+      "purpose": "portfolio",
+      "key": "meta.title",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "length": {
+        "min": 1,
+        "max": 60
+      },
+      "values": [
+        "{name}"
+      ]
+    },
+    {
+      "id": "saas:meta.description",
+      "purpose": "saas",
+      "key": "meta.description",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "length": {
+        "min": 1,
+        "max": 160
+      },
+      "values": [
+        "{description}"
+      ]
+    },
+    {
+      "id": "local_business:meta.description",
+      "purpose": "local_business",
+      "key": "meta.description",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "length": {
+        "min": 1,
+        "max": 160
+      },
+      "values": [
+        "{description}"
+      ]
+    },
+    {
+      "id": "portfolio:meta.description",
+      "purpose": "portfolio",
+      "key": "meta.description",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "length": {
+        "min": 1,
+        "max": 160
+      },
+      "values": [
+        "{description}"
+      ]
+    },
+    {
+      "id": "saas:value.items",
+      "purpose": "saas",
+      "key": "value.items",
+      "count": {
+        "min": 3,
+        "max": 4
+      },
+      "lengths": {
+        "title": {
+          "min": 6,
+          "max": 18
+        },
+        "body": {
+          "min": 30,
+          "max": 90
+        }
+      },
+      "values": [
+        {
+          "title": "[임시] 제목 1",
+          "body": "{key_points.0}"
+        },
+        {
+          "title": "[임시] 제목 2",
+          "body": "[임시] 본문 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+        },
+        {
+          "title": "[임시] 제목 3",
+          "body": "[임시] 본문 3 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+        },
+        {
+          "title": "[임시] 제목 4",
+          "body": "[임시] 본문 4 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+        }
+      ]
+    },
+    {
+      "id": "saas:feature.items",
+      "purpose": "saas",
+      "key": "feature.items",
+      "count": {
+        "min": 3,
+        "max": 5
+      },
+      "lengths": {
+        "title": {
+          "min": 6,
+          "max": 20
+        },
+        "body": {
+          "min": 40,
+          "max": 120
+        }
+      },
+      "values": [
+        {
+          "title": "[임시] 제목 1",
+          "body": "[임시] 본문 1 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+        },
+        {
+          "title": "[임시] 제목 2",
+          "body": "[임시] 본문 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+        },
+        {
+          "title": "[임시] 제목 3",
+          "body": "[임시] 본문 3 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+        },
+        {
+          "title": "[임시] 제목 4",
+          "body": "[임시] 본문 4 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+        },
+        {
+          "title": "[임시] 제목 5",
+          "body": "[임시] 본문 5 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+        }
+      ]
+    },
+    {
+      "id": "saas:faq.items",
+      "purpose": "saas",
+      "key": "faq.items",
+      "count": {
+        "min": 4,
+        "max": 6
+      },
+      "lengths": {
+        "q": {
+          "min": 1,
+          "max": 40
+        },
+        "a": {
+          "min": 40,
+          "max": 160
+        }
+      },
+      "values": [
+        {
+          "q": "[임시] 질문 1",
+          "a": "[임시] 답 1 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+        },
+        {
+          "q": "[임시] 질문 2",
+          "a": "[임시] 답 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+        },
+        {
+          "q": "[임시] 질문 3",
+          "a": "[임시] 답 3 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+        },
+        {
+          "q": "[임시] 질문 4",
+          "a": "[임시] 답 4 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+        },
+        {
+          "q": "[임시] 질문 5",
+          "a": "[임시] 답 5 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+        },
+        {
+          "q": "[임시] 질문 6",
+          "a": "[임시] 답 6 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+        }
+      ]
+    },
+    {
+      "id": "local_business:highlight.items",
+      "purpose": "local_business",
+      "key": "highlight.items",
+      "count": {
+        "min": 3,
+        "max": 3
+      },
+      "lengths": {
+        "title": {
+          "min": 4,
+          "max": 16
+        },
+        "body": {
+          "min": 20,
+          "max": 60
+        }
+      },
+      "values": [
+        {
+          "title": "[임시] 제목 1",
+          "body": "[임시] 본문 1 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+        },
+        {
+          "title": "[임시] 제목 2",
+          "body": "[임시] 본문 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+        },
+        {
+          "title": "[임시] 제목 3",
+          "body": "[임시] 본문 3 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+        }
+      ]
+    },
+    {
+      "id": "local_business:story.body",
+      "purpose": "local_business",
+      "key": "story.body",
+      "count": {
+        "min": 2,
+        "max": 2
+      },
+      "length": {
+        "min": 80,
+        "max": 240
+      },
+      "values": [
+        "[임시] 문구 1 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다. 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다.",
+        "[임시] 문구 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다. 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      ]
+    },
+    {
+      "id": "local_business:menu.groups",
+      "purpose": "local_business",
+      "key": "menu.groups",
+      "count": {
+        "min": 3,
+        "max": 4
+      },
+      "groups": {
+        "min": 1,
+        "max": 2
+      },
+      "lengths": {
+        "name": {
+          "min": 1,
+          "max": 20
+        },
+        "desc": {
+          "min": 1,
+          "max": 40
+        }
+      },
+      "values": [
+        {
+          "title": "[임시] 메뉴 묶음 1",
+          "items": [
+            {
+              "name": "[임시] 항목명 1",
+              "desc": "[임시] 설명 1",
+              "price": "[예시] 0,000원",
+              "placeholder": true
+            },
+            {
+              "name": "[임시] 항목명 2",
+              "desc": "[임시] 설명 2",
+              "price": "[예시] 0,000원",
+              "placeholder": true
+            },
+            {
+              "name": "[임시] 항목명 3",
+              "desc": "[임시] 설명 3",
+              "price": "[예시] 0,000원",
+              "placeholder": true
+            },
+            {
+              "name": "[임시] 항목명 4",
+              "desc": "[임시] 설명 4",
+              "price": "[예시] 0,000원",
+              "placeholder": true
+            }
+          ]
+        },
+        {
+          "title": "[임시] 메뉴 묶음 2",
+          "items": [
+            {
+              "name": "[임시] 항목명 1",
+              "desc": "[임시] 설명 1",
+              "price": "[예시] 0,000원",
+              "placeholder": true
+            },
+            {
+              "name": "[임시] 항목명 2",
+              "desc": "[임시] 설명 2",
+              "price": "[예시] 0,000원",
+              "placeholder": true
+            },
+            {
+              "name": "[임시] 항목명 3",
+              "desc": "[임시] 설명 3",
+              "price": "[예시] 0,000원",
+              "placeholder": true
+            },
+            {
+              "name": "[임시] 항목명 4",
+              "desc": "[임시] 설명 4",
+              "price": "[예시] 0,000원",
+              "placeholder": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "portfolio:work.items",
+      "purpose": "portfolio",
+      "key": "work.items",
+      "count": {
+        "min": 4,
+        "max": 6
+      },
+      "lengths": {
+        "title": {
+          "min": 1,
+          "max": 20
+        },
+        "caption": {
+          "min": 1,
+          "max": 40
+        }
+      },
+      "values": [
+        {
+          "title": "[임시] 제목 1",
+          "caption": "[임시] 캡션 1"
+        },
+        {
+          "title": "[임시] 제목 2",
+          "caption": "[임시] 캡션 2"
+        },
+        {
+          "title": "[임시] 제목 3",
+          "caption": "[임시] 캡션 3"
+        },
+        {
+          "title": "[임시] 제목 4",
+          "caption": "[임시] 캡션 4"
+        },
+        {
+          "title": "[임시] 제목 5",
+          "caption": "[임시] 캡션 5"
+        },
+        {
+          "title": "[임시] 제목 6",
+          "caption": "[임시] 캡션 6"
+        }
+      ]
+    },
+    {
+      "id": "portfolio:service.items",
+      "purpose": "portfolio",
+      "key": "service.items",
+      "count": {
+        "min": 3,
+        "max": 3
+      },
+      "lengths": {
+        "title": {
+          "min": 4,
+          "max": 16
+        },
+        "body": {
+          "min": 30,
+          "max": 90
+        }
+      },
+      "values": [
+        {
+          "title": "[임시] 제목 1",
+          "body": "[임시] 본문 1 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+        },
+        {
+          "title": "[임시] 제목 2",
+          "body": "[임시] 본문 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+        },
+        {
+          "title": "[임시] 제목 3",
+          "body": "[임시] 본문 3 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+        }
+      ]
+    },
+    {
+      "id": "saas:proof.items",
+      "purpose": "saas",
+      "key": "proof.items",
+      "count": {
+        "min": 2,
+        "max": 3
+      },
+      "lengths": {
+        "quote": {
+          "min": 1,
+          "max": 120
+        }
+      },
+      "values": [
+        {
+          "quote": "[예시] 고객 후기 1",
+          "name": "김○○",
+          "placeholder": true
+        },
+        {
+          "quote": "[예시] 고객 후기 2",
+          "name": "김○○",
+          "placeholder": true
+        },
+        {
+          "quote": "[예시] 고객 후기 3",
+          "name": "김○○",
+          "placeholder": true
+        }
+      ]
+    },
+    {
+      "id": "local_business:proof.items",
+      "purpose": "local_business",
+      "key": "proof.items",
+      "count": {
+        "min": 2,
+        "max": 3
+      },
+      "lengths": {
+        "quote": {
+          "min": 1,
+          "max": 120
+        }
+      },
+      "values": [
+        {
+          "quote": "[예시] 고객 후기 1",
+          "name": "김○○",
+          "placeholder": true
+        },
+        {
+          "quote": "[예시] 고객 후기 2",
+          "name": "김○○",
+          "placeholder": true
+        },
+        {
+          "quote": "[예시] 고객 후기 3",
+          "name": "김○○",
+          "placeholder": true
+        }
+      ]
+    },
+    {
+      "id": "portfolio:proof.items",
+      "purpose": "portfolio",
+      "key": "proof.items",
+      "count": {
+        "min": 2,
+        "max": 3
+      },
+      "lengths": {
+        "quote": {
+          "min": 1,
+          "max": 120
+        }
+      },
+      "values": [
+        {
+          "quote": "[예시] 고객 후기 1",
+          "name": "김○○",
+          "placeholder": true
+        },
+        {
+          "quote": "[예시] 고객 후기 2",
+          "name": "김○○",
+          "placeholder": true
+        },
+        {
+          "quote": "[예시] 고객 후기 3",
+          "name": "김○○",
+          "placeholder": true
+        }
+      ]
+    },
+    {
+      "id": "saas:stats.items",
+      "purpose": "saas",
+      "key": "stats.items",
+      "count": {
+        "min": 0,
+        "max": 4
+      },
+      "lengths": {
+        "value": {
+          "min": 1,
+          "max": 10
+        },
+        "label": {
+          "min": 1,
+          "max": 16
+        }
+      },
+      "values": []
+    },
+    {
+      "id": "local_business:stats.items",
+      "purpose": "local_business",
+      "key": "stats.items",
+      "count": {
+        "min": 0,
+        "max": 4
+      },
+      "lengths": {
+        "value": {
+          "min": 1,
+          "max": 10
+        },
+        "label": {
+          "min": 1,
+          "max": 16
+        }
+      },
+      "values": []
+    },
+    {
+      "id": "portfolio:stats.items",
+      "purpose": "portfolio",
+      "key": "stats.items",
+      "count": {
+        "min": 0,
+        "max": 4
+      },
+      "lengths": {
+        "value": {
+          "min": 1,
+          "max": 10
+        },
+        "label": {
+          "min": 1,
+          "max": 16
+        }
+      },
+      "values": []
+    }
+  ]
+}

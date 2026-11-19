@@ -21,6 +21,7 @@ import {
 } from "../../packages/taxonomy/src/map.js";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
 import { chapter, section, table, unquote } from "./spec-md.js";
+import { CONFIG_GENERATORS } from "./seed-config.js";
 
 export const SEED = 20261116;
 /** 봉투 preparedAt(결정성을 위해 시드 날짜로 고정). */
@@ -2182,7 +2183,8 @@ export function seedTemp(root: string): { written: string[]; skippedHuman: strin
   const ctx: Ctx = { root, preparedBy: preparedBy(root), rand: mulberry32(SEED) };
   const written: string[] = [];
   const skippedHuman: string[] = [];
-  for (const gen of GENERATORS)
+  // config 묶음(B20~B24)은 seed-config.ts(순환 import라 호출 시점에 합친다)
+  for (const gen of [...GENERATORS, ...CONFIG_GENERATORS])
     for (const o of gen(ctx)) {
       const abs = join(root, o.path);
       if (isHuman(abs)) {
