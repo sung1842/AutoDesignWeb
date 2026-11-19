@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T14:10Z, since: 2026-11-19T14:35Z}
+- lock: {owner: 2026-11-19T14:10Z, since: 2026-11-19T14:46Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
@@ -68,7 +68,7 @@
 ### 상태(09장 9.7. 표는 덮어쓰고 아래 기록은 append)
 | M | 상태 | 시작 | 종료 | 태그 | verify | 미해결 BLOCKED | 가정 수 |
 |---|---|---|---|---|---|---|---|
-| M0 | in_progress | 2026-11-19T12:50Z | – | – | – | 5 | 6 |
+| M0 | done | 2026-11-19T12:50Z | 2026-11-19T14:46Z | m0-done | pass_blocked | 5 | 7 |
 | M1 | todo | – | – | – | – | – | – |
 | M2 | todo | – | – | – | – | – | – |
 | M3 | todo | – | – | – | – | – | – |
@@ -94,15 +94,16 @@
   - [x] 09 guard 5~8단계: [x] 5·6단계 spec 대조(guard:spec, guard.test 23/24, 남은 1=BLK-002) [x] qa:trace 추적·배정(5/9) [x] --audit 리터럴(7/9) [x] --key-coverage(8/9, BLK-003) [x] --docs(BLK-004, qa-trace.test 8/9) [x] 8단계 tuned(guard:tuned)
   - [x] 10 tests/guard 메타 테스트(⑥⑦·7·8단계 10/10), guard:qa-audit(7단계) 추가
   - [x] 11 verify:fast·verify:m0~m8 실행기(scripts/verify, blocked 판정, 보고서), .guard/verify-scripts.json
-  - [ ] 11b AC-07-01 llm gateway 최소(mock·replay, E_REPLAY_MISS) — verify:m0 남은 fail
-  - [ ] 12 CI 워크플로(.github/workflows/ci.yml, 전 잡 NO_EXTERNAL_NETWORK=1·LLM_MODE=mock, AC-07-01)·docker/ 파일(실행은 needs_ci)
-  - [ ] 13 verify:m0 녹색 → 자체 잠금(verify/guard) → m0-done 태그(tags 맵)
-- [ ] M0 [ ] M1 [ ] M2 [ ] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
+  - [x] 11b AC-07-01 llm gateway 최소(replay·E_REPLAY_MISS, mock은 M5)
+  - [x] 12 CI 워크플로(.github/workflows/ci.yml, 전 잡 NO_EXTERNAL_NETWORK=1·LLM_MODE=mock, AC-07-01)·docker/ 파일(실행은 needs_ci)
+  - [x] 13 자체 잠금(--m0-end, ASM-007) → verify:m0 pass_blocked(BLK-001~005) → m0-done 태그
+- [x] M0 [ ] M1 [ ] M2 [ ] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
 
 ## P5. 완료
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 23:46 | M0 완료: 종료 잠금 23파일, verify:m0 pass_blocked(BLK-001~005), m0-done → 다음: M1 하위 단위 계획(09장 9.4.3)
 - 2026-11-19 23:35 | M0-11 verify 실행기, verify:m0 fail 남음(AC-07-01 llm·ci.yml), BLK-005(커밋 scope) → 다음: 11b llm gateway
 - 2026-11-19 23:27 | M0-10 tests/guard 메타 10/10, guard:qa-audit 단계, ASM-006(sim-tune 커밋에 locked-hashes 허용) → 다음: M0-11 verify
 - 2026-11-19 23:24 | M0-09f guard:tuned(8단계 a~e), M0-09 완료(guard 23/24·qa-trace 8/9, 나머지 BLK) → 다음: M0-10 guard 메타

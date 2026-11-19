@@ -1,8 +1,8 @@
 {
   "milestone": "M0",
-  "gitSha": "bb888e2c3823f85d4eaf5c0f0e0682b4797ef5d7",
-  "startedAt": "2026-11-19T14:37:50.057Z",
-  "finishedAt": "2026-11-19T14:40:45.726Z",
+  "gitSha": "0b950c9e0bbdd6fb305666d53b578b79ff34dfc1",
+  "startedAt": "2026-11-19T14:42:03.625Z",
+  "finishedAt": "2026-11-19T14:46:25.285Z",
   "steps": [
     {
       "name": "guard",
@@ -12,31 +12,31 @@
         "BLK-001",
         "BLK-003"
       ],
-      "durationMs": 2442
+      "durationMs": 5556
     },
     {
       "name": "lint",
       "status": "pass",
       "details": "",
-      "durationMs": 1612
+      "durationMs": 1982
     },
     {
       "name": "typecheck",
       "status": "pass",
       "details": "",
-      "durationMs": 487
+      "durationMs": 570
     },
     {
       "name": "unit",
       "status": "pass",
       "details": "26건 통과",
-      "durationMs": 37870
+      "durationMs": 67117
     },
     {
       "name": "trace",
       "status": "pass",
       "details": "WARN AC-06-99: 배정표에 없음 → M8로 간주(다음 spec-lock 전에 표에 넣어야 함)\nqa:trace: AC 24/24 pass (≤M0), TC 판정 제외\n",
-      "durationMs": 1313
+      "durationMs": 1503
     },
     {
       "name": "acceptance:m0",
@@ -47,7 +47,7 @@
         "BLK-004",
         "BLK-005"
       ],
-      "durationMs": 131941
+      "durationMs": 184927
     },
     {
       "name": "e2e:m0",
