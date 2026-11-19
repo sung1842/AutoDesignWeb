@@ -1,0 +1,301 @@
+{
+  "diagnosis": {
+    "beta": 8,
+    "sigma0": 0.25,
+    "sigmaStop": 0.08,
+    "maxQuestions": 16,
+    "stage1Questions": 8,
+    "lambda": [
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "stage1": {
+      "minPairDist": 0.35,
+      "minDistinctTypes": 3,
+      "maxAppearPerVector": 3,
+      "epsilonExplore": 0.1
+    },
+    "noneAvoidDist": 0.35,
+    "noneExploreAfter": 3,
+    "cantTellInsensitiveAfter": 2,
+    "consistency": {
+      "checkBonus": 0.05,
+      "minScored": 4
+    },
+    "typing": {
+      "tieEps": 0.01,
+      "boundaryEps": 0.05,
+      "conflictMinPicks": 3,
+      "conflictMinCenterDist": 0.6,
+      "lowSignalMinPicks": 4
+    },
+    "positionBias": {
+      "sameSlotRatio": 0.8,
+      "minAnswers": 5
+    },
+    "similarSites": {
+      "maxScore": 0.45,
+      "tau": 0.05,
+      "count": 3
+    },
+    "fastAnswerMs": 1000,
+    "surveyAssetL1AbsMax": 0.15,
+    "typeCenterMinDist": 0.5,
+    "tunable": {
+      "typeDiscWeight": {
+        "values": [
+          2,
+          3,
+          5,
+          8
+        ],
+        "initial": 5
+      },
+      "llChanceRef": {
+        "values": [
+          [
+            -0.15,
+            0.25
+          ],
+          [
+            -0.2,
+            0.25
+          ],
+          [
+            -0.15,
+            0.3
+          ]
+        ],
+        "initial": [
+          -0.15,
+          0.25
+        ]
+      },
+      "calibKappa": {
+        "values": [
+          1.2,
+          1.3,
+          1.4
+        ],
+        "initial": 1.3
+      },
+      "candidateSamples": {
+        "values": [
+          200,
+          400
+        ],
+        "initial": 200
+      },
+      "priorWeight": {
+        "values": [
+          0.2,
+          0.3
+        ],
+        "initial": 0.3
+      },
+      "bridgeRelocated": {
+        "values": [
+          false,
+          true
+        ],
+        "initial": false
+      }
+    }
+  },
+  "generation": {
+    "harmonyFloor": 80,
+    "tasteFloor": 75,
+    "sFreeFloor": 65,
+    "contrastBodyMin": 4.5,
+    "contrastLargeMin": 3,
+    "overflowMax": 0,
+    "overlapMax": 0,
+    "lint": {
+      "errorMax": 0,
+      "warnPerMockupMax": 2
+    },
+    "candidates": 6,
+    "visible": 3,
+    "regenMax": 1,
+    "repairCallsMax": 3,
+    "taste": {
+      "tau": 0.05,
+      "lambdaLayout": 1.5,
+      "d0": 0.4
+    },
+    "sFreeD0": 0.3,
+    "variant": {
+      "targetDistTf": 0.5,
+      "targetDistMin": 0.25,
+      "l2DiffMin": 3,
+      "renderDistMin": 0.15,
+      "candidatePairDistMin": 0.2
+    },
+    "costGuard": {
+      "skipVisionUsd": 0.24,
+      "skipRepairUsd": 0.27,
+      "capUsd": 0.3
+    },
+    "fallbackAtSec": 120,
+    "killAtSec": 180,
+    "fallbackAbortToleranceSec": 2,
+    "renderViewports": [
+      375,
+      768,
+      1024,
+      1280,
+      1920
+    ],
+    "firstViewFontKbMax": 300
+  },
+  "perf": {
+    "firstExposeP50Sec": 45,
+    "latencyP50Sec": 60,
+    "latencyP95Sec": 90,
+    "versionGateP95Sec": 15,
+    "editStyleP95Ms": 200,
+    "editStructP95Ms": 500,
+    "lcpMaxMs": 2500,
+    "inpMaxMs": 200,
+    "clsMax": 0.1,
+    "nextQuestionP95Ms": 150,
+    "resultMaxMs": 1000,
+    "surveyApiP95Ms": 300,
+    "surveyServerP95Ms": 200,
+    "resultServerMs": 200,
+    "mockE2eSubmitToCardsSec": 30,
+    "queueWaitMaxSec": 180,
+    "surveyJsKbMax": 200,
+    "cardImageDesktopKbMax": 140,
+    "cardImageMobileKbMax": 160,
+    "a11y": {
+      "axeSeriousCriticalMax": 0,
+      "lighthouseA11yMin": 95,
+      "touchTargetPx": 44
+    }
+  },
+  "release": {
+    "golden": {
+      "cases": 32,
+      "runsPerCase": 3,
+      "schemaValidFirstMin": 0.9,
+      "schemaValidRepairedMin": 0.99,
+      "exposedHardPass": 1,
+      "fullSuccessMin": 0.95,
+      "minGuarantee": 1,
+      "fallbackRatioMax": 0.15,
+      "harmonyMeanMin": 85,
+      "tasteTrueMeanMin": 82,
+      "tasteTrueGe80RatioMin": 0.9,
+      "lintWarnMeanMax": 1,
+      "personalizationRatioMin": 2,
+      "variantL2DiffViolationsMax": 0,
+      "variantRenderDRatioMin": 0.95,
+      "runStdevMax": 5,
+      "runStdevViolationCasesMax": 2,
+      "costMeanMaxUsd": 0.25,
+      "m1": {
+        "typeIdCases": 24,
+        "muRefAbsMax": 0.02,
+        "muRefAxes": 120,
+        "marginZ": 1.645,
+        "marginCoverageWarnMin": 0.85
+      }
+    },
+    "regression": {
+      "ratioDropMaxPp": 2,
+      "scoreDropMax": 2,
+      "compositeDropMax": 1,
+      "personalizationDropMax": 0.3,
+      "fallbackIncreaseMaxPp": 5,
+      "costIncreaseMax": 0.3,
+      "p95IncreaseMax": 0.2
+    },
+    "promotion": {
+      "blindPairs": 40,
+      "wilsonLbMin": 0.35,
+      "schemaErrorMax": 0.01,
+      "costRatioMax": 1.3,
+      "p95RatioMax": 1.2
+    },
+    "surveySim": {
+      "rmseBeta8Max": 0.12,
+      "rmseBeta4Max": 0.18,
+      "typeAccPCBeta8Min": 0.85,
+      "typeAccPCBeta4Min": 0.7,
+      "top1PUMin": 0.62,
+      "top2PUMin": 0.85,
+      "coverage90": [
+        0.85,
+        0.95
+      ],
+      "adaptiveRmseGainMin": 0.05,
+      "adaptiveTop1GainMinPp": 3,
+      "consistencyBeta16Min": 0.5,
+      "consistencyBeta2Max": 0.25,
+      "anchorAccPABeta8Min": 0.95,
+      "priorTypeChangeMax": 0.06,
+      "robustNoneRmseMax": 0.13,
+      "seeds": {
+        "gate": [
+          20261117,
+          20261118,
+          20261119,
+          20261120,
+          20261121
+        ],
+        "dev": [
+          20261116,
+          20261122,
+          20261123
+        ]
+      },
+      "populationPerSeed": 1000,
+      "populationPA": 800,
+      "maxTuningTrials": 15,
+      "maxGateRuns": 3
+    },
+    "extractor": {
+      "roundtripAbsMax": 0.1,
+      "spearmanMin": 0.7,
+      "maeMax": 0.15,
+      "stabilityMax": 0.01,
+      "reliableAxesMin": 3,
+      "anchorMinDist": 0.25
+    },
+    "export": {
+      "pixelDiffMax": 0.01,
+      "lighthousePerfMin": 90,
+      "lighthouseA11yMin": 95,
+      "lcpMaxMs": 2500,
+      "clsMax": 0.05
+    },
+    "blind": {
+      "aiDetectMax": 0.65,
+      "aiLikeRateMax": 0.25,
+      "aiLikeVsBaselineMaxRatio": 0.5,
+      "baselinePrefMin": 0.7,
+      "baselinePrefLbMin": 0.6,
+      "personalPrefMin": 0.7,
+      "personalPrefLbMin": 0.5,
+      "strongBaselinePrefMin": 0.6,
+      "strongBaselinePrefLbMin": 0.45,
+      "personalOffsetPrefWarnMax": 0.55,
+      "makerMeanMin": 3.5,
+      "tmValidityMin": 0.75,
+      "lintRecallMin": 0.8,
+      "lintFalsePosMax": 0.1,
+      "harmonyValidityMin": 0.8
+    },
+    "usability": {
+      "taskSuccessMin": 0.8,
+      "susMin": 70,
+      "t1MedianMaxSec": 240,
+      "blockerMax": 0,
+      "seqMedianMin": 5
+    }
+  }
+}

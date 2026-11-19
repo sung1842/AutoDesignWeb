@@ -22,7 +22,11 @@ interface LockFile {
 const git = (...a: string[]): string => execFileSync("git", a, { encoding: "utf8" }).trim();
 const sha256 = (p: string): string => createHash("sha256").update(readFileSync(p)).digest("hex");
 
-function main(argv: string[]): number {
+const SPEC_FILES = ["config/thresholds.json", "config/test-policy.json"];
+
+function main(argvIn: string[]): number {
+  const specMode = argvIn.includes("--spec");
+  const argv = argvIn.filter((a) => a !== "--spec");
   if (argv.length === 0) {
     process.stderr.write("guard:self-lock: 경로를 지정하세요\n");
     return 1;
@@ -50,13 +54,22 @@ function main(argv: string[]): number {
   }
   for (const f of targets) {
     if (lock.entries[f]) errors.push(`${f}: 이미 잠금 entry가 있음`);
+    if (specMode && !SPEC_FILES.includes(f))
+      errors.push(`${f}: --spec은 spec:extract 산출 2개 파일만`);
   }
   if (errors.length > 0) {
     for (const e of errors) process.stderr.write(`guard:self-lock FAIL ${e}\n`);
     return 1;
   }
+  // --spec: spec:extract 산출물을 lockedBy "spec"으로 등록한다(07장 7.12.2 사람 없는 운영 표 M0 행).
+  const specCommit = specMode ? git("rev-parse", "--short", "spec-lock^{commit}") : commit;
   for (const f of targets)
-    lock.entries[f] = { sha256: sha256(f), lockedBy: "agent", lockedAt, commit };
+    lock.entries[f] = {
+      sha256: sha256(f),
+      lockedBy: specMode ? "spec" : "agent",
+      lockedAt,
+      commit: specCommit,
+    };
   mkdirSync(dirname(LOCK_PATH), { recursive: true });
   writeFileSync(LOCK_PATH, JSON.stringify(lock, null, 2) + "\n");
   process.stdout.write(`guard:self-lock: ${targets.length}개 등록 (${commit})\n`);
