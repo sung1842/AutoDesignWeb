@@ -96,3 +96,13 @@
 - 2026-11-19 20:20 | r4 08-a: 8.7.7 hold·증거·감사 호출·미확인 요청 행, 8.7.9·8.9.5 ③b→③, AC-08-33·56·57, 신규 58·59, 00 ADM-04
 - 2026-11-19 16:15 | r4 01-a: 1.12.2 기본 규칙·신규 3코드 행, verify 착지 S14 support.verified, AC-01-60
 - 2026-11-19 16:15 | r4 04-a+03-a: maxChars_job 정수·t-1 계산(전 조합 ≥10 확인), defaultImageTag 폴백, AC-04-44·46
+- 2026-11-19 22:35 | M0-04 config(env·dotenv·thresholds·network guard)+단위테스트, AD-026 → 다음: M0-05 spec:extract
+- 2026-11-19 22:25 | M0-03 수용 테스트 5파일·자체 잠금, ASM-001~004, vitest 러너 타임아웃 → 다음: M0-04 config env
+- 2026-11-19 22:15 | 세션 종료 unlock → 다음: M0-03 수용 테스트(acMilestones M0 15항목, F-ID는 9.5.5)
+- 2026-11-19 22:10 | 9.5.7 누락 보완(CLAUDE 두 절·절 이름, 로그 머리줄, 9.7 표), AD-025 spec-lock 재생성 → 다음: M0-03
+- 2026-11-19 22:00 | M0-02 패키지 21·앱 2 골격(tsc -b 참조), lint·typecheck 녹색 → 다음: M0-03 수용 테스트
+- 2026-11-19 21:55 | M0-01 루트 스캐폴드(pnpm 9.15.9 corepack, TS 5.9, eslint 9, vitest 3), lint 녹색 → 다음: M0-02 골격
+- 2026-11-19 21:45 | M0 계획 13단위 작성 → 다음: M0-01 루트 스캐폴드
+- 2026-11-19 21:40 | spec-lock 태그(ca6b1de, 원문 블록 해시 일치, AD-024), P3 완료 → 다음: M0 단위 계획
+- 2026-11-19 21:35 | docs 배치(allowlist 초안·ASSUMPTIONS·BLOCKED), seed:temp는 M1(AD-023), HUMAN_TODO 4건 → 다음: spec-lock 판단·M0 계획
+- 2026-11-19 21:25 | CLAUDE.md 구현 규칙 I-0~I-8(9.8.2 골격), tags 맵·로컬 태그 복원 AD-022 → 다음: docs 배치·임시 시드

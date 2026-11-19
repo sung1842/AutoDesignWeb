@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T14:10Z, since: 2026-11-19T14:46Z}
+- lock: 
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-20 01:08
-- 마지막 갱신: 2026-11-19 23:25 KST (예약 세션: M0-03~08)
+- 마지막 갱신: 2026-11-19 23:47 KST (예약 세션: M0-09~13 완료, M1 계획)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -69,7 +69,7 @@
 | M | 상태 | 시작 | 종료 | 태그 | verify | 미해결 BLOCKED | 가정 수 |
 |---|---|---|---|---|---|---|---|
 | M0 | done | 2026-11-19T12:50Z | 2026-11-19T14:46Z | m0-done | pass_blocked | 5 | 7 |
-| M1 | todo | – | – | – | – | – | – |
+| M1 | in_progress | 2026-11-19T14:47Z | – | – | – | – | – |
 | M2 | todo | – | – | – | – | – | – |
 | M3 | todo | – | – | – | – | – | – |
 | M4 | todo | – | – | – | – | – | – |
@@ -97,12 +97,25 @@
   - [x] 11b AC-07-01 llm gateway 최소(replay·E_REPLAY_MISS, mock은 M5)
   - [x] 12 CI 워크플로(.github/workflows/ci.yml, 전 잡 NO_EXTERNAL_NETWORK=1·LLM_MODE=mock, AC-07-01)·docker/ 파일(실행은 needs_ci)
   - [x] 13 자체 잠금(--m0-end, ASM-007) → verify:m0 pass_blocked(BLK-001~005) → m0-done 태그
+- M1 계획(9.4.3, AC: 02-01·12, 03-01, 05-02~04, 06-01~07·51, 09-04·05. 읽을 장은 CLAUDE.md 구현 규칙 3절):
+  - [ ] 01 M1 수용 테스트(acMilestones M1 + 9.4.3 ①~⑨) `test(acc)` 커밋 → qa:trace --audit → 자체 잠금, traceability.yaml M1 행
+  - [ ] 02 packages/data-contracts B1~B17 zod(09장 9.2 묶음 정의)
+  - [ ] 03 `data:validate`(25묶음, B19 0개 허용, 교차 참조 고아 0) — todo 자리표시 교체
+  - [ ] 04 `seed:temp` 결정적 PRNG(provenance temp, tmp_ 접두사, 2회 바이트 동일): a 택소노미·프리셋·폰트·페어링 b 카드·A/B·레퍼런스·골든 골격
+  - [ ] 05 packages/taxonomy 로더 + centroid(03장 3.4.7) 일치·최소 거리 검사
+  - [ ] 06 packages/db 마이그레이션 SQL(06장 DDL, MVP분) + native 빈 DB 2회 적용(ON_ERROR_STOP)
+  - [ ] 07 RLS 정책·DbPort(withAnon) + RLS 테스트(⑦, AC-06-03b)
+  - [ ] 08 `db:seed` 멱등(⑥)
+  - [ ] 09 `db:types`(allowlist 확인 후 kysely-codegen) + web·worker 컴파일(⑧)
+  - [ ] 10 `verify:schema-parity`(⑨, 06장 DDL ↔ information_schema)
+  - [ ] 11 verify:m1 녹색 → m1-done(tags 맵)
 - [x] M0 [ ] M1 [ ] M2 [ ] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
 
 ## P5. 완료
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-19 23:47 | M1 계획 11단위 작성, 세션 종료 unlock → 다음: M1-01 수용 테스트
 - 2026-11-19 23:46 | M0 완료: 종료 잠금 23파일, verify:m0 pass_blocked(BLK-001~005), m0-done → 다음: M1 하위 단위 계획(09장 9.4.3)
 - 2026-11-19 23:35 | M0-11 verify 실행기, verify:m0 fail 남음(AC-07-01 llm·ci.yml), BLK-005(커밋 scope) → 다음: 11b llm gateway
 - 2026-11-19 23:27 | M0-10 tests/guard 메타 10/10, guard:qa-audit 단계, ASM-006(sim-tune 커밋에 locked-hashes 허용) → 다음: M0-11 verify
@@ -117,13 +130,3 @@
 - 2026-11-19 23:10 | M0-07 web·worker health, env 종료 1, m0 stack.test 8/8 녹색 → 다음: M0-08 guard 1~4
 - 2026-11-19 22:55 | M0-06 native PG+shim 기동 확인(tastefit_app 접속), dev:stack 골격 → 다음: M0-07 health
 - 2026-11-19 22:45 | M0-05 spec:extract, review-pass=FINAL 바이트 동일 확인, config 3파일 잠금 → 다음: M0-06 native 스택
-- 2026-11-19 22:35 | M0-04 config(env·dotenv·thresholds·network guard)+단위테스트, AD-026 → 다음: M0-05 spec:extract
-- 2026-11-19 22:25 | M0-03 수용 테스트 5파일·자체 잠금, ASM-001~004, vitest 러너 타임아웃 → 다음: M0-04 config env
-- 2026-11-19 22:15 | 세션 종료 unlock → 다음: M0-03 수용 테스트(acMilestones M0 15항목, F-ID는 9.5.5)
-- 2026-11-19 22:10 | 9.5.7 누락 보완(CLAUDE 두 절·절 이름, 로그 머리줄, 9.7 표), AD-025 spec-lock 재생성 → 다음: M0-03
-- 2026-11-19 22:00 | M0-02 패키지 21·앱 2 골격(tsc -b 참조), lint·typecheck 녹색 → 다음: M0-03 수용 테스트
-- 2026-11-19 21:55 | M0-01 루트 스캐폴드(pnpm 9.15.9 corepack, TS 5.9, eslint 9, vitest 3), lint 녹색 → 다음: M0-02 골격
-- 2026-11-19 21:45 | M0 계획 13단위 작성 → 다음: M0-01 루트 스캐폴드
-- 2026-11-19 21:40 | spec-lock 태그(ca6b1de, 원문 블록 해시 일치, AD-024), P3 완료 → 다음: M0 단위 계획
-- 2026-11-19 21:35 | docs 배치(allowlist 초안·ASSUMPTIONS·BLOCKED), seed:temp는 M1(AD-023), HUMAN_TODO 4건 → 다음: spec-lock 판단·M0 계획
-- 2026-11-19 21:25 | CLAUDE.md 구현 규칙 I-0~I-8(9.8.2 골격), tags 맵·로컬 태그 복원 AD-022 → 다음: docs 배치·임시 시드
