@@ -1,0 +1,167 @@
+{
+  "bundle": "mapping",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "type.scale_ratio",
+      "kind": "ordinal",
+      "axis": "A1",
+      "sign": 1,
+      "k": 2
+    },
+    {
+      "id": "type.display_boost",
+      "kind": "ordinal",
+      "axis": "A1",
+      "sign": 1,
+      "k": 3
+    },
+    {
+      "id": "type.headline_weight",
+      "kind": "ordinal",
+      "axis": "A1",
+      "sign": 1,
+      "k": null,
+      "kRuleKo": "페어링 허용 웨이트 수 − 1",
+      "noteKo": "페어링 확정 후 계산"
+    },
+    {
+      "id": "type.body_size",
+      "kind": "ordinal",
+      "axis": "A4",
+      "sign": 1,
+      "k": 2,
+      "noteKo": "값 순서 18→16이므로 밀도↑ = 작은 본문"
+    },
+    {
+      "id": "type.body_leading",
+      "kind": "ordinal",
+      "axis": "A4",
+      "sign": 1,
+      "k": 2,
+      "noteKo": "밀도↑ = 좁은 행간"
+    },
+    {
+      "id": "shape.radius_family",
+      "kind": "ordinal",
+      "axis": "A3",
+      "sign": 1,
+      "k": 3
+    },
+    {
+      "id": "shape.border",
+      "kind": "ordinal",
+      "axis": "A3",
+      "sign": 1,
+      "k": 2,
+      "noteKo": "값 순서 bold→none"
+    },
+    {
+      "id": "depth.style",
+      "kind": "ordinal",
+      "axis": "A5",
+      "sign": 1,
+      "k": null,
+      "kRuleKo": "허용 집합 크기 − 1",
+      "noteKo": "서수 = 허용 집합 안에서의 순서"
+    },
+    {
+      "id": "depth.shadow_level",
+      "kind": "ordinal",
+      "axis": "A5",
+      "sign": 1,
+      "k": 2,
+      "noteKo": "값 0~2만"
+    },
+    {
+      "id": "space.density",
+      "kind": "ordinal",
+      "axis": "A4",
+      "sign": 1,
+      "k": 2
+    },
+    {
+      "id": "space.container",
+      "kind": "ordinal",
+      "axis": "A4",
+      "sign": 1,
+      "k": 2
+    },
+    {
+      "id": "layout.grid_mode",
+      "kind": "ordinal",
+      "axis": "A1",
+      "sign": 1,
+      "k": null,
+      "kRuleKo": "허용 집합 크기 − 1",
+      "noteKo": "04장: V-FIT에서 bento 금지"
+    },
+    {
+      "id": "media.treatment",
+      "kind": "ordinal",
+      "axis": "A2",
+      "sign": 1,
+      "k": null,
+      "kRuleKo": "허용 집합 크기 − 1, duotone 제외",
+      "noteKo": "duotone은 시그니처로만"
+    },
+    {
+      "id": "motion.level",
+      "kind": "ordinal",
+      "axis": "A1",
+      "sign": 1,
+      "k": 1
+    },
+    {
+      "id": "type.pairing_id",
+      "kind": "categorical",
+      "rule": "sig-nearest",
+      "targetAxes": [
+        "A2",
+        "A1",
+        "A3"
+      ],
+      "sigKeys": [
+        "temp",
+        "expr",
+        "soft"
+      ],
+      "weights": [
+        0.5,
+        0.25,
+        0.25
+      ],
+      "tieEpsilon": 0.000001,
+      "tieBreak": [
+        "anchor",
+        "idAsc"
+      ]
+    },
+    {
+      "id": "color.palette_id",
+      "kind": "categorical",
+      "rule": "palette-warm-chroma",
+      "warmAxis": "A2",
+      "chromaAxis": "A1",
+      "chromaWeight": 0.5,
+      "tieBreak": [
+        "PAL-0"
+      ]
+    },
+    {
+      "id": "media.mode",
+      "kind": "categorical",
+      "rule": "anchor",
+      "purposeForbiddenReplace": true
+    },
+    {
+      "id": "icon.set",
+      "kind": "categorical",
+      "rule": "anchor"
+    }
+  ]
+}

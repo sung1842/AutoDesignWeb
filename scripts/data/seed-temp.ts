@@ -191,8 +191,141 @@ function genPurposes(ctx: Ctx): Out[] {
   return [{ path: "data/taxonomy/purposes.json", content: bundle(ctx, "purposes", items) }];
 }
 
+// ---------- C03 taxonomy.json (03장 3.2.1 표 + 3.2.2 값별 L1 기여) ----------
+/** 3.2.2 predictL1의 값 사전형 항(키 → 축·항 이름·가중치·값 사전). 공식 블록을 그대로 옮김. */
+const L1_CONTRIB: Record<string, { axis: string; term: string; weight: number; map: Obj }[]> = {
+  "layout.grid_mode": [
+    { axis: "A1", term: "asym", weight: 0.15, map: { symmetric: 0, bento: 0.5, asymmetric: 1 } },
+  ],
+  "shape.radius_family": [
+    {
+      axis: "A3",
+      term: "radius",
+      weight: 0.6,
+      map: { sharp: 0, soft: 0.333, round: 0.667, pill: 1 },
+    },
+    { axis: "A3", term: "pill", weight: 0.15, map: { sharp: 0, soft: 0, round: 0.5, pill: 1 } },
+  ],
+  "shape.border": [
+    { axis: "A3", term: "borderSoft", weight: 0.25, map: { bold: 0, hairline: 0.5, none: 1 } },
+  ],
+  "space.density": [
+    { axis: "A4", term: "density", weight: 0.75, map: { airy: 0, regular: 0.5, compact: 1 } },
+  ],
+  "type.body_size": [
+    { axis: "A4", term: "text", weight: 0.25, map: { "18": 0, "17": 0.5, "16": 1 } },
+  ],
+  "depth.style": [
+    {
+      axis: "A5",
+      term: "style",
+      weight: 0.55,
+      map: {
+        flat: 0,
+        "subtle-shadow": 0.35,
+        "layered-shadow": 0.65,
+        "brutal-offset": 0.75,
+        glass: 1,
+      },
+    },
+  ],
+  "depth.shadow_level": [
+    { axis: "A5", term: "level", weight: 0.45, map: { "0": 0, "1": 0.333, "2": 0.667, "3": 1 } },
+  ],
+};
+
+/** 값 셀의 백틱 토큰을 펼친다(FP01~FP20, PAL-T{n}-{0..3}). */
+export function expandValues(cell: string): string[] {
+  const toks = [...cell.matchAll(/`([^`]+)`/g)].map((m) => m[1] ?? "");
+  if (toks[0] === "FP01" && toks[1] === "FP20")
+    return Array.from({ length: 20 }, (_, i) => `FP${String(i + 1).padStart(2, "0")}`);
+  if (toks[0] === "PAL-T{n}-{0..3}")
+    return Array.from({ length: 32 }, (_, i) => `PAL-T${Math.floor(i / 4) + 1}-${i % 4}`);
+  return toks;
+}
+
+const CATEGORICAL_KEYS = ["type.pairing_id", "color.palette_id", "media.mode", "icon.set"];
+
+function genTaxonomy(ctx: Ctx): Out[] {
+  const rows = table(section(chapter(ctx.root, "03_design_system.md"), "### 3.2.1"));
+  let category = "";
+  const items = rows.map((r) => {
+    if ((r[1] ?? "") !== "〃") category = r[1] ?? "";
+    const id = unquote(r[2] ?? "");
+    const raw = r[3] ?? "";
+    // "(`expressive` MVP 제외)" 같은 제외 괄호는 값 목록에서 뺀다.
+    const excl = /\(([^)]*제외[^)]*)\)/.exec(raw);
+    const cell = excl ? raw.replace(excl[0], "") : raw;
+    const note = /\(([^)]*)\)\s*$/.exec(cell.replace(/`[^`]*`/g, ""))?.[1] ?? "";
+    const item: Obj = {
+      id,
+      order: Number(r[0]),
+      category,
+      values: expandValues(cell),
+      // 범주형 = 3.3.2 "범주형 키"(서수 이동 없음)
+      ordinal: !CATEGORICAL_KEYS.includes(id),
+      editControl: r[4] ?? "",
+    };
+    if (note && note !== "범주형") item.noteKo = note;
+    if (excl) item.excludedMvp = expandValues(excl[1] ?? "");
+    const c = L1_CONTRIB[id];
+    if (c) item.l1Contribution = c;
+    return item;
+  });
+  return [{ path: "data/taxonomy/taxonomy.json", content: bundle(ctx, "taxonomy", items) }];
+}
+
+// ---------- B5 mapping.json (03장 3.3.2 서수 표 + 범주형 규칙) ----------
+function genMapping(ctx: Ctx): Out[] {
+  const rows = table(section(chapter(ctx.root, "03_design_system.md"), "### 3.3.2"));
+  const ordinal: Obj[] = rows.map((r) => {
+    const k = r[3] ?? "";
+    const item: Obj = {
+      id: unquote(r[0] ?? ""),
+      kind: "ordinal",
+      axis: r[1] ?? "",
+      sign: (r[2] ?? "") === "−" || (r[2] ?? "") === "-" ? -1 : 1,
+      k: /^\d+$/.test(k) ? Number(k) : null,
+    };
+    if (!/^\d+$/.test(k)) item.kRuleKo = k.replace(/^\(|\)$/g, "");
+    if (r[4]) item.noteKo = r[4];
+    return item;
+  });
+  const categorical: Obj[] = [
+    {
+      id: "type.pairing_id",
+      kind: "categorical",
+      rule: "sig-nearest",
+      targetAxes: ["A2", "A1", "A3"],
+      sigKeys: ["temp", "expr", "soft"],
+      weights: [0.5, 0.25, 0.25],
+      tieEpsilon: 1e-6,
+      tieBreak: ["anchor", "idAsc"],
+    },
+    {
+      id: "color.palette_id",
+      kind: "categorical",
+      rule: "palette-warm-chroma",
+      warmAxis: "A2",
+      chromaAxis: "A1",
+      chromaWeight: 0.5,
+      tieBreak: ["PAL-0"],
+    },
+    { id: "media.mode", kind: "categorical", rule: "anchor", purposeForbiddenReplace: true },
+    { id: "icon.set", kind: "categorical", rule: "anchor" },
+  ];
+  const items = [...ordinal, ...categorical];
+  return [{ path: "data/taxonomy/mapping.json", content: bundle(ctx, "mapping", items) }];
+}
+
 /** 생성기 목록(의존 순서). 나머지 묶음은 M1-04b 이후 단위에서 추가한다. */
-export const GENERATORS: ((ctx: Ctx) => Out[])[] = [genAxes, genTypes, genPurposes];
+export const GENERATORS: ((ctx: Ctx) => Out[])[] = [
+  genAxes,
+  genTypes,
+  genPurposes,
+  genTaxonomy,
+  genMapping,
+];
 
 function isHuman(abs: string): boolean {
   if (!existsSync(abs) || !abs.endsWith(".json")) return false;

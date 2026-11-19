@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-19T16:09Z, since: 2026-11-19T16:10Z}
+- lock: {owner: 2026-11-19T16:09Z, since: 2026-11-19T16:30Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
@@ -101,7 +101,7 @@
   - [x] 01 M1 수용 테스트(acMilestones M1 + 9.4.3 ①~⑨) `test(acc)` 커밋 → qa:trace --audit → 자체 잠금, traceability.yaml M1 행
   - [x] 02 packages/data-contracts B1~B17 zod(09장 9.2 묶음 정의)
   - [x] 03 `data:validate`(25묶음, B19 0개 허용, 교차 참조 고아 0) — todo 자리표시 교체
-  - [ ] 04 `seed:temp` 결정적 PRNG(provenance temp, tmp_ 접두사, 2회 바이트 동일): [x] a1 골격·B1 축·B2 유형·B4 용도(장 표 파싱) [ ] a2 03장 파일(taxonomy·mapping·presets·palettes·blocks·components·signatures·harmony·tokens·icons·text-roles) [ ] a3 폰트·페어링·이미지 [ ] b 카드·A/B·승인·레퍼런스·골든 골격 [ ] c B14~B24 나머지
+  - [ ] 04 `seed:temp` 결정적 PRNG(provenance temp, tmp_ 접두사, 2회 바이트 동일): [x] a1 골격·B1 축·B2 유형·B4 용도(장 표 파싱) [x] a2a taxonomy·mapping [ ] a2b presets·palettes [ ] a2c blocks·components·signatures·harmony·tokens·icons·text-roles [ ] a3 폰트·페어링·이미지 [ ] b 카드·A/B·승인·레퍼런스·골든 골격 [ ] c B14~B24 나머지
   - [ ] 05 packages/taxonomy 로더 + centroid(03장 3.4.7) 일치·최소 거리 검사
   - [ ] 06 packages/db 마이그레이션 SQL(06장 DDL, MVP분) + native 빈 DB 2회 적용(ON_ERROR_STOP)
   - [ ] 07 RLS 정책·DbPort(withAnon) + RLS 테스트(⑦, AC-06-03b)
@@ -115,6 +115,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-20 01:30 | M1-04a2a taxonomy.json(18키·값별 L1 기여)·mapping.json(서수14+범주4) → 다음: a2b presets·palettes
 - 2026-11-20 00:40 | M1-04a1 seed:temp 골격(mulberry32·human 건너뜀·고정 봉투)+B1·B2·B4, ASM-010 → 다음: 04a2 03장 파일
 - 2026-11-20 00:30 | M1-03 data:validate(스키마·id·교차 참조·수량·sha·CSV 열) — 데이터 없음 44건 → 다음: M1-04a seed:temp
 - 2026-11-20 00:21 | M1-02 data-contracts: 봉투·B1~B25 키 스키마·레지스트리(+03장 8파일), 단위 3 → 다음: M1-03 data:validate

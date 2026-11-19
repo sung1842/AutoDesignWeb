@@ -1,0 +1,388 @@
+{
+  "bundle": "taxonomy",
+  "schemaVersion": 1,
+  "taxonomyVersion": "2026-S4",
+  "provenance": "temp",
+  "preparedAt": "2026-11-16T00:00:00Z",
+  "preparedBy": "seed:temp@acd413d",
+  "items": [
+    {
+      "id": "type.pairing_id",
+      "order": 1,
+      "category": "타이포 페어링",
+      "values": [
+        "FP01",
+        "FP02",
+        "FP03",
+        "FP04",
+        "FP05",
+        "FP06",
+        "FP07",
+        "FP08",
+        "FP09",
+        "FP10",
+        "FP11",
+        "FP12",
+        "FP13",
+        "FP14",
+        "FP15",
+        "FP16",
+        "FP17",
+        "FP18",
+        "FP19",
+        "FP20"
+      ],
+      "ordinal": false,
+      "editControl": "후보 카드(유형 허용 집합)"
+    },
+    {
+      "id": "type.scale_ratio",
+      "order": 2,
+      "category": "타이포 페어링",
+      "values": [
+        "1.2",
+        "1.25",
+        "1.333"
+      ],
+      "ordinal": true,
+      "editControl": "3단 토글"
+    },
+    {
+      "id": "type.display_boost",
+      "order": 3,
+      "category": "타이포 페어링",
+      "values": [
+        "1.0",
+        "1.25",
+        "1.5",
+        "2.0"
+      ],
+      "ordinal": true,
+      "editControl": "3.4.5 허용 범위 안 스텝"
+    },
+    {
+      "id": "type.headline_weight",
+      "order": 4,
+      "category": "타이포 페어링",
+      "values": [
+        "300",
+        "400",
+        "500",
+        "600",
+        "700",
+        "800",
+        "900"
+      ],
+      "ordinal": true,
+      "editControl": "자동(편집 대상 아님)",
+      "noteKo": "페어링이 허용한 값만"
+    },
+    {
+      "id": "type.body_size",
+      "order": 5,
+      "category": "타이포 페어링",
+      "values": [
+        "18",
+        "17",
+        "16"
+      ],
+      "ordinal": true,
+      "editControl": "자동",
+      "l1Contribution": [
+        {
+          "axis": "A4",
+          "term": "text",
+          "weight": 0.25,
+          "map": {
+            "16": 1,
+            "17": 0.5,
+            "18": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "type.body_leading",
+      "order": 6,
+      "category": "타이포 페어링",
+      "values": [
+        "1.8",
+        "1.7",
+        "1.6"
+      ],
+      "ordinal": true,
+      "editControl": "자동"
+    },
+    {
+      "id": "color.palette_id",
+      "order": 7,
+      "category": "팔레트 구조",
+      "values": [
+        "PAL-T1-0",
+        "PAL-T1-1",
+        "PAL-T1-2",
+        "PAL-T1-3",
+        "PAL-T2-0",
+        "PAL-T2-1",
+        "PAL-T2-2",
+        "PAL-T2-3",
+        "PAL-T3-0",
+        "PAL-T3-1",
+        "PAL-T3-2",
+        "PAL-T3-3",
+        "PAL-T4-0",
+        "PAL-T4-1",
+        "PAL-T4-2",
+        "PAL-T4-3",
+        "PAL-T5-0",
+        "PAL-T5-1",
+        "PAL-T5-2",
+        "PAL-T5-3",
+        "PAL-T6-0",
+        "PAL-T6-1",
+        "PAL-T6-2",
+        "PAL-T6-3",
+        "PAL-T7-0",
+        "PAL-T7-1",
+        "PAL-T7-2",
+        "PAL-T7-3",
+        "PAL-T8-0",
+        "PAL-T8-1",
+        "PAL-T8-2",
+        "PAL-T8-3"
+      ],
+      "ordinal": false,
+      "editControl": "팔레트 카드 4장",
+      "noteKo": "범주형, 유형당 4"
+    },
+    {
+      "id": "shape.radius_family",
+      "order": 8,
+      "category": "radius 계열",
+      "values": [
+        "sharp",
+        "soft",
+        "round",
+        "pill"
+      ],
+      "ordinal": true,
+      "editControl": "4단 스텝 슬라이더",
+      "l1Contribution": [
+        {
+          "axis": "A3",
+          "term": "radius",
+          "weight": 0.6,
+          "map": {
+            "sharp": 0,
+            "soft": 0.333,
+            "round": 0.667,
+            "pill": 1
+          }
+        },
+        {
+          "axis": "A3",
+          "term": "pill",
+          "weight": 0.15,
+          "map": {
+            "sharp": 0,
+            "soft": 0,
+            "round": 0.5,
+            "pill": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "shape.border",
+      "order": 9,
+      "category": "radius 계열",
+      "values": [
+        "bold",
+        "hairline",
+        "none"
+      ],
+      "ordinal": true,
+      "editControl": "자동",
+      "l1Contribution": [
+        {
+          "axis": "A3",
+          "term": "borderSoft",
+          "weight": 0.25,
+          "map": {
+            "bold": 0,
+            "hairline": 0.5,
+            "none": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "depth.style",
+      "order": 10,
+      "category": "depth 종류",
+      "values": [
+        "flat",
+        "subtle-shadow",
+        "layered-shadow",
+        "brutal-offset",
+        "glass"
+      ],
+      "ordinal": true,
+      "editControl": "유형 허용 집합 안 카드",
+      "l1Contribution": [
+        {
+          "axis": "A5",
+          "term": "style",
+          "weight": 0.55,
+          "map": {
+            "flat": 0,
+            "subtle-shadow": 0.35,
+            "layered-shadow": 0.65,
+            "brutal-offset": 0.75,
+            "glass": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "depth.shadow_level",
+      "order": 11,
+      "category": "depth 종류",
+      "values": [
+        "0",
+        "1",
+        "2",
+        "3"
+      ],
+      "ordinal": true,
+      "editControl": "3단 토글(0~2)",
+      "noteKo": "3은 예약값: 떠 있는 레이어 전용, 페이지 선택값으로 쓰지 않음",
+      "l1Contribution": [
+        {
+          "axis": "A5",
+          "term": "level",
+          "weight": 0.45,
+          "map": {
+            "0": 0,
+            "1": 0.333,
+            "2": 0.667,
+            "3": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "space.density",
+      "order": 12,
+      "category": "밀도(레이아웃 패턴 범주에 포함)",
+      "values": [
+        "airy",
+        "regular",
+        "compact"
+      ],
+      "ordinal": true,
+      "editControl": "3단 토글",
+      "l1Contribution": [
+        {
+          "axis": "A4",
+          "term": "density",
+          "weight": 0.75,
+          "map": {
+            "airy": 0,
+            "regular": 0.5,
+            "compact": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "space.container",
+      "order": 13,
+      "category": "밀도(레이아웃 패턴 범주에 포함)",
+      "values": [
+        "1120",
+        "1200",
+        "1280"
+      ],
+      "ordinal": true,
+      "editControl": "자동"
+    },
+    {
+      "id": "layout.grid_mode",
+      "order": 14,
+      "category": "레이아웃 패턴",
+      "values": [
+        "symmetric",
+        "bento",
+        "asymmetric"
+      ],
+      "ordinal": true,
+      "editControl": "자동(섹션 편집으로 간접)",
+      "l1Contribution": [
+        {
+          "axis": "A1",
+          "term": "asym",
+          "weight": 0.15,
+          "map": {
+            "symmetric": 0,
+            "bento": 0.5,
+            "asymmetric": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "media.mode",
+      "order": 15,
+      "category": "이미지 스타일",
+      "values": [
+        "type-led",
+        "photo-led",
+        "shape-graphic"
+      ],
+      "ordinal": false,
+      "editControl": "자동"
+    },
+    {
+      "id": "media.treatment",
+      "order": 16,
+      "category": "이미지 스타일",
+      "values": [
+        "grayscale",
+        "none",
+        "warm-tint",
+        "duotone"
+      ],
+      "ordinal": true,
+      "editControl": "자동",
+      "noteKo": "duotone은 시그니처 SIG-10일 때만"
+    },
+    {
+      "id": "motion.level",
+      "order": 17,
+      "category": "모션 수준",
+      "values": [
+        "none",
+        "subtle"
+      ],
+      "ordinal": true,
+      "editControl": "2단 토글",
+      "excludedMvp": [
+        "expressive"
+      ]
+    },
+    {
+      "id": "icon.set",
+      "order": 18,
+      "category": "(자산)",
+      "values": [
+        "phosphor",
+        "tabler",
+        "iconoir"
+      ],
+      "ordinal": false,
+      "editControl": "없음",
+      "noteKo": "프리셋 고정"
+    }
+  ]
+}
