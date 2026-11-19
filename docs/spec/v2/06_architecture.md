@@ -291,7 +291,7 @@ SLO(R-25, 07장 M15): 첫 시안 카드 노출(첫 mockups.created_at − queued
 
 **`account-delete` 절차(S-21, LG2-04)**. 단계마다 멱등이다. 실패하면 큐 재시도(5회)로 처음부터 다시 돌며, 이미 끝난 단계는 건너뛴다. 5회 모두 실패하면 A8 알림과 `admin_audit_logs(action='account_delete_failed')`를 남긴다.
 
-실행 순서는 **⑤ → ⑤b → ① → ② → ③ → ③b → ④ → ⑥ → ⑥b → ⑦**이다(T-15. ⑤가 ①보다 먼저여야 `users.status`가 `deleting`으로 덮이기 전 정지 상태를 읽는다. 별도 `status_before_delete` 컬럼은 두지 않는다).
+실행 순서는 **⑤ → ⑤b → ① → ② → ③b → ③ → ④ → ⑥ → ⑥b → ⑦**이다(T-15, U-03: ③b가 ③보다 먼저다. ⑤가 ①보다 먼저여야 `users.status`가 `deleting`으로 덮이기 전 정지 상태를 읽는다. 별도 `status_before_delete` 컬럼은 두지 않는다).
 
 | 단계 | 동작 | 멱등 근거 |
 |---|---|---|
@@ -299,14 +299,15 @@ SLO(R-25, 07장 M15): 첫 시안 카드 노출(첫 mockups.created_at − queued
 | ⑤b | 이 사용자 소유 공유 링크를 가리키는 `reports`(reason ∈ {impersonation, phishing}, status ∈ {open, hidden, actioned})가 있으면 `abuse_holds(email_hash, report_ids, until)` upsert(`until` = 검토 종료 + 90일, 미종료면 `now()+90d` 후 검토 종료 시 갱신). `actioned`가 있으면 `sanctions`도 upsert(T-15) | upsert |
 | ① | `users.status='deleting'`, 세션 폐기(`AuthPort.adminSignOutAll(uid)`), 소유 공유 링크 비공개 | 같은 값 재설정 |
 | ② | `llm_calls where owner_id=:uid`의 `llm-payloads` 객체 삭제(이 단계는 ⑥보다 먼저다. 그 뒤에는 `owner_id`가 null이 되어 객체를 찾을 수 없다) | 없는 객체 삭제는 성공 처리 |
-| ③ | `renders/<uid>/`·`exports/<uid>/` 객체 삭제. 단 ⑤b 대상 신고가 가리키는 버전의 렌더 객체는 먼저 ③b로 옮긴다 | 같음 |
-| ③b | ⑤b 대상 신고의 `evidence.objectPaths`를 `abuse-evidence/<report_id>/`로 복사(복사 성공 확인 후 원본 삭제는 ③이 한다), `reports.evidence.objectPaths`를 새 경로로 갱신. 보관 `abuse_evidence_90d`(T-15) | 대상 경로에 같은 sha256 객체가 있으면 건너뜀 |
+| ③b | `deleteOwnedRenders`(아래, U-04)의 증거 이동 단계: ⑤b 대상 신고의 `evidence.objectPaths`를 `abuse-evidence/<report_id>/`로 복사하고 sha256 일치를 확인한 뒤 `reports.evidence.objectPaths`를 새 경로로 갱신. 보관 `abuse_evidence_90d`(T-15) | 대상 경로에 같은 sha256 객체가 있으면 건너뜀 |
+| ③ | `deleteOwnedRenders`의 삭제 단계: `renders/<uid>/`·`exports/<uid>/` 객체 삭제. ③b가 끝난 경로만 삭제한다(증거 대상 경로는 ③b 완료 기록이 있어야 지운다, U-03) | 같음 |
 | ④ | `consents where user_id=:uid` → `consents_archive(user_hash, doc_type, doc_version, agreed, agreed_at)`로 복사 후 원본 삭제(한 트랜잭션) | 원본이 없으면 건너뜀 |
 | ⑥ | `AuthPort.adminDeleteUser(uid)`(→ `auth.users` 행 삭제) → `users`·소유 행 cascade. `reports`는 FK가 없어 남는다(T-15) | 없는 사용자면 성공 처리 |
 | ⑥b | 인증 서버 기록 정리(T-13, P14): `auth.audit_log_entries`에서 `payload->>'actor_id' = uid` 행과 `auth.sessions where user_id = uid` 행 삭제. 남은 기록은 `auth_audit_90d`가 90일 후 파기. supabase 프로파일은 service role SQL, native는 shim 테이블 | 0행 삭제도 성공 |
 | ⑦ | `admin_audit_logs(action='account_deleted', target_type='user', target_id=user_hash)` | `target_id` 기준 중복 삽입 방지(존재 확인 후 삽입) |
 
-- 재가입: 로그인 콜백의 `provision_user`(T-12, 6.3.3)가 `sanctions`(미만료)면 그 `level`, `abuse_holds`(미만료)면 `gen_suspended`로 `users.status`를 만든다. 이 사용자의 생성 API는 403 `ACCOUNT_SUSPENDED`다(옛 auth.users 트리거 승계 → T-12로 대체).
+- **`deleteOwnedRenders(uid, versionIds | 'all')`(U-04)**: 렌더·내보내기 객체를 지우는 유일한 함수다. `DELETE /api/projects/:id`의 즉시 잡과 `account-delete` ③b·③이 이것을 쓴다(직접 Storage 삭제 금지, guard). 순서: (1) 대상 버전을 가리키는 신고 중 reason ∈ {impersonation, phishing} ∧ status ∈ {open, hidden, actioned}인 것의 객체를 `abuse-evidence/<report_id>/`로 복사·검증·경로 갱신(③b와 같은 동작) (2) 남은 객체 삭제. `renders_orphan`(6.6)은 `reports.evidence.objectPaths`가 가리키는 hash를 제외한다.
+- 재가입: 로그인 콜백의 `provision_user`(T-12, 6.3.3)가 `sanctions`(미만료)면 그 `level`, `abuse_holds`(미만료)면 `gen_suspended`로 `users.status`를 만들고 `suspend_source`를 각각 `sanction`·`hold`로 쓴다. 둘 다 없고 `suspend_source='hold'`면 `active`로 복구한다(U-06). 이 사용자의 생성 API는 403 `ACCOUNT_SUSPENDED`다(옛 auth.users 트리거 승계 → T-12로 대체).
 - 관리자 계정 삭제도 같은 절차다. `admin_audit_logs`는 FK가 없어 행 수가 그대로 남는다.
 - 수용 기준 AC-06-53: 계정 삭제 E2E 후 해당 사용자의 `llm-payloads` 객체 0건, `consents` 0행, `consents_archive`에 같은 수의 행, `auth.users` 0행. 정지 계정 탈퇴 → 같은 이메일 재가입 → 생성 API 403 `ACCOUNT_SUSPENDED`. 관리자 계정 삭제 성공, 감사 로그 행 수 불변. 단계 ③ 직후 강제 실패를 주입해도 재시도 후 최종 상태가 같다.
 
@@ -383,6 +384,7 @@ create table users (                                  -- 00장 IF-07, 08장의 p
   is_internal     boolean not null default false,     -- 운영자·지인 테스트 계정(KPI 제외)
   display_name    text null check (char_length(display_name) <= 40),  -- 자동 채움 금지(08장 8.7.1)
   status          text not null default 'active' check (status in ('active','gen_suspended','suspended','deleting')),  -- deleting = account-delete 진행 중(S-21)
+  suspend_source  text null check (suspend_source in ('hold','sanction','admin')),  -- U-06: 정지 사유 원천. active면 null
   quota_day_override   smallint null check (quota_day_override between 0 and 50),   -- ADM-06
   quota_month_override smallint null check (quota_month_override between 0 and 500),
   created_at      timestamptz not null default now(),
@@ -456,7 +458,7 @@ create table sanctions (                              -- 정지 이력 재가입
 create table abuse_holds (                            -- 탈퇴 보류(T-15, LG3-04): 처리 중 사칭·피싱 신고가 있는 계정의 재가입 승계용
   email_hash   text primary key,                      -- sanctions와 같은 HMAC
   report_ids   uuid[] not null check (cardinality(report_ids) >= 1),
-  until        timestamptz not null,                  -- 마지막 신고 검토 종료 + 90일(abuse_evidence_90d와 같은 기준, 08 8.14 Q6)
+  until        timestamptz not null,                  -- 마지막 신고 검토 종료 + 90일(abuse_evidence_90d와 같은 기준, 08 8.14 Q6). 미처리 중에는 retention이 now()+90d로 연장(U-06)
   created_at   timestamptz not null default now()
 );
 -- consents_archive·sanctions·abuse_holds는 RLS 켜고 정책 0개(service_role 전용).
@@ -472,9 +474,12 @@ begin
   select level, until into s from sanctions where email_hash = p_email_hash and until > now();
   select until into h from abuse_holds where email_hash = p_email_hash and until > now();
   if s.level is not null then
-    update users set status = s.level where id = p_user_id and status = 'active';
+    update users set status = s.level, suspend_source = 'sanction' where id = p_user_id and status = 'active';
   elsif h.until is not null then
-    update users set status = 'gen_suspended' where id = p_user_id and status = 'active';  -- 신고 검토 종료 전 재가입: 생성만 보류
+    update users set status = 'gen_suspended', suspend_source = 'hold' where id = p_user_id and status = 'active';  -- 신고 검토 종료 전 재가입: 생성만 보류
+  else
+    update users set status = 'active', suspend_source = null
+     where id = p_user_id and status = 'gen_suspended' and suspend_source = 'hold';  -- U-06: 보류 해제 후 복구
   end if;
   select * into r from users where id = p_user_id;
   return r;
@@ -1427,7 +1432,7 @@ MeView = { id, email, role, consentsOk, inviteOk,
 | `POST /api/projects` | consent | `{resultId, purpose, brand: BrandInput, useSampleContent: boolean, brandAttested?: boolean, briefDraftId?: string}`(임시본 제출 시 `consumed_at` 기록) | `201 {projectId, maskedFields: {phone:n, email:n, …}}` | 400, 409 `PROJECT_LIMIT`/`SURVEY_NOT_COMPLETED`, 422 `BLOCKED_BRAND`/`BRAND_ATTESTATION_REQUIRED` |
 | `GET /api/projects` | user | cursor | `200 {items: ProjectSummary[], nextCursor}` | |
 | `GET /api/projects/:id` | user 소유 | — | `200 {project, activeJobId, jobs: JobSummary[] (최근 10)}` | 404 |
-| `DELETE /api/projects/:id` | user 소유 | — | `204`(Storage 객체 삭제는 `retention` 다음 실행 전 즉시 잡) | 404 |
+| `DELETE /api/projects/:id` | user 소유 | — | `204`(Storage 객체 삭제는 `retention` 다음 실행 전 즉시 잡, 잡은 `deleteOwnedRenders`로 신고 증거를 먼저 옮긴다, U-04) | 404 |
 | `POST /api/projects/:id/generations` | consent + 헤더 `Idempotency-Key` | `{kind:'initial'|'regenerate'}` | `202 GenerationView` | 409 `JOB_IN_PROGRESS`, 429 `RATE_LIMITED`/`QUOTA_*`, 403 `INVITE_REQUIRED`, 503 `GEN_*` |
 | `GET /api/generations/:jobId` | user 소유 | `If-None-Match` | `200 GenerationView` / `304` | 404 |
 | `POST /api/generations/:jobId/cancel` | user 소유 | — | `202 {refunded}` | 409 `JOB_ALREADY_FINISHED` |
@@ -1471,7 +1476,7 @@ MockupCard = { mockupId, variant: 'v_true'|'v_fit'|'v_bal', isFallback, harmonyS
 | `POST /api/share/:shareId/report` | anon | `{reason, details?, email?, turnstileToken}` | `202` | 403 `TURNSTILE_FAILED`, 429 |
 | `POST /api/support` | anon | `{category, email, body, turnstileToken}` | `201 {ticketId, dueBy}` | 403 `TURNSTILE_FAILED`, 429 |
 | `POST /api/rights-requests` | anon | `RightsRequest` 입력 필드(08장 8.1.6) + `turnstileToken` | `201 {requestId, dueAt}`(`privacy_request`는 아래 본인 확인 흐름, 응답 모양은 이메일 일치 여부와 무관하게 같다) | 403 `TURNSTILE_FAILED`, 429 |
-| `GET /api/rights-requests/:id/verify?token=` | 없음 | — | `200`(확인 완료 화면으로 302, `verified_at` 기록, status `awaiting_verification` → `received`) | 410 `VERIFY_LINK_INVALID`(재사용·만료·토큰 불일치) |
+| `GET /api/rights-requests/:id/verify?token=` | 없음 | — | `302 → /support?verified=1`(S14, 01장 1.12.2 `support.verified`, U-13. 옛 "확인 완료 화면" → 대체, `verified_at` 기록, status `awaiting_verification` → `received`) | 410 `VERIFY_LINK_INVALID`(재사용·만료·토큰 불일치) |
 | `POST /api/events` | anon | `{events: Event[1..20]}` | `204` | 400(미등록 이벤트), 429 |
 
 - 편집 미리보기(R-17): 서버 호출 없음. 클라이언트가 `currentVersion`과 로컬 `EditState`로 isomorphic 컴파일러를 실행해 HTML을 만들고 `sandbox=""` iframe의 `srcdoc`을 통째로 교체한다(6.11.4).
@@ -1507,14 +1512,14 @@ MockupCard = { mockupId, variant: 'v_true'|'v_fit'|'v_bal', isFallback, harmonyS
 | `GET /api/admin/metrics?from&to` | ADM-01·02 지표(6.12.3 뷰 조회) |
 | `GET/PATCH /api/admin/flags` | ADM-02 `feature_flags` 조회·변경(값 zod 검증, 6.10.4) |
 | `GET /api/admin/jobs?status&errorCode&cursor`, `GET /api/admin/jobs/:id` | ADM-03(후보별 QualityReport·스크린샷 서명 URL 5분) |
-| `GET /api/admin/reports`, `PATCH /api/admin/reports/:id` | ADM-04 |
+| `GET /api/admin/reports`, `PATCH /api/admin/reports/:id` | ADM-04. 처리 PATCH는 한 트랜잭션(U-06): `dismissed`이고 그 신고가 어떤 `abuse_holds` 행의 마지막 미종료 신고면 hold 삭제 + web이 계산한 그 `email_hash`의 재가입 계정이 `status='gen_suspended' ∧ suspend_source='hold'`면 `active`·`suspend_source=null`. `actioned`면 `sanctions` upsert 후 hold 삭제, 재가입 계정은 `suspend_source='sanction'` |
 | `GET /api/admin/support`, `PATCH /api/admin/support/:id` | ADM-05 |
 | `GET /api/admin/users?q`, `PATCH /api/admin/users/:id` | ADM-06(한도 상향은 `reason` 필수) |
 | `GET/PATCH /api/admin/references…`, `POST /api/admin/references/:id/labels` | ADM-07, 05장 5.7 라벨링 |
 | `GET /api/admin/survey-items`, `PATCH /api/admin/survey-items/:id` | ADM-08(활성 토글) |
 | `POST /api/admin/eval-sets`, `GET /api/admin/eval-sets/:id` | ADM-09 |
 | `GET/POST/DELETE /api/admin/blocked-brands` | ADM-10 |
-| `GET/PATCH /api/admin/rights-requests` | ADM-11(opt-out 처리 시 05장 5.13.3 절차 실행). `privacy_request`이고 `verified_at is null`이면 처리 PATCH는 409 `REQUEST_NOT_VERIFIED`(T-16) |
+| `GET/PATCH /api/admin/rights-requests` | ADM-11(opt-out 처리 시 05장 5.13.3 절차 실행). 목록 기본 필터는 `awaiting_verification` 행을 숨긴다(`?includeUnverified=1`로만 표시, U-07). `privacy_request`이고 `verified_at is null`이면 처리 PATCH는 409 `REQUEST_NOT_VERIFIED`(T-16) |
 | `GET/POST /api/admin/invites` | ADM-12 |
 | `GET /api/admin/audit-logs` | ADM-13 |
 | `GET /api/health`(공개) · `GET /api/health/deep`(admin) | `{status, version}` · `{db, queueDepth, oldestQueuedS, workers:[{id, lastBeatS}], spendTodayUsd}` |
@@ -1633,7 +1638,7 @@ MockupCard = { mockupId, variant: 'v_true'|'v_fit'|'v_bal', isFallback, harmonyS
 | `ref-screenshots` | private | 레퍼런스 스크린샷 | `<reference_id>/<capture_id>/{first,full}.webp` | ingest CLI | 관리자 라우트만 | 5분 | 수집 후 90일(D-31) |
 | `llm-payloads` | private | LLM 요청·응답 원문(gzip JSON) | `<yyyy-mm-dd>/<llm_call_id>.json.gz` | worker | 관리자 | 5분 | 30일 |
 | `eval-artifacts` | private | 골든·블라인드 평가 스크린샷 | `<eval_set_id>/<item_id>.webp` | eval 스크립트 | 관리자·평가자 링크(서버 경유) | 5분 | 평가 종료 후 180일 |
-| `abuse-evidence` | private | 사칭·피싱 신고 대상 버전의 렌더 사본(T-15) | `<report_id>/<원래 파일명>` | worker(`account-delete` ③b, 신고 `actioned` 처리) | 관리자 라우트만 | 5분 | 검토 종료 후 90일(`abuse_evidence_90d`, 08 8.14 Q6) |
+| `abuse-evidence` | private | 사칭·피싱 신고 대상 버전의 렌더 사본(T-15) | `<report_id>/<원래 파일명>` | worker(`deleteOwnedRenders`, 신고 `actioned` 처리, U-04) | 관리자 라우트만 | 5분 | 검토 종료 후 90일(`abuse_evidence_90d`, 08 8.14 Q6) |
 
 - 이미지·아이콘은 Storage에 두지 않는다. `@tastefit/assets`가 해석한 로컬 파일(이미지 팩 192장, R-34)을 web 빌드가 `public/assets/<sha256>.<ext>`로 복사해 WEB_ORIGIN·PREVIEW_ORIGIN 양쪽에서 같은 경로로 서빙하고(편집 `srcdoc`은 WEB_ORIGIN, 공유·후보 미리보기는 PREVIEW_ORIGIN에서 읽는다), worker·exporter는 Docker 이미지 안의 같은 파일을 쓴다(외부 CDN 0, D-26·D-27).
 
@@ -1661,13 +1666,17 @@ RetentionRule = { id: string, table?: string, bucket?: string,
 //     { id:'candidates_unexposed_30d', table:'candidates',      // 노출되지 않은 후보만. 노출 시안의 후보는 '시안' 범주(계정 존속)
 //       where:"created_at < $now - interval '30 days' and not exists (select 1 from mockups m where m.candidate_id = candidates.id)", batch:1000 }
 //     { id:'renders_orphan', bucket:'renders',                  // renders/<owner>/<hash>/ 는 같은 hash를 참조하는 candidates·mockup_versions 행이 0개일 때만 삭제
-//       where:"not exists (select 1 from candidates c where c.render_hash = $hash) and not exists (select 1 from mockup_versions v where v.render_hash = $hash)", batch:1000 }
+//       where:"not exists (select 1 from candidates c where c.render_hash = $hash) and not exists (select 1 from mockup_versions v where v.render_hash = $hash)
+//              and not exists (select 1 from reports r where r.evidence->'objectPaths' ? $path)", batch:1000 }   // U-04: 증거 경로 제외
 //     { id:'consents_archive_1y', table:'consents_archive', where:"archived_at < $now - interval '1 year'", batch:1000 }
 //     { id:'sanctions_expired', table:'sanctions', where:"until < $now", batch:1000 }
-//     { id:'abuse_holds_expired', table:'abuse_holds', where:"until < $now", batch:1000 }
+//     { id:'abuse_holds_expired', table:'abuse_holds', where:"until < $now and not exists (select 1 from reports r where r.id = any(abuse_holds.report_ids) and r.status in ('open','hidden'))", batch:1000 }
+//       // U-06: 미처리 신고가 있으면 만료하지 않고 until = now()+90d로 연장, 접수 90일 초과 미처리 신고는 A12
+//     { id:'rights_unverified_7d', table:'rights_requests',     // U-07, 08 8.7.7 미확인 privacy_request
+//       where:"status = 'awaiting_verification' and received_at < $now - interval '7 days'", batch:1000 }
 //     { id:'abuse_evidence_90d', bucket:'abuse-evidence',       // 검토 종료(status ∈ {dismissed, actioned} ∧ handled_at) + 90일
 //       where:"exists (select 1 from reports r where r.id = $report_id and r.status in ('dismissed','actioned') and r.handled_at < $now - interval '90 days')", batch:1000 }
-//     { id:'admin_audit_1y', table:'admin_audit_logs',          // 직접 DELETE 불가. 실행기는 purge_audit_logs($now - interval '1 year')를 호출(T-14)
+//     { id:'admin_audit_1y', table:'admin_audit_logs',          // 직접 DELETE 불가. 실행기는 purge_audit_logs(least($now, now()) - interval '1 year')를 호출(T-14, U-05: 주입 시계가 DB 검사를 넘지 않는다)
 //       where:"created_at < $now - interval '1 year'", batch:1000 }
 //     { id:'auth_audit_90d', table:'auth.audit_log_entries',    // P14(T-13). auth.sessions는 not_after·updated_at 기준 같은 90일
 //       where:"created_at < $now - interval '90 days'", batch:1000 }
@@ -1680,7 +1689,7 @@ RetentionRule = { id: string, table?: string, bucket?: string,
 
 시계는 `RETENTION_NOW` 주입(테스트 전용, production 기동 거부)으로 바꿀 수 있다(09장 M7 ④).
 
-- 수용 기준 AC-06-54: `RETENTION_NOW=+31d`에서 노출되지 않은 후보 행과 그 전용 렌더 객체는 0개, 노출 시안의 후보·버전·썸네일은 남고 종료 코드 0. 일부러 실패하는 규칙 1개를 주입해도 다른 규칙의 삭제 건수가 감사 로그에 남는다. `RETENTION_NOW=+366d`에서 `consents_archive` 만료 행 0건, `admin_audit_logs`의 366일 전 행 0건(1년 이내 행은 남음, T-14). `RETENTION_NOW=+91d`에서 `auth.audit_log_entries`·`auth.sessions`의 보관 기간 밖 행 0건(T-13), 검토 종료 91일 지난 `abuse-evidence/<report_id>/` 객체 0개(T-15).
+- 수용 기준 AC-06-54: `RETENTION_NOW=+31d`에서 노출되지 않은 후보 행과 그 전용 렌더 객체는 0개, 노출 시안의 후보·버전·썸네일은 남고 종료 코드 0. 일부러 실패하는 규칙 1개를 주입해도 다른 규칙의 삭제 건수가 감사 로그에 남는다. `RETENTION_NOW=+366d`에서 `consents_archive` 만료 행 0건. `admin_audit_logs`는 `created_at = now() − 400d`·`now() − 300d`로 넣은 행으로 판정한다: 400일 행 0건, 300일 행 남음, `+31d`·`+366d` 두 실행 모두 `admin_audit_1y` 규칙 오류 0·종료 코드 0(T-14, U-05. 옛 "366일 전 행" 문장 → 대체). `RETENTION_NOW=+8d`에서 미확인 `privacy_request` 0행, 확인된 행은 남음(U-07). `RETENTION_NOW=+91d`에서 `auth.audit_log_entries`·`auth.sessions`의 보관 기간 밖 행 0건(T-13), 검토 종료 91일 지난 `abuse-evidence/<report_id>/` 객체 0개(T-15).
 - `verify:schema-parity`(09장 M1 ⑨)는 08장 8.7.7 보관표의 "구현 기준" 열에 나온 테이블·컬럼이 이 장 DDL에 모두 있는지 함께 검사한다(S-20).
 
 ## 6.7 캐싱
@@ -2276,6 +2285,7 @@ KPI(WAM·퍼널)는 →00장 8.5 쿼리를 뷰로 만든다.
 | A8 | `retention` 마지막 성공 > 26시간 전 | 경고 |
 | A9 | `unapproved` 또는 카나리 탐지 1건 | 치명 |
 | A10 | `rights_requests.due_at - now() < 24h`이고 미완료 | 경고 |
+| A12 | `report_overdue`: reason ∈ {impersonation, phishing} 신고가 status ∈ {open, hidden}으로 접수 후 90일 초과(U-06, `retention` 실행 시, 신고당 1건) | 경고 |
 | A11 | `llm_calls` 합계와 `generation_jobs.cost_usd` 차이 > US$0.001, 또는 잡 `cost_usd > capEff`(`usage_overrun`, 워커가 정산 즉시 발행, 잡당 1건, T-17) | 경고 |
 
 외형 감시: 무료 업타임 서비스가 `GET /api/health`를 1분마다 확인(운영자 설정, 09장 9.9.3).
@@ -2674,3 +2684,4 @@ deploy-prod (수동, staging 성공 sha만 입력 허용):
 | TL3-09(06) | Minor | AC-06-02 `pg_class.relforcerowsecurity` | |
 | S-32·S-37(06) | Major | 6.4.3 MockupCard `movedAxes`·`diffFromTrue`·brandColorNotice 5값 | |
 | U-01·U-02(06-a, r4 RB4-01·02) | Major | 6.9.4 ① 사건 t1·처리 순서, ③ `cacheState`·est 반올림·합계 0.23676, ⑦ Mock 지연·`usage_overrun` 거부 집합, `llm_calls.started_at`·`first_token_at`, AC-06-56 ④⑤·AC-06-61, AC-06-07/07b/07c·6.17 행 | 09 9.6.2·07 배정표는 각 단위 |
+| U-03~U-07·U-13(06-b, r4 RC4-01~05·RA4-03) | Major | 6.2.5 순서 ③b→③·`deleteOwnedRenders`·재가입 복구, `users.suspend_source`, `provision_user` 복구 분기, 6.4.3 `DELETE /api/projects/:id`·verify 302·ADM-04 PATCH·ADM-11 필터, 6.6 `renders_orphan` 증거 제외·`abuse_holds_expired` 연장·`rights_unverified_7d`·`admin_audit_1y` least(), 스토리지 표, 6.12.4 A12, AC-06-54 | AC-08-57·58·59는 08-a |
