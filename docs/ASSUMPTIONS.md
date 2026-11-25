@@ -390,3 +390,10 @@
 - 결과: 폴백 72 × 1280·375에서 G-02·04·05·06·07 위반 0(로컬 측정 약 80초)
 - 영향 범위: apps/worker(render/harness·measure), packages/scoring, packages/renderer(base·hero·compile), packages/design-spec(tokens), data/tokens/schema.json(temp)
 - 되돌리기 비용: 중간
+
+## ASM-056 · M2 · gap · 2026-11-25T19:40Z
+- 질문: 하네스 headlineLines·compileInBrowser를 어떻게 재나
+- 근거 탐색: 03장 3.8.1(헤드라인 줄 수·고아 글자), 04장 AC-04-18a, ASM-027 ①
+- 선택: ① headlineLines: [data-role=hero.headline|cta.headline] 요소의 글자별 Range 사각형을 top으로 묶어 줄 수, 마지막 줄 글자 수(공백 제외) ② compileInBrowser: renderer·design-spec·assets dist ESM을 가상 오리진에서 import map(`@tastefit/design-spec/tokens-css`·`@tastefit/assets`)으로 서빙하고, blocks/index.js 등록 후 compile.js의 compilePageImpl을 실행(node 전용 진입점 m2.js는 쓰지 않는다). import()는 문자열 평가로 실행(테스트 변환기 회피)
+- 영향 범위: apps/worker(render/harness)
+- 되돌리기 비용: 낮음

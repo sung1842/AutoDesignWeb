@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { fallbackMockup, loadDesignData } from "@tastefit/design-spec";
+import { createHash } from "node:crypto";
+import { fallbackMockup, loadDesignData, standardTree } from "@tastefit/design-spec";
 import { compilePage } from "@tastefit/renderer";
 import { evaluateGates } from "@tastefit/scoring";
 import { openHarness, type Harness } from "./harness.js";
@@ -44,5 +45,13 @@ describe("렌더 하네스·하드 게이트 4종(M2-09a, ASM-055)", () => {
     const r = Object.fromEntries(evaluateGates(m, GATES).map((g) => [g.id, g.pass]));
     expect(r).toMatchObject({ "G-02": false, "G-04": false, "G-07": false });
     expect(m.externalRequests.length).toBe(1);
+  });
+  it("AC-04-18a 선구현: 브라우저 번들 compile = Node compile(SHA-256), headlineLines", async () => {
+    const sha = (x: string): string => createHash("sha256").update(x).digest("hex");
+    const { spec, tree } = standardTree("T6", "portfolio", data);
+    const node = compilePage(spec, tree, data).html;
+    expect(sha(await h.compileInBrowser(spec, tree, data))).toBe(sha(node));
+    const hl = await h.headlineLines(node, 1280);
+    expect(hl.find((x) => x.role === "hero.headline")?.lines).toBeGreaterThanOrEqual(1);
   });
 });

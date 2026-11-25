@@ -177,3 +177,4 @@
 - 2026-11-25 13:34 | M2-04b PageSchema(확정 트리)·⑥ 금지 키·열린 객체 정적 검사, ASM-040 → 다음: M2-05 renderer a
 - 2026-11-25 16:26 | M2-05a1 CM-02 리터럴 검사·CSS 레지스트리·base·Button·TextLink(ASM-041) → 다음: 05a2 컴포넌트 CSS
 - 2026-11-25 16:31 | M2-05a2 컴포넌트 CSS 16종(state 3.5.3, 리터럴 0) → 다음: 05a3 compilePage 골격
+- 2026-11-25 16:52 | M2-05a3 compilePage 골격·tokens-css 분리(ASM-042) → M2-05 완료, 다음: M2-06 variant 템플릿

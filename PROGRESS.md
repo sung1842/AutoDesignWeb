@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-25T15:28Z, since: 2026-11-25T16:43Z}
+- lock: {owner: 2026-11-25T15:28Z, since: 2026-11-25T17:13Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-26 05:28  # 이 세션 시작(00:28 KST)+5h 추정. 한도로 끊기면 이 시각 이후 정기 세션이 이어감
-- 마지막 갱신: 2026-11-26 01:43 KST (세션: M2-09a 하네스·게이트, 다음 09b)
+- 마지막 갱신: 2026-11-26 02:13 KST (세션: M2-09b, 다음 09c G-03·G-12)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -119,7 +119,7 @@
   - [x] 06 renderer b: [x] b0 텍스트 역할 층(B25 33역할 → text-roles.css·모든 텍스트 노드 data-role·blocks 슬롯 textRoles, 단위 4/4, ASM-043) [x] b1 hero 6 variant(hero.css 12열 text_cols, hero.test 4/4, ASM-044) [ ] b2 나머지 블록(registerTemplate + blocks/*.css): [x] b2a value·feature·showcase·stats·process 13(ASM-045) [x] b2b proof·pricing·faq·cta·menu 12(ASM-046) [x] b2c highlight·gallery·location·story·about·service·contact 16(ASM-047, BLK-010) [x] b2d nav·footer variant(sticky T2·T7, ASM-048)
   - [x] 07 assets: [x] a 아이콘 인라인 SVG(임시 도형 40, icon-grid·location, ASM-049·BLK-011) [x] b 로컬 @font-face: [x] b1 폰트 계획·@font-face·preload(순수, ASM-050) [x] b2 node 서브셋 생성(fontTools, temp 시스템 Noto CJK, 결정적·이름 표=subsetFamily, ASM-051) [x] c 이미지 <img>(로컬 경로·width/height·eager/lazy·초점)·shape-graphic G1~G4(ASM-052) [x] d 100회 SHA 동일(④, 프리셋 8 단위 테스트)
   - [x] 08 폴백 생성기: [x] a standardTree·fallbackMockup·resolveTree(72 PageSchema 유효, ASM-053) [x] b fixtures/layouts 31(용도 × 10+, 패턴 1~4 전부, `pnpm fixtures:layouts`)·fixturePage(①, ASM-054)
-  - [ ] 09 하네스·게이트: [x] a 하네스 코어(가상 오리진·자산 서빙·measure·폰트 바이트·플랫폼 폰트)·G-02·04·05·06·07(폴백 72×2 위반 0, ASM-055) [ ] b 하네스 나머지(headlineLines·compileInBrowser·parentProbe·extractL1)·G-03·G-12
+  - [ ] 09 하네스·게이트: [x] a 하네스 코어(가상 오리진·자산 서빙·measure·폰트 바이트·플랫폼 폰트)·G-02·04·05·06·07(폴백 72×2 위반 0, ASM-055) [x] b headlineLines·compileInBrowser(브라우저 = Node SHA 동일, AC-04-18a) [ ] c G-03 비텍스트 대비·G-12 명세 무결성 [ ] d extractL1(05장 추출기) — parentProbe는 M2-11
   - [ ] 10 worker render 잡(뷰포트 5 스크린샷)·외부 요청 0(③)
   - [ ] 11 미리보기 오리진 라우트·sandbox iframe·CSP 문자열 일치(⑧)
   - [ ] 12 시각 회귀 기준선 24장(⑤, 로컬 chromium 가능분만, 나머지 needs_ci)
@@ -132,6 +132,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-26 02:13 | M2-09b headlineLines·compileInBrowser(브라우저·Node SHA 동일), ASM-056 → 다음: 09c G-03·G-12
 - 2026-11-26 01:43 | M2-09a 렌더 하네스·G-02/04/05/06/07(폴백 72×2 통과)·inverse 버튼·이미지 위 텍스트 판, ASM-055 → 다음: 09b
 - 2026-11-26 01:29 | M2-08b 픽스처 30개 생성기·fixturePage(전부 스키마 유효·컴파일), ASM-054 → M2-08 완료 → 다음: M2-09 하네스
 - 2026-11-26 01:26 | M2-08a standardTree·fallbackMockup·resolveTree(24 표준·72 폴백 스키마 유효, 넘침 0), ASM-053 → 다음: 08b
@@ -146,4 +147,3 @@
 - 2026-11-26 01:11 | M2-06b2a value·feature·showcase·stats·process 13 variant·layout.css(넘침 0), ASM-045 → 다음: b2b
 - 2026-11-26 00:59 | M2-06b1 hero 6 variant 템플릿·hero.css(1280·375 넘침 0 확인), ASM-044 → 다음: b2 나머지 블록
 - 2026-11-26 00:47 | M2-06b0 텍스트 역할 층(text-roles.css·data-role·슬롯 textRoles·단계 leading/tracking 변수), ASM-043 → 다음: b1 hero
-- 2026-11-25 16:52 | M2-05a3 compilePage 골격·tokens-css 분리(ASM-042) → M2-05 완료, 다음: M2-06 variant 템플릿

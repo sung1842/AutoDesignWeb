@@ -254,8 +254,92 @@ export async function openHarness(): Promise<Harness> {
         await closeS(s);
       }
     },
-    headlineLines: pending("headlineLines"),
-    compileInBrowser: pending("compileInBrowser"),
+    async headlineLines(html, vw) {
+      const s = await openPage(browser, html, vw);
+      try {
+        return await s.page.evaluate(() => {
+          // 3.8.1: 헤드라인 역할 요소의 줄 수·마지막 줄 글자 수(공백 제외)
+          const out: { role: string; lines: number; lastLineChars: number }[] = [];
+          for (const el of document.querySelectorAll(
+            "[data-role='hero.headline'],[data-role='cta.headline']",
+          )) {
+            const range = document.createRange();
+            const tops: number[] = [];
+            const perLine = new Map<number, number>();
+            const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+            for (let n = w.nextNode(); n; n = w.nextNode()) {
+              const t = n.textContent ?? "";
+              for (let i = 0; i < t.length; i++) {
+                if (/\s/.test(t[i] ?? "")) continue;
+                range.setStart(n, i);
+                range.setEnd(n, i + 1);
+                const r = range.getBoundingClientRect();
+                if (r.width === 0) continue;
+                let key = tops.find((y) => Math.abs(y - r.top) < r.height / 2);
+                if (key === undefined) {
+                  key = r.top;
+                  tops.push(key);
+                }
+                perLine.set(key, (perLine.get(key) ?? 0) + 1);
+              }
+            }
+            tops.sort((a, b) => a - b);
+            const last = tops.at(-1);
+            out.push({
+              role: el.getAttribute("data-role") ?? "",
+              lines: tops.length,
+              lastLineChars: last === undefined ? 0 : (perLine.get(last) ?? 0),
+            });
+          }
+          return out;
+        });
+      } finally {
+        await closeS(s);
+      }
+    },
+    async compileInBrowser(spec, tree, data) {
+      // AC-04-18a: renderer dist ESM을 import map으로 띄워 브라우저에서 compilePageImpl을 실행한다(ASM-027 ①)
+      const ctx = await browser.newContext();
+      const page = await ctx.newPage();
+      const MODS: Record<string, string> = {
+        "/m/renderer/": join(ROOT, "packages/renderer/dist/"),
+        "/m/design-spec/": join(ROOT, "packages/design-spec/dist/"),
+        "/m/assets/": join(ROOT, "packages/assets/dist/"),
+      };
+      const shell =
+        '<!doctype html><html><head><script type="importmap">' +
+        JSON.stringify({
+          imports: {
+            "@tastefit/design-spec/tokens-css": "/m/design-spec/tokens-css.js",
+            "@tastefit/assets": "/m/assets/index.js",
+          },
+        }) +
+        "</script></head><body></body></html>";
+      await page.route("**/*", async (route: Route) => {
+        const url = new URL(route.request().url());
+        if (url.origin !== HARNESS_ORIGIN) return route.abort("blockedbyclient");
+        if (url.pathname === "/") return route.fulfill({ body: shell, contentType: "text/html" });
+        const pre = Object.keys(MODS).find((k) => url.pathname.startsWith(k));
+        const file = pre ? join(MODS[pre] ?? "", url.pathname.slice(pre.length)) : "";
+        if (!file || !existsSync(file)) return route.fulfill({ status: 404, body: "" });
+        return route.fulfill({ body: readFileSync(file), contentType: "text/javascript" });
+      });
+      try {
+        await page.goto(`${HARNESS_ORIGIN}/`);
+        // import()가 테스트 변환기에 바뀌지 않도록 문자열로 평가한다
+        await page.evaluate(
+          (args) => {
+            (globalThis as unknown as { __tfArgs: unknown }).__tfArgs = args;
+          },
+          [spec, tree, data],
+        );
+        return (await page.evaluate(
+          `(async () => { await import("/m/renderer/blocks/index.js"); const c = await import("/m/renderer/compile.js"); const [s, t, d] = globalThis.__tfArgs; return c.compilePageImpl(s, t, d).html; })()`,
+        )) as string;
+      } finally {
+        await ctx.close();
+      }
+    },
     extractL1: pending("extractL1"),
     parentProbe: pending("parentProbe"),
     async close() {
