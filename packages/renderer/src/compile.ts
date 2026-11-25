@@ -14,6 +14,15 @@ import {
 } from "./fonts.js";
 import { attrs, el, esc, join, raw, safeAnchor, type Html } from "./html.js";
 import { focalCss, mediaHtml, type ImageLike, type MediaCtx, type MediaOpts } from "./media.js";
+import {
+  grainHtml,
+  marqueeHtml,
+  outlineHtml,
+  scriptAttr,
+  sigApplies,
+  signatureRoleCss,
+  type SignatureLike,
+} from "./signature.js";
 
 /** 08장 8.x AI 고지(CM-16). */
 export const GENERATOR_META = "TasteFit (AI-generated design draft)";
@@ -65,6 +74,8 @@ export interface SpecLike {
   theme: "light" | "dark";
   l2: Record<string, unknown>;
   tokens: Record<string, unknown>;
+  /** 04장 4.14 시그니처(정확히 1개). 없으면 시그니처 층이 꺼진다(검사용 페이지). */
+  signature?: SignatureLike;
 }
 
 /** 블록 템플릿 문맥(CM-01 ctx). */
@@ -106,6 +117,7 @@ export function textEl(tag: string, cls: string, slotId: string, t: PText, role:
       "data-role": role,
       "data-slot-id": slotId,
       "data-placeholder": t.placeholder ? "true" : null,
+      "data-script": scriptAttr(role, t.text),
     },
     t.text,
   );
@@ -195,7 +207,13 @@ export function genericBlock(s: PSection, ctx: BlockCtx): Html {
   return join(parts);
 }
 
-function sectionHtml(spec: SpecLike, s: PSection, data: DataLike, media: MediaCtx): Html {
+function sectionHtml(
+  spec: SpecLike,
+  s: PSection,
+  data: DataLike,
+  media: MediaCtx,
+  outlineText = "",
+): Html {
   const heading = headingFor(data, s.block);
   const headingId = `${s.id}-h`;
   const ctx: BlockCtx = {
@@ -263,8 +281,12 @@ function sectionHtml(spec: SpecLike, s: PSection, data: DataLike, media: MediaCt
       "data-section-id": s.id,
       "data-bg": s.bg,
       "data-pad": s.pad,
+      "data-sig": sigApplies(spec.signature, s.block) ? "on" : null,
       "aria-labelledby": headingId,
     },
+    ...(spec.signature?.id === "SIG-11" && sigApplies(spec.signature, s.block) && outlineText
+      ? [outlineHtml(outlineText)]
+      : []),
     custom
       ? el("div", { class: "tf-container" }, custom(rest, { ...ctx, heading: join(head) }))
       : el("div", { class: "tf-container" }, ...head, genericBlock(rest, ctx)),
@@ -274,18 +296,28 @@ function sectionHtml(spec: SpecLike, s: PSection, data: DataLike, media: MediaCt
 /** 03장 C08: sticky는 프리셋 T2·T7만(ASM-048). */
 export const STICKY_NAV_TYPES: ReadonlySet<string> = new Set(["T2", "T7"]);
 
-function navHtml(tree: PTree, brand: string, typeId: string): Html {
+function navHtml(tree: PTree, brand: string, typeId: string, sig?: SignatureLike): Html {
   const links = tree.nav.items.map((it) =>
     el(
       "a",
-      { class: "tf-navbar__link", "data-role": "nav.link", href: safeAnchor(it.target) },
+      {
+        class: "tf-navbar__link",
+        "data-role": "nav.link",
+        "data-script": scriptAttr("nav.link", it.label),
+        href: safeAnchor(it.target),
+      },
       it.label,
     ),
   );
   const drawerLinks = tree.nav.items.map((it) =>
     el(
       "a",
-      { class: "tf-drawer__link", "data-role": "nav.link", href: safeAnchor(it.target) },
+      {
+        class: "tf-drawer__link",
+        "data-role": "nav.link",
+        "data-script": scriptAttr("nav.link", it.label),
+        href: safeAnchor(it.target),
+      },
       it.label,
     ),
   );
@@ -296,6 +328,7 @@ function navHtml(tree: PTree, brand: string, typeId: string): Html {
       class: `tf-navbar tf-navbar--${v}${STICKY_NAV_TYPES.has(typeId) ? " tf-navbar--sticky" : ""}`,
       "data-block": "nav",
       "data-variant": tree.nav.variant,
+      "data-sig": sigApplies(sig, "nav") ? "on" : null,
     },
     el(
       "nav",
@@ -317,7 +350,7 @@ function navHtml(tree: PTree, brand: string, typeId: string): Html {
 }
 
 /** 03장 C10·C18: minimal(한 줄 묶음) / columns(브랜드·링크·사업자 정보 칸) / big-type(워드마크 display, 맨 아래). ASM-048. */
-function footerHtml(tree: PTree): Html {
+function footerHtml(tree: PTree, sig?: SignatureLike, outlineText = ""): Html {
   const f = tree.footer;
   const v = f.variant.split(".")[1] ?? "minimal";
   const s = f.slots;
@@ -363,7 +396,15 @@ function footerHtml(tree: PTree): Html {
         : [...word, ...tagline, ...links, ...biz];
   return el(
     "footer",
-    { class: `tf-footer tf-footer--${v}`, "data-block": "footer", "data-variant": f.variant },
+    {
+      class: `tf-footer tf-footer--${v}`,
+      "data-block": "footer",
+      "data-variant": f.variant,
+      "data-sig": sigApplies(sig, "footer") ? "on" : null,
+    },
+    ...(sig?.id === "SIG-11" && sigApplies(sig, "footer") && outlineText
+      ? [outlineHtml(outlineText)]
+      : []),
     el("div", { class: "tf-container tf-footer__inner" }, ...parts),
   );
 }
@@ -441,12 +482,24 @@ export function compilePageImpl(
     seed: spec.spec_id,
     find: (id) => imgIdx.get(id),
   };
-  const sections = tree.sections.map((s) => sectionHtml(spec, s, data, media));
+  const sig = spec.signature;
+  const sections = tree.sections.map((s) => sectionHtml(spec, s, data, media, brand));
+  if (sig?.id === "SIG-06") {
+    // 마키 띠: CTA 위 또는 hero 하단(1개, apply_to 첫 블록)
+    const hero = tree.sections.find((s) => s.block === "hero")?.slots.headline;
+    const text = brand || (isCopy(hero) ? hero.copy.text : "");
+    const at = tree.sections.findIndex((s) => sig.apply_to.includes(s.block));
+    if (text && at >= 0) {
+      const after = tree.sections[at]?.block === "hero";
+      sections.splice(after ? at + 1 : at, 0, marqueeHtml(text));
+    }
+  }
   const body = join([
     el("a", { class: "tf-skip-link", "data-role": "nav.link", href: "#main" }, SKIP_LINK_KO),
-    navHtml(tree, brand, spec.type_id),
+    ...(sig?.id === "SIG-07" && sig.apply_to.includes("page") ? [grainHtml()] : []),
+    navHtml(tree, brand, spec.type_id, sig),
     el("main", { id: "main" }, ...sections),
-    footerHtml(tree),
+    footerHtml(tree, sig, brand),
   ]);
   return documentHtml(spec, body, brand, data, roleCss);
 }
@@ -481,6 +534,9 @@ export function documentHtml(
     rootCss(spec.tokens, `TasteFit tokens-1 · ${spec.spec_id}`) +
     stylesCss(role) +
     focalCss() +
+    (spec.signature?.id === "SIG-09" && data?.textRoles
+      ? signatureRoleCss(data.textRoles, { smallPx: stepPx(spec.tokens, "small") })
+      : "") +
     extraCss;
   const head = raw(
     `${GENERATOR_COMMENT}<meta charset="utf-8">` +
@@ -495,6 +551,8 @@ export function documentHtml(
     "data-inverse-button": inverseMode(spec.tokens),
     "data-type": spec.type_id,
     "data-spec-id": spec.spec_id,
+    "data-signature": spec.signature?.id ?? null,
+    "data-signature-intensity": spec.signature?.intensity ?? null,
   })}><head>${head.__html}</head><body>${body.__html}</body></html>`;
   return { html, fonts: plan };
 }

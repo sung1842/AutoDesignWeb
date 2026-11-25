@@ -21,6 +21,7 @@ import { CONTENT_B_CSS } from "./blocks/content-b.js";
 import { CONTENT_C_CSS } from "./blocks/content-c.js";
 import { HERO_CSS } from "./blocks/hero.js";
 import { MEDIA_BLOCK_CSS } from "./blocks/media.js";
+import { SIGNATURE_CSS } from "./signatures.js";
 
 export interface CssSource {
   path: string;
@@ -48,6 +49,7 @@ const SOURCES: readonly CssSource[] = [
   { path: "blocks/content-b.css", css: CONTENT_B_CSS },
   { path: "blocks/content-c.css", css: CONTENT_C_CSS },
   { path: "blocks/nav-footer.css", css: CHROME_CSS },
+  { path: "signatures.css", css: SIGNATURE_CSS },
 ];
 
 /** 층 순서(base → components → blocks → signatures)대로 반환한다. */
