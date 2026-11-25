@@ -277,3 +277,10 @@
 - 선택: ① 섹션 = 블록별 discriminatedUnion(block 리터럴), variant enum·슬롯 키는 blocks.json, 슬롯 값은 kind별(copy·list·image·link) strict 객체, required 슬롯은 필수 ② nav·footer는 섹션 블록에서 제외(footer는 별도 필드) ③ 섹션 수 스키마 상한 = purposes 최대(8), 용도별 범위·LT-01~04·09·10은 명세서가 필요해 린트 T(M2-08)에서 ④ image.tag enum = manifest 태그(orient.·tone. 제외) ⑤ 섹션 id 중복은 superRefine으로 거부 ⑥ JSON Schema는 zod 4 `z.toJSONSchema` ⑦ copyDeckLimits = 4.6.2 상한(목록은 한글 필드명 객체, blocks.json maxLength 키와 같음), `work.items[0]`(showcase 캡션)·`contact.*`(컴파일러 채움, 0) 포함 ⑧ 기준 픽스처 fixtures/layouts/saas-ps1.json(`{purpose, typeId, provenance: temp, raw, deck}`), 나머지 픽스처는 M2-08
 - 영향 범위: packages/layout-schema/src/schema.ts, fixtures/layouts
 - 되돌리기 비용: 낮음
+
+## ASM-040 · M2 · gap · 2026-11-25T04:33Z
+- 질문: 04장 4.5.2 확정 트리(LayoutTree = 06장 PageSchema)의 세부 형태(목록 항목 2필드, nav·footer 표현, role_overrides 키)와 9.4.4 ⑥ 정적 검사 기준
+- 근거 탐색: 04장 4.5.1·4.5.2(확정 치환 규칙·nav 최대 5·T-30 role_overrides), 06장 jsonb 원본 규칙, 09장 9.4.4 ⑥
+- 선택: ① copy → `{copy: {text, sub?, placeholder, deck_ref}}`(sub = 목록 항목 둘째 필드: 본문·답·설명·라벨·이름), image → `{tag, ratio, asset_id, alt, focal}`, link.label도 같은 Text ② nav = `{variant, items[≤ 5]{label ≤ 20, target 앵커}}`, footer = `{variant, slots}`(blocks.json footer 슬롯) ③ role_overrides = 이미지가 아닌 슬롯 키만, 값은 타입 단계 9종 ④ 자유 키 record를 쓰지 않는다(전부 strict 객체) → ⑥ 검사 = JSON Schema에서 금지 키(style·className·css·html·script·on*) 속성 0 ∧ 열린 객체 0. 단위 테스트에서 PageSchema·LayoutTreeRaw 둘 다 검사 ⑤ 텍스트 상한 400자(덱 최대 240 + 여유), 이스케이프는 렌더러 책임
+- 영향 범위: packages/layout-schema/src/schema.ts
+- 되돌리기 비용: 낮음
