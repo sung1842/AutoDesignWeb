@@ -31,14 +31,25 @@ export function compilePage(
     data as Parameters<typeof compilePageImpl>[2],
   );
 }
+/** 6.11.4 (b) 편집 미리보기 srcdoc: 편집 토큰으로 컴파일하고 <head> 첫 요소로 CSP meta를 넣는다(ASM-059). */
+export function editCsp(webOrigin: string): string {
+  return `default-src 'none'; style-src 'unsafe-inline'; img-src ${webOrigin} data:; font-src ${webOrigin}; base-uri 'none'; form-action 'none'`;
+}
 export function compileForEdit(
-  _tokens: unknown,
-  _tree: unknown,
+  tokens: unknown,
+  tree: unknown,
   _vw: number,
-  _opts: { webOrigin: string; spec: unknown; data: unknown },
+  opts: { webOrigin: string; spec: unknown; data: unknown },
 ): { html: string } {
-  void [_tokens, _tree, _vw, _opts];
-  return pending("compileForEdit");
+  void _vw;
+  const spec = { ...(opts.spec as SpecLike), tokens: tokens as Record<string, unknown> };
+  const { html } = compilePageImpl(
+    spec,
+    tree as PTree,
+    opts.data as Parameters<typeof compilePageImpl>[2],
+  );
+  const meta = `<meta http-equiv="Content-Security-Policy" content="${editCsp(opts.webOrigin)}">`;
+  return { html: html.replace("<head>", `<head>${meta}`) };
 }
 export function renderBlockSample(
   _input: {

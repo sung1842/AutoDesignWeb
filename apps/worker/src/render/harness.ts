@@ -173,7 +173,7 @@ function chromium(): { launch: () => Promise<Browser> } {
 export async function openHarness(): Promise<Harness> {
   const browser = await chromium().launch();
   const pending = (n: string) => (): never => {
-    throw new Error(`Harness.${n}: M2-09 이후 단위에서 구현 예정`);
+    throw new Error(`Harness.${n}: M2-09d(05장 추출기)에서 구현 예정`);
   };
   const h: Harness = {
     async measure(html, vw, opts) {
@@ -353,7 +353,38 @@ export async function openHarness(): Promise<Harness> {
       }
     },
     extractL1: pending("extractL1"),
-    parentProbe: pending("parentProbe"),
+    async parentProbe(html) {
+      // 6.11.4: 부모(JS 켬)가 sandbox="" iframe에 srcdoc으로 넣는다 → 시안 쪽 코드가 부모에 닿는지, 부모가 문서에 닿는지
+      const ctx = await browser.newContext();
+      const page = await ctx.newPage();
+      await page.route("**/*", (route: Route) => {
+        const u = new URL(route.request().url());
+        if (u.origin === HARNESS_ORIGIN && u.pathname === "/")
+          return route.fulfill({
+            body: "<!doctype html><html><body></body></html>",
+            contentType: "text/html",
+          });
+        return route.abort("blockedbyclient");
+      });
+      try {
+        await page.goto(`${HARNESS_ORIGIN}/`);
+        return await page.evaluate(async (doc) => {
+          const f = document.createElement("iframe");
+          f.setAttribute("sandbox", "");
+          f.srcdoc = doc;
+          const loaded = new Promise((r) => f.addEventListener("load", r));
+          document.body.append(f);
+          await loaded;
+          await new Promise((r) => setTimeout(r, 300));
+          return {
+            xss: (window as unknown as { __xss?: unknown }).__xss !== undefined,
+            contentDocumentNull: f.contentDocument === null,
+          };
+        }, html);
+      } finally {
+        await ctx.close();
+      }
+    },
     async close() {
       await browser.close();
     },

@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-25T15:28Z, since: 2026-11-25T17:26Z}
+- lock: {owner: 2026-11-25T15:28Z, since: 2026-11-25T17:28Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-26 05:28  # 이 세션 시작(00:28 KST)+5h 추정. 한도로 끊기면 이 시각 이후 정기 세션이 이어감
-- 마지막 갱신: 2026-11-26 02:26 KST (세션: M2-10 완료, 다음 M2-11 미리보기)
+- 마지막 갱신: 2026-11-26 02:28 KST (세션: M2-11 완료, 다음 M2-12·13·09d·09e)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -121,7 +121,7 @@
   - [x] 08 폴백 생성기: [x] a standardTree·fallbackMockup·resolveTree(72 PageSchema 유효, ASM-053) [x] b fixtures/layouts 31(용도 × 10+, 패턴 1~4 전부, `pnpm fixtures:layouts`)·fixturePage(①, ASM-054)
   - [ ] 09 하네스·게이트: [x] a 하네스 코어(가상 오리진·자산 서빙·measure·폰트 바이트·플랫폼 폰트)·G-02·04·05·06·07(폴백 72×2 위반 0, ASM-055) [x] b headlineLines·compileInBrowser(브라우저 = Node SHA 동일, AC-04-18a) [x] c G-03 비텍스트 대비(입력·버튼 경계·포커스, 폴백 72×2 G-02~07 위반 0) [ ] e G-12 명세 무결성 [ ] d extractL1(05장 추출기) — parentProbe는 M2-11
   - [x] 10 worker render 잡(뷰포트 5 PNG·차단 카운터, JS off, 글꼴 /fonts/, ASM-058)
-  - [ ] 11 미리보기 오리진 라우트·sandbox iframe·CSP 문자열 일치(⑧)
+  - [x] 11 미리보기: 서명 URL·preview 헤더·iframe·compileForEdit CSP·parentProbe(⑧, ASM-059). Next 라우트 연결은 M5
   - [ ] 12 시각 회귀 기준선 24장(⑤, 로컬 chromium 가능분만, 나머지 needs_ci)
   - [ ] 13 renderer 금지 의존성 검사(⑦) 확인
   - [ ] 14 verify:m2 → m2-done(tags 맵)
@@ -132,6 +132,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-26 02:28 | M2-11 미리보기 서명·헤더·iframe·편집 CSP·parentProbe, ASM-059 → 다음: 09e G-12 또는 13 금지 의존성
 - 2026-11-26 02:26 | M2-10 render 잡(뷰포트 5 PNG·render_blocked_requests)·하네스 JS off·글꼴 /fonts/, ASM-058 → 다음: M2-11 미리보기
 - 2026-11-26 02:20 | M2-09c G-03 비텍스트 대비(폴백 72×2 게이트 6종 위반 0), ASM-057 → 다음: M2-10 render 잡
 - 2026-11-26 02:13 | M2-09b headlineLines·compileInBrowser(브라우저·Node SHA 동일), ASM-056 → 다음: 09c G-03·G-12
@@ -146,4 +147,3 @@
 - 2026-11-26 00:56 | M2-06b2d nav·footer variant·sticky → M2-06 완료(53 variant 템플릿), ASM-048 → 다음: M2-07 assets
 - 2026-11-26 00:54 | M2-06b2c 7블록 16 variant·폼·갤러리(넘침 0), ASM-047·BLK-010 → 다음: b2d
 - 2026-11-26 00:50 | M2-06b2b proof·pricing·faq·cta·menu 12 variant(넘침 0), ASM-046 → 다음: b2c
-- 2026-11-26 01:11 | M2-06b2a value·feature·showcase·stats·process 13 variant·layout.css(넘침 0), ASM-045 → 다음: b2b

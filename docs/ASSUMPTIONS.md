@@ -411,3 +411,10 @@
 - 선택: ① 글꼴 경로를 `/fonts/<파일>`로(6.8.3), 이미지는 `/assets/images/…`. 운영 자산 오리진(http://assets.local)과 문서 오리진 분리는 운영 워커(M7)에서, 로컬 하네스는 가상 오리진 하나(http://tf.local)로 문서·자산을 같이 응답 ② 하네스 페이지는 javaScriptEnabled false(측정 evaluate는 동작, addStyleTag 대신 evaluate로 style 삽입) ③ Harness에 `screenshot(html, vw) → {png, blocked[]}` 추가, `runRenderJob({html}, h)` = renderViewports 5종 전체 페이지 PNG, renderBlockedRequests = 막은 URL 수(중복 제거), externalRequests = 실제로 나간 요청(route가 전부 막으므로 빈 배열)
 - 영향 범위: apps/worker(jobs/render·render/harness·measure), packages/renderer(fonts)
 - 되돌리기 비용: 낮음
+
+## ASM-059 · M2 · gap · 2026-11-25T20:40Z
+- 질문: 6.11.4 preview 호스트·서명·iframe·편집 srcdoc CSP를 어떤 함수로 두나
+- 근거 탐색: 06장 6.11.4, AC-06-25·26, 09장 9.4.4 ⑧, ASM-027 ⑥
+- 선택: ① `apps/web/src/lib/preview.ts`: signPreview(HMAC-SHA256 hex, `kind|id|vp|exp`), handlePreview(GET /render/{candidate|version}/{id}, 서명 timingSafeEqual, exp ≤ now 또는 > now + 15분이면 403, 없는 후보 404, 본문 = compilePage, 헤더 6.11.4 문자열 그대로), issuePreviewUrl(소유자 아니면 404, exp = 발급 + 600초), previewFrame(표시 sandbox=""·측정 sandbox="allow-same-origin" 화면 밖). share는 공개 링크 확인(M6) 전까지 404 ② 자산 URL은 루트 상대(`/fonts/…`·`/assets/…`)로 두어 문서 오리진(preview = PREVIEW_ORIGIN, srcdoc = 부모 WEB_ORIGIN)으로 해석되게 한다(6.11.4 "WEB_ORIGIN 절대 URL"과 같은 대상, 본문 외부 URL 0) ③ compileForEdit(tokens, tree, vw, {webOrigin, spec, data}) = 편집 토큰으로 컴파일 + `<head>` 첫 요소 CSP meta ④ 하네스 parentProbe: JS 켠 부모 페이지에 sandbox="" iframe srcdoc → `window.__xss` 미설정·`contentDocument === null` 확인 ⑤ web → renderer 의존 추가
+- 영향 범위: apps/web(lib/preview), packages/renderer(m2 compileForEdit), apps/worker(harness parentProbe)
+- 되돌리기 비용: 낮음

@@ -54,4 +54,10 @@ describe("렌더 하네스·하드 게이트 4종(M2-09a, ASM-055)", () => {
     const hl = await h.headlineLines(node, 1280);
     expect(hl.find((x) => x.role === "hero.headline")?.lines).toBeGreaterThanOrEqual(1);
   });
+  it("parentProbe: sandbox iframe 안 시안은 부모에 닿지 못하고 부모도 문서에 닿지 못한다", async () => {
+    const html =
+      '<!doctype html><html><body><img src="x" onerror="parent.__xss=1"><script>parent.__xss=1</script></body></html>';
+    const r = await h.parentProbe(html);
+    expect(r).toEqual({ xss: false, contentDocumentNull: true });
+  });
 });
