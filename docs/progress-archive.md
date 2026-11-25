@@ -169,3 +169,4 @@
 - 2026-11-20 07:20 | M2-03c applyBrandColor(primary→accent→tint→ignored, 무채 반전)·hexToOklch, ASM-032 → 다음: 03d
 - 2026-11-20 07:27 | M2-03d1 variantTargets(t_TRUE·t_FIT·t_BAL, D≥0.50 강제), ASM-033 → 다음: 03d2
 - 2026-11-20 07:36 | M2-03d2a pickSignatures(후보∩요구 조건, FIT 용도 순위·BAL 상이), ASM-034 → 다음: 03d3
+- 2026-11-25 12:53 | M2-03d3 layoutConstraints·patternSlots·sigCtx·apply_to·copyTone·decor, ASM-035 → 다음: 03d3b

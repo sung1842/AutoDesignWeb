@@ -3,7 +3,17 @@
 // 빈 자리표시 틀(장식, aria-hidden)로 그린다(BLK-010).
 import { mediaEl, registerTemplate, textEl, type BlockCtx, type PSection } from "../compile.js";
 import { el, type Html } from "../html.js";
-import { copyOf, head, imageOf, listEl, listOf, mediaBox, itemEl, type Img } from "./common.js";
+import {
+  copyOf,
+  head,
+  iconEl,
+  imageOf,
+  listEl,
+  listOf,
+  mediaBox,
+  itemEl,
+  type Img,
+} from "./common.js";
 
 type Tpl = (s: PSection, ctx: BlockCtx) => Html;
 const role = (ctx: BlockCtx, slot: string, i: number, fb: string): string =>
@@ -125,6 +135,11 @@ const galleryFeature: Tpl = (s, ctx) =>
   );
 
 // --- location ---
+const INFO_ICON: Readonly<Record<string, string>> = {
+  address: "map-pin",
+  hours: "clock",
+  phone: "phone",
+};
 const INFO_LABEL: Readonly<Record<string, string>> = {
   address: "주소",
   hours: "영업시간",
@@ -138,7 +153,12 @@ function infoList(s: PSection, ctx: BlockCtx): Html {
           el(
             "div",
             { class: "tf-location__row" },
-            el("dt", { "data-role": "stat.label" }, INFO_LABEL[k] ?? k),
+            el(
+              "dt",
+              { "data-role": "stat.label" },
+              iconEl(ctx, INFO_ICON[k] ?? "info", 20),
+              INFO_LABEL[k] ?? k,
+            ),
             el(
               "dd",
               {

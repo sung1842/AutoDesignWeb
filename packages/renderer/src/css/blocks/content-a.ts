@@ -33,7 +33,8 @@ export const CONTENT_A_CSS = `/* TasteFit blocks/value·feature·showcase·stats
 .tf-value__item-text { display: flex; flex-direction: column; gap: var(--tf-space-3); }
 .tf-value__index, .tf-process__index { color: var(--tf-color-accent); }
 .tf-value__item-body, .tf-process__item-body, .tf-feature__item-body { color: var(--tf-color-fg-muted); }
-.tf-icon-slot { display: inline-block; width: var(--tf-space-8); height: var(--tf-space-8); color: var(--tf-color-accent); }
+.tf-icon { display: inline-flex; flex: none; color: var(--tf-color-accent); }
+.tf-value__item > .tf-icon { align-self: flex-start; }
 .tf-feature__rows { display: flex; flex-direction: column; gap: var(--tf-space-16); }
 .tf-feature__row { display: grid; grid-template-columns: 1fr; gap: var(--tf-space-8) var(--tf-layout-base-gutter); align-items: center; }
 .tf-feature__text { display: flex; flex-direction: column; gap: var(--tf-space-3); min-width: 0; }

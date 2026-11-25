@@ -83,6 +83,10 @@ describe("value·feature·showcase·stats·process 템플릿(M2-06b2a, ASM-045)"
         expect(sec, v.id).toContain('data-role="list.index" aria-hidden="true">03<');
     }
     expect(html).toContain('data-role="stat.value"');
+    const ig = html.slice(html.indexOf('data-variant="value.icon-grid"'));
+    const grid = ig.slice(0, ig.indexOf("</section>"));
+    expect(grid.match(/<svg /g)).toHaveLength(3);
+    expect(grid).toContain(`data-icon-set="${String(spec.l2["icon.set"])}"`);
   });
   it("CSS 리터럴 0(CM-02)", () => {
     expect(cssLiteralViolations(LAYOUT_CSS + CONTENT_A_CSS)).toEqual([]);

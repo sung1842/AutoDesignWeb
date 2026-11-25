@@ -98,3 +98,11 @@
 - 처리: 렌더는 계속 진행. 시각 품질(AIL·이미지 다양성) 판정이 걸리면 이 BLK로 보고
 - 제안 수정안(사람): 04장 4.5.2 image 슬롯을 배열(`images: {…}[]`, 최대 9)로 넓히거나 목록 항목에 선택 `image` 필드를 추가, blocks.json cta·menu에 media 슬롯 추가 → relock
 - 상태: open
+
+## BLK-011 · M2 · locked-conflict · 2026-11-25T16:50Z
+- 대상: 03장 3.9.1 아이콘 패키지(`@phosphor-icons/core`·`@tabler/icons`·`iconoir`) ↔ `docs/dependency-allowlist.md`(M0 종료 시 잠금, 세 패키지 없음)
+- 증상: 실제 아이콘 세트를 설치할 수 없다
+- 시도: 허용 목록은 잠금 대상이라 행을 더하지 않음
+- 처리: `packages/assets`에 임시 자체 도형 40개(24 그리드 선 아이콘, `ICON_PROVENANCE = "temp"`)를 세 세트 이름으로 낸다(ASM-049). 세트 구분은 선 끝·이음만
+- 제안 수정안(사람): 허용 목록에 세 패키지(MIT, 출시 전 원문 확인) 추가 → `PATHS`를 패키지 SVG로 교체
+- 상태: open

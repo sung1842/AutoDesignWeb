@@ -38,3 +38,4 @@
 - [ ] (BLK-009) AC-03-19 슬롯 maxLength ↔ 덱 상한 비교를 필드별로 고치고 relock해 주세요. 지금 식(min ≥ max)은 2필드 목록 키에서 항상 실패합니다(BLOCKED.md BLK-009)
 - [ ] (ASM-035) 패턴 카탈로그(4.8)를 config/patterns.json으로, 용도 허용 hero 목록을 purposes.json에 둘지 확인해 주세요. 지금은 design-spec PATTERNS 상수와 패턴 hero 힌트로 대신합니다
 - [ ] (BLK-010) 이미지 슬롯이 블록당 1개라 gallery(5~9장)·hero.offset(2장)·zigzag·highlight.trio·menu.cards 항목 이미지를 못 그림. 04장 4.5.2 image 슬롯 배열화 또는 목록 항목 image 필드, cta·menu media 슬롯 추가 결정 후 relock
+- [ ] (BLK-011) 아이콘 패키지 3종(@phosphor-icons/core·@tabler/icons·iconoir, MIT) 허용 목록 추가 여부. 지금은 임시 자체 도형 40개

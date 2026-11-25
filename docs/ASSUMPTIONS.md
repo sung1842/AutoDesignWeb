@@ -340,3 +340,10 @@
 - 선택: ① nav: split(로고 좌·링크 우), center(≥48rem 로고 위·링크 아래 가운데), minimal(로고 + 메뉴 버튼, 모든 폭 drawer). 768 미만 모두 drawer ② sticky = 프리셋 유형 T2·T7(`STICKY_NAV_TYPES`, C08 표) ③ nav CTA는 트리 nav에 슬롯이 없어 생략 ④ footer: minimal 세로 묶음, columns 3칸(브랜드+태그라인 / 링크 / 사업자 정보), big-type은 태그라인·링크·사업자 정보 뒤 맨 아래 워드마크(display) ⑤ 배치 CSS는 blocks/nav-footer.css(컴포넌트 층 위)
 - 영향 범위: packages/renderer(compile navHtml·footerHtml, css/blocks/chrome)
 - 되돌리기 비용: 낮음
+
+## ASM-049 · M2 · gap · 2026-11-25T16:50Z
+- 질문: 아이콘 패키지 없이 3.9 인라인 SVG를 어떻게 내나, value.icon-grid 항목별 의미는 무엇으로 고르나
+- 근거 탐색: 03장 3.9.1, 04장 4.9.3, 09장 9.1.3(renderer → assets 허용), dependency-allowlist(잠금)
+- 선택: ① 임시 자체 선 아이콘 40개(map.json 의미 그대로, 24 그리드, currentColor, aria-hidden, data-icon-set·data-icon-stroke)로 iconSvg 구현(BLK-011) ② 굵기 = radius family(sharp·soft 1.5, round·pill 2), 세트 = l2 icon.set ③ icon-grid 의미는 용도별 고정 순환(saas bolt·chart·shield-check·users, local coffee·store·heart·leaf, portfolio brush·camera·image·link), 크기 32 ④ location 행 라벨 앞 map-pin·clock·phone(20) — 3.9.1 연락처 행 예외 안
+- 영향 범위: packages/assets(icons), packages/renderer(common·content-a·content-c, renderer → assets 의존)
+- 되돌리기 비용: 낮음(PATHS 표 교체)

@@ -159,6 +159,9 @@ importers:
 
   packages/renderer:
     dependencies:
+      '@tastefit/assets':
+        specifier: workspace:^
+        version: link:../assets
       '@tastefit/design-spec':
         specifier: workspace:^
         version: link:../design-spec

@@ -1,7 +1,17 @@
 // value·feature·showcase·stats·process variant 템플릿(03장 3.6.1·3.11.3, CM-01). ASM-045.
 import { registerTemplate, textEl, type BlockCtx, type PSection } from "../compile.js";
 import { el, type Html } from "../html.js";
-import { copyOf, head, imageOf, itemEl, listEl, listOf, mediaBox } from "./common.js";
+import {
+  copyOf,
+  head,
+  iconEl,
+  ICON_GRID_DEFAULTS,
+  imageOf,
+  itemEl,
+  listEl,
+  listOf,
+  mediaBox,
+} from "./common.js";
 
 type Tpl = (s: PSection, ctx: BlockCtx) => Html;
 
@@ -26,8 +36,12 @@ const valueIconGrid: Tpl = (s, ctx) =>
         el(
           "li",
           { class: "tf-value__item" },
-          // 의미 아이콘은 assets(M2-07)가 data-icon 자리에 인라인 SVG로 채운다
-          el("span", { class: "tf-icon-slot", "data-icon": "auto", "aria-hidden": "true" }),
+          iconEl(
+            ctx,
+            (ICON_GRID_DEFAULTS[ctx.spec.purpose] ?? ICON_GRID_DEFAULTS.saas ?? [])[i % 4] ??
+              "check",
+            32,
+          ),
           itemEl(s, ctx, "items", i, t, { tag: "div", cls: "tf-value__item-text" }),
         ),
       ),

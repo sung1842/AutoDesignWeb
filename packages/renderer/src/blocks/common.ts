@@ -7,7 +7,8 @@ import {
   type PSlot,
   type PText,
 } from "../compile.js";
-import { el, type Html } from "../html.js";
+import { iconStrokeFor, iconSvg, type IconSet } from "@tastefit/assets";
+import { el, raw, type Html } from "../html.js";
 
 export type Img = Extract<PSlot, { image: unknown }>["image"];
 export const copyOf = (v: PSlot | undefined): PText | null => (v && "copy" in v ? v.copy : null);
@@ -87,3 +88,17 @@ export function mediaBox(ctx: BlockCtx, slot: string, img: Img | null, cls: stri
 /** 섹션 머리(제목). 블록 템플릿 공통 래퍼. */
 export const head = (ctx: BlockCtx, cls = "tf-section__head"): Html =>
   el("div", { class: cls }, ctx.heading);
+
+/** 3.9.1 의미 아이콘(인라인 SVG, aria-hidden). 세트 = l2 icon.set, 굵기 = radius family(4.9.3). */
+export function iconEl(ctx: BlockCtx, id: string, size: 16 | 20 | 24 | 32): Html {
+  const set = (ctx.spec.l2["icon.set"] as IconSet | undefined) ?? "tabler";
+  const stroke = iconStrokeFor(String(ctx.spec.l2["shape.radius_family"] ?? "soft"));
+  return el("span", { class: "tf-icon" }, raw(iconSvg(set, id, { strokeWidth: stroke, size })));
+}
+
+/** value.icon-grid 항목 아이콘(용도별 고정 순환, ASM-049). 의미 선택은 생성 단계(M5)에서 바꿀 수 있다. */
+export const ICON_GRID_DEFAULTS: Readonly<Record<string, readonly string[]>> = {
+  saas: ["bolt", "chart", "shield-check", "users"],
+  local_business: ["coffee", "store", "heart", "leaf"],
+  portfolio: ["brush", "camera", "image", "link"],
+};

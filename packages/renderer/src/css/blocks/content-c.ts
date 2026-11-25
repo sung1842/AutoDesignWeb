@@ -16,7 +16,8 @@ export const CONTENT_C_CSS = `/* TasteFit blocks/highlight·gallery·location·s
 .tf-gallery__grid--masonry { align-items: start; }
 .tf-location__info { display: flex; flex-direction: column; }
 .tf-location__row { display: grid; grid-template-columns: var(--tf-space-24) 1fr; gap: var(--tf-space-4); padding-block: var(--tf-space-4); border-top: var(--tf-border-width-thin) solid var(--tf-color-border); }
-.tf-location__row > dt { color: var(--tf-color-fg-muted); }
+.tf-location__row > dt { color: var(--tf-color-fg-muted); display: flex; align-items: center; gap: var(--tf-space-2); }
+.tf-location__row > dt > .tf-icon { color: inherit; }
 .tf-contact__form { display: flex; flex-direction: column; gap: var(--tf-space-5); align-items: stretch; }
 .tf-contact__form > .tf-button { align-self: flex-start; }
 .tf-contact__info { font-weight: var(--tf-font-weight-emphasis); }
