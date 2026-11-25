@@ -92,7 +92,7 @@ export function hexToOklab(hex: string): [number, number, number] {
 export function hexToOklch(hex: string): Oklch {
   const [l, a, b] = hexToOklab(hex);
   const c = Math.hypot(a, b);
-  const h = c < 1e-6 ? 0 : (((Math.atan2(b, a) * 180) / Math.PI) % 360 + 360) % 360;
+  const h = c < 1e-6 ? 0 : ((((Math.atan2(b, a) * 180) / Math.PI) % 360) + 360) % 360;
   return { l, c, h };
 }
 

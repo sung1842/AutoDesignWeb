@@ -1,5 +1,5 @@
 // 디자인 데이터 로더(ASM-023 ①). 03장 산출 파일을 한 번에 읽어 매핑·토큰·명세서 컴파일러가 공유한다.
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import type { MapData, PaletteLite, PresetLite, TaxKey } from "@tastefit/taxonomy";
 
@@ -113,7 +113,9 @@ export function loadDesignData(root: string): DesignData {
     signatures: read<JsonObj>(root, "data/taxonomy/signatures.json").items,
     harmony: read<JsonObj>(root, "data/taxonomy/harmony.json").items,
     purposes: read<JsonObj>(root, "data/taxonomy/purposes.json").items,
-    colorNames: [],
+    colorNames: existsSync(join(root, "config/color-names.ko.json"))
+      ? read<ColorNameEntry>(root, "config/color-names.ko.json").items
+      : [],
     fonts: read<FontEntry>(root, "data/fonts/registry.json").items,
     pairingsFull: read<PairingFull>(root, "data/fonts/pairings.json").items,
     blocks: read<JsonObj>(root, "data/taxonomy/blocks.json").items,

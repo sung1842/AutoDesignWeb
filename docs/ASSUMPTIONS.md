@@ -433,3 +433,10 @@
 - 결과: 갤러리 8프리셋 × typical(G-02·G-07)·max(G-04·G-05) 위반 0
 - 영향 범위: packages/renderer(samples·gallery·compile·m2·components.css), packages/design-spec(patternRaw opts)
 - 되돌리기 비용: 낮음
+
+## ASM-062 · M2 · gap · 2026-11-25T22:00Z
+- 질문: 3.13.5 colorName 사전(≥ 40)과 판정 순서, 사전 파일은 어디서 만드나
+- 근거 탐색: 03장 3.13.5·AC-03-41, 01장 D-0111, 09장 seed:temp(config 묶음 temp 생성)
+- 선택: ① 사전 원천 = `packages/taxonomy` COLOR_NAMES(기본 색 22개가 0~360 빈틈없이 + 명도·채도 조건 색 20개 = 42), seed:temp가 같은 내용을 `config/color-names.ko.json`(provenance temp)으로 낸다. DesignData.colorNames는 이 파일 ② 판정: OKLCH → C < 0.03 무채색 5단계 → 조건 색(h·l·c 모두 맞으면, 수식어 없음) → 기본 색 + 수식어(밝은 ≥ 0.80 / 짙은 < 0.40 / 탁한 C < 0.08 / 선명한 C ≥ 0.20, 최대 1개, 명도 우선) ③ 사람 라벨 60색 일치율(85%)은 fixtures/color-names.json이 사람 데이터라 BLK-007 범위
+- 영향 범위: packages/taxonomy(color-name), scripts/data/seed-config.ts, config/color-names.ko.json, packages/design-spec(data)
+- 되돌리기 비용: 낮음

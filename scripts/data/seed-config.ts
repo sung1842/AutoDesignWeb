@@ -1,4 +1,5 @@
 // seed:temp — config/ 묶음 B20·B21·B22·B24(09장 9.2.4). 결정적(난수 미사용), provenance temp.
+import { COLOR_NAMES } from "../../packages/taxonomy/src/color-name.js";
 import type { Json, Obj } from "./load.js";
 import { type Ctx, type Out, bundle } from "./seed-temp.js";
 import { chapter, section, table, unquote } from "./spec-md.js";
@@ -450,7 +451,17 @@ export function genImageTagKeywords(ctx: Ctx): Out[] {
   ];
 }
 
+// ---------- 03장 3.13.5 config/color-names.ko.json(사전 원천 = packages/taxonomy COLOR_NAMES, ASM-062) ----------
+export function genColorNames(ctx: Ctx): Out[] {
+  const items = COLOR_NAMES.map((e) => ({
+    id: e.name,
+    ...(JSON.parse(JSON.stringify(e)) as Obj),
+  })) as Obj[];
+  return [{ path: "config/color-names.ko.json", content: bundle(ctx, "color-names", items) }];
+}
+
 export const CONFIG_GENERATORS = [
+  genColorNames,
   genCopyTemplates,
   genAxisHints,
   genHighRiskBrands,
