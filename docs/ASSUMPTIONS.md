@@ -319,3 +319,10 @@
 - 선택: ① 공용 배치 층 `blocks/layout.css`(head·cols·rule-list·bento·split)와 블록 CSS. cols는 ≥64rem에서 항목 수만큼 같은 폭, 48rem~ 2열, 그 미만 1열. stats는 모바일 2×2 ② feature.zigzag는 스키마에 항목 이미지가 없어 media를 첫 항목에만 두고 나머지 행은 좌우 교차 텍스트 ③ icon-grid 아이콘은 `span[data-icon=auto]` 자리(M2-07 assets가 인라인 SVG로 채움) ④ bento는 3열·첫 칸 2×2 ⑤ list 항목 = [list.index] 제목(text) + 본문(sub), 역할은 슬롯 textRoles 순서. stats는 제목 태그 p(stat.value)
 - 영향 범위: packages/renderer(blocks/common·content-a, css/blocks/content-a)
 - 되돌리기 비용: 낮음
+
+## ASM-046 · M2 · gap · 2026-11-25T16:05Z
+- 질문: proof·pricing·faq·cta·menu 12 variant에서 목록 항목(카피 text/sub뿐)을 어떤 필드로 읽나, 덱 키가 없는 pricing·cta.image 이미지는 어떻게 하나
+- 근거 탐색: 03장 3.6.1·3.6.3·3.11.3, 04장 4.6.2 덱 표(proof·faq·menu 비고), D-0312
+- 선택: ① 필드 대응 고정: proof = 인용/이름(아바타 이니셜 = 이름 첫 글자, 장식), pricing = 플랜/가격, faq = 질문/답(details·summary), menu = 항목명/설명 + 가격은 항상 `[예시] 0,000원`(placeholder) ② pricing.cards 강조는 3플랜일 때 가운데 1개, 모바일은 강조 먼저(order) ③ menu 그룹은 1그룹으로 펼침(그룹 제목 = 블록 기본 제목), menu.cards 항목 이미지는 스키마 밖이라 생략 ④ cta 슬롯에 media가 없어 cta.image는 media가 있을 때만 겹치고 없으면 band 틀(fallback band) ⑤ inverse 섹션의 primary 버튼은 bg/fg를 뒤집어 대비 확보
+- 영향 범위: packages/renderer(blocks/content-b, css/blocks/content-b)
+- 되돌리기 비용: 낮음
