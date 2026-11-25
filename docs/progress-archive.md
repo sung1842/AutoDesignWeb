@@ -173,3 +173,4 @@
 - 2026-11-25 12:57 | M2-03d3b enforceVariantL2Diff(FIT→BAL 부족분·J 최소)·specId, ASM-036 → 다음: 03d4
 - 2026-11-25 13:06 | M2-03d4a compileSpecs 조립·DesignSpecSchema → AC-04-03·06·08 녹색, ASM-037 → 다음: 03d4b staticLint
 - 2026-11-25 13:16 | M2-03d4b staticLint 단계 S(AIL-01·03·06·09+SPEC)·장식 예산 거름 → AC-04-04·30 녹색, ASM-038 → 다음: M2-04
+- 2026-11-25 13:27 | M2-04a LayoutTreeRaw zod·JSON Schema·copyDeckLimits·픽스처 1 → AC-04-10 녹색, BLK-009 → 다음: 04b
