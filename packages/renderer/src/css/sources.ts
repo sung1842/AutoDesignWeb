@@ -16,6 +16,7 @@ import {
   TEXT_LINK_CSS,
 } from "./components.js";
 import { CONTENT_A_CSS, LAYOUT_CSS } from "./blocks/content-a.js";
+import { CHROME_CSS } from "./blocks/chrome.js";
 import { CONTENT_B_CSS } from "./blocks/content-b.js";
 import { CONTENT_C_CSS } from "./blocks/content-c.js";
 import { HERO_CSS } from "./blocks/hero.js";
@@ -44,6 +45,7 @@ const SOURCES: readonly CssSource[] = [
   { path: "blocks/content-a.css", css: CONTENT_A_CSS },
   { path: "blocks/content-b.css", css: CONTENT_B_CSS },
   { path: "blocks/content-c.css", css: CONTENT_C_CSS },
+  { path: "blocks/nav-footer.css", css: CHROME_CSS },
 ];
 
 /** 층 순서(base → components → blocks → signatures)대로 반환한다. */

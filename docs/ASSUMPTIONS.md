@@ -333,3 +333,10 @@
 - 선택: ① 여러 이미지 칸은 첫 칸만 실제 이미지, 나머지 빈 틀(BLK-010). gallery 칸 수 = captions 수, masonry 비율은 4:5·1:1·3:2 고정 순환, feature는 첫 칸 2×2 ② location 라벨 "주소·영업시간·전화"(dt, stat.label 역할), 지도는 3:2 자리표시(임베드 MVP 제외) ③ story·about 같은 틀(split/text), 본문 폭 `.tf-measure` = 컨테이너 1/2(36em 근사, 리터럴 금지) ④ contact 폼: 이름·이메일·문의 내용 고정 라벨 + form 슬롯은 도움말, action 없음, 보내기 버튼. contact.simple은 링크 슬롯이 없어 연락처를 강조 행으로 ⑤ 섹션 안 요소는 섹션 클래스(tf-<블록>, tf-<블록>--<variant>)를 쓰지 않는다(gallery 충돌 수정, 단위 테스트) ⑥ html `el`은 void 태그(input 등)를 닫지 않는다
 - 영향 범위: packages/renderer(blocks/content-c, css/blocks/content-c, html)
 - 되돌리기 비용: 낮음
+
+## ASM-048 · M2 · gap · 2026-11-25T16:35Z
+- 질문: nav 3·footer 3 variant 배치, sticky 적용 대상, nav CTA
+- 근거 탐색: 03장 3.5.1 C08·C10·C18, 3.6.1 footer 행
+- 선택: ① nav: split(로고 좌·링크 우), center(≥48rem 로고 위·링크 아래 가운데), minimal(로고 + 메뉴 버튼, 모든 폭 drawer). 768 미만 모두 drawer ② sticky = 프리셋 유형 T2·T7(`STICKY_NAV_TYPES`, C08 표) ③ nav CTA는 트리 nav에 슬롯이 없어 생략 ④ footer: minimal 세로 묶음, columns 3칸(브랜드+태그라인 / 링크 / 사업자 정보), big-type은 태그라인·링크·사업자 정보 뒤 맨 아래 워드마크(display) ⑤ 배치 CSS는 blocks/nav-footer.css(컴포넌트 층 위)
+- 영향 범위: packages/renderer(compile navHtml·footerHtml, css/blocks/chrome)
+- 되돌리기 비용: 낮음

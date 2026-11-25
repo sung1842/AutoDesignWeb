@@ -261,7 +261,10 @@ function sectionHtml(spec: SpecLike, s: PSection, data: DataLike): Html {
   );
 }
 
-function navHtml(tree: PTree, brand: string): Html {
+/** 03장 C08: sticky는 프리셋 T2·T7만(ASM-048). */
+export const STICKY_NAV_TYPES: ReadonlySet<string> = new Set(["T2", "T7"]);
+
+function navHtml(tree: PTree, brand: string, typeId: string): Html {
   const links = tree.nav.items.map((it) =>
     el(
       "a",
@@ -279,7 +282,11 @@ function navHtml(tree: PTree, brand: string): Html {
   const v = tree.nav.variant.split(".")[1] ?? "split";
   return el(
     "header",
-    { class: `tf-navbar tf-navbar--${v}`, "data-block": "nav", "data-variant": tree.nav.variant },
+    {
+      class: `tf-navbar tf-navbar--${v}${STICKY_NAV_TYPES.has(typeId) ? " tf-navbar--sticky" : ""}`,
+      "data-block": "nav",
+      "data-variant": tree.nav.variant,
+    },
     el(
       "nav",
       { class: "tf-container tf-navbar__inner", "aria-label": "주요 메뉴" },
@@ -299,41 +306,51 @@ function navHtml(tree: PTree, brand: string): Html {
   );
 }
 
+/** 03장 C10·C18: minimal(한 줄 묶음) / columns(브랜드·링크·사업자 정보 칸) / big-type(워드마크 display, 맨 아래). ASM-048. */
 function footerHtml(tree: PTree): Html {
   const f = tree.footer;
   const v = f.variant.split(".")[1] ?? "minimal";
-  const parts: Html[] = [];
   const s = f.slots;
-  if (isCopy(s.wordmark))
-    parts.push(
-      textEl(
-        "p",
-        `tf-wordmark tf-wordmark--${v === "big-type" ? "big-type" : "footer"}`,
-        "footer.wordmark",
-        s.wordmark.copy,
-        "footer.wordmark",
-      ),
-    );
-  if (isCopy(s.tagline))
-    parts.push(textEl("p", "tf-footer__tagline", "footer.tagline", s.tagline.copy, "body"));
-  if (isList(s.links))
-    parts.push(
-      el(
-        "ul",
-        { class: "tf-footer__links" },
-        ...s.links.list.map((it, i) =>
-          el(
-            "li",
-            {},
-            textEl("span", "tf-footer__link", `footer.links.${i}`, it.copy, "footer.link"),
+  const word = isCopy(s.wordmark)
+    ? [
+        textEl(
+          "p",
+          `tf-wordmark tf-wordmark--${v === "big-type" ? "big-type" : "footer"}`,
+          "footer.wordmark",
+          s.wordmark.copy,
+          "footer.wordmark",
+        ),
+      ]
+    : [];
+  const tagline = isCopy(s.tagline)
+    ? [textEl("p", "tf-footer__tagline", "footer.tagline", s.tagline.copy, "body")]
+    : [];
+  const links = isList(s.links)
+    ? [
+        el(
+          "ul",
+          { class: "tf-footer__links" },
+          ...s.links.list.map((it, i) =>
+            el(
+              "li",
+              {},
+              textEl("span", "tf-footer__link", `footer.links.${i}`, it.copy, "footer.link"),
+            ),
           ),
         ),
-      ),
-    );
-  if (isCopy(s.businessInfo))
-    parts.push(
-      textEl("p", "tf-footer__biz", "footer.businessInfo", s.businessInfo.copy, "footer.legal"),
-    );
+      ]
+    : [];
+  const biz = isCopy(s.businessInfo)
+    ? [textEl("p", "tf-footer__biz", "footer.businessInfo", s.businessInfo.copy, "footer.legal")]
+    : [];
+  const col = (...p: Html[]): Html[] =>
+    p.length ? [el("div", { class: "tf-footer__col" }, ...p)] : [];
+  const parts: Html[] =
+    v === "columns"
+      ? [...col(...word, ...tagline), ...col(...links), ...col(...biz)]
+      : v === "big-type"
+        ? [...col(...tagline, ...links), ...col(...biz), ...word]
+        : [...word, ...tagline, ...links, ...biz];
   return el(
     "footer",
     { class: `tf-footer tf-footer--${v}`, "data-block": "footer", "data-variant": f.variant },
@@ -385,7 +402,7 @@ export function compilePageImpl(spec: SpecLike, tree: PTree, data?: DataLike): {
   const depth = typeof spec.l2["depth.style"] === "string" ? spec.l2["depth.style"] : null;
   const body = join([
     el("a", { class: "tf-skip-link", "data-role": "nav.link", href: "#main" }, SKIP_LINK_KO),
-    navHtml(tree, brand),
+    navHtml(tree, brand, spec.type_id),
     el("main", { id: "main" }, ...sections),
     footerHtml(tree),
   ]);
