@@ -557,6 +557,8 @@ export function deriveTokensImpl(input: DeriveInputLite, data: DesignData): Deri
     ratio2(hex("on-primary") ?? "", prim) >= body
       ? "primary"
       : "invert";
+  // 3.1.3: 두 플래그는 TokenSet에 저장되고 컴파일러가 분기한다(ASM-055)
+  tokenSet.$extensions = { "app.tastefit": { accentTextSafe, inverseButtonMode } };
   return { tokenSet, accentTextSafe, inverseButtonMode };
 }
 

@@ -1379,7 +1379,11 @@ function genTokenSchema(ctx: Ctx): Out[] {
         $extensions: { $ref: "#/$defs/extensions" },
       },
     };
-  const props: Obj = { $schemaVersion: { const: "tokens-1" } };
+  // 3.1.3: accentTextSafe·inverseButtonMode는 TokenSet 루트 $extensions["app.tastefit"]에 둔다(ASM-055)
+  const props: Obj = {
+    $schemaVersion: { const: "tokens-1" },
+    $extensions: { $ref: "#/$defs/extensions" },
+  };
   for (const g of TOKEN_GROUPS) props[g] = { $ref: "#/$defs/group" };
   props.color = {
     allOf: [{ $ref: "#/$defs/group" }, { required: REQUIRED_COLOR_ROLES }],

@@ -31,7 +31,10 @@ export const HERO_CSS = `/* TasteFit blocks/hero.css */
   padding: var(--tf-space-8) var(--tf-layout-base-margin);
   color: var(--tf-color-fg-inverse);
   --tf-color-focus: var(--tf-color-focus-inverse);
+  --tf-color-fg-muted: var(--tf-color-fg-inverse);
 }
+/* 이미지·색면 위 텍스트는 surface-inverse 판 위에 둔다: fg-inverse 대 surface-inverse ≥ 4.5(3.1.3 하드)로 G-02 보장(ASM-055) */
+.tf-hero__overlay .tf-hero__text { background: var(--tf-color-surface-inverse); padding: var(--tf-space-6); }
 .tf-hero__overlay .tf-hero__eyebrow,
 .tf-hero__overlay .tf-hero__sub { color: var(--tf-color-fg-inverse); }
 @media (min-width: 48rem) {

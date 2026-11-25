@@ -2,15 +2,34 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "dist"
+    "outDir": "dist",
+    "lib": [
+      "ES2023",
+      "DOM",
+      "DOM.Iterable"
+    ]
   },
-  "include": ["src"],
+  "include": [
+    "src"
+  ],
   "references": [
     {
       "path": "../../packages/config"
     },
     {
       "path": "../../packages/db"
+    },
+    {
+      "path": "../../packages/assets"
+    },
+    {
+      "path": "../../packages/renderer"
+    },
+    {
+      "path": "../../packages/design-spec"
+    },
+    {
+      "path": "../../packages/scoring"
     }
   ]
 }

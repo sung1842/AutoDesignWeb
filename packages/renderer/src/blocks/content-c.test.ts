@@ -24,7 +24,9 @@ const T = (text: string, sub?: string) => ({
   deck_ref: "deck:x#0",
   ...(sub !== undefined ? { sub } : {}),
 });
-const img = { image: { tag: "x", ratio: "4:5", asset_id: data.images[0]!.id, alt: "사진", focal: [0.5, 0.5] } };
+const img = {
+  image: { tag: "x", ratio: "4:5", asset_id: data.images[0]!.id, alt: "사진", focal: [0.5, 0.5] },
+};
 const list = (n: number, sub = true) => ({
   list: Array.from({ length: n }, (_, i) => ({
     copy: T(`항목${i}`, sub ? `설명${i}` : undefined),

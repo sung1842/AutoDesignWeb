@@ -382,3 +382,11 @@
 - 선택: ① `pnpm fixtures:layouts`가 용도별 10개를 결정론으로 만든다: 패턴 = 번호 mod 4 + 1, 유형 = (3 × 번호 + 용도 순번) mod 8, variant = 그 유형 앵커 명세 allowed_variants에서 (번호 + 블록 순번) 순환, hero = hero_variants 순환. 덱 = 용도 템플릿 덱(+ PS-2용 [예시] stats 3개). provenance temp, 수동 픽스처 saas-ps1.json 유지 ② fixturePage(fx, data, {presetId?}) = 유형(또는 프리셋 유형) standardTree 명세(v_true) + resolveTree(raw, 픽스처 덱), spec_id는 명세 것으로 바꿈
 - 영향 범위: scripts/data/fixtures-layouts.ts, fixtures/layouts/*.json, packages/renderer(m2 fixturePage), package.json
 - 되돌리기 비용: 낮음
+
+## ASM-055 · M2 · gap · 2026-11-25T19:10Z
+- 질문: 렌더 하네스가 페이지·자산을 어떻게 띄우고, 하드 게이트 G-02·04·05·06·07을 어떤 측정으로 판정하나
+- 근거 탐색: 04장 4.10.2 게이트 표·4.11 자동 보정, 03장 3.1.3(inverseButtonMode·fg-inverse), ASM-025 ①②
+- 선택: ① 하네스: chromium 1회 실행, 페이지마다 새 컨텍스트, 가상 오리진 http://tf.local/ 에 route로 HTML·`/assets/images`(data/images)·`/assets/fonts`(요청 시 fonts-node로 서브셋 생성, tmp 캐시)만 응답, 나머지는 차단해 externalRequests로 센다. worker 의존성에 playwright 1.63.0·sharp·assets·renderer·design-spec·scoring 추가 ② G-02: 텍스트 노드의 부모 요소별 전경색 vs 조상 배경색 알파 합성(캔버스로 sRGB 변환, 기본 흰색), 큰 글자 = ≥ 24px 또는 ≥ 18.66px·700. 이미지 위(.tf-hero__overlay·[data-text-over-image]) 텍스트는 글자를 투명하게 한 뒤 bbox 픽셀별 대비의 하위 5% 값 ③ G-05: overflow hidden/clip인 텍스트 요소의 scroll > client + 1(시각 숨김·스킵 링크 제외) ④ G-06: 텍스트 줄 상자(Range 사각형을 line-height 높이로 자름)끼리·텍스트 vs 인터랙티브, 조상-자손 제외, 교차 > 2px² ⑤ G-07: 이미지 naturalWidth 0(lazy도 eager로 바꿔 측정), 폰트 error(3.7.4 폴백 면 tf-fb-* 제외), 404, 콘솔 error, 외부 요청 ⑥ 판정은 `@tastefit/scoring` evaluateGates(thresholds contrastBodyMin·LargeMin), 미구현 id는 실패로 낸다 ⑦ 결과에 맞춘 렌더러 수정: inverse 섹션의 fg-muted·border = fg-inverse, 버튼@inverse를 3.1.3 표대로(invert 모드 = bg fg-inverse·글자 surface-inverse, `html[data-inverse-button]`), 이미지·색면 위 hero 텍스트는 surface-inverse 판 위에(4.11 오버레이 보정은 생성 파이프라인 M3·M5) ⑧ inverseButtonMode·accentTextSafe는 TokenSet 루트 `$extensions["app.tastefit"]`(3.1.3), tokens-1 스키마(seed temp)에 루트 $extensions 허용
+- 결과: 폴백 72 × 1280·375에서 G-02·04·05·06·07 위반 0(로컬 측정 약 80초)
+- 영향 범위: apps/worker(render/harness·measure), packages/scoring, packages/renderer(base·hero·compile), packages/design-spec(tokens), data/tokens/schema.json(temp)
+- 되돌리기 비용: 중간

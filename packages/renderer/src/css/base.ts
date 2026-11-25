@@ -64,6 +64,22 @@ button { font: inherit; color: inherit; }
   background: var(--tf-color-surface-inverse);
   color: var(--tf-color-fg-inverse);
   --tf-color-focus: var(--tf-color-focus-inverse);
+  --tf-color-fg-muted: var(--tf-color-fg-inverse);
+  --tf-color-border: var(--tf-color-fg-inverse);
+  --tf-color-border-strong: var(--tf-color-fg-inverse);
+}
+/* 3.1.3 버튼@inverse(inverseButtonMode = invert): bg = fg-inverse, 글자 = surface-inverse. 이미지 오버레이 위도 같다 */
+[data-inverse-button="invert"] .tf-section[data-bg="inverse"] .tf-button--primary,
+[data-inverse-button="invert"] .tf-hero__overlay .tf-button--primary {
+  background: var(--tf-color-fg-inverse);
+  color: var(--tf-color-surface-inverse);
+  border-color: var(--tf-color-fg-inverse);
+}
+.tf-section[data-bg="inverse"] .tf-button--secondary,
+.tf-hero__overlay .tf-button--secondary {
+  background: none;
+  color: var(--tf-color-fg-inverse);
+  border-color: var(--tf-color-fg-inverse);
 }
 .tf-visually-hidden {
   position: absolute;

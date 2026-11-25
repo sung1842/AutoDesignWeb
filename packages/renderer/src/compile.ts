@@ -388,6 +388,13 @@ function slotRoles(data: DataLike, block: string, slot: string): string[] {
     data?.blocks?.find((b) => b.id === block)?.slots?.find((x) => x.id === slot)?.textRoles ?? []
   );
 }
+/** 3.1.3 inverseButtonMode(TokenSet $extensions, ASM-055). 없으면 invert(기본). */
+function inverseMode(tokens: Record<string, unknown>): string {
+  const ext = (tokens.$extensions as Record<string, { inverseButtonMode?: string }> | undefined)?.[
+    "app.tastefit"
+  ];
+  return ext?.inverseButtonMode === "primary" ? "primary" : "invert";
+}
 /** 토큰 세트 font.weight.<k> 값. */
 function weightOf(tokens: Record<string, unknown>, k: string, fb: number): number {
   const w = (
@@ -464,6 +471,7 @@ export function compilePageImpl(
     lang: "ko",
     "data-theme": spec.theme,
     "data-depth": depth,
+    "data-inverse-button": inverseMode(spec.tokens),
     "data-type": spec.type_id,
     "data-spec-id": spec.spec_id,
   })}><head>${head.__html}</head><body>${body.__html}</body></html>`;

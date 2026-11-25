@@ -12,7 +12,6 @@ export const CONTENT_B_CSS = `/* TasteFit blocks/proof·pricing·faq·cta·menu.
 .tf-pricing__single .tf-pricing__list { width: 100%; max-width: calc(var(--tf-layout-container) / 3); }
 .tf-faq__narrow, .tf-menu__narrow { max-width: calc(var(--tf-layout-container) * 2 / 3); }
 .tf-cta__inner { display: flex; flex-direction: column; gap: var(--tf-space-8); align-items: flex-start; }
-.tf-section[data-bg="inverse"] .tf-button--primary { background: var(--tf-color-bg); color: var(--tf-color-fg); border-color: var(--tf-color-bg); }
 .tf-cta--band .tf-cta__inner { align-items: center; text-align: center; }
 .tf-menu__list { display: flex; flex-direction: column; gap: var(--tf-space-5); }
 .tf-menu__item { display: flex; flex-direction: column; gap: var(--tf-space-1); min-width: 0; }

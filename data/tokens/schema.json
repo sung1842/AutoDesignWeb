@@ -32,6 +32,9 @@
           "$schemaVersion": {
             "const": "tokens-1"
           },
+          "$extensions": {
+            "$ref": "#/$defs/extensions"
+          },
           "color": {
             "allOf": [
               {
