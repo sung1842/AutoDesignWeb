@@ -298,3 +298,10 @@
 - 선택: ① design-spec의 토큰→CSS 변환을 순수 모듈 `tokens-css.ts`(+ 상수 `type-spec.ts`)로 분리하고 하위 경로 `@tastefit/design-spec/tokens-css`로만 renderer가 가져온다(fs·config 미사용, 내보내기 tokens.css와 같은 코드) ② renderer는 layout-schema를 런타임에 가져오지 않고 같은 모양의 구조 타입(PTree)을 둔다(테스트만 devDependency) ③ 블록 기본 제목은 `data.blocks[].default_heading_ko`, 없으면 시각 숨김 h2(aria-labelledby 유지) ④ data-slot-id = `<섹션>.<슬롯>[.<항목>]`(목록 둘째 필드 `.sub`), 푸터 `footer.<슬롯>` ⑤ variant 템플릿이 없으면 일반 템플릿(슬롯 종류 순서)으로 그리고 M2-05b·06에서 variant별로 교체 ⑥ 이미지는 M2-07 전까지 자리표시 틀(`data-media-slot`·`data-asset-id`)
 - 영향 범위: packages/design-spec(tokens-css·type-spec·package exports), packages/renderer
 - 되돌리기 비용: 낮음
+
+## ASM-043 · M2 · gap · 2026-11-25T15:45Z
+- 질문: 3.1.5a 역할 표를 CSS로 어떻게 옮기나(행간·자간 변수 없음), blocks.json 슬롯별 역할은 어디서 정하나, 조건부 단계(stepRuleKo)는 어떻게 고르나
+- 근거 탐색: 03장 3.1.5a·3.8.2, AC-03-42·46, 04장 CM-02
+- 선택: ① tokens.css에 단계별 `--tf-type-<키>-leading`·`-tracking` 추가, 모바일 자간은 모바일 크기로 계산해 `:root` 안 `@media (max-width: 47.99rem)`로 재선언(clamp 중간 크기는 두 값 중 하나로 근사) ② `text-roles.css`를 스펙마다 B25에서 생성해 components 층 뒤·blocks 층 앞에 둔다. weight heading→heading 글꼴·웨이트, emphasis→본문 글꼴·emphasis 웨이트, tracking label은 0(한글 기본, 라틴 대문자 +0.06·SIG-09는 시그니처 층) ③ 조건부 단계: hero.type-only·full-bleed-image / cta.big-type / footer.big-type → t-display, button sm → t-small, nav.link는 데스크톱 t-small < 15px면 컴파일 시 t-body. nav.wordmark 줄 예산 강등은 하네스(M2-09) 이후 ④ blocks.json 슬롯 textRoles는 seed:temp `BLOCK_SLOT_TEXT_ROLES` 표로 고정(list 슬롯은 항목 요소 순서) ⑤ 버튼 라벨은 `a > span[data-role=button.label][data-size]`, 스킵 링크는 nav.link
+- 영향 범위: packages/design-spec(tokens·tokens-css·data), packages/renderer(compile·css/text-roles), data/taxonomy/blocks.json(temp)
+- 되돌리기 비용: 낮음

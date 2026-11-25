@@ -65,6 +65,8 @@ export interface DesignData extends MapData {
   pairingsFull: PairingFull[];
   /** 03장 blocks.json(20블록). */
   blocks: JsonObj[];
+  /** 03장 3.1.5a 텍스트 역할(B25, text-roles.json). */
+  textRoles: JsonObj[];
   /** 03장 3.6.5 이미지 태그 전체(manifest 태그 합집합, orient.·tone. 제외). */
   imageTags: string[];
   /** 05장 정규화기 최신 버전(data/normalizers/<시즌>.json 파일명). */
@@ -100,6 +102,7 @@ export function loadDesignData(root: string): DesignData {
     fonts: read<FontEntry>(root, "data/fonts/registry.json").items,
     pairingsFull: read<PairingFull>(root, "data/fonts/pairings.json").items,
     blocks: read<JsonObj>(root, "data/taxonomy/blocks.json").items,
+    textRoles: read<JsonObj>(root, "data/taxonomy/text-roles.json").items,
     normalizerVersion:
       readdirSync(join(root, "data/normalizers"))
         .filter((f) => f.endsWith(".json"))

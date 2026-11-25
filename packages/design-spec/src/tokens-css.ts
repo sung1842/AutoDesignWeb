@@ -18,6 +18,7 @@ export function tokenLeaves(node: unknown, path: string[] = []): { path: string[
 export const varName = (path: string[]): string => `--tf-${path.join("-")}`;
 const rem = (px: number): string => `${Math.round((px / 16) * 10000) / 10000}rem`;
 const fmt = (x: number): string => String(Math.round(x * 10000) / 10000);
+const em = (x: number): string => (x === 0 ? "0" : `${fmt(x)}em`);
 
 export function cssValue(tok: Node, path: string[]): { main: string; oklch?: string } | null {
   const v = tok.$value;
@@ -99,19 +100,32 @@ export function cssValue(tok: Node, path: string[]): { main: string; oklch?: str
   }
 }
 
-
 /** tokens.css 본문(:root 단일 블록, 색은 hex + @supports oklch 재선언). */
 export function rootCss(tokenSet: Record<string, unknown>, header: string): string {
   const main: string[] = [];
   const ok: string[] = [];
+  const mob: string[] = [];
   for (const { path, tok } of tokenLeaves(tokenSet)) {
     const v = cssValue(tok, path);
     if (!v) continue;
     main.push(`  ${varName(path)}: ${v.main};`);
     if (v.oklch) ok.push(`    ${varName(path)}: ${v.oklch};`);
+    if (tok.$type === "typography") {
+      // 텍스트 역할 층(3.1.5a)이 참조할 단계별 행간·자간(ASM-043)
+      const t = tok.$value as { lineHeight: number; letterSpacing: { value: number } };
+      const ext = (tok.$extensions as Node | undefined)?.["app.tastefit"] as
+        { mobileLetterSpacing?: number } | undefined;
+      main.push(`  ${varName(path)}-leading: ${fmt(t.lineHeight)};`);
+      main.push(`  ${varName(path)}-tracking: ${em(t.letterSpacing.value)};`);
+      const mls = ext?.mobileLetterSpacing;
+      if (mls !== undefined && mls !== t.letterSpacing.value)
+        mob.push(`    ${varName(path)}-tracking: ${em(mls)};`);
+    }
   }
   return (
     `/* ${header} */\n` +
-    `:root {\n${main.join("\n")}\n  @supports (color: oklch(0 0 0)) {\n${ok.join("\n")}\n  }\n}\n`
+    `:root {\n${main.join("\n")}\n  @supports (color: oklch(0 0 0)) {\n${ok.join("\n")}\n  }\n` +
+    (mob.length ? `  @media (max-width: 47.99rem) {\n${mob.join("\n")}\n  }\n` : "") +
+    `}\n`
   );
 }

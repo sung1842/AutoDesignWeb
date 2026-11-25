@@ -42,7 +42,16 @@ export function rendererCssSources(): CssSource[] {
   return SOURCES.map((s) => ({ ...s }));
 }
 
-/** styles.css 본문(층 순서 연결). tokens.css는 앞에 따로 붙인다. */
-export function stylesCss(): string {
-  return SOURCES.map((s) => s.css).join("\n");
+/** styles.css 본문(층 순서 연결). tokens.css는 앞에 따로 붙인다.
+ *  textRoles(text-roles.css, 스펙마다 생성)는 components 층 뒤·blocks 층 앞에 넣는다(ASM-043). */
+export function stylesCss(textRoles?: string): string {
+  const parts = SOURCES.map((s) => s.css);
+  if (textRoles !== undefined) {
+    let at = 0;
+    SOURCES.forEach((s, i) => {
+      if (s.path === "base.css" || s.path.startsWith("components/")) at = i + 1;
+    });
+    parts.splice(at, 0, textRoles);
+  }
+  return parts.join("\n");
 }

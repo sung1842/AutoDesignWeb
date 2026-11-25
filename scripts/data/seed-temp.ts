@@ -910,6 +910,46 @@ const COMPONENT_TEXT_ROLES: Record<string, string[]> = {
   Wordmark: ["nav.wordmark", "footer.wordmark"],
 };
 
+/** 블록 텍스트 슬롯 → 3.1.5a 역할(AC-03-46 ①). 장에 슬롯별 표가 없어 3.1.5a 비고·블록 용도로 고정(ASM-043).
+ *  첫 원소 = 슬롯 본문 역할. list 슬롯은 항목 요소 순서(제목·본문·보조). */
+const BLOCK_SLOT_TEXT_ROLES: Record<string, Record<string, string[]>> = {
+  hero: {
+    eyebrow: ["eyebrow"],
+    headline: ["hero.headline"],
+    sub: ["lead"],
+    primaryCta: ["button.label"],
+    secondaryCta: ["button.label"],
+  },
+  value: { items: ["item.title", "body", "list.index"] },
+  feature: { items: ["item.title", "body"] },
+  showcase: { caption: ["caption"] },
+  stats: { items: ["stat.value", "stat.label"] },
+  process: { items: ["item.title", "body", "list.index"] },
+  proof: { items: ["quote", "proof.name", "avatar.initials"] },
+  pricing: { plans: ["pricing.plan", "pricing.price", "body", "button.label"] },
+  faq: { items: ["accordion.question", "body"] },
+  cta: { headline: ["cta.headline"], primaryCta: ["button.label"] },
+  menu: { groups: ["card.title", "menu.item", "menu.desc", "menu.price"] },
+  highlight: { items: ["card.title", "body"] },
+  gallery: { captions: ["caption"] },
+  location: { address: ["info.row"], hours: ["info.row"], phone: ["info.row"] },
+  story: { body: ["body"] },
+  about: { title: ["section.title"], body: ["body"] },
+  service: { items: ["card.title", "body"] },
+  contact: {
+    title: ["section.title"],
+    body: ["body"],
+    contactInfo: ["info.row"],
+    form: ["form.label", "form.input", "form.help", "form.error", "button.label"],
+  },
+  footer: {
+    wordmark: ["footer.wordmark"],
+    tagline: ["body"],
+    businessInfo: ["footer.legal"],
+    links: ["footer.link"],
+  },
+};
+
 function genComponents(ctx: Ctx): Out[] {
   const md = chapter(ctx.root, "03_design_system.md");
   const list = table(section(md, "### 3.5.1")).filter((r) => /^C\d\d$/.test(r[0] ?? ""));
@@ -1122,6 +1162,11 @@ function genBlocks(ctx: Ctx): Out[] {
                   ? [deckKeys[idx] ?? ""]
                   : deckKeys;
             const slot: Obj = { id, kind, deckKeys: keys, required: raw.includes("●") };
+            if (kind !== "image") {
+              const tr = BLOCK_SLOT_TEXT_ROLES[bname]?.[id];
+              if (!tr) throw new Error(`BLOCK_SLOT_TEXT_ROLES에 ${bname}.${id} 없음`);
+              slot.textRoles = tr;
+            }
             const lim = keys.length === 1 ? deck.get(keys[0] ?? "") : undefined;
             if (lim !== undefined && lim !== null) slot.maxLength = lim;
             if (kind === "list" && sr[3] && sr[3] !== "—") slot.listRangeKo = sr[3];

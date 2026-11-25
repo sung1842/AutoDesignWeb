@@ -274,7 +274,15 @@ function typeGroup(l2: L2, pairing: PairingFull, font: Group): Group {
         lineHeight: lh,
         letterSpacing: { value: ls, unit: "em" },
       },
-      $extensions: { "app.tastefit": { source: "formula", step: s.step, mobileSize: s.m } },
+      $extensions: {
+        "app.tastefit": {
+          source: "formula",
+          step: s.step,
+          mobileSize: s.m,
+          // 3.8.2: 자간은 뷰포트별 계산 크기 기준 → 모바일 크기의 자간을 따로 둔다(ASM-043)
+          mobileLetterSpacing: heading ? letterSpacingEmImpl(s.m, headCls) : 0,
+        },
+      },
     };
   }
   g["leading-body"] = num(leading);
