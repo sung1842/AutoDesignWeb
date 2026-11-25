@@ -544,7 +544,7 @@
           },
           "icon_grid": false,
           "text_over_image": false,
-          "fallback_variant": null,
+          "fallback_variant": "remove",
           "allowed_bg": [
             "bg",
             "surface",
@@ -558,8 +558,7 @@
             "SIG-09",
             "SIG-10"
           ],
-          "mobile": "1열 그대로, 모바일 타입 스케일 적용",
-          "fallbackKo": "블록 제거(용도 필수가 아닐 때). saas에서 value가 없으면 value.numbered로 치환"
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용"
         },
         {
           "id": "feature.split-list",
@@ -628,7 +627,7 @@
           },
           "icon_grid": false,
           "text_over_image": false,
-          "fallback_variant": null,
+          "fallback_variant": "remove",
           "allowed_bg": [
             "bg",
             "surface",
@@ -643,7 +642,6 @@
             "SIG-10"
           ],
           "mobile": "1열 그대로, 모바일 타입 스케일 적용",
-          "fallbackKo": "type-only 대체 불가 → 블록 제거 후 G-01 재검사",
           "metaKo": "대표작·제품 화면 1장"
         },
         {
@@ -658,7 +656,7 @@
           },
           "icon_grid": false,
           "text_over_image": false,
-          "fallback_variant": null,
+          "fallback_variant": "remove",
           "allowed_bg": [
             "bg",
             "surface",
@@ -672,8 +670,7 @@
             "SIG-09",
             "SIG-10"
           ],
-          "mobile": "1열 그대로, 모바일 타입 스케일 적용",
-          "fallbackKo": "type-only 대체 불가 → 블록 제거 후 G-01 재검사"
+          "mobile": "1열 그대로, 모바일 타입 스케일 적용"
         }
       ]
     },
@@ -1390,7 +1387,7 @@
           },
           "icon_grid": false,
           "text_over_image": false,
-          "fallback_variant": null,
+          "fallback_variant": "remove",
           "allowed_bg": [
             "bg",
             "surface",
@@ -1403,8 +1400,7 @@
             "SIG-09",
             "SIG-10"
           ],
-          "mobile": "2열(gallery.feature는 대 1 + 소 2×2)",
-          "fallbackKo": "블록 제거"
+          "mobile": "2열(gallery.feature는 대 1 + 소 2×2)"
         },
         {
           "id": "gallery.masonry",

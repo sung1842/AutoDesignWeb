@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-25T15:28Z, since: 2026-11-25T18:32Z}
+- lock: {owner: 2026-11-25T15:28Z, since: 2026-11-25T18:49Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-26 05:28  # 이 세션 시작(00:28 KST)+5h 추정. 한도로 끊기면 이 시각 이후 정기 세션이 이어감
-- 마지막 갱신: 2026-11-26 03:32 KST (세션: AC-03-41 colorName, 다음 09e G-12)
+- 마지막 갱신: 2026-11-26 03:49 KST (세션: AC-03-21 폴백 체인, 다음 09e G-12)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -132,6 +132,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-26 03:49 | AC-03-21 fallback 체인 끝 = remove(seed:temp), ASM-063
 - 2026-11-26 03:32 | AC-03-41 colorName(사전 42, 무채색·조건 색·수식어)·config/color-names.ko.json(temp), ASM-062; 블록 샘플 8×50 넘침·잘림·겹침 0
 - 2026-11-26 03:07 | M2-09f 블록 샘플·컴포넌트 갤러리(8프리셋 게이트 통과)·단계 프로브, ASM-061 → 다음: 샘플 50×8 결과 반영·09e G-12
 - 2026-11-26 02:42 | AC-06-24 이스케이프(= → &#61;)·⑦ 금지 의존성 확인, render 수용 19/22(남은 3 = treeLint·extractL1), ASM-060
@@ -146,4 +147,3 @@
 - 2026-11-26 01:17 | M2-07c 미디어 슬롯 img·shape-graphic G1~4·폰트/이미지 /assets 절대 경로(외부 요청 0 확인), ASM-052 → 다음: 07d
 - 2026-11-26 01:10 | M2-07b2 fontTools 페이지 서브셋 woff2(결정적, 첫 화면 약 150KB), ASM-051·AD-032 → 다음: 07c 이미지
 - 2026-11-26 01:04 | M2-07b1 폰트 계획(≤5면·preload 2·글자 해시 파일명)·@font-face, ASM-050 → 다음: 07b2
-- 2026-11-26 00:59 | M2-07a 아이콘 iconSvg(임시 40×3)·icon-grid·location 연결, ASM-049·BLK-011 → 다음: 07b @font-face

@@ -1187,11 +1187,14 @@ function genBlocks(ctx: Ctx): Out[] {
       const metaCell = r[5] ?? "";
       const fb = (r[6] ?? "—") === "〃" ? prevFb : (r[6] ?? "—");
       prevFb = fb;
+      // 3.6.1 fallback 열: variant 이름 → 같은 블록 variant, "블록 제거…" → "remove"(AC-03-21 끝 = 블록 제거, ASM-063)
       const fbVariant = /^[a-z-]+$/.test(fb)
         ? `${String(cur?.id)}.${fb}`
         : fb.startsWith("value.")
           ? fb
-          : null;
+          : /블록 제거/.test(fb)
+            ? "remove"
+            : null;
       const textOverImage = metaCell.includes("text_over_image");
       const allowedBg =
         id === "cta.band"

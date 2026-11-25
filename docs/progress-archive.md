@@ -184,3 +184,4 @@
 - 2026-11-26 00:50 | M2-06b2b proof·pricing·faq·cta·menu 12 variant(넘침 0), ASM-046 → 다음: b2c
 - 2026-11-26 00:54 | M2-06b2c 7블록 16 variant·폼·갤러리(넘침 0), ASM-047·BLK-010 → 다음: b2d
 - 2026-11-26 00:56 | M2-06b2d nav·footer variant·sticky → M2-06 완료(53 variant 템플릿), ASM-048 → 다음: M2-07 assets
+- 2026-11-26 00:59 | M2-07a 아이콘 iconSvg(임시 40×3)·icon-grid·location 연결, ASM-049·BLK-011 → 다음: 07b @font-face

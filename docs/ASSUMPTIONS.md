@@ -440,3 +440,10 @@
 - 선택: ① 사전 원천 = `packages/taxonomy` COLOR_NAMES(기본 색 22개가 0~360 빈틈없이 + 명도·채도 조건 색 20개 = 42), seed:temp가 같은 내용을 `config/color-names.ko.json`(provenance temp)으로 낸다. DesignData.colorNames는 이 파일 ② 판정: OKLCH → C < 0.03 무채색 5단계 → 조건 색(h·l·c 모두 맞으면, 수식어 없음) → 기본 색 + 수식어(밝은 ≥ 0.80 / 짙은 < 0.40 / 탁한 C < 0.08 / 선명한 C ≥ 0.20, 최대 1개, 명도 우선) ③ 사람 라벨 60색 일치율(85%)은 fixtures/color-names.json이 사람 데이터라 BLK-007 범위
 - 영향 범위: packages/taxonomy(color-name), scripts/data/seed-config.ts, config/color-names.ko.json, packages/design-spec(data)
 - 되돌리기 비용: 낮음
+
+## ASM-063 · M2 · gap · 2026-11-25T22:10Z
+- 질문: 3.6.1 fallback 열의 "블록 제거…"(feature.stack·showcase·gallery.grid)를 blocks.json에 어떻게 적나
+- 근거 탐색: 03장 3.6.1 표·AC-03-21(끝 = 이미지 0장 variant 또는 블록 제거)
+- 선택: seed:temp가 "블록 제거"가 든 셀(〃 포함)을 `fallback_variant: "remove"`로 적는다. 조건부 문구(saas에서 value 없으면 value.numbered 등)는 `fallbackKo`로 남기지 않고 제거로 본다(생성 파이프라인 M5에서 용도 필수 블록 처리)
+- 영향 범위: scripts/data/seed-temp.ts, data/taxonomy/blocks.json(temp)
+- 되돌리기 비용: 낮음
