@@ -404,3 +404,10 @@
 - 선택: ① 표본: 입력(테두리·채움 중 큰 대비), .tf-button(채움·테두리 중 큰 대비, 둘 다 없으면 제외), 모든 인터랙티브 요소의 `--tf-color-focus`(요소 문맥에서 해석) — 각각 부모 쪽 합성 배경과 비교 ② 기준 3:1은 thresholds에 별도 키가 없어 같은 값인 `generation.contrastLargeMin`을 쓴다(키 추가는 사람 결정)
 - 영향 범위: apps/worker(render/measure), packages/scoring
 - 되돌리기 비용: 낮음
+
+## ASM-058 · M2 · gap · 2026-11-25T20:15Z
+- 질문: worker render 잡의 입력·출력과 06장 6.8.3 네트워크 규칙을 로컬 하네스에서 어떻게 맞추나
+- 근거 탐색: 06장 6.8.2(javaScriptEnabled false)·6.8.3(자산 오리진 /assets/·/fonts/, 그 외 abort + render_blocked_requests), AC-06-28, ASM-027 ⑤
+- 선택: ① 글꼴 경로를 `/fonts/<파일>`로(6.8.3), 이미지는 `/assets/images/…`. 운영 자산 오리진(http://assets.local)과 문서 오리진 분리는 운영 워커(M7)에서, 로컬 하네스는 가상 오리진 하나(http://tf.local)로 문서·자산을 같이 응답 ② 하네스 페이지는 javaScriptEnabled false(측정 evaluate는 동작, addStyleTag 대신 evaluate로 style 삽입) ③ Harness에 `screenshot(html, vw) → {png, blocked[]}` 추가, `runRenderJob({html}, h)` = renderViewports 5종 전체 페이지 PNG, renderBlockedRequests = 막은 URL 수(중복 제거), externalRequests = 실제로 나간 요청(route가 전부 막으므로 빈 배열)
+- 영향 범위: apps/worker(jobs/render·render/harness·measure), packages/renderer(fonts)
+- 되돌리기 비용: 낮음

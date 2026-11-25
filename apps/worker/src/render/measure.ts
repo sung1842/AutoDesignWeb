@@ -295,8 +295,12 @@ async function overImageRatios(
   texts: TextSample[],
 ): Promise<void> {
   if (items.length === 0) return;
-  await page.addStyleTag({
-    content: ".tf-hero__overlay *, [data-text-over-image] * { color: transparent !important; }",
+  // addStyleTag는 javaScriptEnabled=false에서 멈춘다 → evaluate로 style 요소를 넣는다
+  await page.evaluate(() => {
+    const st = document.createElement("style");
+    st.textContent =
+      ".tf-hero__overlay *, [data-text-over-image] * { color: transparent !important; }";
+    document.head.append(st);
   });
   for (const it of items) {
     const [x, y, w, h] = it.rect;

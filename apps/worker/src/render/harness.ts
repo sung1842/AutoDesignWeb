@@ -1,5 +1,5 @@
 // worker 렌더 하네스(Playwright chromium, ASM-025 ①·026 ②·027 ④, ASM-055).
-// 페이지는 가상 오리진 http://tf.local/ 에 route로 띄운다. /assets/images/* = data/images, /assets/fonts/* = 페이지 서브셋
+// 페이지는 가상 오리진 http://tf.local/ 에 route로 띄운다. /assets/images/* = data/images, /fonts/* = 페이지 서브셋(06장 6.8.3)
 // (@tastefit/assets/fonts-node가 요청 시 생성·캐시). 그 밖의 요청은 전부 막고 externalRequests로 센다(G-07, 외부 요청 0).
 import { createRequire } from "node:module";
 import { existsSync, readFileSync } from "node:fs";
@@ -22,6 +22,8 @@ export interface PageMeasure extends RawMeasure {
 export interface Harness {
   measure(html: string, vw: number, opts?: { spec?: unknown }): Promise<PageMeasure>;
   withPage<T>(html: string, vw: number, fn: (page: PageLike) => Promise<T>): Promise<T>;
+  /** 전체 페이지 PNG + 막은 요청(06장 6.8.3 render_blocked_requests). ASM-058 계약 확장. */
+  screenshot(html: string, vw: number): Promise<{ png: Buffer; blocked: string[] }>;
   platformFontsForHangul(html: string, vw: number): Promise<{ selector: string; family: string }[]>;
   firstViewFontBytes(html: string, vw: number): Promise<number>;
   firstViewImageBytes(html: string, vw: number): Promise<number>;
@@ -64,7 +66,7 @@ function registry(): Map<string, RegistryFont> {
 export function facesOf(html: string): { faces: FaceIn[]; chars: string } {
   const faces: FaceIn[] = [];
   const re =
-    /@font-face \{ font-family: "([^"]+)"; src: url\("(\/assets\/fonts\/[^"]+)"\) format\("woff2"\); font-weight: (\d+);/g;
+    /@font-face \{ font-family: "([^"]+)"; src: url\("(\/fonts\/[^"]+)"\) format\("woff2"\); font-weight: (\d+);/g;
   for (const m of html.matchAll(re)) {
     const fam = m[1] ?? "";
     const reg = registry().get(fam);
@@ -112,6 +114,7 @@ async function openPage(browser: Browser, html: string, vw: number): Promise<Ses
   const ctx = await browser.newContext({
     viewport: { width: vw, height: viewH(vw) },
     deviceScaleFactor: 1,
+    javaScriptEnabled: false, // 06장 6.8.2: 시안 HTML에는 스크립트가 없다(측정 evaluate는 동작)
   });
   const page = await ctx.newPage();
   const s: Session = { page, external: [], failed: [], consoleErrors: [], bytes: [] };
@@ -134,7 +137,7 @@ async function openPage(browser: Browser, html: string, vw: number): Promise<Ses
         "data/images",
         decodeURIComponent(url.pathname.slice("/assets/images/".length)),
       );
-    else if (url.pathname.startsWith("/assets/fonts/")) {
+    else if (url.pathname.startsWith("/fonts/")) {
       const face = plan.faces.filter((f) => f.file === url.pathname);
       if (face.length) materializeFonts({ faces: face, chars: plan.chars }, FONT_CACHE);
       file = join(FONT_CACHE, url.pathname);
@@ -192,6 +195,15 @@ export async function openHarness(): Promise<Harness> {
       const s = await openPage(browser, html, vw);
       try {
         return await fn(s.page as unknown as PageLike);
+      } finally {
+        await closeS(s);
+      }
+    },
+    async screenshot(html, vw) {
+      const s = await openPage(browser, html, vw);
+      try {
+        const png = await s.page.screenshot({ fullPage: true, type: "png" });
+        return { png, blocked: [...s.external] };
       } finally {
         await closeS(s);
       }

@@ -179,3 +179,4 @@
 - 2026-11-25 16:31 | M2-05a2 컴포넌트 CSS 16종(state 3.5.3, 리터럴 0) → 다음: 05a3 compilePage 골격
 - 2026-11-25 16:52 | M2-05a3 compilePage 골격·tokens-css 분리(ASM-042) → M2-05 완료, 다음: M2-06 variant 템플릿
 - 2026-11-26 00:47 | M2-06b0 텍스트 역할 층(text-roles.css·data-role·슬롯 textRoles·단계 leading/tracking 변수), ASM-043 → 다음: b1 hero
+- 2026-11-26 00:59 | M2-06b1 hero 6 variant 템플릿·hero.css(1280·375 넘침 0 확인), ASM-044 → 다음: b2 나머지 블록
