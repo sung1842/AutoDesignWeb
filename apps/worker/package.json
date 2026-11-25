@@ -22,6 +22,7 @@
     "@tastefit/config": "workspace:^",
     "@tastefit/db": "workspace:^",
     "@tastefit/design-spec": "workspace:^",
+    "@tastefit/extractor": "workspace:^",
     "@tastefit/renderer": "workspace:^",
     "@tastefit/scoring": "workspace:^",
     "pg-boss": "^12.0.0",

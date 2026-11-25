@@ -87,6 +87,9 @@ importers:
       '@tastefit/design-spec':
         specifier: workspace:^
         version: link:../../packages/design-spec
+      '@tastefit/extractor':
+        specifier: workspace:^
+        version: link:../../packages/extractor
       '@tastefit/renderer':
         specifier: workspace:^
         version: link:../../packages/renderer

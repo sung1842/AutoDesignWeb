@@ -30,6 +30,9 @@
     },
     {
       "path": "../../packages/scoring"
+    },
+    {
+      "path": "../../packages/extractor"
     }
   ]
 }

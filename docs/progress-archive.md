@@ -187,3 +187,4 @@
 - 2026-11-26 00:59 | M2-07a 아이콘 iconSvg(임시 40×3)·icon-grid·location 연결, ASM-049·BLK-011 → 다음: 07b @font-face
 - 2026-11-26 01:04 | M2-07b1 폰트 계획(≤5면·preload 2·글자 해시 파일명)·@font-face, ASM-050 → 다음: 07b2
 - 2026-11-26 01:10 | M2-07b2 fontTools 페이지 서브셋 woff2(결정적, 첫 화면 약 150KB), ASM-051·AD-032 → 다음: 07c 이미지
+- 2026-11-26 01:17 | M2-07c 미디어 슬롯 img·shape-graphic G1~4·폰트/이미지 /assets 절대 경로(외부 요청 0 확인), ASM-052 → 다음: 07d

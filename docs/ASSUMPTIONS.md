@@ -464,3 +464,11 @@
 - 결과: 표준 트리 24 × 뷰포트 5 위반 0, 13px·15px 픽스처 전 뷰포트 검출, 폴백 3종 위반 0
 - 영향 범위: packages/design-spec(integrity), apps/worker(measure), packages/scoring(gates)
 - 되돌리기 비용: 낮음
+
+## ASM-066 · M2 · gap · 2026-11-25T21:50Z
+- 질문: 05장 5.5 추출기(원시 특징 F01~F30)의 정의가 모호한 부분을 어떻게 구현하나(M2-09d1, AC-04-08 선행)
+- 근거 탐색: 05장 5.4.2·5.5.1~5.5.3·5.5.6, 09장 9.1.3 의존 규칙(extractor = Page 입력, 의존 없음)
+- 선택: ① Sec "최상위 블록(중첩 시 가장 바깥)": 조건을 만족하는 자식이 2개 이상인 감싸개(main 등)는 내려가서 그 자식들을 Sec로 본다 ② F13 = 블록 수 / (측정 면적 / 1280×800)(면적 정규화, 2400px이면 /3) ③ F18 = 첫 뷰포트 T 최대 font-size / 본문 크기 ④ F29 = 2개 이상인 행만 최빈값, 없으면 1 ⑤ F28 line-height normal = 1.2 ⑥ 합집합 면적은 4px 격자 래스터화 ⑦ 미등록 generic: sans-serif·system-ui → sans_neo_grotesque, cursive → script, fantasy → display ⑧ 픽셀: 측정 영역 스크린샷을 sharp(nearest)로 폭 320 축소(worker가 decode 주입, 추출기는 이미지 라이브러리 무의존), k-means++ PRNG = mulberry32(42) ⑨ 하네스 `features(html, vw)`: 애니메이션 finish 후 추출(5.4.2 7단계, 로컬 렌더는 대기 없음)
+- 결과: 앵커 8종 키 30개·2회 DOM 일치·픽셀 차 ≤ 0.01, 다크=T7·pill=T6. 표준 saas 트리에는 그림자 표면이 없어 F05=0(Sf 정의상 그림자만 있는 카드는 표면 아님) → M3 왕복 검증에서 depth 축 판단
+- 영향 범위: packages/extractor(dom·pixels·index), apps/worker(harness.features)
+- 되돌리기 비용: 낮음

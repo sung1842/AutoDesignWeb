@@ -7,6 +7,8 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { materializeFonts, type FaceIn } from "@tastefit/assets/fonts-node";
 import type { Browser, Page, Route } from "playwright";
+import { extractFeatures, type ExtractPage, type Features } from "@tastefit/extractor";
+import sharp from "sharp";
 import { collectMeasure, type RawMeasure } from "./measure.js";
 
 export interface PageLike {
@@ -33,6 +35,8 @@ export interface Harness {
   ): Promise<{ role: string; lines: number; lastLineChars: number }[]>;
   compileInBrowser(spec: unknown, tree: unknown, data: unknown): Promise<string>;
   extractL1(html: string, vw: number): Promise<number[]>;
+  /** 05장 5.5.3 원시 특징(M2-09d1, ASM-066). 5.4.2: 1280×800·애니메이션 정착 후 측정. */
+  features(html: string, vw: number): Promise<Features>;
   parentProbe(html: string): Promise<{ xss: boolean; contentDocumentNull: boolean }>;
   close(): Promise<void>;
 }
@@ -169,6 +173,13 @@ function chromium(): { launch: () => Promise<Browser> } {
     CHROMIUM = (req("playwright") as { chromium: { launch: () => Promise<Browser> } }).chromium;
   }
   return CHROMIUM;
+}
+
+/** 5.5.2: tf- family는 03장 레지스트리 classification으로 분류한다. */
+function fontClasses(): Record<string, string> {
+  return Object.fromEntries(
+    [...registry().values()].map((f) => [f.subsetFamily.toLowerCase(), f.classification]),
+  );
 }
 
 export async function openHarness(): Promise<Harness> {
@@ -354,6 +365,32 @@ export async function openHarness(): Promise<Harness> {
       }
     },
     extractL1: pending("extractL1"),
+    async features(html, vw) {
+      const s = await openPage(browser, html, vw);
+      try {
+        await s.page.evaluate(() => {
+          for (const a of document.getAnimations())
+            try {
+              a.finish();
+            } catch {
+              a.pause();
+            }
+        });
+        return await extractFeatures(s.page as unknown as ExtractPage, {
+          fontClasses: fontClasses(),
+          decode: async (png, width) => {
+            const { data, info } = await sharp(png)
+              .resize({ width, kernel: "nearest" })
+              .removeAlpha()
+              .raw()
+              .toBuffer({ resolveWithObject: true });
+            return { data, channels: info.channels };
+          },
+        });
+      } finally {
+        await closeS(s);
+      }
+    },
     async parentProbe(html) {
       // 6.11.4: 부모(JS 켬)가 sandbox="" iframe에 srcdoc으로 넣는다 → 시안 쪽 코드가 부모에 닿는지, 부모가 문서에 닿는지
       const ctx = await browser.newContext();
