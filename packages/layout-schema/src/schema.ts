@@ -149,7 +149,8 @@ const PAGE_SLOT_VALUE = {
         .object({
           tag: z.enum(nonEmpty(IMAGE_TAGS)),
           ratio: z.enum(["1:1", "4:5", "3:2", "16:9", "21:9"]),
-          asset_id: z.string().regex(/^[a-z0-9_.-]{1,64}$/),
+          // manifest id(temp "tmp_img:<태그>-<번호>") 또는 색면 표시 "shape-graphic"(ASM-053)
+          asset_id: z.string().regex(/^[a-z0-9_.:-]{1,64}$/),
           alt: z.string().max(120),
           focal: z.tuple([z.number().min(0).max(1), z.number().min(0).max(1)]),
         })

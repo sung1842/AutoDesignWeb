@@ -53,6 +53,8 @@ export interface PairingFull {
   sig: { temp: number; expr: number; soft: number };
 }
 export interface DesignData extends MapData {
+  /** 저장소 루트(설정 파일 읽기용). */
+  root: string;
   taxonomyVersion: string;
   taxonomy: TaxKey[];
   palettes: Palette[];
@@ -82,6 +84,7 @@ export interface ImageEntry {
   height: number;
   focalPoint: [number, number];
   altKo: string;
+  tags: string[];
 }
 
 interface Envelope<T> {
@@ -100,6 +103,7 @@ export function loadDesignData(root: string): DesignData {
     .sort()
     .flatMap((f) => read<Preset>(root, `data/taxonomy/presets/${f}`).items);
   return {
+    root,
     taxonomyVersion: tax.taxonomyVersion ?? "",
     taxonomy: tax.items,
     mapping: read<MapData["mapping"][number]>(root, "data/taxonomy/mapping.json").items,
@@ -121,6 +125,7 @@ export function loadDesignData(root: string): DesignData {
       height: m.height,
       focalPoint: m.focalPoint,
       altKo: m.altKo,
+      tags: m.tags,
     })),
     normalizerVersion:
       readdirSync(join(root, "data/normalizers"))

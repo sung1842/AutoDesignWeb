@@ -79,7 +79,8 @@ const highlightSplit: Tpl = (s, ctx) =>
 function galleryCells(s: PSection, ctx: BlockCtx, ratioOf: (i: number) => string): Html[] {
   const img = imageOf(s.slots.media);
   const caps = listOf(s.slots.captions);
-  const n = Math.max(caps.length, 1);
+  // 캡션이 없으면 variant 기본 칸 수(3.6.1: grid 6, masonry 6, feature 5)
+  const n = caps.length || (s.variant === "gallery.feature" ? 5 : 6);
   return Array.from({ length: n }, (_, i) => {
     const c = caps[i];
     return el(

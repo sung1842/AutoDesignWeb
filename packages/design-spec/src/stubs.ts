@@ -1,7 +1,14 @@
 // M2-02~08에서 구현할 공개 함수(ASM-023~027 계약). 수용 테스트 수집이 깨지지 않도록 이름만 먼저 둔다.
 import type { L1, L2 } from "@tastefit/taxonomy";
 import type { DesignData } from "./data.js";
-import { todo } from "./todo.js";
+import {
+  DEFAULT_BRAND,
+  patternRaw,
+  resolveTree,
+  STANDARD_PATTERN,
+  templateDeck,
+  type Brand,
+} from "./standard.js";
 import { compileSpecsImpl } from "./compile.js";
 import { predictL1Vec } from "./predict.js";
 import { exportTokensImpl } from "./export.js";
@@ -76,23 +83,90 @@ export interface TreeOptions {
   brandName?: string;
   copyOverride?: string;
 }
-export function standardTree(
-  _typeId: string,
-  _purpose: string,
-  _data: DesignData,
-  _opts?: TreeOptions,
-): { spec: DesignSpec; tree: LayoutTreeLike } {
-  void [_typeId, _purpose, _data, _opts];
-  return todo("M2-08", "standardTree");
+/** 3.4.7 유형 앵커 취향(μ = predictL1(기본 L2), σ 확신, κ 0.8). */
+export function anchorTaste(typeId: string, data: DesignData): TasteResult {
+  const p = data.presets.find((x) => x.typeId === typeId);
+  if (!p) throw new Error(`프리셋 없음 ${typeId}`);
+  return {
+    mu: predictL1Vec(p.l2, data),
+    sigma: { expression: 0.08, temperature: 0.08, shape: 0.08, density: 0.08, depth: 0.08 },
+    kappa: 0.8,
+    insensitive_axes: [],
+    type_id: typeId,
+  };
 }
-export function fallbackMockup(
-  _typeId: string,
-  _purpose: string,
-  _variant: Variant,
-  _data: DesignData,
-  _opts?: { spec?: DesignSpec },
+
+function treeFor(
+  spec: DesignSpec,
+  purpose: string,
+  data: DesignData,
+  opts: TreeOptions = {},
+): LayoutTreeLike {
+  const brand: Brand = { ...DEFAULT_BRAND, ...(opts.brandName ? { name: opts.brandName } : {}) };
+  const deck = templateDeck(purpose, data.root, brand);
+  if (opts.copyOverride !== undefined) deck["hero.headline"] = [opts.copyOverride];
+  const raw = patternRaw(spec, STANDARD_PATTERN[purpose] ?? "PS-1", deck, data);
+  return resolveTree(raw, data, {
+    deck,
+    brand,
+    seed: spec.spec_id,
+    navVariant: spec.layout_constraints.allowed_variants.nav?.[0] ?? "nav.split",
+    mediaMode: String(spec.l2["media.mode"]),
+  }) as unknown as LayoutTreeLike;
+}
+
+/** 페어링·팔레트 덮어쓰기(AC-03-23 등 검사용): l2를 바꾸고 토큰을 다시 만든다. */
+function withOverrides(spec: DesignSpec, data: DesignData, opts: TreeOptions): DesignSpec {
+  if (!opts.pairingId && !opts.paletteId) return spec;
+  const l2 = {
+    ...spec.l2,
+    ...(opts.pairingId ? { "type.pairing_id": opts.pairingId } : {}),
+    ...(opts.paletteId ? { "color.palette_id": opts.paletteId } : {}),
+  } as L2;
+  const preset = data.presets.find((x) => x.typeId === spec.type_id);
+  const tokens = deriveTokensImpl({ presetId: preset?.id ?? "", l2 }, data).tokenSet;
+  return { ...spec, l2, tokens };
+}
+
+/** 03장 standardTree(typeId, purpose): 앵커 v_true 명세 + 용도 표준 패턴 + 템플릿 카피(ASM-053). */
+export function standardTree(
+  typeId: string,
+  purpose: string,
+  data: DesignData,
+  opts: TreeOptions = {},
 ): { spec: DesignSpec; tree: LayoutTreeLike } {
-  void [_typeId, _purpose, _variant, _data, _opts];
-  return todo("M2-08", "fallbackMockup");
+  const specs = compileSpecsImpl(
+    {
+      taste: anchorTaste(typeId, data),
+      purpose: purpose as Purpose,
+      brand: null,
+      jobSeed: `standard:${typeId}:${purpose}`,
+    },
+    data,
+  );
+  const spec = withOverrides(specs.v_true, data, opts);
+  return { spec, tree: treeFor(spec, purpose, data, opts) };
+}
+
+/** 04장 4.12 buildFallback(v): 해당 변형 명세(토큰 그대로) + 표준 트리 + 템플릿 카피. LLM 0회. */
+export function fallbackMockup(
+  typeId: string,
+  purpose: string,
+  variant: Variant,
+  data: DesignData,
+  opts: { spec?: DesignSpec } = {},
+): { spec: DesignSpec; tree: LayoutTreeLike } {
+  const spec =
+    opts.spec ??
+    compileSpecsImpl(
+      {
+        taste: anchorTaste(typeId, data),
+        purpose: purpose as Purpose,
+        brand: null,
+        jobSeed: `fallback:${typeId}:${purpose}`,
+      },
+      data,
+    )[variant];
+  return { spec, tree: treeFor(spec, purpose, data) };
 }
 export type { L1 };
