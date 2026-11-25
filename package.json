@@ -38,7 +38,8 @@
     "db:grants-snapshot": "tsx scripts/data/grants-snapshot.ts",
     "survey:build": "tsx scripts/todo.ts survey:build M4",
     "eval:golden": "tsx scripts/todo.ts eval:golden M7",
-    "release:check": "tsx scripts/todo.ts release:check M8"
+    "release:check": "tsx scripts/todo.ts release:check M8",
+    "fixtures:layouts": "tsx scripts/data/fixtures-layouts.ts"
   },
   "devDependencies": {
     "@tastefit/config": "workspace:^",

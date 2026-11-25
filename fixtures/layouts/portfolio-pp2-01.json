@@ -1,0 +1,257 @@
+{
+  "purpose": "portfolio",
+  "typeId": "T6",
+  "provenance": "temp",
+  "raw": {
+    "schemaVersion": "1",
+    "spec_id": "0000000000000000",
+    "pattern_id": "PP-2",
+    "sections": [
+      {
+        "id": "hero",
+        "block": "hero",
+        "variant": "hero.split",
+        "bg": "bg",
+        "pad": 1,
+        "slots": {
+          "eyebrow": {
+            "copy": "deck:hero.eyebrow#0"
+          },
+          "headline": {
+            "copy": "deck:hero.headline#0"
+          },
+          "sub": {
+            "copy": "deck:hero.sub#0"
+          },
+          "primaryCta": {
+            "link": {
+              "label": "deck:cta.primary#0",
+              "target": "#contact"
+            }
+          },
+          "media": {
+            "image": {
+              "tag": "portfolio.studio",
+              "ratio": "4:5"
+            }
+          }
+        }
+      },
+      {
+        "id": "about",
+        "block": "about",
+        "variant": "about.text",
+        "bg": "surface",
+        "pad": 0,
+        "slots": {
+          "title": {
+            "copy": "deck:about.title#0"
+          },
+          "body": {
+            "copy": "deck:about.body#0"
+          }
+        }
+      },
+      {
+        "id": "gallery",
+        "block": "gallery",
+        "variant": "gallery.feature",
+        "bg": "bg",
+        "pad": 0,
+        "slots": {
+          "media": {
+            "image": {
+              "tag": "portfolio.studio",
+              "ratio": "1:1"
+            }
+          },
+          "captions": {
+            "list": [
+              {
+                "copy": "deck:work.items#0"
+              },
+              {
+                "copy": "deck:work.items#1"
+              },
+              {
+                "copy": "deck:work.items#2"
+              },
+              {
+                "copy": "deck:work.items#3"
+              },
+              {
+                "copy": "deck:work.items#4"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "service",
+        "block": "service",
+        "variant": "service.list",
+        "bg": "bg",
+        "pad": 0,
+        "slots": {
+          "items": {
+            "list": [
+              {
+                "copy": "deck:service.items#0"
+              },
+              {
+                "copy": "deck:service.items#1"
+              },
+              {
+                "copy": "deck:service.items#2"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "contact",
+        "block": "contact",
+        "variant": "contact.simple",
+        "bg": "inverse",
+        "pad": 0,
+        "slots": {
+          "title": {
+            "copy": "deck:contact.title#0"
+          },
+          "body": {
+            "copy": "deck:contact.body#0"
+          },
+          "contactInfo": {
+            "copy": "deck:contact.email#0"
+          },
+          "form": {
+            "copy": "deck:contact.form#0"
+          }
+        }
+      }
+    ],
+    "footer": {
+      "variant": "footer.minimal"
+    }
+  },
+  "deck": {
+    "hero.headline": [
+      {
+        "kind": "factual",
+        "text": "한결"
+      },
+      {
+        "kind": "benefit",
+        "text": "[임시] 문구 2"
+      },
+      {
+        "kind": "emotive",
+        "text": "[임시] 문구 3"
+      }
+    ],
+    "hero.sub": [
+      "[예시] 브랜드 소개 문장을 여기에 넣어 주세요. 실제 문구로 바꿔 주세요.",
+      "[임시] 문구 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+    ],
+    "hero.eyebrow": [
+      "[임시] 문구 1",
+      "[임시] 문구 2"
+    ],
+    "cta.primary": [
+      "작업 보기",
+      "문의하기",
+      "이력 보기"
+    ],
+    "cta.secondary": [
+      "[임시] 문구 1",
+      "[임시] 문구 2"
+    ],
+    "about.title": [
+      "[임시] 문구 1"
+    ],
+    "about.body": [
+      "[예시] 브랜드 소개 문장을 여기에 넣어 주세요. 실제 문구로 바꿔 주세요.",
+      "[임시] 문구 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다. 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+    ],
+    "footer.tagline": [
+      "한결"
+    ],
+    "meta.title": [
+      "한결"
+    ],
+    "meta.description": [
+      "[예시] 브랜드 소개 문장을 여기에 넣어 주세요. 실제 문구로 바꿔 주세요."
+    ],
+    "work.items": [
+      {
+        "title": "[임시] 제목 1",
+        "caption": "[임시] 캡션 1"
+      },
+      {
+        "title": "[임시] 제목 2",
+        "caption": "[임시] 캡션 2"
+      },
+      {
+        "title": "[임시] 제목 3",
+        "caption": "[임시] 캡션 3"
+      },
+      {
+        "title": "[임시] 제목 4",
+        "caption": "[임시] 캡션 4"
+      },
+      {
+        "title": "[임시] 제목 5",
+        "caption": "[임시] 캡션 5"
+      },
+      {
+        "title": "[임시] 제목 6",
+        "caption": "[임시] 캡션 6"
+      }
+    ],
+    "service.items": [
+      {
+        "title": "[임시] 제목 1",
+        "body": "[임시] 본문 1 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      },
+      {
+        "title": "[임시] 제목 2",
+        "body": "[임시] 본문 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      },
+      {
+        "title": "[임시] 제목 3",
+        "body": "[임시] 본문 3 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      }
+    ],
+    "proof.items": [
+      {
+        "quote": "[예시] 고객 후기 1",
+        "name": "김○○",
+        "placeholder": true
+      },
+      {
+        "quote": "[예시] 고객 후기 2",
+        "name": "김○○",
+        "placeholder": true
+      },
+      {
+        "quote": "[예시] 고객 후기 3",
+        "name": "김○○",
+        "placeholder": true
+      }
+    ],
+    "stats.items": [
+      {
+        "value": "[예시] 10%",
+        "label": "[예시] 지표 1"
+      },
+      {
+        "value": "[예시] 20%",
+        "label": "[예시] 지표 2"
+      },
+      {
+        "value": "[예시] 30%",
+        "label": "[예시] 지표 3"
+      }
+    ]
+  }
+}

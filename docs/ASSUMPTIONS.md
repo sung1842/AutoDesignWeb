@@ -375,3 +375,10 @@
 - 선택: ① 앵커 취향 μ = predictL1(프리셋 기본 L2), σ 0.08, κ 0.8 → compileSpecs(jobSeed `standard:<유형>:<용도>`·`fallback:…`). standardTree = v_true, fallbackMockup = 지정 변형(명세 토큰 그대로) ② 트리 = 용도 표준 패턴 PS-1/PL-1/PP-1(layout.ts PATTERNS). variant = 명세 allowed_variants 첫 값(type-led면 이미지 없는 것 우선), hero = 패턴 힌트가 hero_variants에 있으면 그것, 아니면 첫 값. bg = 순환 surface·bg·bg·surface, 마지막 섹션 inverse(허용 밖이면 allowed_bg 첫 값), pad hero 1·나머지 0. 섹션 수는 footer 포함으로 셈(PL-1 = 5 + footer) ③ 카피 = copy_templates 용도별 + 브랜드 치환({name}·{description}·{key_points.N}), `[예시]`·`[임시]` 포함 문구는 placeholder. contact.*·사업자 정보는 CP-10 예시값, contact 제목 "문의하기" ④ 덱 값 모양 → text/sub(title·body, quote·name, name·desc, value·label). menu.groups 그룹은 항목으로 펼치고 deck_ref는 그룹 참조 ⑤ 이미지: 명세 image_tags_allowed에서 용도 태그 → 같은 태그·미사용 manifest 중 sha256(seed‖섹션‖슬롯) 선택(톤 규칙·fallback_variant 치환은 M5). 후보 없음·shape-graphic이면 asset_id `shape-graphic`(색면). PageSchema asset_id 정규식에 `:` 허용(temp id `tmp_img:…`) ⑥ nav = nav_label 있는 섹션 ≤ 5, footer = 워드마크(브랜드명)·태그라인·사업자 예시값 ⑦ 갤러리 캡션이 없으면 variant 기본 칸 수(grid·masonry 6, feature 5)
 - 영향 범위: packages/design-spec(standard·stubs·data), packages/layout-schema(asset_id), packages/renderer(gallery)
 - 되돌리기 비용: 중간(폴백 시안 모양 전체)
+
+## ASM-054 · M2 · gap · 2026-11-25T18:40Z
+- 질문: 9.4.4 ① 픽스처 30개를 어떻게 만들고 fixturePage는 어떤 명세로 확정하나
+- 근거 탐색: 09장 9.4.4 ①, 04장 AC-04-11(용도 × 패턴 4), ASM-027 ②, ASM-053
+- 선택: ① `pnpm fixtures:layouts`가 용도별 10개를 결정론으로 만든다: 패턴 = 번호 mod 4 + 1, 유형 = (3 × 번호 + 용도 순번) mod 8, variant = 그 유형 앵커 명세 allowed_variants에서 (번호 + 블록 순번) 순환, hero = hero_variants 순환. 덱 = 용도 템플릿 덱(+ PS-2용 [예시] stats 3개). provenance temp, 수동 픽스처 saas-ps1.json 유지 ② fixturePage(fx, data, {presetId?}) = 유형(또는 프리셋 유형) standardTree 명세(v_true) + resolveTree(raw, 픽스처 덱), spec_id는 명세 것으로 바꿈
+- 영향 범위: scripts/data/fixtures-layouts.ts, fixtures/layouts/*.json, packages/renderer(m2 fixturePage), package.json
+- 되돌리기 비용: 낮음

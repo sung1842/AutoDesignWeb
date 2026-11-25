@@ -1,0 +1,275 @@
+{
+  "purpose": "saas",
+  "typeId": "T4",
+  "provenance": "temp",
+  "raw": {
+    "schemaVersion": "1",
+    "spec_id": "0000000000000000",
+    "pattern_id": "PS-2",
+    "sections": [
+      {
+        "id": "hero",
+        "block": "hero",
+        "variant": "hero.split",
+        "bg": "bg",
+        "pad": 1,
+        "slots": {
+          "eyebrow": {
+            "copy": "deck:hero.eyebrow#0"
+          },
+          "headline": {
+            "copy": "deck:hero.headline#0"
+          },
+          "sub": {
+            "copy": "deck:hero.sub#0"
+          },
+          "primaryCta": {
+            "link": {
+              "label": "deck:cta.primary#0",
+              "target": "#cta"
+            }
+          },
+          "media": {
+            "image": {
+              "tag": "saas.architecture",
+              "ratio": "4:5"
+            }
+          }
+        }
+      },
+      {
+        "id": "stats",
+        "block": "stats",
+        "variant": "stats.row",
+        "bg": "surface",
+        "pad": 0,
+        "slots": {
+          "items": {
+            "list": [
+              {
+                "copy": "deck:stats.items#0"
+              },
+              {
+                "copy": "deck:stats.items#1"
+              },
+              {
+                "copy": "deck:stats.items#2"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "feature",
+        "block": "feature",
+        "variant": "feature.zigzag",
+        "bg": "bg",
+        "pad": 0,
+        "slots": {
+          "items": {
+            "list": [
+              {
+                "copy": "deck:feature.items#0"
+              },
+              {
+                "copy": "deck:feature.items#1"
+              },
+              {
+                "copy": "deck:feature.items#2"
+              }
+            ]
+          },
+          "media": {
+            "image": {
+              "tag": "saas.architecture",
+              "ratio": "3:2"
+            }
+          }
+        }
+      },
+      {
+        "id": "proof",
+        "block": "proof",
+        "variant": "proof.quote-large",
+        "bg": "bg",
+        "pad": 0,
+        "slots": {
+          "items": {
+            "list": [
+              {
+                "copy": "deck:proof.items#0"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "cta",
+        "block": "cta",
+        "variant": "cta.big-type",
+        "bg": "inverse",
+        "pad": 0,
+        "slots": {
+          "headline": {
+            "copy": "deck:hero.headline#1"
+          },
+          "primaryCta": {
+            "link": {
+              "label": "deck:cta.primary#0",
+              "target": "#cta"
+            }
+          }
+        }
+      }
+    ],
+    "footer": {
+      "variant": "footer.big-type"
+    }
+  },
+  "deck": {
+    "hero.headline": [
+      {
+        "kind": "factual",
+        "text": "한결"
+      },
+      {
+        "kind": "benefit",
+        "text": "[임시] 문구 2"
+      },
+      {
+        "kind": "emotive",
+        "text": "[임시] 문구 3"
+      }
+    ],
+    "hero.sub": [
+      "[예시] 브랜드 소개 문장을 여기에 넣어 주세요. 실제 문구로 바꿔 주세요.",
+      "[임시] 문구 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+    ],
+    "hero.eyebrow": [
+      "[임시] 문구 1",
+      "[임시] 문구 2"
+    ],
+    "cta.primary": [
+      "무료로 써보기",
+      "데모 신청",
+      "가격 보기"
+    ],
+    "cta.secondary": [
+      "[임시] 문구 1",
+      "[임시] 문구 2"
+    ],
+    "about.title": [
+      "[임시] 문구 1"
+    ],
+    "about.body": [
+      "[예시] 브랜드 소개 문장을 여기에 넣어 주세요. 실제 문구로 바꿔 주세요.",
+      "[임시] 문구 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다. 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+    ],
+    "footer.tagline": [
+      "한결"
+    ],
+    "meta.title": [
+      "한결"
+    ],
+    "meta.description": [
+      "[예시] 브랜드 소개 문장을 여기에 넣어 주세요. 실제 문구로 바꿔 주세요."
+    ],
+    "value.items": [
+      {
+        "title": "[임시] 제목 1",
+        "body": "[예시] 핵심 장점"
+      },
+      {
+        "title": "[임시] 제목 2",
+        "body": "[임시] 본문 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      },
+      {
+        "title": "[임시] 제목 3",
+        "body": "[임시] 본문 3 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      },
+      {
+        "title": "[임시] 제목 4",
+        "body": "[임시] 본문 4 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      }
+    ],
+    "feature.items": [
+      {
+        "title": "[임시] 제목 1",
+        "body": "[임시] 본문 1 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      },
+      {
+        "title": "[임시] 제목 2",
+        "body": "[임시] 본문 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      },
+      {
+        "title": "[임시] 제목 3",
+        "body": "[임시] 본문 3 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      },
+      {
+        "title": "[임시] 제목 4",
+        "body": "[임시] 본문 4 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      },
+      {
+        "title": "[임시] 제목 5",
+        "body": "[임시] 본문 5 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      }
+    ],
+    "faq.items": [
+      {
+        "q": "[임시] 질문 1",
+        "a": "[임시] 답 1 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      },
+      {
+        "q": "[임시] 질문 2",
+        "a": "[임시] 답 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      },
+      {
+        "q": "[임시] 질문 3",
+        "a": "[임시] 답 3 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      },
+      {
+        "q": "[임시] 질문 4",
+        "a": "[임시] 답 4 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      },
+      {
+        "q": "[임시] 질문 5",
+        "a": "[임시] 답 5 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      },
+      {
+        "q": "[임시] 질문 6",
+        "a": "[임시] 답 6 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      }
+    ],
+    "proof.items": [
+      {
+        "quote": "[예시] 고객 후기 1",
+        "name": "김○○",
+        "placeholder": true
+      },
+      {
+        "quote": "[예시] 고객 후기 2",
+        "name": "김○○",
+        "placeholder": true
+      },
+      {
+        "quote": "[예시] 고객 후기 3",
+        "name": "김○○",
+        "placeholder": true
+      }
+    ],
+    "stats.items": [
+      {
+        "value": "[예시] 10%",
+        "label": "[예시] 지표 1"
+      },
+      {
+        "value": "[예시] 20%",
+        "label": "[예시] 지표 2"
+      },
+      {
+        "value": "[예시] 30%",
+        "label": "[예시] 지표 3"
+      }
+    ]
+  }
+}

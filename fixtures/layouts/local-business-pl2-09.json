@@ -1,0 +1,264 @@
+{
+  "purpose": "local_business",
+  "typeId": "T5",
+  "provenance": "temp",
+  "raw": {
+    "schemaVersion": "1",
+    "spec_id": "0000000000000000",
+    "pattern_id": "PL-2",
+    "sections": [
+      {
+        "id": "hero",
+        "block": "hero",
+        "variant": "hero.type-only",
+        "bg": "bg",
+        "pad": 1,
+        "slots": {
+          "eyebrow": {
+            "copy": "deck:hero.eyebrow#0"
+          },
+          "headline": {
+            "copy": "deck:hero.headline#0"
+          },
+          "sub": {
+            "copy": "deck:hero.sub#0"
+          },
+          "primaryCta": {
+            "link": {
+              "label": "deck:cta.primary#0",
+              "target": "#story"
+            }
+          }
+        }
+      },
+      {
+        "id": "story",
+        "block": "story",
+        "variant": "story.split",
+        "bg": "surface",
+        "pad": 0,
+        "slots": {
+          "body": {
+            "copy": "deck:story.body#0"
+          },
+          "media": {
+            "image": {
+              "tag": "local_business.storefront",
+              "ratio": "4:5"
+            }
+          }
+        }
+      },
+      {
+        "id": "gallery",
+        "block": "gallery",
+        "variant": "gallery.masonry",
+        "bg": "bg",
+        "pad": 0,
+        "slots": {
+          "media": {
+            "image": {
+              "tag": "local_business.storefront",
+              "ratio": "1:1"
+            }
+          }
+        }
+      },
+      {
+        "id": "menu",
+        "block": "menu",
+        "variant": "menu.columns",
+        "bg": "bg",
+        "pad": 0,
+        "slots": {
+          "groups": {
+            "list": [
+              {
+                "copy": "deck:menu.groups#0"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "location",
+        "block": "location",
+        "variant": "location.info-only",
+        "bg": "inverse",
+        "pad": 0,
+        "slots": {
+          "address": {
+            "copy": "deck:contact.address#0"
+          },
+          "hours": {
+            "copy": "deck:contact.hours#0"
+          },
+          "phone": {
+            "copy": "deck:contact.phone#0"
+          }
+        }
+      }
+    ],
+    "footer": {
+      "variant": "footer.minimal"
+    }
+  },
+  "deck": {
+    "hero.headline": [
+      {
+        "kind": "factual",
+        "text": "한결"
+      },
+      {
+        "kind": "benefit",
+        "text": "[임시] 문구 2"
+      },
+      {
+        "kind": "emotive",
+        "text": "[임시] 문구 3"
+      }
+    ],
+    "hero.sub": [
+      "[예시] 브랜드 소개 문장을 여기에 넣어 주세요. 실제 문구로 바꿔 주세요.",
+      "[임시] 문구 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+    ],
+    "hero.eyebrow": [
+      "[임시] 문구 1",
+      "[임시] 문구 2"
+    ],
+    "cta.primary": [
+      "예약하기",
+      "오시는 길",
+      "메뉴 보기"
+    ],
+    "cta.secondary": [
+      "[임시] 문구 1",
+      "[임시] 문구 2"
+    ],
+    "about.title": [
+      "[임시] 문구 1"
+    ],
+    "about.body": [
+      "[예시] 브랜드 소개 문장을 여기에 넣어 주세요. 실제 문구로 바꿔 주세요.",
+      "[임시] 문구 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다. 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+    ],
+    "footer.tagline": [
+      "한결"
+    ],
+    "meta.title": [
+      "한결"
+    ],
+    "meta.description": [
+      "[예시] 브랜드 소개 문장을 여기에 넣어 주세요. 실제 문구로 바꿔 주세요."
+    ],
+    "highlight.items": [
+      {
+        "title": "[임시] 제목 1",
+        "body": "[임시] 본문 1 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      },
+      {
+        "title": "[임시] 제목 2",
+        "body": "[임시] 본문 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      },
+      {
+        "title": "[임시] 제목 3",
+        "body": "[임시] 본문 3 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+      }
+    ],
+    "story.body": [
+      "[임시] 문구 1 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다. 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다.",
+      "[임시] 문구 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다. 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다."
+    ],
+    "menu.groups": [
+      {
+        "title": "[임시] 메뉴 묶음 1",
+        "items": [
+          {
+            "name": "[임시] 항목명 1",
+            "desc": "[임시] 설명 1",
+            "price": "[예시] 0,000원",
+            "placeholder": true
+          },
+          {
+            "name": "[임시] 항목명 2",
+            "desc": "[임시] 설명 2",
+            "price": "[예시] 0,000원",
+            "placeholder": true
+          },
+          {
+            "name": "[임시] 항목명 3",
+            "desc": "[임시] 설명 3",
+            "price": "[예시] 0,000원",
+            "placeholder": true
+          },
+          {
+            "name": "[임시] 항목명 4",
+            "desc": "[임시] 설명 4",
+            "price": "[예시] 0,000원",
+            "placeholder": true
+          }
+        ]
+      },
+      {
+        "title": "[임시] 메뉴 묶음 2",
+        "items": [
+          {
+            "name": "[임시] 항목명 1",
+            "desc": "[임시] 설명 1",
+            "price": "[예시] 0,000원",
+            "placeholder": true
+          },
+          {
+            "name": "[임시] 항목명 2",
+            "desc": "[임시] 설명 2",
+            "price": "[예시] 0,000원",
+            "placeholder": true
+          },
+          {
+            "name": "[임시] 항목명 3",
+            "desc": "[임시] 설명 3",
+            "price": "[예시] 0,000원",
+            "placeholder": true
+          },
+          {
+            "name": "[임시] 항목명 4",
+            "desc": "[임시] 설명 4",
+            "price": "[예시] 0,000원",
+            "placeholder": true
+          }
+        ]
+      }
+    ],
+    "proof.items": [
+      {
+        "quote": "[예시] 고객 후기 1",
+        "name": "김○○",
+        "placeholder": true
+      },
+      {
+        "quote": "[예시] 고객 후기 2",
+        "name": "김○○",
+        "placeholder": true
+      },
+      {
+        "quote": "[예시] 고객 후기 3",
+        "name": "김○○",
+        "placeholder": true
+      }
+    ],
+    "stats.items": [
+      {
+        "value": "[예시] 10%",
+        "label": "[예시] 지표 1"
+      },
+      {
+        "value": "[예시] 20%",
+        "label": "[예시] 지표 2"
+      },
+      {
+        "value": "[예시] 30%",
+        "label": "[예시] 지표 3"
+      }
+    ]
+  }
+}
