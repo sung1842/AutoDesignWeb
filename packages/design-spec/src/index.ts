@@ -7,6 +7,7 @@ export * from "./snap.js";
 export * from "./brand.js";
 export * from "./variants.js";
 export * from "./pick-signature.js";
+export * from "./layout.js";
 export {
   TYPE_STEPS,
   TYPE_SPEC,

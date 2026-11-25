@@ -19,6 +19,8 @@ export interface Preset extends PresetLite {
   signatureIds: string[];
   defaultSignatureId: string;
   excludedVariants: string[];
+  heroVariants: string[];
+  preferredPatterns: Record<string, string[]>;
   buttonPill: boolean;
   tokens: { typeScale: Record<string, [number, number]>; displayToBody: number };
 }
@@ -60,6 +62,10 @@ export interface DesignData extends MapData {
   colorNames: ColorNameEntry[];
   fonts: FontEntry[];
   pairingsFull: PairingFull[];
+  /** 03장 blocks.json(20블록). */
+  blocks: JsonObj[];
+  /** 03장 3.6.5 이미지 태그 전체(manifest 태그 합집합, orient.·tone. 제외). */
+  imageTags: string[];
 }
 
 interface Envelope<T> {
@@ -90,5 +96,17 @@ export function loadDesignData(root: string): DesignData {
     colorNames: [],
     fonts: read<FontEntry>(root, "data/fonts/registry.json").items,
     pairingsFull: read<PairingFull>(root, "data/fonts/pairings.json").items,
+    blocks: read<JsonObj>(root, "data/taxonomy/blocks.json").items,
+    imageTags: imageTagSet(read<JsonObj>(root, "data/images/manifest.json").items),
   };
+}
+
+function imageTagSet(items: JsonObj[]): string[] {
+  const out = new Set<string>();
+  for (const it of items) {
+    const tags = Array.isArray(it.tags) ? it.tags : typeof it.tag === "string" ? [it.tag] : [];
+    for (const t of tags)
+      if (typeof t === "string" && !t.startsWith("orient.") && !t.startsWith("tone.")) out.add(t);
+  }
+  return [...out].sort();
 }

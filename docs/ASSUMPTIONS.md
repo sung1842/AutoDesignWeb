@@ -242,3 +242,10 @@
 - 선택: ① 후보 = 프리셋 signatureIds ∩ signatureEligible(3.2.4 요구 조건·충돌). 시안당 1개라 시그니처 사이 충돌은 해당 없음 ② `purpose_rank`는 사양 상수 PURPOSE_RANK(SIG-05 제외 11종, 임시, HUMAN_TODO) ③ V-FIT = 순위 최상위(동률이면 후보 순서), V-BAL = 둘과 다른 첫 후보, 없으면 V-TRUE와 같은 값(BAL 후보에 없으면 BAL 첫 후보) ④ 후보가 비면 SIG-01, 03장 기준 SIG-01 조건(border ≠ bold)도 불가하면 SIG-09(조건 없음) ⑤ intensity: V-TRUE는 t_TRUE.expression ≥ 0.6이면 2, 나머지 1 ⑥ apply_to(블록 ID)는 layoutConstraints와 함께 M2-03d3에서 정한다
 - 영향 범위: packages/design-spec/src/pick-signature.ts
 - 되돌리기 비용: 낮음
+
+## ASM-035 · M2 · gap · 2026-11-25T03:52Z
+- 질문: 04장 4.2.2 7·8·10단계(layoutConstraints·copyTone·decor)와 4.8 슬롯·4.14 apply_to의 빈 곳(용도 허용 hero, 패턴 카탈로그 파일, 잡 내 패턴 상한 충돌, 적용 블록 매핑, tone 기본 순서)
+- 근거 탐색: 04장 4.2.1·4.2.2·4.6.1·4.8·4.14, 03장 3.2.4·3.6.5·3.6.6, data/taxonomy/purposes·presets·blocks·signatures, images manifest
+- 선택: ① hero_variants: TRUE = 프리셋 heroVariants, FIT = purposes.standardHero, BAL = 유형 ∩ "용도 허용"(= 그 용도 패턴 4개의 hero 힌트), 비면 유형 목록. 값은 `hero.<id>` ② 패턴 카탈로그는 사양 상수 PATTERNS(config/patterns.json 없음). FIT = [표준, job_seed 회전으로 고른 표준 외 1], TRUE = preferredPatterns, BAL = [표준, 유형 선호 중 표준 아닌 것]. 표준이 TRUE에도 있어 3회가 되면 "잡 내 ≤ 2"가 이기고 BAL 슬롯1을 남은 패턴으로 바꾼다 ③ SigCtx: 섹션 수 = 용도 하한, chroma medium→moderate, 숫자 슬롯 = stats·process·value.numbered 허용, 이미지 슬롯 = SIG-12 적용 블록(hero.split·story·about) 중 이미지 variant 허용 ④ allowed_variants = 용도 블록(required ∪ requiredAny ∪ optional, nav·hero·footer 포함) − excludedVariants, `*.bento`는 grid_mode=bento일 때만, hero = hero_variants ⑤ apply_to는 03장 3.2.4 적용 블록(순서 = 우선) ∩ 이 명세 블록, 최대 수는 04장 4.14(전체 = 후보 수), SIG-02·08 = 섹션 전체, SIG-09 = nav + 섹션, SIG-10 = 이미지 variant 블록, SIG-07 = "page"(페이지 배경) ⑥ image_tags_allowed: 업종 태그 입력이 CompileInput에 없어 지금은 항상 {defaultImageTag} ∪ common.texture-*(M5 BrandInput 업종 연결 때 industryTags 인자 사용) ⑦ tone 기본 헤드라인 순서(4.6.1 "tone 기본 순서" 미정): PRECISE factual>benefit>emotive, WARM benefit>emotive>factual, EDITORIAL·PLAYFUL emotive 우선 ⑧ decor.effects가 max를 넘는 조합(DecorId 시그니처 + glass/brutal-offset, max 1)은 M2-03d4 staticLint(S)에서 걸러 재시도한다
+- 영향 범위: packages/design-spec/src/layout.ts·data.ts(blocks·imageTags 로드)
+- 되돌리기 비용: 낮음
