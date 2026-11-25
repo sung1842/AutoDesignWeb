@@ -354,3 +354,10 @@
 - 선택: ① 컴파일러는 폰트 계획만 낸다: 페어링 → heading(토큰 heading 웨이트, preload)·body 400(preload)·body emphasis·heading 라틴·mono(classification=mono) ≤ 5면, 글자 집합 = 본문 텍스트 + 제목 + ASCII 95 + 한글 문장부호, 파일 `assets/fonts/<code>-<웨이트>-<FNV-1a 64 해시 12자>.woff2`(상대 경로, 외부 요청 0) ② `compilePage` 반환에 `fonts`(FontPlan) 추가 — 실제 woff2는 node 쪽 assets가 같은 계획으로 만든다(M2-07b2) ③ @font-face family = registry `subsetFamily`, `font-display: swap`, 폴백 면 tf-fb-sans·serif(3.7.4 local·메트릭 오버라이드), base에 `font-synthesis: none` ④ 해시는 순수 JS(FNV-1a 64, BigInt)로 node API 없이 계산
 - 영향 범위: packages/renderer(fonts·compile·m2·base.css)
 - 되돌리기 비용: 낮음
+
+## ASM-051 · M2 · gap · 2026-11-25T17:20Z
+- 질문: 페이지 서브셋 woff2를 무엇으로 만들고, temp(B6 파일 없음)에서 어떤 원본을 쓰나, 렌더 측정(AC-03-23 getPlatformFontsForNode)이 지정 서체로 보이게 하려면
+- 근거 탐색: 03장 3.7.5, 09장 9.2 B6(temp: 시스템 Noto CJK KR), AD-032
+- 선택: ① `@tastefit/assets/fonts-node`(node 전용 하위 경로)가 python3 fontTools로 서브셋(layout 기능 전부, notdef 유지, 타임스탬프 재계산 없음 → 같은 입력 같은 바이트) ② 원본: registry files(있으면) → temp는 serif 분류 Noto Serif CJK KR, mono DejaVu Sans Mono, 그 외 Noto Sans CJK KR. 웨이트는 CSS 매칭 규칙(500 초과는 더 굵은 쪽)으로 가장 가까운 스타일 ③ 서브셋 파일의 이름 표(1·4·6·16)를 CSS family(subsetFamily)로 바꾼다 — temp 대체 서체여도 측정에는 지정 family로 나온다(실제 서체 품질 검증은 사람 데이터 B6 이후) ④ 같은 파일 이름이 있으면 다시 만들지 않는다(이름 = 글자 집합 해시)
+- 영향 범위: packages/assets(fonts-node·py/subset_fonts.py)
+- 되돌리기 비용: 낮음

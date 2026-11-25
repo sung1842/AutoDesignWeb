@@ -9,6 +9,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./fonts-node": {
+      "types": "./dist/fonts-node.d.ts",
+      "default": "./dist/fonts-node.js"
     }
   },
   "scripts": {
