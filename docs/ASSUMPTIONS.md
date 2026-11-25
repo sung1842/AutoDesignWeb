@@ -347,3 +347,10 @@
 - 선택: ① 임시 자체 선 아이콘 40개(map.json 의미 그대로, 24 그리드, currentColor, aria-hidden, data-icon-set·data-icon-stroke)로 iconSvg 구현(BLK-011) ② 굵기 = radius family(sharp·soft 1.5, round·pill 2), 세트 = l2 icon.set ③ icon-grid 의미는 용도별 고정 순환(saas bolt·chart·shield-check·users, local coffee·store·heart·leaf, portfolio brush·camera·image·link), 크기 32 ④ location 행 라벨 앞 map-pin·clock·phone(20) — 3.9.1 연락처 행 예외 안
 - 영향 범위: packages/assets(icons), packages/renderer(common·content-a·content-c, renderer → assets 의존)
 - 되돌리기 비용: 낮음(PATHS 표 교체)
+
+## ASM-050 · M2 · gap · 2026-11-25T17:05Z
+- 질문: 순수 컴파일러(4.9.1)가 3.7.5 페이지 서브셋 woff2를 어떻게 "생성"하나, 파일 이름·경로·preload는 무엇으로 정하나
+- 근거 탐색: 03장 3.7.4·3.7.5, 04장 CM-09, 09장 9.2 B6(temp: 시스템 Noto CJK KR 대체), D-0308
+- 선택: ① 컴파일러는 폰트 계획만 낸다: 페어링 → heading(토큰 heading 웨이트, preload)·body 400(preload)·body emphasis·heading 라틴·mono(classification=mono) ≤ 5면, 글자 집합 = 본문 텍스트 + 제목 + ASCII 95 + 한글 문장부호, 파일 `assets/fonts/<code>-<웨이트>-<FNV-1a 64 해시 12자>.woff2`(상대 경로, 외부 요청 0) ② `compilePage` 반환에 `fonts`(FontPlan) 추가 — 실제 woff2는 node 쪽 assets가 같은 계획으로 만든다(M2-07b2) ③ @font-face family = registry `subsetFamily`, `font-display: swap`, 폴백 면 tf-fb-sans·serif(3.7.4 local·메트릭 오버라이드), base에 `font-synthesis: none` ④ 해시는 순수 JS(FNV-1a 64, BigInt)로 node API 없이 계산
+- 영향 범위: packages/renderer(fonts·compile·m2·base.css)
+- 되돌리기 비용: 낮음

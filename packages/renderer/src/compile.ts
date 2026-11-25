@@ -4,6 +4,14 @@
 import { rootCss } from "@tastefit/design-spec/tokens-css";
 import { stylesCss } from "./css/sources.js";
 import { textRoleCss, type TextRole } from "./css/text-roles.js";
+import {
+  fontFaceCss,
+  fontPlan,
+  preloadLinks,
+  type FontEntryLike,
+  type FontPlan,
+  type PairingLike,
+} from "./fonts.js";
 import { attrs, el, esc, join, raw, safeAnchor, type Html } from "./html.js";
 
 /** 08장 8.x AI 고지(CM-16). */
@@ -367,6 +375,8 @@ type DataLike =
         slots?: { id: string; textRoles?: string[] }[];
       }[];
       textRoles?: TextRole[];
+      pairingsFull?: PairingLike[];
+      fonts?: FontEntryLike[];
     }
   | undefined;
 function headingFor(data: DataLike, block: string): string | null {
@@ -377,6 +387,25 @@ function slotRoles(data: DataLike, block: string, slot: string): string[] {
     data?.blocks?.find((b) => b.id === block)?.slots?.find((x) => x.id === slot)?.textRoles ?? []
   );
 }
+/** 토큰 세트 font.weight.<k> 값. */
+function weightOf(tokens: Record<string, unknown>, k: string, fb: number): number {
+  const w = (
+    (tokens.font as Record<string, unknown> | undefined)?.weight as
+      Record<string, { $value?: unknown }> | undefined
+  )?.[k]?.$value;
+  return typeof w === "number" ? w : fb;
+}
+/** 본문 HTML의 보이는 글자(태그 제거·기본 엔티티 복원). */
+function pageText(html: string): string {
+  return html
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&amp;/g, "&");
+}
+
 /** 토큰 세트에서 타입 단계의 데스크톱 px(3.1.5a nav.link 규칙용). */
 function stepPx(tokens: Record<string, unknown>, key: string): number | undefined {
   const t = (tokens.type as Record<string, unknown> | undefined)?.[key] as
@@ -385,19 +414,16 @@ function stepPx(tokens: Record<string, unknown>, key: string): number | undefine
 }
 
 /** CM-01~16 문서 조립. 같은 입력 → 같은 바이트(CM-14). */
-export function compilePageImpl(spec: SpecLike, tree: PTree, data?: DataLike): { html: string } {
+export function compilePageImpl(
+  spec: SpecLike,
+  tree: PTree,
+  data?: DataLike,
+): { html: string; fonts: FontPlan } {
   const wm = tree.footer.slots.wordmark;
   const brand = isCopy(wm) ? wm.copy.text : "";
   const roleCss = data?.textRoles
     ? textRoleCss(data.textRoles, { smallPx: stepPx(spec.tokens, "small") })
     : undefined;
-  const css = rootCss(spec.tokens, `TasteFit tokens-1 · ${spec.spec_id}`) + stylesCss(roleCss);
-  const head = raw(
-    `${GENERATOR_COMMENT}<meta charset="utf-8">` +
-      `<meta name="viewport" content="width=device-width, initial-scale=1">` +
-      `<meta name="generator" content="${esc(GENERATOR_META)}">` +
-      `<title>${esc(brand)}</title><style>${css}</style>`,
-  );
   const sections = tree.sections.map((s) => sectionHtml(spec, s, data));
   const depth = typeof spec.l2["depth.style"] === "string" ? spec.l2["depth.style"] : null;
   const body = join([
@@ -406,6 +432,26 @@ export function compilePageImpl(spec: SpecLike, tree: PTree, data?: DataLike): {
     el("main", { id: "main" }, ...sections),
     footerHtml(tree),
   ]);
+  // 폰트 계획(3.7.5 페이지 서브셋, CM-09). 글자 집합 = 본문 텍스트 + 제목(brand)
+  const plan = fontPlan({
+    pairingId: String(spec.l2["type.pairing_id"] ?? ""),
+    headingWeight: weightOf(spec.tokens, "heading", 700),
+    emphasisWeight: weightOf(spec.tokens, "emphasis", 700),
+    pairings: data?.pairingsFull ?? [],
+    fonts: data?.fonts ?? [],
+    text: pageText(body.__html) + brand,
+  });
+  const css =
+    fontFaceCss(plan) +
+    "\n" +
+    rootCss(spec.tokens, `TasteFit tokens-1 · ${spec.spec_id}`) +
+    stylesCss(roleCss);
+  const head = raw(
+    `${GENERATOR_COMMENT}<meta charset="utf-8">` +
+      `<meta name="viewport" content="width=device-width, initial-scale=1">` +
+      `<meta name="generator" content="${esc(GENERATOR_META)}">` +
+      `<title>${esc(brand)}</title>${preloadLinks(plan)}<style>${css}</style>`,
+  );
   const html = `<!doctype html><html${attrs({
     lang: "ko",
     "data-theme": spec.theme,
@@ -413,5 +459,5 @@ export function compilePageImpl(spec: SpecLike, tree: PTree, data?: DataLike): {
     "data-type": spec.type_id,
     "data-spec-id": spec.spec_id,
   })}><head>${head.__html}</head><body>${body.__html}</body></html>`;
-  return { html };
+  return { html, fonts: plan };
 }

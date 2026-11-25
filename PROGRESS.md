@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-25T15:28Z, since: 2026-11-25T15:59Z}
+- lock: {owner: 2026-11-25T15:28Z, since: 2026-11-25T16:04Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-26 05:28  # 이 세션 시작(00:28 KST)+5h 추정. 한도로 끊기면 이 시각 이후 정기 세션이 이어감
-- 마지막 갱신: 2026-11-26 00:59 KST (세션: M2-07a 아이콘, 다음 07b 폰트)
+- 마지막 갱신: 2026-11-26 01:04 KST (세션: M2-07b1 폰트 계획, 다음 07b2 서브셋 생성)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -116,7 +116,7 @@
   - [x] 04 layout-schema: [x] a LayoutTreeRaw zod(blocks.json enum·슬롯 kind)·JSON Schema·copyDeckLimits·기준 픽스처 → AC-04-10 녹색, ASM-039·BLK-009 [x] b PageSchema(확정 LayoutTree: text·asset_id·role_overrides)·JSON Schema 정적 검사(⑥, schema.test 4/4, ASM-040)
   - [x] 05 renderer a: [x] a1 CM-02 리터럴 검사·CSS 층 레지스트리·base.css·Button·TextLink(literal.test 4/4, 토큰 리터럴 AC 녹색, ASM-041) [x] a2 컴포넌트 CSS 나머지 16종(3.5.1·3.5.3 state, 12파일 리터럴 0) [x] a3 compilePage 골격(문서·nav·footer·섹션 속성 CM-04~06·14·16, 일반 템플릿, compile.test 3/3, ASM-042)
   - [x] 06 renderer b: [x] b0 텍스트 역할 층(B25 33역할 → text-roles.css·모든 텍스트 노드 data-role·blocks 슬롯 textRoles, 단위 4/4, ASM-043) [x] b1 hero 6 variant(hero.css 12열 text_cols, hero.test 4/4, ASM-044) [ ] b2 나머지 블록(registerTemplate + blocks/*.css): [x] b2a value·feature·showcase·stats·process 13(ASM-045) [x] b2b proof·pricing·faq·cta·menu 12(ASM-046) [x] b2c highlight·gallery·location·story·about·service·contact 16(ASM-047, BLK-010) [x] b2d nav·footer variant(sticky T2·T7, ASM-048)
-  - [ ] 07 assets: [x] a 아이콘 인라인 SVG(임시 도형 40, icon-grid·location, ASM-049·BLK-011) [ ] b 로컬 @font-face(B6 페이지 서브셋) [ ] c 이미지 경로·srcset·width/height [ ] d 100회 SHA 동일(④) 확인
+  - [ ] 07 assets: [x] a 아이콘 인라인 SVG(임시 도형 40, icon-grid·location, ASM-049·BLK-011) [ ] b 로컬 @font-face: [x] b1 폰트 계획·@font-face·preload(순수, ASM-050) [ ] b2 node 서브셋 생성(pyftsubset, temp 시스템 Noto CJK) [ ] c 이미지 경로·srcset·width/height [ ] d 100회 SHA 동일(④) 확인
   - [ ] 08 폴백 생성기(앵커 프리셋 + standardTree, AC-04-25 72조합) + fixtures/layouts 30+(①)
   - [ ] 09 Playwright(chromium) 렌더 하네스 + 하드 게이트 4종 선구현(②: 대비 AA·가로 넘침·겹침·깨진 이미지)
   - [ ] 10 worker render 잡(뷰포트 5 스크린샷)·외부 요청 0(③)
@@ -131,6 +131,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-26 01:04 | M2-07b1 폰트 계획(≤5면·preload 2·글자 해시 파일명)·@font-face, ASM-050 → 다음: 07b2
 - 2026-11-26 00:59 | M2-07a 아이콘 iconSvg(임시 40×3)·icon-grid·location 연결, ASM-049·BLK-011 → 다음: 07b @font-face
 - 2026-11-26 00:56 | M2-06b2d nav·footer variant·sticky → M2-06 완료(53 variant 템플릿), ASM-048 → 다음: M2-07 assets
 - 2026-11-26 00:54 | M2-06b2c 7블록 16 variant·폼·갤러리(넘침 0), ASM-047·BLK-010 → 다음: b2d
@@ -145,4 +146,3 @@
 - 2026-11-25 13:27 | M2-04a LayoutTreeRaw zod·JSON Schema·copyDeckLimits·픽스처 1 → AC-04-10 녹색, BLK-009 → 다음: 04b
 - 2026-11-25 13:16 | M2-03d4b staticLint 단계 S(AIL-01·03·06·09+SPEC)·장식 예산 거름 → AC-04-04·30 녹색, ASM-038 → 다음: M2-04
 - 2026-11-25 13:06 | M2-03d4a compileSpecs 조립·DesignSpecSchema → AC-04-03·06·08 녹색, ASM-037 → 다음: 03d4b staticLint
-- 2026-11-25 12:57 | M2-03d3b enforceVariantL2Diff(FIT→BAL 부족분·J 최소)·specId, ASM-036 → 다음: 03d4

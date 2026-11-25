@@ -3,13 +3,19 @@ export { cssLiteralViolations, declarations } from "./css/literal.js";
 export { rendererCssSources, stylesCss, type CssSource } from "./css/sources.js";
 import { compilePageImpl, type PTree, type SpecLike } from "./compile.js";
 import "./blocks/index.js";
+import type { FontPlan } from "./fonts.js";
+export * from "./fonts.js";
 export * from "./compile.js";
 export { esc } from "./html.js";
 const pending = (n: string): never => {
   throw new Error(`${n}: M2-05~07에서 구현 예정`);
 };
 /** 04장 4.9 컴파일(ASM-025 ③·ASM-042). spec = DesignSpec, tree = 확정 PageSchema, data = DesignData. */
-export function compilePage(spec: unknown, tree: unknown, data: unknown): { html: string } {
+export function compilePage(
+  spec: unknown,
+  tree: unknown,
+  data: unknown,
+): { html: string; fonts: FontPlan } {
   return compilePageImpl(
     spec as SpecLike,
     tree as PTree,

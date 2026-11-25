@@ -11,6 +11,7 @@ body {
   font-weight: var(--tf-font-weight-body);
   font-size: var(--tf-type-body);
   line-height: var(--tf-type-leading-body);
+  font-synthesis: none;
   word-break: keep-all;
   overflow-wrap: anywhere;
   text-wrap: pretty;
