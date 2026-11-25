@@ -9,6 +9,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./tokens-css": {
+      "types": "./dist/tokens-css.d.ts",
+      "default": "./dist/tokens-css.js"
     }
   },
   "scripts": {

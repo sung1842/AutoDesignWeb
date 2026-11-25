@@ -291,3 +291,10 @@
 - 선택: ① 위반 = 색 리터럴(hex·색 함수·color-mix·이름 색·transparent) + 단위 있는 치수(0·100%·1fr 제외, %·ms·deg 포함) + `!important` ② 단위 없는 수(opacity 0.06·flex 1)는 허용 ③ @media 등 at-rule 머리는 CSS 변수가 안 되므로 검사 밖(03장 브레이크포인트 값만 씀) ④ var(--x, 대체값)의 대체값은 검사 대상 ⑤ px 크기는 space 토큰 calc 합(36=8+1, 44=10+1, 52=12+1 단계), ghost hover α는 ::before currentColor + opacity ⑥ CSS는 문자열 TS 모듈(isomorphic, 4.9.1)로 두고 `rendererCssSources()`가 층 순서로 반환
 - 영향 범위: packages/renderer/src/css/**
 - 되돌리기 비용: 낮음
+
+## ASM-042 · M2 · gap · 2026-11-25T07:50Z
+- 질문: renderer가 DesignSpec.tokens(DTCG)를 tokens.css로 바꿀 때 design-spec의 변환 코드를 어떻게 쓰나(9.1.3 의존 표에 renderer→design-spec 없음, 4.9.1 isomorphic), 블록 기본 제목·확정 트리 타입은 어디서
+- 근거 탐색: 04장 4.9.1·CM-01~16, 03장 3.1.12, 09장 9.1.3, ASM-027 ①
+- 선택: ① design-spec의 토큰→CSS 변환을 순수 모듈 `tokens-css.ts`(+ 상수 `type-spec.ts`)로 분리하고 하위 경로 `@tastefit/design-spec/tokens-css`로만 renderer가 가져온다(fs·config 미사용, 내보내기 tokens.css와 같은 코드) ② renderer는 layout-schema를 런타임에 가져오지 않고 같은 모양의 구조 타입(PTree)을 둔다(테스트만 devDependency) ③ 블록 기본 제목은 `data.blocks[].default_heading_ko`, 없으면 시각 숨김 h2(aria-labelledby 유지) ④ data-slot-id = `<섹션>.<슬롯>[.<항목>]`(목록 둘째 필드 `.sub`), 푸터 `footer.<슬롯>` ⑤ variant 템플릿이 없으면 일반 템플릿(슬롯 종류 순서)으로 그리고 M2-05b·06에서 variant별로 교체 ⑥ 이미지는 M2-07 전까지 자리표시 틀(`data-media-slot`·`data-asset-id`)
+- 영향 범위: packages/design-spec(tokens-css·type-spec·package exports), packages/renderer
+- 되돌리기 비용: 낮음

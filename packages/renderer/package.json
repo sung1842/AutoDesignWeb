@@ -14,5 +14,11 @@
   "scripts": {
     "build": "tsc -b",
     "typecheck": "tsc -b --pretty false"
+  },
+  "dependencies": {
+    "@tastefit/design-spec": "workspace:^"
+  },
+  "devDependencies": {
+    "@tastefit/layout-schema": "workspace:^"
   }
 }

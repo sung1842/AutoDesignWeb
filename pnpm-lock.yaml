@@ -157,7 +157,15 @@ importers:
 
   packages/pipeline: {}
 
-  packages/renderer: {}
+  packages/renderer:
+    dependencies:
+      '@tastefit/design-spec':
+        specifier: workspace:^
+        version: link:../design-spec
+    devDependencies:
+      '@tastefit/layout-schema':
+        specifier: workspace:^
+        version: link:../layout-schema
 
   packages/scoring: {}
 

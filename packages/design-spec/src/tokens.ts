@@ -216,18 +216,8 @@ export const TYPE_STEPS: readonly { key: string; step: string; n: number }[] = [
   { key: "h1", step: "t-1", n: 5 },
   { key: "display", step: "t-display", n: 6 },
 ];
-/** 3.1.5 공식 상수: boost 적용 단계·상한(base 배수)·모바일 상한 px·음수 단계 하한·보간 기준 뷰포트. */
-export const TYPE_SPEC = {
-  boostFrom: 5,
-  h1MaxX: 6,
-  displayMaxX: 8,
-  mobileH1Max: 44,
-  mobileDisplayMax: 52,
-  minNegPx: 12,
-  mobileBaseMin: 16,
-  vwMobile: 375,
-  vwDesktop: 1280,
-} as const;
+export { TYPE_SPEC } from "./type-spec.js";
+import { TYPE_SPEC } from "./type-spec.js";
 const MOBILE_RATIO: Record<string, number> = { "1.333": 1.25, "1.25": 1.2, "1.2": 1.15 };
 /** 3.1.5 heading 행간: 크기 하한 내림차순. */
 const HEADING_LEADING: readonly { fromPx: number; lh: number }[] = [
