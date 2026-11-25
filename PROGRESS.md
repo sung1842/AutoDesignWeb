@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-25T03:47Z, since: 2026-11-25T04:16Z}
+- lock: {owner: 2026-11-25T03:47Z, since: 2026-11-25T04:27Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-25 17:47
-- 마지막 갱신: 2026-11-25 12:53 KST (예약 세션: M2-03 완료, 다음 M2-04 layout-schema)
+- 마지막 갱신: 2026-11-25 12:53 KST (예약 세션: M2-03·04a 완료, 다음 M2-04b PageSchema)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -113,7 +113,7 @@
   - [x] 01 M2 수용 테스트(acMilestones M2 + 9.4.4 ①~⑧) `test(acc)` 커밋 → qa:trace --audit → 자체 잠금, traceability M2 행: [x] a 토큰·택소노미·시그니처(03-02~11·44, tokens.test, ASM-023) [x] b 04장 명세서·보정·변형·트리(04-03~10·30, spec.test, ASM-024·BLK-007; 04-11은 e로) [x] c 컴포넌트·블록·서체·조판·텍스트 역할(03-15~27·42·45·46, blocks.test, ASM-025·BLK-008) [x] d 아이콘·이미지·반응형·다크·브랜드(03-28~37·41, assets.test, ASM-026) [x] e 컴파일·렌더·미리보기(render.test, ASM-027, AC-03-38 tokens.test 추가, traceability M2 56행; 04-11·17·18·18a, 04-08 렌더 D, 03-44 accent 렌더, 06-24~26·28, ①~⑧) [x] f qa:trace --audit 리터럴 0·단일 test(acc) eded1cd(AD-031)·자체 잠금
   - [x] 02 design-spec a: [x] a1 predictL1(AC-03-07 8/8)·calibrate 1·2단계(AC-04-05 31/31, ASM-028) [x] a2 mapL1toL2ForPurpose·snapToFeasible(F·J, snap.test 4/4, ASM-029)
   - [x] 03 design-spec b: [x] a signatureEligible(AC-03-08 12/12)·letterSpacingEm(단위 8/8) [x] b0 validateTokenSet(최소 JSON Schema 검증기, ASM-030) [x] b1 deriveTokens·expectedSize(AC-03-02~04·44 8/8, ASM-031; expectedSize 브라우저 대조는 M2-09) [x] b2 exportTokens(AC-03-05 ① 녹색, CSS 리터럴 ②③은 renderer M2-05) [x] c applyBrandColor(3.13, brand.test 4/4·192건 대비 통과, ASM-032) [ ] d compileSpecs: [x] d1 variantTargets(4.4 α·거리 강제, variants.test 2/2, ASM-033) [x] d2a pickSignatures(4.14, PURPOSE_RANK 임시, ASM-034) [x] d3 layoutConstraints(hero_variants·SigCtx·apply_to)·copyTone(4.6.1)·decor(layout.test 9/9, ASM-035) [x] d3b enforceVariantL2Diff(4.4 L2 7키 ≥3)·spec_id(enforce.test 4/4, ASM-036) [x] d4a compileSpecs 조립·DesignSpecSchema(zod, l2 단방향 생성) — spec.test AC-04-03·06·08 녹색, ASM-037 [x] d4b staticLint(S)·장식 예산 후보 거름 → spec.test AC-04-03~09·30 녹색(10은 M2-04), ASM-038
-  - [ ] 04 layout-schema: PageSchema zod·블록 슬롯·폴백 + JSON Schema 정적 검사(⑥)
+  - [ ] 04 layout-schema: [x] a LayoutTreeRaw zod(blocks.json enum·슬롯 kind)·JSON Schema·copyDeckLimits·기준 픽스처 → AC-04-10 녹색, ASM-039·BLK-009 [ ] b PageSchema(확정 LayoutTree: text·asset_id·role_overrides)·JSON Schema 정적 검사(⑥)
   - [ ] 05 renderer a: CSS Modules+CSS 변수, renderToStaticMarkup, 토큰→변수, 블록 일부
   - [ ] 06 renderer b: 나머지 블록·variant 전부(blocks.json 20블록·53 variant)
   - [ ] 07 assets: 로컬 @font-face·이미지 경로·아이콘 SVG 인라인, 100회 SHA 동일(④)
@@ -131,6 +131,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-25 13:27 | M2-04a LayoutTreeRaw zod·JSON Schema·copyDeckLimits·픽스처 1 → AC-04-10 녹색, BLK-009 → 다음: 04b
 - 2026-11-25 13:16 | M2-03d4b staticLint 단계 S(AIL-01·03·06·09+SPEC)·장식 예산 거름 → AC-04-04·30 녹색, ASM-038 → 다음: M2-04
 - 2026-11-25 13:06 | M2-03d4a compileSpecs 조립·DesignSpecSchema → AC-04-03·06·08 녹색, ASM-037 → 다음: 03d4b staticLint
 - 2026-11-25 12:57 | M2-03d3b enforceVariantL2Diff(FIT→BAL 부족분·J 최소)·specId, ASM-036 → 다음: 03d4
@@ -145,4 +146,3 @@
 - 2026-11-20 04:15 | M2-02a2 mapL1toL2ForPurpose·snapToFeasible(F 상충 7종·J), ASM-029 → 다음: M2-03
 - 2026-11-20 04:13 | M2-02a1 predictL1(8/8)·calibrate(31/31), ASM-028(감사 리터럴→사양 표) → 다음: 02a2 snap
 - 2026-11-20 03:33 | M2 API 자리표시(todo)·loadDesignData: 잠긴 m2 테스트 수집 복구(guard:count 274) → 다음: M2-02
-- 2026-11-20 03:28 | M2-01 완료: test(acc) eded1cd 자체 잠금 5파일(AD-031) → 다음: M2-02 design-spec a

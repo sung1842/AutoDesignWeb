@@ -35,3 +35,5 @@
 - [ ] (ASM-028) design-spec calibrate의 κ 구간 경계 0.75·moved_axes 0.20을 감사 회피용이 아닌 사양 상수 표 객체(KAPPA_BANDS·CALIB_SPEC)로 둔 것이 괜찮은지 확인해 주세요. BLK-007의 SC 행 추가 시 함께 정리 가능
 - [ ] (ASM-030) JSON Schema 검증기(ajv 등)를 dependency-allowlist에 넣을지 결정해 주세요. 지금은 data-contracts의 최소 검증기로 data/tokens/schema.json을 검증합니다
 - [ ] (ASM-034) 시그니처 용도 적합 순위(`signatures.json.purpose_rank`)가 데이터에 없어 design-spec `PURPOSE_RANK`에 임시 순위를 두었습니다. 사람 순위로 B 묶음에 추가해 주세요
+- [ ] (BLK-009) AC-03-19 슬롯 maxLength ↔ 덱 상한 비교를 필드별로 고치고 relock해 주세요. 지금 식(min ≥ max)은 2필드 목록 키에서 항상 실패합니다(BLOCKED.md BLK-009)
+- [ ] (ASM-035) 패턴 카탈로그(4.8)를 config/patterns.json으로, 용도 허용 hero 목록을 purposes.json에 둘지 확인해 주세요. 지금은 design-spec PATTERNS 상수와 패턴 hero 힌트로 대신합니다

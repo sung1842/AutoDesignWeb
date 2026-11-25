@@ -80,3 +80,12 @@
 - 처리: M2 수용 테스트는 AC-03-15의 렌더·케이스 수·G-02·G-07만 검사. axe 검사는 허용 목록에 추가된 뒤 수용 테스트에 넣는다(relock)
 - 제안 수정안(사람): dependency-allowlist에 `axe-core`(MPL-2.0, apps/worker·e2e) 추가 → guard 라이선스 허용 목록에 MPL-2.0 → relock
 - 상태: open
+
+## BLK-009 · M2 · locked-conflict · 2026-11-25T04:25Z
+- 대상: tests/acceptance/m2/blocks.test.ts AC-03-19(자체 잠금) ↔ 04장 4.6.2 덱 상한(목록 키는 필드별 상한) ↔ ASM-025 ⑤ 계약 `copyDeckLimits() → {덱키: 수 | {필드: 수}}`
+- 증상: 테스트가 `min(슬롯 maxLength 값들) ≥ max(덱 상한 값들)`로 비교해, 필드가 2개 이상인 목록 키(value.items {제목 18, 본문 90} 등)는 슬롯과 상한이 같아도 18 < 90으로 항상 실패한다
+- 재현: copyDeckLimits()가 4.6.2 표 그대로(예 "value.items": {제목: 18, 본문: 90}) 반환하고 blocks.json 슬롯 maxLength가 같은 값일 때 AC-03-19 실패
+- 시도: (1) 목록 키 상한을 숫자 하나(최소 필드값)로 반환 → 본문 상한이 사라져 계약·4.6.2와 어긋남 (2) blocks.json 슬롯 maxLength를 부풀림 → 데이터 왜곡
+- 처리: copyDeckLimits는 4.6.2 그대로 구현(M2-04a). AC-03-19 목록 키 비교는 실패로 남고 verify:m2에서 이 BLK로 보고
+- 제안 수정안(사람): 비교를 필드별로 바꾼다(`for f in lim: ml[f] ≥ lim[f]`, 숫자끼리는 그대로) → relock
+- 상태: open

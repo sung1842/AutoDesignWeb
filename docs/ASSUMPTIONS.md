@@ -270,3 +270,10 @@
 - 선택: ① 단계 S = AIL-01(토큰 gradient 정지점), AIL-03(font.heading·body 첫 항목을 fonts registry 별칭→패밀리로 풀어 비교, mono 제외), AIL-06(depth.style이 그림자형일 때 radius.md ∈ [12,16] ∧ 해당 shadow level 최대 blur ≥ 16 ∧ 전 층 α ≤ 0.15, T3·T4·T6 warn), AIL-09(a)(glass 장식 ∧ depth.style ≠ glass) + 명세 정합 규칙 SPEC-DECOR(effects > max)·SPEC-CF(conflict_ids)·SPEC-RESERVED(shadow 3)·SPEC-DUOTONE·SPEC-SIG. 탐지 상수는 packages/linter/data/rule-params.json(자체 잠금은 M2 끝 --m2-end에서) ② 11단계 재시도 대신 실패 원인을 선택 단계에서 막는다: pickSignatures 후보를 "장식 예산 안"(decorFor 결과 effects ≤ max)으로 거르고, 비면 SIG-01/SIG-09(장식 없음). 그 결과 72조합 단계 S error 0(AC-04-04). 다른 S 규칙 위반은 생성 경로가 없어(그라디언트 토큰 없음·F 집합이 상충 제외) 재시도 루프는 두지 않는다
 - 영향 범위: packages/linter/src/stage-s.ts·data/rule-params.json, packages/design-spec/src/pick-signature.ts·compile.ts
 - 되돌리기 비용: 낮음
+
+## ASM-039 · M2 · gap · 2026-11-25T04:26Z
+- 질문: 04장 4.5.2 LayoutTreeRaw zod의 enum 원천·슬롯 필수성·섹션 수 상한과 4.6.2 copyDeckLimits 형식, AC-04-10 기준 픽스처
+- 근거 탐색: 04장 4.5.2·4.5.3·4.6.2, 03장 blocks.json(slots.kind·required)·purposes.json(sectionCount)·images manifest, ASM-024 ⑥·ASM-027 ②
+- 선택: ① 섹션 = 블록별 discriminatedUnion(block 리터럴), variant enum·슬롯 키는 blocks.json, 슬롯 값은 kind별(copy·list·image·link) strict 객체, required 슬롯은 필수 ② nav·footer는 섹션 블록에서 제외(footer는 별도 필드) ③ 섹션 수 스키마 상한 = purposes 최대(8), 용도별 범위·LT-01~04·09·10은 명세서가 필요해 린트 T(M2-08)에서 ④ image.tag enum = manifest 태그(orient.·tone. 제외) ⑤ 섹션 id 중복은 superRefine으로 거부 ⑥ JSON Schema는 zod 4 `z.toJSONSchema` ⑦ copyDeckLimits = 4.6.2 상한(목록은 한글 필드명 객체, blocks.json maxLength 키와 같음), `work.items[0]`(showcase 캡션)·`contact.*`(컴파일러 채움, 0) 포함 ⑧ 기준 픽스처 fixtures/layouts/saas-ps1.json(`{purpose, typeId, provenance: temp, raw, deck}`), 나머지 픽스처는 M2-08
+- 영향 범위: packages/layout-schema/src/schema.ts, fixtures/layouts
+- 되돌리기 비용: 낮음
