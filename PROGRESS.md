@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-25T21:08Z, since: 2026-11-25T22:32Z}
+- lock: 
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-26 11:08  # 이 세션 시작(06:08 KST)+5h 추정
-- 마지막 갱신: 2026-11-26 07:32 KST (세션: M2-09d3 B18 코퍼스 재생성, 다음 09d4 AC-04-08 진단)
+- 마지막 갱신: 2026-11-26 07:40 KST (세션 종료: G-12·추출기·B18 재생성, 다음 09d4a 시그니처 층)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -119,7 +119,7 @@
   - [x] 06 renderer b: [x] b0 텍스트 역할 층(B25 33역할 → text-roles.css·모든 텍스트 노드 data-role·blocks 슬롯 textRoles, 단위 4/4, ASM-043) [x] b1 hero 6 variant(hero.css 12열 text_cols, hero.test 4/4, ASM-044) [ ] b2 나머지 블록(registerTemplate + blocks/*.css): [x] b2a value·feature·showcase·stats·process 13(ASM-045) [x] b2b proof·pricing·faq·cta·menu 12(ASM-046) [x] b2c highlight·gallery·location·story·about·service·contact 16(ASM-047, BLK-010) [x] b2d nav·footer variant(sticky T2·T7, ASM-048)
   - [x] 07 assets: [x] a 아이콘 인라인 SVG(임시 도형 40, icon-grid·location, ASM-049·BLK-011) [x] b 로컬 @font-face: [x] b1 폰트 계획·@font-face·preload(순수, ASM-050) [x] b2 node 서브셋 생성(fontTools, temp 시스템 Noto CJK, 결정적·이름 표=subsetFamily, ASM-051) [x] c 이미지 <img>(로컬 경로·width/height·eager/lazy·초점)·shape-graphic G1~G4(ASM-052) [x] d 100회 SHA 동일(④, 프리셋 8 단위 테스트)
   - [x] 08 폴백 생성기: [x] a standardTree·fallbackMockup·resolveTree(72 PageSchema 유효, ASM-053) [x] b fixtures/layouts 31(용도 × 10+, 패턴 1~4 전부, `pnpm fixtures:layouts`)·fixturePage(①, ASM-054)
-  - [ ] 09 하네스·게이트: [x] a 하네스 코어(가상 오리진·자산 서빙·measure·폰트 바이트·플랫폼 폰트)·G-02·04·05·06·07(폴백 72×2 위반 0, ASM-055) [x] b headlineLines·compileInBrowser(브라우저 = Node SHA 동일, AC-04-18a) [x] c G-03 비텍스트 대비(입력·버튼 경계·포커스, 폴백 72×2 G-02~07 위반 0) [x] f 검사용 렌더: renderBlockSample·renderComponentGallery(93케이스)·renderStepProbe(ASM-061) [x] e G-12 명세 무결성·AIL-17(D)(AC-03-45 ①~④ 녹색, ASM-065) [ ] d extractL1(05장 추출기): [x] d1 원시 특징 F01~F30(DOM·픽셀 k-means, harness.features, ASM-066) [x] d2 정규화기 → L1(5.5.4)·harness.extractL1(ASM-067; AC-04-08 0.406, 자리표시 분위 탓) [x] d3 B18 재생성(`seed:temp --corpus`, 200 렌더, ASM-068) [ ] d4 AC-04-08(현재 0.365 < 0.95) 원인 진단·추출 특징 보정
+  - [ ] 09 하네스·게이트: [x] a 하네스 코어(가상 오리진·자산 서빙·measure·폰트 바이트·플랫폼 폰트)·G-02·04·05·06·07(폴백 72×2 위반 0, ASM-055) [x] b headlineLines·compileInBrowser(브라우저 = Node SHA 동일, AC-04-18a) [x] c G-03 비텍스트 대비(입력·버튼 경계·포커스, 폴백 72×2 G-02~07 위반 0) [x] f 검사용 렌더: renderBlockSample·renderComponentGallery(93케이스)·renderStepProbe(ASM-061) [x] e G-12 명세 무결성·AIL-17(D)(AC-03-45 ①~④ 녹색, ASM-065) [ ] d extractL1(05장 추출기): [x] d1 원시 특징 F01~F30(DOM·픽셀 k-means, harness.features, ASM-066) [x] d2 정규화기 → L1(5.5.4)·harness.extractL1(ASM-067; AC-04-08 0.406, 자리표시 분위 탓) [x] d3 B18 재생성(`seed:temp --corpus`, 200 렌더, ASM-068) [ ] d4 AC-04-08(현재 0.365 < 0.95). 진단(골든 6건): 변형 쌍 토큰 차이 1~2키뿐이고 4.4 ≥3키는 hero·signature extras로 채움, 그런데 renderer에 시그니처 층(4.14 SIG-01~12)이 없어 렌더 차이가 안 남. F22 항상 0, F01 중앙값 0 → [ ] d4a renderer 시그니처 층(4.14·3.2.4, signature.apply_to) [ ] d4b 폴백 트리 hero variant 반영 확인 [ ] d4c `pnpm -s build && pnpm seed:temp --corpus` 재생성 → AC-04-08 재측정(미달이면 추출 특징 정의 점검, 같은 원인 3회면 BLOCKED)
   - [x] 10 worker render 잡(뷰포트 5 PNG·차단 카운터, JS off, 글꼴 /fonts/, ASM-058)
   - [x] 11 미리보기: 서명 URL·preview 헤더·iframe·compileForEdit CSP·parentProbe(⑧, ASM-059). Next 라우트 연결은 M5
   - [ ] 12 시각 회귀 기준선 24장(⑤, 로컬 chromium 가능분만, 나머지 needs_ci)
@@ -132,6 +132,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-26 07:40 | 09d4 진단: 시그니처 층 미구현으로 변형 렌더 차이 부족 → d4a~c 계획, 세션 종료(잠금 해제)
 - 2026-11-26 07:32 | M2-09d3 B18 정규화기 200 렌더 재생성(seed:temp --corpus), 전 축 temp, AC-04-08 0.365, ASM-068
 - 2026-11-26 07:06 | M2-09d2 toL1(5.5.4)·extractL1, AC-04-08 0.406(B18 자리표시) → 09d3 B18 재생성, ASM-067
 - 2026-11-26 06:58 | M2-09d1 추출기 F01~F30(DOM·k-means)·harness.features, 앵커 8 결정성 통과, ASM-066
@@ -146,4 +147,3 @@
 - 2026-11-26 02:20 | M2-09c G-03 비텍스트 대비(폴백 72×2 게이트 6종 위반 0), ASM-057 → 다음: M2-10 render 잡
 - 2026-11-26 02:13 | M2-09b headlineLines·compileInBrowser(브라우저·Node SHA 동일), ASM-056 → 다음: 09c G-03·G-12
 - 2026-11-26 01:43 | M2-09a 렌더 하네스·G-02/04/05/06/07(폴백 72×2 통과)·inverse 버튼·이미지 위 텍스트 판, ASM-055 → 다음: 09b
-- 2026-11-26 01:29 | M2-08b 픽스처 30개 생성기·fixturePage(전부 스키마 유효·컴파일), ASM-054 → M2-08 완료 → 다음: M2-09 하네스
