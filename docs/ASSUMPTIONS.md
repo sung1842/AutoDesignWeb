@@ -249,3 +249,10 @@
 - 선택: ① hero_variants: TRUE = 프리셋 heroVariants, FIT = purposes.standardHero, BAL = 유형 ∩ "용도 허용"(= 그 용도 패턴 4개의 hero 힌트), 비면 유형 목록. 값은 `hero.<id>` ② 패턴 카탈로그는 사양 상수 PATTERNS(config/patterns.json 없음). FIT = [표준, job_seed 회전으로 고른 표준 외 1], TRUE = preferredPatterns, BAL = [표준, 유형 선호 중 표준 아닌 것]. 표준이 TRUE에도 있어 3회가 되면 "잡 내 ≤ 2"가 이기고 BAL 슬롯1을 남은 패턴으로 바꾼다 ③ SigCtx: 섹션 수 = 용도 하한, chroma medium→moderate, 숫자 슬롯 = stats·process·value.numbered 허용, 이미지 슬롯 = SIG-12 적용 블록(hero.split·story·about) 중 이미지 variant 허용 ④ allowed_variants = 용도 블록(required ∪ requiredAny ∪ optional, nav·hero·footer 포함) − excludedVariants, `*.bento`는 grid_mode=bento일 때만, hero = hero_variants ⑤ apply_to는 03장 3.2.4 적용 블록(순서 = 우선) ∩ 이 명세 블록, 최대 수는 04장 4.14(전체 = 후보 수), SIG-02·08 = 섹션 전체, SIG-09 = nav + 섹션, SIG-10 = 이미지 variant 블록, SIG-07 = "page"(페이지 배경) ⑥ image_tags_allowed: 업종 태그 입력이 CompileInput에 없어 지금은 항상 {defaultImageTag} ∪ common.texture-*(M5 BrandInput 업종 연결 때 industryTags 인자 사용) ⑦ tone 기본 헤드라인 순서(4.6.1 "tone 기본 순서" 미정): PRECISE factual>benefit>emotive, WARM benefit>emotive>factual, EDITORIAL·PLAYFUL emotive 우선 ⑧ decor.effects가 max를 넘는 조합(DecorId 시그니처 + glass/brutal-offset, max 1)은 M2-03d4 staticLint(S)에서 걸러 재시도한다
 - 영향 범위: packages/design-spec/src/layout.ts·data.ts(blocks·imageTags 로드)
 - 되돌리기 비용: 낮음
+
+## ASM-036 · M2 · gap · 2026-11-25T03:56Z
+- 질문: 04장 4.4 enforceVariantL2Diff의 탐색 방식(교체 키·평가 쌍·종료)과 4.2.1 spec_id "입력 정규화 JSON"의 범위
+- 근거 탐색: 04장 4.2.1·4.2.2·4.3 3단계(J·F)·4.4 표, thresholds generation.variant.l2DiffMin
+- 선택: ① 교체 대상 = 7키 중 L2 키 6개(pairing·palette·radius·depth.style·shadow_level·density). hero·signature는 l2에서 다시 계산하는 extras 콜백으로 차이에 반영 ② V-FIT은 (TRUE, FIT) 쌍만, V-BAL은 (TRUE, BAL)·(FIT, BAL) 부족분 합을 줄이는 단일 키 교체 중 J 증가량 최소(동률이면 키·값 순서 앞)를 F 안에서 반복(≤ 7회) ③ 페어링 교체 시 헤드라인 굵기가 새 페어링 허용값 밖이면 페어링 기본값(없으면 첫 허용값)으로 맞춘 뒤 F 판정 ④ 끝까지 미달이면 예외 없이 satisfied=false(4.4 렌더 층·low_separation으로 넘김) ⑤ spec_id = sha256(키 정렬 JSON(compile 입력 + variant + 버전)) 앞 16자. 조립 필드는 M2-03d4 compileSpecs에서 확정
+- 영향 범위: packages/design-spec/src/enforce.ts
+- 되돌리기 비용: 낮음
