@@ -55,11 +55,14 @@ export function fnv64(s: string): string {
   return h.toString(16).padStart(16, "0");
 }
 
+/** 제어 문자(U+0000~U+001F)를 빼는 기준: 공백(U+0020)부터. */
+const FIRST_PRINTABLE = " ".codePointAt(0) ?? 0;
+
 export function subsetChars(text: string): string {
   const set = new Set<number>();
   for (const ch of SUBSET_BASE + text) {
     const cp = ch.codePointAt(0) ?? 0;
-    if (cp >= 32) set.add(cp);
+    if (cp >= FIRST_PRINTABLE) set.add(cp);
   }
   return [...set]
     .sort((a, b) => a - b)
