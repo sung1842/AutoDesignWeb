@@ -3,11 +3,11 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {}
+- lock: {owner: 2026-11-25T15:28Z, since: 2026-11-25T15:30Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
-- limit.next_reset_kst: 2026-11-25 17:47
+- limit.next_reset_kst: 2026-11-26 05:28
 - 마지막 갱신: 2026-11-25 16:55 KST (예약 세션: M2-05 완료(a1~a3), 다음 M2-06 b0 텍스트 역할 층)
 
 ## 실행 환경 사실(2026-11-18 점검)
