@@ -61,7 +61,7 @@ describe("폰트 계획(3.7.4·3.7.5·CM-09, ASM-050)", () => {
         ["heading", "body"].slice(0, plan.faces.filter((f) => f.preload).length),
       );
       for (const f of plan.faces)
-        expect(f.file).toMatch(/^assets\/fonts\/[a-z0-9-]+-\d{3}-[0-9a-f]{12}\.woff2$/);
+        expect(f.file).toMatch(/^\/assets\/fonts\/[a-z0-9-]+-\d{3}-[0-9a-f]{12}\.woff2$/);
     }
   });
   it("컴파일 HTML: @font-face(subsetFamily)·폴백 면·preload, 외부 URL 0, 같은 입력 같은 파일 이름", () => {

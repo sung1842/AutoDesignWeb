@@ -29,7 +29,7 @@ const img = {
   image: {
     tag: "x",
     ratio: "16:9",
-    asset_id: "a1",
+    asset_id: data.images[0]!.id,
     alt: "화면",
     focal: [0.5, 0.5] as [number, number],
   },

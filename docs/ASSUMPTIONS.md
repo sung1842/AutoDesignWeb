@@ -361,3 +361,10 @@
 - 선택: ① `@tastefit/assets/fonts-node`(node 전용 하위 경로)가 python3 fontTools로 서브셋(layout 기능 전부, notdef 유지, 타임스탬프 재계산 없음 → 같은 입력 같은 바이트) ② 원본: registry files(있으면) → temp는 serif 분류 Noto Serif CJK KR, mono DejaVu Sans Mono, 그 외 Noto Sans CJK KR. 웨이트는 CSS 매칭 규칙(500 초과는 더 굵은 쪽)으로 가장 가까운 스타일 ③ 서브셋 파일의 이름 표(1·4·6·16)를 CSS family(subsetFamily)로 바꾼다 — temp 대체 서체여도 측정에는 지정 family로 나온다(실제 서체 품질 검증은 사람 데이터 B6 이후) ④ 같은 파일 이름이 있으면 다시 만들지 않는다(이름 = 글자 집합 해시)
 - 영향 범위: packages/assets(fonts-node·py/subset_fonts.py)
 - 되돌리기 비용: 낮음
+
+## ASM-052 · M2 · gap · 2026-11-25T17:45Z
+- 질문: 미디어 슬롯을 어떤 마크업으로 그리나(경로·크기·초점·shape-graphic), 3.10.5 구성 선택 seed는 무엇인가
+- 근거 탐색: 03장 3.10·3.10.5·AC-03-31·32, 04장 CM-03(style 속성 금지)·CM-09, ASM-026 ③
+- 선택: ① photo-led·type-led: `<img src="/assets/images/<manifest path에서 data/images/ 뺀 것>" width height(슬롯 비율, manifest 폭 기준) loading(hero eager + fetchpriority high, 나머지 lazy) decoding=async>`를 `.tf-media[data-media-slot][data-asset-id]` 안에 ② 초점은 10% 단위 `data-fx·data-fy` + 생성 CSS(focal.css, 소스 층 밖)로 object-position 변수 설정 ③ media.mode = shape-graphic 또는 manifest에 없는 자산 → 3.10.5 색면 G1~G4(12×12 격자 직사각형, primary·accent·surface-inverse), 선택 = FNV-1a(spec_id‖slot) mod 4(sha256(job_seed‖slot) 대신, 잡 seed가 아직 없음), role=img + "<alt> 이미지 자리" ④ BLK-010 빈 칸도 색면(aria-hidden, data-media-slot 없음) ⑤ 폰트·이미지 경로는 `/assets/...` 절대 경로(내보내기에서 상대 경로로 바꿈, M6). srcset은 human 래스터 이미지가 들어올 때(지금 temp는 SVG)
+- 영향 범위: packages/renderer(media·compile·blocks), packages/design-spec(DesignData.images), packages/assets(py 경로)
+- 되돌리기 비용: 낮음

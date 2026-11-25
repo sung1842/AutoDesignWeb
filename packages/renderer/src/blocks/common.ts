@@ -82,7 +82,7 @@ export function listEl(
 }
 
 export function mediaBox(ctx: BlockCtx, slot: string, img: Img | null, cls: string): Html[] {
-  return img ? [el("div", { class: cls }, mediaEl(ctx.slotId(slot), img))] : [];
+  return img ? [el("div", { class: cls }, mediaEl(ctx, ctx.slotId(slot), img))] : [];
 }
 
 /** 섹션 머리(제목). 블록 템플릿 공통 래퍼. */

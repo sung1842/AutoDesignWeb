@@ -5,6 +5,7 @@ import { compilePageImpl, type PTree, type SpecLike } from "./compile.js";
 import "./blocks/index.js";
 import type { FontPlan } from "./fonts.js";
 export * from "./fonts.js";
+export * from "./media.js";
 export * from "./compile.js";
 export { esc } from "./html.js";
 const pending = (n: string): never => {

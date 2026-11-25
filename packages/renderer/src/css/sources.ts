@@ -20,6 +20,7 @@ import { CHROME_CSS } from "./blocks/chrome.js";
 import { CONTENT_B_CSS } from "./blocks/content-b.js";
 import { CONTENT_C_CSS } from "./blocks/content-c.js";
 import { HERO_CSS } from "./blocks/hero.js";
+import { MEDIA_BLOCK_CSS } from "./blocks/media.js";
 
 export interface CssSource {
   path: string;
@@ -41,6 +42,7 @@ const SOURCES: readonly CssSource[] = [
   { path: "components/accordion.css", css: ACCORDION_CSS },
   { path: "components/misc.css", css: MISC_CSS },
   { path: "blocks/layout.css", css: LAYOUT_CSS },
+  { path: "blocks/media.css", css: MEDIA_BLOCK_CSS },
   { path: "blocks/hero.css", css: HERO_CSS },
   { path: "blocks/content-a.css", css: CONTENT_A_CSS },
   { path: "blocks/content-b.css", css: CONTENT_B_CSS },

@@ -77,7 +77,7 @@ def main():
     req = json.load(sys.stdin)
     res = []
     for f in req["faces"]:
-        out = os.path.join(req["outDir"], f["file"])
+        out = os.path.join(req["outDir"], f["file"].lstrip("/"))
         how = "cached"
         if not os.path.exists(out):
             how = build(f, req["chars"], out)

@@ -46,7 +46,7 @@ function treeFor(v: { id: string; image: { ratios: string[] } | null }): PTree {
                   image: {
                     tag: "x",
                     ratio,
-                    asset_id: "a1",
+                    asset_id: data.images[0]!.id,
                     alt: "화면",
                     focal: [0.5, 0.5] as [number, number],
                   },

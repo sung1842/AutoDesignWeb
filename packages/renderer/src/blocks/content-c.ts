@@ -3,6 +3,7 @@
 // 빈 자리표시 틀(장식, aria-hidden)로 그린다(BLK-010).
 import { mediaEl, registerTemplate, textEl, type BlockCtx, type PSection } from "../compile.js";
 import { el, type Html } from "../html.js";
+import { shapeGraphic } from "../media.js";
 import {
   copyOf,
   head,
@@ -20,15 +21,17 @@ const role = (ctx: BlockCtx, slot: string, i: number, fb: string): string =>
   ctx.roles(slot)[i] ?? fb;
 
 /** 실제 이미지가 없는 칸(BLK-010): 비율만 가진 빈 틀. */
-function emptyFrame(ratio: string): Html {
-  return el("div", {
-    class: `tf-media tf-media--${ratio.replace(":", "-")} tf-media--placeholder`,
-    "aria-hidden": "true",
-    "data-media-empty": "true",
-  });
+function emptyFrame(ctx: BlockCtx, i: number, ratio: string): Html {
+  return el(
+    "div",
+    { class: "tf-media-slot", "data-media-empty": "true" },
+    shapeGraphic(ctx.media.seed, `${ctx.slotId("media")}.${i}`, ratio, null),
+  );
 }
 function frameAt(ctx: BlockCtx, img: Img | null, i: number, ratio: string): Html {
-  return i === 0 && img ? mediaEl(ctx.slotId("media"), { ...img, ratio }) : emptyFrame(ratio);
+  return i === 0 && img
+    ? mediaEl(ctx, ctx.slotId("media"), { ...img, ratio })
+    : emptyFrame(ctx, i, ratio);
 }
 
 // --- highlight ---
@@ -184,8 +187,8 @@ const locationInfoMap: Tpl = (s, ctx) =>
       "div",
       { class: "tf-split__aside" },
       imageOf(s.slots.mapPlaceholder)
-        ? mediaEl(ctx.slotId("mapPlaceholder"), imageOf(s.slots.mapPlaceholder)!)
-        : emptyFrame("3:2"),
+        ? mediaEl(ctx, ctx.slotId("mapPlaceholder"), imageOf(s.slots.mapPlaceholder)!)
+        : emptyFrame(ctx, 0, "3:2"),
     ),
   );
 const locationInfoOnly: Tpl = (s, ctx) =>

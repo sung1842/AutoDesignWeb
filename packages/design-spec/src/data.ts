@@ -65,12 +65,23 @@ export interface DesignData extends MapData {
   pairingsFull: PairingFull[];
   /** 03장 blocks.json(20블록). */
   blocks: JsonObj[];
+  /** 03장 3.10 이미지 팩 manifest(B8). 렌더러가 asset_id → 경로·크기·초점을 찾는다. */
+  images: ImageEntry[];
   /** 03장 3.1.5a 텍스트 역할(B25, text-roles.json). */
   textRoles: JsonObj[];
   /** 03장 3.6.5 이미지 태그 전체(manifest 태그 합집합, orient.·tone. 제외). */
   imageTags: string[];
   /** 05장 정규화기 최신 버전(data/normalizers/<시즌>.json 파일명). */
   normalizerVersion: string;
+}
+
+export interface ImageEntry {
+  id: string;
+  path: string;
+  width: number;
+  height: number;
+  focalPoint: [number, number];
+  altKo: string;
 }
 
 interface Envelope<T> {
@@ -103,6 +114,14 @@ export function loadDesignData(root: string): DesignData {
     pairingsFull: read<PairingFull>(root, "data/fonts/pairings.json").items,
     blocks: read<JsonObj>(root, "data/taxonomy/blocks.json").items,
     textRoles: read<JsonObj>(root, "data/taxonomy/text-roles.json").items,
+    images: read<ImageEntry>(root, "data/images/manifest.json").items.map((m) => ({
+      id: m.id,
+      path: m.path,
+      width: m.width,
+      height: m.height,
+      focalPoint: m.focalPoint,
+      altKo: m.altKo,
+    })),
     normalizerVersion:
       readdirSync(join(root, "data/normalizers"))
         .filter((f) => f.endsWith(".json"))

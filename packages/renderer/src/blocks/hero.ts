@@ -56,7 +56,9 @@ function heroText(s: PSection, ctx: BlockCtx): Html {
 }
 
 function heroMedia(ctx: BlockCtx, img: Img | null, cls = "tf-hero__media"): Html[] {
-  return img ? [el("div", { class: cls }, mediaEl(ctx.slotId("media"), img))] : [];
+  return img
+    ? [el("div", { class: cls }, mediaEl(ctx, ctx.slotId("media"), img, { eager: true }))]
+    : [];
 }
 
 const grid = (...parts: Html[]): Html => el("div", { class: "tf-hero__grid" }, ...parts);
@@ -81,7 +83,7 @@ function offset(s: PSection, ctx: BlockCtx): Html {
         el(
           "div",
           { class: "tf-hero__media tf-hero__media--secondary", "aria-hidden": "true" },
-          mediaEl(`${ctx.slotId("media")}.secondary`, { ...img, ratio: "1:1", alt: "" }),
+          mediaEl(ctx, `${ctx.slotId("media")}.secondary`, { ...img, ratio: "1:1", alt: "" }),
         ),
       ]
     : [];

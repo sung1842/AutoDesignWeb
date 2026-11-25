@@ -39,7 +39,7 @@ export interface FontPlan {
 /** 3.7.5 페이지 서브셋 기본 글자: ASCII 95 + 한글 문장부호. */
 export const SUBSET_BASE =
   Array.from({ length: 95 }, (_, i) => String.fromCharCode(32 + i)).join("") + "「」·…–“”‘’";
-export const FONT_DIR = "assets/fonts";
+export const FONT_DIR = "/assets/fonts";
 
 /** FNV-1a 64비트(BigInt, 순수). 파일 이름용 결정적 해시. */
 export function fnv64(s: string): string {

@@ -13,6 +13,7 @@ import {
   type PairingLike,
 } from "./fonts.js";
 import { attrs, el, esc, join, raw, safeAnchor, type Html } from "./html.js";
+import { focalCss, mediaHtml, type ImageLike, type MediaCtx, type MediaOpts } from "./media.js";
 
 /** 08장 8.x AI 고지(CM-16). */
 export const GENERATOR_META = "TasteFit (AI-generated design draft)";
@@ -71,6 +72,8 @@ export interface BlockCtx {
   spec: SpecLike;
   section: PSection;
   headingId: string;
+  /** 미디어 해석(이미지 팩·media.mode). */
+  media: MediaCtx;
   /** 섹션 제목 요소(h1/h2). variant 템플릿은 이것을 직접 배치한다(일반 템플릿은 컴파일러가 앞에 둔다). */
   heading: Html;
   /** 슬롯 요소 id(CM-04 data-slot-id): `<섹션>.<슬롯>[.<항목>]`. */
@@ -128,18 +131,14 @@ export function linkEl(
     isButton ? el("span", { "data-role": role, "data-size": size }, l.label.text) : l.label.text,
   );
 }
-/** 미디어 슬롯(C12). 실제 이미지 경로·srcset은 assets(M2-07)에서 붙는다. 지금은 자리표시 틀. */
-export function mediaEl(slotId: string, img: Extract<PSlot, { image: unknown }>["image"]): Html {
-  const ratio = img.ratio.replace(":", "-");
-  return el("div", {
-    class: `tf-media tf-media--${ratio} tf-media--placeholder`,
-    role: img.alt ? "img" : null,
-    "aria-label": img.alt || null,
-    "aria-hidden": img.alt ? null : "true",
-    "data-slot-id": slotId,
-    "data-media-slot": img.tag,
-    "data-asset-id": img.asset_id,
-  });
+/** 미디어 슬롯(C12, 3.10): 이미지 팩 <img> 또는 색면 구성(media.ts, ASM-052). */
+export function mediaEl(
+  ctx: { media?: MediaCtx },
+  slotId: string,
+  img: Extract<PSlot, { image: unknown }>["image"],
+  o: MediaOpts = {},
+): Html {
+  return mediaHtml(ctx.media, slotId, img, o);
 }
 
 /** 일반 템플릿: 슬롯 종류별로 순서대로 그린다(블록별 템플릿이 없을 때). */
@@ -191,12 +190,12 @@ export function genericBlock(s: PSection, ctx: BlockCtx): Html {
           ),
         ),
       );
-    else if (isImage(v)) parts.push(mediaEl(ctx.slotId(k), v.image));
+    else if (isImage(v)) parts.push(mediaEl(ctx, ctx.slotId(k), v.image));
   }
   return join(parts);
 }
 
-function sectionHtml(spec: SpecLike, s: PSection, data: DataLike): Html {
+function sectionHtml(spec: SpecLike, s: PSection, data: DataLike, media: MediaCtx): Html {
   const heading = headingFor(data, s.block);
   const headingId = `${s.id}-h`;
   const ctx: BlockCtx = {
@@ -206,6 +205,7 @@ function sectionHtml(spec: SpecLike, s: PSection, data: DataLike): Html {
     slotId: (slot, i) => (i === undefined ? `${s.id}.${slot}` : `${s.id}.${slot}.${i}`),
     roles: (slot) => slotRoles(data, s.block, slot),
     heading: raw(""),
+    media,
   };
   const custom = TEMPLATES.get(s.variant);
   const isHero = s.block === "hero";
@@ -377,6 +377,7 @@ type DataLike =
       textRoles?: TextRole[];
       pairingsFull?: PairingLike[];
       fonts?: FontEntryLike[];
+      images?: ImageLike[];
     }
   | undefined;
 function headingFor(data: DataLike, block: string): string | null {
@@ -424,7 +425,13 @@ export function compilePageImpl(
   const roleCss = data?.textRoles
     ? textRoleCss(data.textRoles, { smallPx: stepPx(spec.tokens, "small") })
     : undefined;
-  const sections = tree.sections.map((s) => sectionHtml(spec, s, data));
+  const imgIdx = new Map((data?.images ?? []).map((m) => [m.id, m]));
+  const media: MediaCtx = {
+    mode: String(spec.l2["media.mode"] ?? "photo-led"),
+    seed: spec.spec_id,
+    find: (id) => imgIdx.get(id),
+  };
+  const sections = tree.sections.map((s) => sectionHtml(spec, s, data, media));
   const depth = typeof spec.l2["depth.style"] === "string" ? spec.l2["depth.style"] : null;
   const body = join([
     el("a", { class: "tf-skip-link", "data-role": "nav.link", href: "#main" }, SKIP_LINK_KO),
@@ -445,7 +452,8 @@ export function compilePageImpl(
     fontFaceCss(plan) +
     "\n" +
     rootCss(spec.tokens, `TasteFit tokens-1 · ${spec.spec_id}`) +
-    stylesCss(roleCss);
+    stylesCss(roleCss) +
+    focalCss();
   const head = raw(
     `${GENERATOR_COMMENT}<meta charset="utf-8">` +
       `<meta name="viewport" content="width=device-width, initial-scale=1">` +
