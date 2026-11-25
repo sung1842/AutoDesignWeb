@@ -2,12 +2,19 @@
 // 페이지는 가상 오리진 http://tf.local/ 에 route로 띄운다. /assets/images/* = data/images, /fonts/* = 페이지 서브셋(06장 6.8.3)
 // (@tastefit/assets/fonts-node가 요청 시 생성·캐시). 그 밖의 요청은 전부 막고 externalRequests로 센다(G-07, 외부 요청 0).
 import { createRequire } from "node:module";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { materializeFonts, type FaceIn } from "@tastefit/assets/fonts-node";
 import type { Browser, Page, Route } from "playwright";
-import { extractFeatures, type ExtractPage, type Features } from "@tastefit/extractor";
+import {
+  AXES,
+  extractFeatures,
+  toL1,
+  type ExtractPage,
+  type Features,
+  type Normalizer,
+} from "@tastefit/extractor";
 import sharp from "sharp";
 import { collectMeasure, type RawMeasure } from "./measure.js";
 
@@ -175,6 +182,21 @@ function chromium(): { launch: () => Promise<Browser> } {
   return CHROMIUM;
 }
 
+/** 현재 정규화기 = data/normalizers의 가장 늦은 버전(design-spec normalizerVersion과 같은 규칙). */
+let NZ: Normalizer | null = null;
+function normalizer(): Normalizer {
+  if (!NZ) {
+    const dir = join(ROOT, "data/normalizers");
+    const last = readdirSync(dir)
+      .filter((f) => f.endsWith(".json"))
+      .sort()
+      .at(-1);
+    if (!last) throw new Error("정규화기 없음(data/normalizers)");
+    NZ = JSON.parse(readFileSync(join(dir, last), "utf8")) as Normalizer;
+  }
+  return NZ;
+}
+
 /** 5.5.2: tf- family는 03장 레지스트리 classification으로 분류한다. */
 function fontClasses(): Record<string, string> {
   return Object.fromEntries(
@@ -184,9 +206,6 @@ function fontClasses(): Record<string, string> {
 
 export async function openHarness(): Promise<Harness> {
   const browser = await chromium().launch();
-  const pending = (n: string) => (): never => {
-    throw new Error(`Harness.${n}: M2-09d(05장 추출기)에서 구현 예정`);
-  };
   const h: Harness = {
     async measure(html, vw, opts) {
       const s = await openPage(browser, html, vw);
@@ -364,7 +383,12 @@ export async function openHarness(): Promise<Harness> {
         await ctx.close();
       }
     },
-    extractL1: pending("extractL1"),
+    async extractL1(html, vw) {
+      const l1 = toL1(await h.features(html, vw), normalizer());
+      const bad = AXES.filter((k) => l1[k] === null);
+      if (bad.length) throw new Error(`extractL1: 측정 불가 축 ${bad.join(",")}(5.5.3 null)`);
+      return AXES.map((k) => l1[k] as number);
+    },
     async features(html, vw) {
       const s = await openPage(browser, html, vw);
       try {

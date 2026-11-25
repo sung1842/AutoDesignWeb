@@ -472,3 +472,11 @@
 - 결과: 앵커 8종 키 30개·2회 DOM 일치·픽셀 차 ≤ 0.01, 다크=T7·pill=T6. 표준 saas 트리에는 그림자 표면이 없어 F05=0(Sf 정의상 그림자만 있는 카드는 표면 아님) → M3 왕복 검증에서 depth 축 판단
 - 영향 범위: packages/extractor(dom·pixels·index), apps/worker(harness.features)
 - 되돌리기 비용: 낮음
+
+## ASM-067 · M2 · gap · 2026-11-25T22:05Z
+- 질문: extractL1의 null 축·정규화기 선택(M2-09d2)
+- 근거 탐색: 05장 5.5.3(null 대체 금지)·5.5.4·5.8.2, 09장 9.2.4 B18
+- 선택: ① 정규화기 = data/normalizers 가장 늦은 버전(design-spec normalizerVersion 규칙과 같음) ② 축이 null이면 extractL1은 예외(0·0.5 대체 금지) ③ quantileRank: 같은 값 구간 = (첫 분위 + 끝 분위)/2/100
+- 결과: AC-04-08 실행 가능, 부트스트랩 자리표시 분위(2026-S0 placeholder)로는 충족률 0.406 < 0.95 → 9.2.4 B18 코퍼스 200 렌더 재생성(ASM-020 M3 이월분)을 M2-09d3으로 당긴다
+- 영향 범위: packages/extractor(l1), apps/worker(harness.extractL1)
+- 되돌리기 비용: 낮음
