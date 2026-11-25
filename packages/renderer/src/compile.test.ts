@@ -16,7 +16,11 @@ const spec = {
   l2: p.l2 as Record<string, unknown>,
   tokens: deriveTokens({ presetId: p.id, l2: p.l2 }, data).tokenSet,
 };
-const T = (text: string, placeholder = false) => ({ text, placeholder, deck_ref: "deck:hero.headline#0" });
+const T = (text: string, placeholder = false) => ({
+  text,
+  placeholder,
+  deck_ref: "deck:hero.headline#0",
+});
 const tree: PTree = {
   schemaVersion: "1",
   spec_id: "0123456789abcdef",
@@ -31,7 +35,7 @@ const tree: PTree = {
       pad: 0,
       slots: {
         headline: { copy: T(`<script>alert(1)</script>`) },
-        sub: { copy: T("설명 \"따옴표\" & 기호") },
+        sub: { copy: T('설명 "따옴표" & 기호') },
         primaryCta: { link: { label: T("시작하기"), target: "#features" } },
       },
     },
@@ -76,6 +80,8 @@ describe("compilePage 골격(CM-04~06·14·16)", () => {
   });
   it("PageSchema 형식과 맞는다(테스트 트리 자체 검사)", () => {
     const r = PageSchema.safeParse(tree);
-    expect(r.success ? [] : r.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`)).toEqual([]);
+    expect(r.success ? [] : r.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`)).toEqual(
+      [],
+    );
   });
 });

@@ -1,8 +1,12 @@
 // 04장 4.9 결정론적 컴파일러(ASM-023·025·027). M2-05~07에서 채운다.
 export { cssLiteralViolations, declarations } from "./css/literal.js";
 export { rendererCssSources, stylesCss, type CssSource } from "./css/sources.js";
-import { compilePageImpl, type PTree, type SpecLike } from "./compile.js";
+import { compilePageImpl, type DataLike, type PTree, type SpecLike } from "./compile.js";
 import "./blocks/index.js";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { renderComponentGalleryImpl } from "./gallery.js";
+export { forcedStateCss } from "./gallery.js";
 import {
   DEFAULT_BRAND,
   resolveTree,
@@ -14,11 +18,10 @@ import {
 import type { FontPlan } from "./fonts.js";
 export * from "./fonts.js";
 export * from "./media.js";
+import { renderBlockSampleImpl, renderStepProbeImpl, type SampleInput } from "./samples.js";
+export { maxDeck, maxText } from "./samples.js";
 export * from "./compile.js";
 export { esc } from "./html.js";
-const pending = (n: string): never => {
-  throw new Error(`${n}: M2-05~07에서 구현 예정`);
-};
 /** 04장 4.9 컴파일(ASM-025 ③·ASM-042). spec = DesignSpec, tree = 확정 PageSchema, data = DesignData. */
 export function compilePage(
   spec: unknown,
@@ -51,30 +54,34 @@ export function compileForEdit(
   const meta = `<meta http-equiv="Content-Security-Policy" content="${editCsp(opts.webOrigin)}">`;
   return { html: html.replace("<head>", `<head>${meta}`) };
 }
-export function renderBlockSample(
-  _input: {
-    presetId: string;
-    block: string;
-    variant: string;
-    purpose: string;
-    copy: "max" | "typical";
-  },
-  _data: unknown,
-): string | null {
-  void [_input, _data];
-  return pending("renderBlockSample");
+export function renderBlockSample(input: SampleInput, data: unknown): string | null {
+  return renderBlockSampleImpl(input, data as DesignData);
 }
+/** AC-03-15·17·46 컴포넌트 갤러리(ASM-061). 명세 = 프리셋 유형 표준 명세(saas). */
 export function renderComponentGallery(
-  _presetId: string,
-  _data: unknown,
-  _opts: { copy: "max" | "typical" },
+  presetId: string,
+  data: unknown,
+  opts: { copy: "max" | "typical" },
 ): { html: string; cases: string[] } {
-  void [_presetId, _data, _opts];
-  return pending("renderComponentGallery");
+  const d = data as DesignData;
+  const p = d.presets.find((x) => x.id === presetId);
+  if (!p) throw new Error(`프리셋 없음 ${presetId}`);
+  const { spec } = standardTree(p.typeId, "saas", d);
+  const comps = (
+    JSON.parse(readFileSync(join(d.root, "data/taxonomy/components.json"), "utf8")) as {
+      items: Parameters<typeof renderComponentGalleryImpl>[2];
+    }
+  ).items;
+  return renderComponentGalleryImpl(
+    spec as unknown as SpecLike,
+    d as unknown as DataLike,
+    comps,
+    opts.copy,
+  );
 }
-export function renderStepProbe(_spec: unknown, _data: unknown): string {
-  void [_spec, _data];
-  return pending("renderStepProbe");
+export function renderStepProbe(spec: unknown, _data: unknown): string {
+  void _data;
+  return renderStepProbeImpl(spec as SpecLike);
 }
 export interface FixturePage {
   spec: { variant: string; tokens: Record<string, unknown> };

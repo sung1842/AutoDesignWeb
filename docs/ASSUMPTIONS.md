@@ -425,3 +425,11 @@
 - 선택: 컴파일러 `esc`가 `=`도 `&#61;`로 바꾼다(텍스트·속성 값 공통, 브라우저 표시는 같음). 폰트 서브셋 글자 수집은 `&#61;`을 되돌려 센다
 - 영향 범위: packages/renderer(html·compile), apps/worker(harness facesOf)
 - 되돌리기 비용: 낮음
+
+## ASM-061 · M2 · gap · 2026-11-25T21:40Z
+- 질문: AC-03-15·17·18·45·46 검사용 렌더(renderBlockSample·renderComponentGallery·renderStepProbe)를 어떻게 만드나
+- 근거 탐색: 03장 3.5.1·3.5.3·3.6.1·3.1.5, 04장 4.6.2 상한, ASM-025 ③
+- 선택: ① renderBlockSample = 프리셋 유형 표준 명세 + 블록 하나만 있는 원시 트리(patternRaw order 지정, 마지막 inverse 끔, footer 샘플은 hero 1개 + 해당 footer) + 덱(typical = 용도 템플릿, max = 4.6.2 상한 길이 한국어 문구 `maxDeck`, 템플릿에 없는 stats·work는 예시 값), 프리셋 excludedVariants면 null ② renderStepProbe = 토큰 CSS + 단계 9종 `[data-step-probe]` ③ renderComponentGallery = components.json 18종 × variant × state(true인 것만) 케이스(`<id>.<variant>.<state>`), hover·active·focus-visible은 층 CSS 상태 규칙을 `[data-state=…]`로 바꾼 사본으로 강제, disabled·error·checked·open·expanded·placeholder는 실제 속성. max 카피 = Button 10·Tag 8·Stat 값 10자(AC-03-17) ④ 문서 머리 조립을 `documentHtml`로 분리해 갤러리도 같은 폰트·토큰·층 CSS를 쓴다 ⑤ 결과에 맞춘 수정: Stat 값 nowrap 해제(10자 상한이 375에서 넘침), pricing 플랜 덱이 없으면 목록 생략
+- 결과: 갤러리 8프리셋 × typical(G-02·G-07)·max(G-04·G-05) 위반 0
+- 영향 범위: packages/renderer(samples·gallery·compile·m2·components.css), packages/design-spec(patternRaw opts)
+- 되돌리기 비용: 낮음

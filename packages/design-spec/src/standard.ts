@@ -340,6 +340,7 @@ export function patternRaw(
   deck: Deck,
   data: DesignData,
   pick: Record<string, string> = {},
+  opts: { order?: string[]; lastInverse?: boolean } = {},
 ): RawTree {
   const pat = Object.values(PATTERNS)
     .flat()
@@ -371,7 +372,7 @@ export function patternRaw(
     const noImg = vs.find((v) => !v.image);
     return (typeLed && noImg ? noImg : vs[0]) ?? meta.variants[0]!;
   };
-  const order = ["hero", ...pat.order];
+  const order = opts.order ?? ["hero", ...pat.order];
   const ids = order.map((b) => b);
   const ctaTarget = ids.includes("cta")
     ? "#cta"
@@ -411,8 +412,10 @@ export function patternRaw(
         ? v.id === "hero.full-bleed-image"
           ? "image"
           : "bg"
-        : (BG_CYCLE[(i - 1) % 4] ?? "bg");
-    if (i === order.length - 1 && block !== "hero") bg = "inverse";
+        : i === 0
+          ? "bg"
+          : (BG_CYCLE[(i - 1) % 4] ?? "bg");
+    if (i === order.length - 1 && block !== "hero" && opts.lastInverse !== false) bg = "inverse";
     if (!v.allowed_bg.includes(bg)) bg = (v.allowed_bg[0] as PSection["bg"] | undefined) ?? "bg";
     return { id: block, block, variant: v.id, bg, pad: block === "hero" ? 1 : 0, slots };
   });

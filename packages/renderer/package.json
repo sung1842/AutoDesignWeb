@@ -17,9 +17,8 @@
   },
   "dependencies": {
     "@tastefit/assets": "workspace:^",
-    "@tastefit/design-spec": "workspace:^"
-  },
-  "devDependencies": {
+    "@tastefit/design-spec": "workspace:^",
     "@tastefit/layout-schema": "workspace:^"
-  }
+  },
+  "devDependencies": {}
 }

@@ -309,8 +309,10 @@ export const DATA_CSS = `/* C14 PriceTag · C15 Stat */
   font-family: var(--tf-font-heading);
   font-size: var(--tf-type-h3);
   font-variant-numeric: tabular-nums;
-  white-space: nowrap;
+  /* 값 상한 10자(AC-03-17)가 375에서 넘치지 않게 줄바꿈 허용 */
+  min-width: 0;
 }
+.tf-stat > * { min-width: 0; }
 .tf-stat__label { font-size: var(--tf-type-small); }
 .tf-stat__note { font-size: var(--tf-type-caption); color: var(--tf-color-fg-muted); }
 .tf-price a, .tf-stat a { color: inherit; }

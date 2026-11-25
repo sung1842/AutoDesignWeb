@@ -367,7 +367,7 @@ function footerHtml(tree: PTree): Html {
 }
 
 /** 블록 기본 제목(blocks.json default_heading_ko). data에서 읽는다. */
-type DataLike =
+export type DataLike =
   | {
       blocks?: {
         id: string;
@@ -440,13 +440,30 @@ export function compilePageImpl(
     find: (id) => imgIdx.get(id),
   };
   const sections = tree.sections.map((s) => sectionHtml(spec, s, data, media));
-  const depth = typeof spec.l2["depth.style"] === "string" ? spec.l2["depth.style"] : null;
   const body = join([
     el("a", { class: "tf-skip-link", "data-role": "nav.link", href: "#main" }, SKIP_LINK_KO),
     navHtml(tree, brand, spec.type_id),
     el("main", { id: "main" }, ...sections),
     footerHtml(tree),
   ]);
+  return documentHtml(spec, body, brand, data, roleCss);
+}
+
+/** 문서 조립(폰트 계획·토큰·층 CSS·head). 갤러리 등 검사용 페이지도 같은 머리를 쓴다(ASM-061). */
+export function documentHtml(
+  spec: SpecLike,
+  body: Html,
+  brand: string,
+  data: DataLike,
+  roleCss?: string,
+  extraCss = "",
+): { html: string; fonts: FontPlan } {
+  const role =
+    roleCss ??
+    (data?.textRoles
+      ? textRoleCss(data.textRoles, { smallPx: stepPx(spec.tokens, "small") })
+      : undefined);
+  const depth = typeof spec.l2["depth.style"] === "string" ? spec.l2["depth.style"] : null;
   // 폰트 계획(3.7.5 페이지 서브셋, CM-09). 글자 집합 = 본문 텍스트 + 제목(brand)
   const plan = fontPlan({
     pairingId: String(spec.l2["type.pairing_id"] ?? ""),
@@ -460,8 +477,9 @@ export function compilePageImpl(
     fontFaceCss(plan) +
     "\n" +
     rootCss(spec.tokens, `TasteFit tokens-1 · ${spec.spec_id}`) +
-    stylesCss(roleCss) +
-    focalCss();
+    stylesCss(role) +
+    focalCss() +
+    extraCss;
   const head = raw(
     `${GENERATOR_COMMENT}<meta charset="utf-8">` +
       `<meta name="viewport" content="width=device-width, initial-scale=1">` +

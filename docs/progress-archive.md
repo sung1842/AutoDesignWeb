@@ -182,3 +182,4 @@
 - 2026-11-26 00:59 | M2-06b1 hero 6 variant 템플릿·hero.css(1280·375 넘침 0 확인), ASM-044 → 다음: b2 나머지 블록
 - 2026-11-26 01:11 | M2-06b2a value·feature·showcase·stats·process 13 variant·layout.css(넘침 0), ASM-045 → 다음: b2b
 - 2026-11-26 00:50 | M2-06b2b proof·pricing·faq·cta·menu 12 variant(넘침 0), ASM-046 → 다음: b2c
+- 2026-11-26 00:54 | M2-06b2c 7블록 16 variant·폼·갤러리(넘침 0), ASM-047·BLK-010 → 다음: b2d

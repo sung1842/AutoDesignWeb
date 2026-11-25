@@ -87,7 +87,8 @@ const proofCards: Tpl = (s, ctx) =>
 /** 강조 플랜: 3개일 때 가운데 1개(≤ 1, 3.6.1). 모바일은 강조 플랜 먼저(3.11.3, CSS order). */
 const featuredIndex = (n: number): number => (n === 3 ? 1 : -1);
 function planEl(s: PSection, ctx: BlockCtx, i: number, featured: boolean): Html {
-  const t = listOf(s.slots.plans)[i]!;
+  const t = listOf(s.slots.plans)[i];
+  if (!t) return el("li", { class: "tf-card tf-pricing__plan" });
   const id = ctx.slotId("plans", i);
   return el(
     "li",
@@ -124,12 +125,15 @@ const pricingCards: Tpl = (s, ctx) => {
     ),
   );
 };
+// 플랜이 없으면(덱 키 없음, 4.6.2) 제목만 둔다
 const pricingSingle: Tpl = (s, ctx) =>
   el(
     "div",
     { class: "tf-pricing__single" },
     head(ctx),
-    el("ul", { class: "tf-pricing__list" }, planEl(s, ctx, 0, false)),
+    ...(listOf(s.slots.plans).length
+      ? [el("ul", { class: "tf-pricing__list" }, planEl(s, ctx, 0, false))]
+      : []),
   );
 
 function faqList(s: PSection, ctx: BlockCtx): Html {
