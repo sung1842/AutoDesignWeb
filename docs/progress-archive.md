@@ -165,3 +165,4 @@
 - 2026-11-20 04:13 | M2-02a1 predictL1(8/8)·calibrate(31/31), ASM-028(감사 리터럴→사양 표) → 다음: 02a2 snap
 - 2026-11-20 04:18 | M2-03b0 validateTokenSet(MiniValidator, ajv 없음 ASM-030) → 다음: 03b1 deriveTokens
 - 2026-11-20 04:29 | M2-03b1 deriveTokens(AC-03-02~04·44 녹색)·expectedSize, palettes null 역할 생략(ASM-031) → 다음: 03b2
+- 2026-11-20 04:32 | M2-03b2 exportTokens(tokens.json 별칭·css :root 1블록·@theme), 잠금 해제 → 다음: 03c 브랜드 색

@@ -312,3 +312,10 @@
 - 선택: ① 텍스트 칼럼(eyebrow → h1 → sub → CTA lg)은 공통, 칸 수 = text_cols.lg(12열 그리드, ≥64rem), 48~63.99rem은 split·offset 2열, 그 미만 1열(텍스트 → 이미지) ② full-bleed는 이미지·텍스트를 같은 격자 칸에 겹치고 스크림 `--tf-color-overlay`, 모바일 4:5·≥48rem 16:9, 텍스트 폭 7/12 ③ offset 보조 1:1은 같은 자산을 1:1로 자른 장식(aria-hidden, ≥64rem에서만 표시) — 둘째 이미지 슬롯은 스키마 밖이라 추가하지 않음 ④ variant 템플릿은 컴파일러가 만든 제목(ctx.heading)을 직접 배치, 등록은 패키지 진입점(blocks/index)에서 1회(순환 import 방지) ⑤ 헤드라인 단계 강등(role_overrides)은 M2-08·09 헤드라인 예산과 함께
 - 영향 범위: packages/renderer(blocks/hero·css/blocks/hero·compile)
 - 되돌리기 비용: 낮음
+
+## ASM-045 · M2 · gap · 2026-11-25T16:10Z
+- 질문: value·feature·showcase·stats·process 13 variant 배치, 항목별 이미지(zigzag)·아이콘·bento 칸을 어떻게 그리나
+- 근거 탐색: 03장 3.6.1·3.6.3·3.11.3, 04장 CM-01, layout-schema(목록 항목 = 카피만)
+- 선택: ① 공용 배치 층 `blocks/layout.css`(head·cols·rule-list·bento·split)와 블록 CSS. cols는 ≥64rem에서 항목 수만큼 같은 폭, 48rem~ 2열, 그 미만 1열. stats는 모바일 2×2 ② feature.zigzag는 스키마에 항목 이미지가 없어 media를 첫 항목에만 두고 나머지 행은 좌우 교차 텍스트 ③ icon-grid 아이콘은 `span[data-icon=auto]` 자리(M2-07 assets가 인라인 SVG로 채움) ④ bento는 3열·첫 칸 2×2 ⑤ list 항목 = [list.index] 제목(text) + 본문(sub), 역할은 슬롯 textRoles 순서. stats는 제목 태그 p(stat.value)
+- 영향 범위: packages/renderer(blocks/common·content-a, css/blocks/content-a)
+- 되돌리기 비용: 낮음

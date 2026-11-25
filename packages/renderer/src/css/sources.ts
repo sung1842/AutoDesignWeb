@@ -15,6 +15,7 @@ import {
   TAG_CSS,
   TEXT_LINK_CSS,
 } from "./components.js";
+import { CONTENT_A_CSS, LAYOUT_CSS } from "./blocks/content-a.js";
 import { HERO_CSS } from "./blocks/hero.js";
 
 export interface CssSource {
@@ -36,7 +37,9 @@ const SOURCES: readonly CssSource[] = [
   { path: "components/data.css", css: DATA_CSS },
   { path: "components/accordion.css", css: ACCORDION_CSS },
   { path: "components/misc.css", css: MISC_CSS },
+  { path: "blocks/layout.css", css: LAYOUT_CSS },
   { path: "blocks/hero.css", css: HERO_CSS },
+  { path: "blocks/content-a.css", css: CONTENT_A_CSS },
 ];
 
 /** 층 순서(base → components → blocks → signatures)대로 반환한다. */
