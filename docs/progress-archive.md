@@ -160,3 +160,6 @@
 - 2026-11-20 03:27 | M2-01e render.test·AC-03-38·traceability M2 56행(qa:trace M2 전부 매핑)·ASM-027 → 다음: 01f 자체 잠금
 - 2026-11-20 03:28 | M2-01 완료: test(acc) eded1cd 자체 잠금 5파일(AD-031) → 다음: M2-02 design-spec a
 - 2026-11-20 03:33 | M2 API 자리표시(todo)·loadDesignData: 잠긴 m2 테스트 수집 복구(guard:count 274) → 다음: M2-02
+- 2026-11-20 04:16 | M2-03a signatureEligible(AC-03-08)·letterSpacingEm(3.8.2) → 다음: 03b deriveTokens·expectedSize
+- 2026-11-20 04:15 | M2-02a2 mapL1toL2ForPurpose·snapToFeasible(F 상충 7종·J), ASM-029 → 다음: M2-03
+- 2026-11-20 04:13 | M2-02a1 predictL1(8/8)·calibrate(31/31), ASM-028(감사 리터럴→사양 표) → 다음: 02a2 snap
