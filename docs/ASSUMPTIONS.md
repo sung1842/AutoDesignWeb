@@ -263,3 +263,10 @@
 - 선택: ① 순서: variantTargets → 변형별 mapL1toL2ForPurpose·snapToFeasible(시그니처 = 프리셋 기본) → enforceVariantL2Diff(extras = hero_variants·pickSignatures를 후보 l2로 다시 계산) → pickSignatures 확정 → 변형별 브랜드·토큰·제약·톤·apply_to·decor ② preset_version = 프리셋 version, normalizer_version = data/normalizers 최신 파일명(R-30은 둘이 같은 시즌이라 했으나 temp 데이터는 S4/S0으로 다름 → 데이터 값을 그대로 기록, M3 B18 재생성 때 맞춤) ③ forbidden.lint_rules_strict = [](용도·유형 엄격 규칙 원천 미정), conflict_ids = l2Conflicts(확정 시그니처 기준) ④ DesignSpecSchema는 strict, l2는 taxonomy.json에서 단방향 생성(18키 enum), tokens는 record(TokenSet 세부 검증은 validateTokenSet) ⑤ staticLint 실패 시 재시도(11단계)는 M2-03d4b에서 붙인다
 - 영향 범위: packages/design-spec/src/compile.ts·data.ts, packages/data-contracts/src/m2.ts
 - 되돌리기 비용: 낮음
+
+## ASM-038 · M2 · gap · 2026-11-25T04:15Z
+- 질문: 04장 4.13 단계 S의 판정 대상(명세서만으로 볼 수 있는 규칙)과 4.2.2 11단계 "error면 다음 후보 값으로 재시도"의 구체 방식
+- 근거 탐색: 04장 4.13.1·4.13.2(AIL-01·03·06·09 단계 S), 03장 3.2.4·3.3(radius.md = 버튼·카드)·S-33(allowSoftRoundShadow T3·T4·T6), 4.2.1 decor 주석(시그니처 포함 개수)
+- 선택: ① 단계 S = AIL-01(토큰 gradient 정지점), AIL-03(font.heading·body 첫 항목을 fonts registry 별칭→패밀리로 풀어 비교, mono 제외), AIL-06(depth.style이 그림자형일 때 radius.md ∈ [12,16] ∧ 해당 shadow level 최대 blur ≥ 16 ∧ 전 층 α ≤ 0.15, T3·T4·T6 warn), AIL-09(a)(glass 장식 ∧ depth.style ≠ glass) + 명세 정합 규칙 SPEC-DECOR(effects > max)·SPEC-CF(conflict_ids)·SPEC-RESERVED(shadow 3)·SPEC-DUOTONE·SPEC-SIG. 탐지 상수는 packages/linter/data/rule-params.json(자체 잠금은 M2 끝 --m2-end에서) ② 11단계 재시도 대신 실패 원인을 선택 단계에서 막는다: pickSignatures 후보를 "장식 예산 안"(decorFor 결과 effects ≤ max)으로 거르고, 비면 SIG-01/SIG-09(장식 없음). 그 결과 72조합 단계 S error 0(AC-04-04). 다른 S 규칙 위반은 생성 경로가 없어(그라디언트 토큰 없음·F 집합이 상충 제외) 재시도 루프는 두지 않는다
+- 영향 범위: packages/linter/src/stage-s.ts·data/rule-params.json, packages/design-spec/src/pick-signature.ts·compile.ts
+- 되돌리기 비용: 낮음

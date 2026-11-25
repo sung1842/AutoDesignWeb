@@ -68,6 +68,10 @@ export function compileSpecsImpl(
         v_bal: sigCtx(theme, all.v_bal, constraintsOf("v_bal", all.v_bal), data),
       },
       targets.v_true.target.expression,
+      (v, id) => {
+        const d = decorFor(id, all[v], taste.kappa, v, data);
+        return d.effects.length <= d.max;
+      },
     );
 
   // 4단계: 변형 간 L2 차이(hero·signature 포함 7키)

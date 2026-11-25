@@ -1,0 +1,37 @@
+{
+  "bundle": "linter-rule-params",
+  "schemaVersion": 1,
+  "source": "04장 4.13.2 표(단계 S 탐지 상수). 원천은 장 표, 자체 잠금(AD-006)",
+  "items": [
+    {
+      "id": "AIL-01",
+      "stage": ["S", "D"],
+      "hueA": [260, 320],
+      "hueB": [200, 260],
+      "chromaMin": 0.08
+    },
+    {
+      "id": "AIL-03",
+      "stage": ["S", "D"],
+      "singleFamilyBanned": [
+        "Inter",
+        "Roboto",
+        "Arial",
+        "system-ui",
+        "Geist",
+        "Pretendard",
+        "Noto Sans KR"
+      ],
+      "headingFirstBanned": ["Inter", "Geist", "Roboto", "Arial", "system-ui"]
+    },
+    {
+      "id": "AIL-06",
+      "stage": ["S", "D"],
+      "radiusPx": [12, 16],
+      "blurMinPx": 16,
+      "alphaMax": 0.15,
+      "warnTypes": ["T3", "T4", "T6"]
+    },
+    { "id": "AIL-09", "stage": ["S", "P"] }
+  ]
+}
