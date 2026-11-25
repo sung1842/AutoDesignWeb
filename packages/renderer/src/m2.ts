@@ -1,18 +1,9 @@
 // 04장 4.9 결정론적 컴파일러(ASM-023·025·027). M2-05~07에서 채운다.
+export { cssLiteralViolations, declarations } from "./css/literal.js";
+export { rendererCssSources, stylesCss, type CssSource } from "./css/sources.js";
 const pending = (n: string): never => {
   throw new Error(`${n}: M2-05~07에서 구현 예정`);
 };
-export interface CssSource {
-  path: string;
-  css: string;
-}
-export function rendererCssSources(): CssSource[] {
-  return pending("rendererCssSources");
-}
-export function cssLiteralViolations(_css: string): string[] {
-  void [_css];
-  return pending("cssLiteralViolations");
-}
 export function compilePage(_spec: unknown, _tree: unknown, _data: unknown): { html: string } {
   void [_spec, _tree, _data];
   return pending("compilePage");

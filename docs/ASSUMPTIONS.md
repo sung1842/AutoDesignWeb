@@ -284,3 +284,10 @@
 - 선택: ① copy → `{copy: {text, sub?, placeholder, deck_ref}}`(sub = 목록 항목 둘째 필드: 본문·답·설명·라벨·이름), image → `{tag, ratio, asset_id, alt, focal}`, link.label도 같은 Text ② nav = `{variant, items[≤ 5]{label ≤ 20, target 앵커}}`, footer = `{variant, slots}`(blocks.json footer 슬롯) ③ role_overrides = 이미지가 아닌 슬롯 키만, 값은 타입 단계 9종 ④ 자유 키 record를 쓰지 않는다(전부 strict 객체) → ⑥ 검사 = JSON Schema에서 금지 키(style·className·css·html·script·on*) 속성 0 ∧ 열린 객체 0. 단위 테스트에서 PageSchema·LayoutTreeRaw 둘 다 검사 ⑤ 텍스트 상한 400자(덱 최대 240 + 여유), 이스케이프는 렌더러 책임
 - 영향 범위: packages/layout-schema/src/schema.ts
 - 되돌리기 비용: 낮음
+
+## ASM-041 · M2 · gap · 2026-11-25T07:25Z
+- 질문: CM-02 리터럴 허용 목록(0·100%·auto·1fr·inherit·currentColor)의 검사 범위(단위 없는 수·@media 머리·var 대체값)와 03장 px 크기(버튼 36/44/52)의 토큰 표현
+- 근거 탐색: 04장 4.9.2 CM-02·03, 03장 3.5.1·3.5.3, AC-03-16(색·그림자·radius 리터럴 0)
+- 선택: ① 위반 = 색 리터럴(hex·색 함수·color-mix·이름 색·transparent) + 단위 있는 치수(0·100%·1fr 제외, %·ms·deg 포함) + `!important` ② 단위 없는 수(opacity 0.06·flex 1)는 허용 ③ @media 등 at-rule 머리는 CSS 변수가 안 되므로 검사 밖(03장 브레이크포인트 값만 씀) ④ var(--x, 대체값)의 대체값은 검사 대상 ⑤ px 크기는 space 토큰 calc 합(36=8+1, 44=10+1, 52=12+1 단계), ghost hover α는 ::before currentColor + opacity ⑥ CSS는 문자열 TS 모듈(isomorphic, 4.9.1)로 두고 `rendererCssSources()`가 층 순서로 반환
+- 영향 범위: packages/renderer/src/css/**
+- 되돌리기 비용: 낮음
