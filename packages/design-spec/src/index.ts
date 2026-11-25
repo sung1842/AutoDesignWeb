@@ -33,3 +33,4 @@ export {
 } from "./predict.js";
 export { DesignSpecSchema } from "@tastefit/data-contracts";
 export * from "./standard.js";
+export * from "./integrity.js";

@@ -455,3 +455,12 @@
 - 결과: 표준 트리 24 중 8개 하향, AC-03-26 통과
 - 영향 범위: packages/design-spec(standard·stubs), packages/renderer(compile·text-roles)
 - 되돌리기 비용: 낮음
+
+## ASM-065 · M2 · gap · 2026-11-25T21:30Z
+- 질문: G-12 명세 무결성·AIL-17 스케일 밖 값의 표본 범위와 margin:auto 식별(M2-09e)
+- 배경: 04장 G-12·AIL-17은 "토큰 집합 안"을 요구하지만 표본 범위(어떤 요소·속성)와 margin:auto 식별법을 정하지 않았다.
+- 근거 탐색: 04장 4.10.2 G-12·4.11 AIL-17(T-28), 03장 3.1.5 expectedSize·H6 tolerancePx, AC-03-45
+- 선택: ① 기준 집합(design-spec tokenReference): 색 = color 토큰 + border 토큰 color(ΔE_OK ≤ 0.01, alpha 차 ≤ 0.01), radius = radius.*, spacing = space.* + layout.*.gutter/margin + 0, font-size = 9단계 expectedSize(vw)(±H6 tolerancePx) ② 표본(worker measure): 보이는 요소 전부(svg 내부 제외)의 배경색·테두리색(폭>0)·px radius(>0), 텍스트 요소의 color·font-size, `data-layout-auto` 밖의 padding·flex/grid gap·세로 margin, 좌우가 다른 가로 margin(같으면 auto 중앙 정렬로 봄). 음수 margin은 절댓값 ③ G-12 = deriveTokens(l2[, brand hex_in]) 잎 비교 불일치 + AIL-17 판정, spec 없으면 실패 ④ ΔE 계산은 scoring 안 OKLab(의존 규칙: scoring → config만)
+- 결과: 표준 트리 24 × 뷰포트 5 위반 0, 13px·15px 픽스처 전 뷰포트 검출, 폴백 3종 위반 0
+- 영향 범위: packages/design-spec(integrity), apps/worker(measure), packages/scoring(gates)
+- 되돌리기 비용: 낮음

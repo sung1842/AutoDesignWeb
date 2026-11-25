@@ -3,6 +3,13 @@
 // bbox 픽셀을 찍어 픽셀별 대비의 하위 5% 값을 쓴다. G-04 가로 넘침, G-05 잘림, G-06 겹침, G-07 리소스.
 import type { Page } from "playwright";
 import sharp from "sharp";
+import {
+  loadDesignData,
+  specTokenDrift,
+  tokenReference,
+  type DesignData,
+  type TokenReference,
+} from "@tastefit/design-spec";
 
 export interface TextSample {
   sel: string;
@@ -25,6 +32,16 @@ export interface RawMeasure {
   imageCount: number;
   /** G-03 비텍스트 대비 표본. */
   ui: { sel: string; kind: string; ratio: number }[];
+  /** G-12·AIL-17 computed style 표본(ASM-065). */
+  styles: StyleSamples;
+  /** spec을 넘겼을 때만: 기준 집합과 deriveTokens 불일치 잎. */
+  integrity?: { ref: TokenReference; drift: string[] };
+}
+export interface StyleSamples {
+  fonts: { sel: string; role: string | null; px: number }[];
+  colors: { sel: string; prop: string; rgba: [number, number, number, number] }[];
+  radii: { sel: string; prop: string; px: number }[];
+  spaces: { sel: string; prop: string; px: number }[];
 }
 
 type RGBA = [number, number, number, number];
@@ -264,6 +281,68 @@ async function collectInPage(page: Page): Promise<
       const bg = bgOf(el.parentElement);
       ui.push({ sel: selOf(el), kind: "focus", ratio: cr(over(toRGBA(focus), bg), bg) });
     }
+    // --- G-12·AIL-17 style 표본(ASM-065): 색·radius·font-size·spacing ---
+    const styles: StyleSamples = { fonts: [], colors: [], radii: [], spaces: [] };
+    const SIDES = ["Top", "Right", "Bottom", "Left"] as const;
+    const CORNERS = ["TopLeft", "TopRight", "BottomRight", "BottomLeft"] as const;
+    const pxOf = (v: string): number | null => (/^-?[\d.]+px$/.test(v) ? parseFloat(v) : null);
+    for (const el of document.body.querySelectorAll("*")) {
+      const tag = el.tagName.toLowerCase();
+      if (el.closest("svg") && tag !== "svg") continue;
+      if (!visible(el)) continue;
+      const cs = getComputedStyle(el);
+      const sel = selOf(el);
+      const csd = cs as unknown as Record<string, string>;
+      if (seen.has(el)) {
+        const role = el.closest("[data-role]")?.getAttribute("data-role") ?? null;
+        styles.fonts.push({ sel, role, px: parseFloat(cs.fontSize) });
+        styles.colors.push({ sel, prop: "color", rgba: toRGBA(cs.color) });
+      }
+      const bgc = toRGBA(cs.backgroundColor);
+      if (bgc[3] > 0) styles.colors.push({ sel, prop: "background-color", rgba: bgc });
+      for (const side of SIDES)
+        if (
+          parseFloat(csd[`border${side}Width`] ?? "0") > 0 &&
+          csd[`border${side}Style`] !== "none"
+        )
+          styles.colors.push({
+            sel,
+            prop: `border-${side.toLowerCase()}-color`,
+            rgba: toRGBA(csd[`border${side}Color`] ?? ""),
+          });
+      for (const c of CORNERS) {
+        const v = pxOf((csd[`border${c}Radius`] ?? "").split(" ")[0] ?? "");
+        if (v !== null && v > 0) styles.radii.push({ sel, prop: `border-${c}-radius`, px: v });
+      }
+      if (el.closest("[data-layout-auto]")) continue;
+      for (const side of SIDES) {
+        const v = pxOf(csd[`padding${side}`] ?? "");
+        if (v !== null && v !== 0)
+          styles.spaces.push({ sel, prop: `padding-${side.toLowerCase()}`, px: v });
+      }
+      if (/(flex|grid)/.test(cs.display))
+        for (const [k, prop] of [
+          ["rowGap", "row-gap"],
+          ["columnGap", "column-gap"],
+        ] as const) {
+          const v = pxOf(csd[k] ?? "");
+          if (v !== null && v !== 0) styles.spaces.push({ sel, prop, px: v });
+        }
+      // margin: 세로는 그대로, 가로는 좌우가 같으면 자동 중앙 정렬(margin:auto)로 보고 뺀다(04장 AIL-17)
+      for (const side of ["Top", "Bottom"] as const) {
+        const v = pxOf(csd[`margin${side}`] ?? "");
+        if (v !== null && v !== 0)
+          styles.spaces.push({ sel, prop: `margin-${side.toLowerCase()}`, px: v });
+      }
+      const ml = pxOf(cs.marginLeft);
+      const mr = pxOf(cs.marginRight);
+      if (ml !== null && mr !== null && Math.abs(ml - mr) > 0.5)
+        for (const [prop, v] of [
+          ["margin-left", ml],
+          ["margin-right", mr],
+        ] as const)
+          if (v !== 0) styles.spaces.push({ sel, prop, px: v });
+    }
     // --- 리소스 G-07 ---
     const brokenImages = imgs
       .filter((im) => im.naturalWidth === 0)
@@ -284,6 +363,7 @@ async function collectInPage(page: Page): Promise<
       fontErrors,
       imageCount: imgs.length,
       ui,
+      styles,
     };
   }, GATE_SPEC);
 }
@@ -321,11 +401,20 @@ async function overImageRatios(
   }
 }
 
-export async function collectMeasure(page: Page, _spec?: unknown): Promise<RawMeasure> {
-  void _spec;
+let DATA: DesignData | null = null;
+const ROOT = new URL("../../../../", import.meta.url).pathname;
+
+export async function collectMeasure(page: Page, spec?: unknown): Promise<RawMeasure> {
   const r = await collectInPage(page);
   await overImageRatios(page, r.overImage, r.texts);
   const { overImage, ...rest } = r;
   void overImage;
-  return rest;
+  if (spec === undefined) return rest;
+  DATA ??= loadDesignData(ROOT);
+  const s = spec as { tokens: Record<string, unknown> };
+  const vw = page.viewportSize()?.width ?? rest.innerWidth;
+  return {
+    ...rest,
+    integrity: { ref: tokenReference(s.tokens, vw, DATA), drift: specTokenDrift(spec, DATA) },
+  };
 }

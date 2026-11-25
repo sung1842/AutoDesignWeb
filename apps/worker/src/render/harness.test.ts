@@ -36,6 +36,33 @@ describe("렌더 하네스·하드 게이트 4종(M2-09a, ASM-055)", () => {
     }
     expect(bad).toEqual([]);
   });
+  it("G-12·AIL-17(M2-09e, ASM-065): 폴백 시안 3종 × 1280·375 위반 0, 토큰 변조는 G-12가 잡는다", async () => {
+    const bad: string[] = [];
+    for (const [t, p, v] of [
+      ["T3", "saas", "v_fit"],
+      ["T6", "local_business", "v_bal"],
+      ["T8", "portfolio", "v_true"],
+    ] as const) {
+      const { spec, tree } = fallbackMockup(t, p, v, data);
+      const { html } = compilePage(spec, tree, data);
+      for (const vw of [1280, 375]) {
+        const m = await h.measure(html, vw, { spec });
+        expect(m.styles.fonts.length).toBeGreaterThan(10);
+        for (const g of evaluateGates(m, ["G-12", "AIL-17"]))
+          if (!g.pass) bad.push(`${t}/${p}/${v}@${vw} ${g.id} ${g.violations[0] ?? ""}`);
+      }
+    }
+    expect(bad).toEqual([]);
+    const { spec, tree } = fallbackMockup("T1", "saas", "v_true", data);
+    const { html } = compilePage(spec, tree, data);
+    const forged = structuredClone(spec) as unknown as {
+      tokens: { radius: { md: { $value: { value: number } } } };
+    };
+    forged.tokens.radius.md.$value.value += 2;
+    const m = await h.measure(html, 1280, { spec: forged });
+    const [g12] = evaluateGates(m, ["G-12"]);
+    expect(g12!.violations).toContain("deriveTokens 불일치 radius.md");
+  });
   it("위반 페이지를 잡는다: 넘침·깨진 이미지·외부 요청·저대비", async () => {
     const html =
       '<!doctype html><html lang="ko"><head><meta charset="utf-8"></head><body style="margin:0;background:#fff">' +
