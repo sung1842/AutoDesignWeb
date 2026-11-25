@@ -89,3 +89,12 @@
 - 처리: copyDeckLimits는 4.6.2 그대로 구현(M2-04a). AC-03-19 목록 키 비교는 실패로 남고 verify:m2에서 이 BLK로 보고
 - 제안 수정안(사람): 비교를 필드별로 바꾼다(`for f in lim: ml[f] ≥ lim[f]`, 숫자끼리는 그대로) → relock
 - 상태: open
+
+## BLK-010 · M2 · locked-conflict · 2026-11-25T16:20Z
+- 대상: 03장 3.6.1 이미지 수(hero.offset 2, feature.zigzag·highlight.trio·menu.cards 항목별 1, gallery 5~9, cta.image 1) ↔ 04장 4.5.2 PageSchema(블록당 image 슬롯 1개, 목록 항목은 카피만)·blocks.json 슬롯(cta·menu에 media 없음)
+- 증상: 여러 장을 요구하는 variant를 스키마 안에서 그릴 수 없다. 렌더러는 첫 칸만 실제 이미지, 나머지는 빈 자리표시 틀(aria-hidden)로 그린다(ASM-044~047)
+- 재현: gallery.grid에 캡션 6개 → 이미지 1장 + 빈 틀 5개
+- 시도: 스키마·장 수정은 잠금 대상이라 하지 않음
+- 처리: 렌더는 계속 진행. 시각 품질(AIL·이미지 다양성) 판정이 걸리면 이 BLK로 보고
+- 제안 수정안(사람): 04장 4.5.2 image 슬롯을 배열(`images: {…}[]`, 최대 9)로 넓히거나 목록 항목에 선택 `image` 필드를 추가, blocks.json cta·menu에 media 슬롯 추가 → relock
+- 상태: open

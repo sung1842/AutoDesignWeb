@@ -2,6 +2,7 @@
 // 값은 var(--tf-*)·단위 없는 수·허용 목록만. 모바일 1열(3.11.3), stats.row 2×2. ASM-045.
 export const LAYOUT_CSS = `/* TasteFit blocks/layout.css */
 .tf-section__head { margin-bottom: var(--tf-space-10); }
+.tf-section .tf-media { width: 100%; }
 .tf-cols { display: grid; grid-template-columns: 1fr; gap: var(--tf-space-8) var(--tf-layout-base-gutter); }
 .tf-rule-list { display: grid; grid-template-columns: 1fr; column-gap: var(--tf-layout-base-gutter); }
 .tf-rule-list > * { border-top: var(--tf-border-width-thin) solid var(--tf-color-border); padding-block: var(--tf-space-5); }

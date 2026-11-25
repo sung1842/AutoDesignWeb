@@ -326,3 +326,10 @@
 - 선택: ① 필드 대응 고정: proof = 인용/이름(아바타 이니셜 = 이름 첫 글자, 장식), pricing = 플랜/가격, faq = 질문/답(details·summary), menu = 항목명/설명 + 가격은 항상 `[예시] 0,000원`(placeholder) ② pricing.cards 강조는 3플랜일 때 가운데 1개, 모바일은 강조 먼저(order) ③ menu 그룹은 1그룹으로 펼침(그룹 제목 = 블록 기본 제목), menu.cards 항목 이미지는 스키마 밖이라 생략 ④ cta 슬롯에 media가 없어 cta.image는 media가 있을 때만 겹치고 없으면 band 틀(fallback band) ⑤ inverse 섹션의 primary 버튼은 bg/fg를 뒤집어 대비 확보
 - 영향 범위: packages/renderer(blocks/content-b, css/blocks/content-b)
 - 되돌리기 비용: 낮음
+
+## ASM-047 · M2 · gap · 2026-11-25T16:20Z
+- 질문: highlight·gallery·location·story·about·service·contact 16 variant 배치, 여러 이미지 칸·지도·정적 폼은 어떻게 그리나
+- 근거 탐색: 03장 3.6.1·3.6.3·3.11.3, 04장 4.5.2, 06장 contact 폼(정적 내보내기 action 없음)
+- 선택: ① 여러 이미지 칸은 첫 칸만 실제 이미지, 나머지 빈 틀(BLK-010). gallery 칸 수 = captions 수, masonry 비율은 4:5·1:1·3:2 고정 순환, feature는 첫 칸 2×2 ② location 라벨 "주소·영업시간·전화"(dt, stat.label 역할), 지도는 3:2 자리표시(임베드 MVP 제외) ③ story·about 같은 틀(split/text), 본문 폭 `.tf-measure` = 컨테이너 1/2(36em 근사, 리터럴 금지) ④ contact 폼: 이름·이메일·문의 내용 고정 라벨 + form 슬롯은 도움말, action 없음, 보내기 버튼. contact.simple은 링크 슬롯이 없어 연락처를 강조 행으로 ⑤ 섹션 안 요소는 섹션 클래스(tf-<블록>, tf-<블록>--<variant>)를 쓰지 않는다(gallery 충돌 수정, 단위 테스트) ⑥ html `el`은 void 태그(input 등)를 닫지 않는다
+- 영향 범위: packages/renderer(blocks/content-c, css/blocks/content-c, html)
+- 되돌리기 비용: 낮음

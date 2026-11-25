@@ -33,8 +33,12 @@ export function attrs(a: Record<string, AttrVal>): string {
   return out;
 }
 
+/** 닫는 태그 없는 요소(HTML void). 자식은 무시한다. */
+const VOID_TAGS = new Set(["input", "img", "br", "hr", "meta", "link", "source"]);
+
 /** 요소. children은 Html 또는 이스케이프할 문자열. */
 export function el(tag: string, a: Record<string, AttrVal>, ...children: (Html | string)[]): Html {
+  if (VOID_TAGS.has(tag)) return raw(`<${tag}${attrs(a)}>`);
   const body = children.map((c) => (typeof c === "string" ? esc(c) : c.__html)).join("");
   return raw(`<${tag}${attrs(a)}>${body}</${tag}>`);
 }

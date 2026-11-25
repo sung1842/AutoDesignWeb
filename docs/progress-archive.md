@@ -167,3 +167,4 @@
 - 2026-11-20 04:29 | M2-03b1 deriveTokens(AC-03-02~04·44 녹색)·expectedSize, palettes null 역할 생략(ASM-031) → 다음: 03b2
 - 2026-11-20 04:32 | M2-03b2 exportTokens(tokens.json 별칭·css :root 1블록·@theme), 잠금 해제 → 다음: 03c 브랜드 색
 - 2026-11-20 07:20 | M2-03c applyBrandColor(primary→accent→tint→ignored, 무채 반전)·hexToOklch, ASM-032 → 다음: 03d
+- 2026-11-20 07:27 | M2-03d1 variantTargets(t_TRUE·t_FIT·t_BAL, D≥0.50 강제), ASM-033 → 다음: 03d2
