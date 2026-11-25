@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-25T07:21Z, since: 2026-11-25T07:24Z}
+- lock: {owner: 2026-11-25T07:21Z, since: 2026-11-25T07:26Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
@@ -114,7 +114,7 @@
   - [x] 02 design-spec a: [x] a1 predictL1(AC-03-07 8/8)·calibrate 1·2단계(AC-04-05 31/31, ASM-028) [x] a2 mapL1toL2ForPurpose·snapToFeasible(F·J, snap.test 4/4, ASM-029)
   - [x] 03 design-spec b: [x] a signatureEligible(AC-03-08 12/12)·letterSpacingEm(단위 8/8) [x] b0 validateTokenSet(최소 JSON Schema 검증기, ASM-030) [x] b1 deriveTokens·expectedSize(AC-03-02~04·44 8/8, ASM-031; expectedSize 브라우저 대조는 M2-09) [x] b2 exportTokens(AC-03-05 ① 녹색, CSS 리터럴 ②③은 renderer M2-05) [x] c applyBrandColor(3.13, brand.test 4/4·192건 대비 통과, ASM-032) [ ] d compileSpecs: [x] d1 variantTargets(4.4 α·거리 강제, variants.test 2/2, ASM-033) [x] d2a pickSignatures(4.14, PURPOSE_RANK 임시, ASM-034) [x] d3 layoutConstraints(hero_variants·SigCtx·apply_to)·copyTone(4.6.1)·decor(layout.test 9/9, ASM-035) [x] d3b enforceVariantL2Diff(4.4 L2 7키 ≥3)·spec_id(enforce.test 4/4, ASM-036) [x] d4a compileSpecs 조립·DesignSpecSchema(zod, l2 단방향 생성) — spec.test AC-04-03·06·08 녹색, ASM-037 [x] d4b staticLint(S)·장식 예산 후보 거름 → spec.test AC-04-03~09·30 녹색(10은 M2-04), ASM-038
   - [x] 04 layout-schema: [x] a LayoutTreeRaw zod(blocks.json enum·슬롯 kind)·JSON Schema·copyDeckLimits·기준 픽스처 → AC-04-10 녹색, ASM-039·BLK-009 [x] b PageSchema(확정 LayoutTree: text·asset_id·role_overrides)·JSON Schema 정적 검사(⑥, schema.test 4/4, ASM-040)
-  - [ ] 05 renderer a: [x] a1 CM-02 리터럴 검사·CSS 층 레지스트리·base.css·Button·TextLink(literal.test 4/4, 토큰 리터럴 AC 녹색, ASM-041) [ ] a2 컴포넌트 CSS 나머지 16종 [ ] a3 compilePage 골격(문서·섹션 속성 CM-04~06·16)+블록 일부
+  - [ ] 05 renderer a: [x] a1 CM-02 리터럴 검사·CSS 층 레지스트리·base.css·Button·TextLink(literal.test 4/4, 토큰 리터럴 AC 녹색, ASM-041) [x] a2 컴포넌트 CSS 나머지 16종(3.5.1·3.5.3 state, 12파일 리터럴 0) [ ] a3 compilePage 골격(문서·섹션 속성 CM-04~06·16)+블록 일부
   - [ ] 06 renderer b: 나머지 블록·variant 전부(blocks.json 20블록·53 variant)
   - [ ] 07 assets: 로컬 @font-face·이미지 경로·아이콘 SVG 인라인, 100회 SHA 동일(④)
   - [ ] 08 폴백 생성기(앵커 프리셋 + standardTree, AC-04-25 72조합) + fixtures/layouts 30+(①)
@@ -131,6 +131,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-25 16:31 | M2-05a2 컴포넌트 CSS 16종(state 3.5.3, 리터럴 0) → 다음: 05a3 compilePage 골격
 - 2026-11-25 16:26 | M2-05a1 CM-02 리터럴 검사·CSS 레지스트리·base·Button·TextLink(ASM-041) → 다음: 05a2 컴포넌트 CSS
 - 2026-11-25 13:34 | M2-04b PageSchema(확정 트리)·⑥ 금지 키·열린 객체 정적 검사, ASM-040 → 다음: M2-05 renderer a
 - 2026-11-25 13:27 | M2-04a LayoutTreeRaw zod·JSON Schema·copyDeckLimits·픽스처 1 → AC-04-10 녹색, BLK-009 → 다음: 04b

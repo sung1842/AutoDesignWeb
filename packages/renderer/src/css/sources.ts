@@ -1,7 +1,20 @@
 // CSS 층 레지스트리(04장 CM-02). tokens.css·theme.css는 design-spec exportTokens가 만들고,
 // 여기는 base·components·blocks·signatures 층만 둔다. 문자열 모듈이라 isomorphic(4.9.1).
 import { BASE_CSS } from "./base.js";
-import { BUTTON_CSS, TEXT_LINK_CSS } from "./components.js";
+import {
+  ACCORDION_CSS,
+  BUTTON_CSS,
+  CARD_CSS,
+  CHECKBOX_CSS,
+  DATA_CSS,
+  FIELD_CSS,
+  FOOTER_CSS,
+  MEDIA_CSS,
+  MISC_CSS,
+  NAVBAR_CSS,
+  TAG_CSS,
+  TEXT_LINK_CSS,
+} from "./components.js";
 
 export interface CssSource {
   path: string;
@@ -12,6 +25,16 @@ const SOURCES: readonly CssSource[] = [
   { path: "base.css", css: BASE_CSS },
   { path: "components/button.css", css: BUTTON_CSS },
   { path: "components/text-link.css", css: TEXT_LINK_CSS },
+  { path: "components/tag.css", css: TAG_CSS },
+  { path: "components/field.css", css: FIELD_CSS },
+  { path: "components/checkbox.css", css: CHECKBOX_CSS },
+  { path: "components/navbar.css", css: NAVBAR_CSS },
+  { path: "components/footer.css", css: FOOTER_CSS },
+  { path: "components/card.css", css: CARD_CSS },
+  { path: "components/media.css", css: MEDIA_CSS },
+  { path: "components/data.css", css: DATA_CSS },
+  { path: "components/accordion.css", css: ACCORDION_CSS },
+  { path: "components/misc.css", css: MISC_CSS },
 ];
 
 /** 층 순서(base → components → blocks → signatures)대로 반환한다. */
