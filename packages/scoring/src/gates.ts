@@ -1,5 +1,5 @@
 // 04장 4.10.2 하드 게이트 판정(9.4.4 ②, ASM-025 ②·ASM-055). 입력 = worker 하네스 측정값(PageMeasure).
-// 구현: G-02 텍스트 대비, G-04 가로 넘침, G-05 텍스트 잘림, G-06 겹침, G-07 리소스. 나머지 id는 "미구현"으로 실패를 낸다.
+// 구현: G-02 텍스트 대비, G-03 비텍스트 대비, G-04 가로 넘침, G-05 텍스트 잘림, G-06 겹침, G-07 리소스. 나머지 id는 "미구현"으로 실패를 낸다.
 import { thresholdNumber } from "@tastefit/config";
 
 export interface GateResult {
@@ -25,6 +25,7 @@ export interface MeasureLike {
   failedRequests?: string[];
   consoleErrors?: string[];
   externalRequests?: string[];
+  ui?: { sel: string; kind: string; ratio: number }[];
 }
 
 const floor2 = (x: number): number => Math.floor(x * 100) / 100;
@@ -37,6 +38,13 @@ const JUDGES: Readonly<Record<string, Judge>> = {
     return (m.texts ?? [])
       .filter((t) => floor2(t.ratio) < (t.large ? large : body))
       .map((t) => `${t.sel} "${t.text}" ${floor2(t.ratio)} < ${t.large ? large : body}`);
+  },
+  // 비텍스트 3:1(WCAG 1.4.11) = contrastLargeMin과 같은 값을 쓴다(ASM-057)
+  "G-03": (m) => {
+    const min = thresholdNumber("generation.contrastLargeMin");
+    return (m.ui ?? [])
+      .filter((u) => floor2(u.ratio) < min)
+      .map((u) => `${u.sel} ${u.kind} ${floor2(u.ratio)} < ${min}`);
   },
   "G-04": (m) =>
     (m.scrollWidth ?? 0) > (m.innerWidth ?? 0)

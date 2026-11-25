@@ -397,3 +397,10 @@
 - 선택: ① headlineLines: [data-role=hero.headline|cta.headline] 요소의 글자별 Range 사각형을 top으로 묶어 줄 수, 마지막 줄 글자 수(공백 제외) ② compileInBrowser: renderer·design-spec·assets dist ESM을 가상 오리진에서 import map(`@tastefit/design-spec/tokens-css`·`@tastefit/assets`)으로 서빙하고, blocks/index.js 등록 후 compile.js의 compilePageImpl을 실행(node 전용 진입점 m2.js는 쓰지 않는다). import()는 문자열 평가로 실행(테스트 변환기 회피)
 - 영향 범위: apps/worker(render/harness)
 - 되돌리기 비용: 낮음
+
+## ASM-057 · M2 · gap · 2026-11-25T19:55Z
+- 질문: G-03 비텍스트 대비의 표본·기준값
+- 근거 탐색: 04장 4.10.2 G-03, 03장 3.1.3 focus·focus-inverse, WCAG 1.4.11
+- 선택: ① 표본: 입력(테두리·채움 중 큰 대비), .tf-button(채움·테두리 중 큰 대비, 둘 다 없으면 제외), 모든 인터랙티브 요소의 `--tf-color-focus`(요소 문맥에서 해석) — 각각 부모 쪽 합성 배경과 비교 ② 기준 3:1은 thresholds에 별도 키가 없어 같은 값인 `generation.contrastLargeMin`을 쓴다(키 추가는 사람 결정)
+- 영향 범위: apps/worker(render/measure), packages/scoring
+- 되돌리기 비용: 낮음

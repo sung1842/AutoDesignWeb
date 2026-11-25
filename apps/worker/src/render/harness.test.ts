@@ -13,7 +13,7 @@ beforeAll(async () => {
 afterAll(async () => {
   await h?.close();
 });
-const GATES = ["G-02", "G-04", "G-05", "G-06", "G-07"];
+const GATES = ["G-02", "G-03", "G-04", "G-05", "G-06", "G-07"];
 
 describe("렌더 하네스·하드 게이트 4종(M2-09a, ASM-055)", () => {
   it("폴백 시안 3종 × 1280·375: 게이트 통과, 외부 요청 0, 폰트·이미지 로컬 서빙", async () => {

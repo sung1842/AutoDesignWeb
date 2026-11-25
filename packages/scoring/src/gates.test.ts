@@ -34,4 +34,16 @@ describe("하드 게이트 판정(4.10.2, ASM-055)", () => {
   it("미구현 게이트는 통과로 속이지 않는다", () => {
     expect(evaluateGates({}, ["G-11"])[0]!.pass).toBe(false);
   });
+  it("G-03 비텍스트 3:1", () => {
+    const r = evaluateGates(
+      {
+        ui: [
+          { sel: "a", kind: "focus", ratio: 2.99 },
+          { sel: "b", kind: "input-edge", ratio: 3 },
+        ],
+      },
+      ["G-03"],
+    )[0]!;
+    expect(r.violations).toHaveLength(1);
+  });
 });

@@ -23,6 +23,8 @@ export interface RawMeasure {
   brokenImages: string[];
   fontErrors: string[];
   imageCount: number;
+  /** G-03 비텍스트 대비 표본. */
+  ui: { sel: string; kind: string; ratio: number }[];
 }
 
 type RGBA = [number, number, number, number];
@@ -218,6 +220,50 @@ async function collectInPage(page: Page): Promise<
         if (x > 0 && y > 0 && x * y > G.overlapAreaPx2)
           overlaps.push(`${selOf(a.el)} × ${selOf(b.el)} ${(x * y).toFixed(1)}px²`);
       }
+    // --- 비텍스트 대비 G-03: 입력 테두리·버튼 경계·포커스 링 vs 인접 배경 ---
+    const bgOf = (start: Element | null): [number, number, number, number] => {
+      let bg: [number, number, number, number] = [0, 0, 0, 0];
+      for (let a: Element | null = start; a && bg[3] < 0.999; a = a.parentElement) {
+        const c = toRGBA(getComputedStyle(a).backgroundColor);
+        if (c[3] > 0) bg = over(bg, c);
+      }
+      return bg[3] < 0.999 ? over(bg, [255, 255, 255, 1]) : bg;
+    };
+    const cr = (a: number[], b: number[]): number => {
+      const x = lum(a);
+      const y = lum(b);
+      return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+    };
+    const ui: { sel: string; kind: string; ratio: number }[] = [];
+    // 입력 경계 = 테두리 또는 채움 중 더 뚜렷한 쪽(WCAG 1.4.11, ASM-057)
+    for (const el of document.querySelectorAll("input,textarea,select")) {
+      if (!visible(el)) continue;
+      const cs = getComputedStyle(el);
+      const parentBg = bgOf(el.parentElement);
+      const bw = parseFloat(cs.borderTopWidth);
+      const edge = bw > 0 ? cr(over(toRGBA(cs.borderTopColor), parentBg), parentBg) : 0;
+      const own = toRGBA(cs.backgroundColor);
+      const fill = own[3] > 0 ? cr(over(own, parentBg), parentBg) : 0;
+      ui.push({ sel: selOf(el), kind: "input-edge", ratio: Math.max(edge, fill) });
+    }
+    for (const el of document.querySelectorAll(".tf-button")) {
+      if (!visible(el)) continue;
+      const cs = getComputedStyle(el);
+      const parentBg = bgOf(el.parentElement);
+      const own = toRGBA(cs.backgroundColor);
+      const fill = own[3] > 0 ? cr(over(own, parentBg), parentBg) : 0;
+      const bw = parseFloat(cs.borderTopWidth);
+      const edge = bw > 0 ? cr(over(toRGBA(cs.borderTopColor), parentBg), parentBg) : 0;
+      if (own[3] === 0 && bw === 0) continue;
+      ui.push({ sel: selOf(el), kind: "button-edge", ratio: Math.max(fill, edge) });
+    }
+    for (const el of document.querySelectorAll("a[href],button,input,textarea,select,summary")) {
+      if (!visible(el)) continue;
+      const focus = getComputedStyle(el).getPropertyValue("--tf-color-focus").trim();
+      if (!focus) continue;
+      const bg = bgOf(el.parentElement);
+      ui.push({ sel: selOf(el), kind: "focus", ratio: cr(over(toRGBA(focus), bg), bg) });
+    }
     // --- 리소스 G-07 ---
     const brokenImages = imgs
       .filter((im) => im.naturalWidth === 0)
@@ -237,6 +283,7 @@ async function collectInPage(page: Page): Promise<
       brokenImages,
       fontErrors,
       imageCount: imgs.length,
+      ui,
     };
   }, GATE_SPEC);
 }
