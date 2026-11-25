@@ -418,3 +418,10 @@
 - 선택: ① `apps/web/src/lib/preview.ts`: signPreview(HMAC-SHA256 hex, `kind|id|vp|exp`), handlePreview(GET /render/{candidate|version}/{id}, 서명 timingSafeEqual, exp ≤ now 또는 > now + 15분이면 403, 없는 후보 404, 본문 = compilePage, 헤더 6.11.4 문자열 그대로), issuePreviewUrl(소유자 아니면 404, exp = 발급 + 600초), previewFrame(표시 sandbox=""·측정 sandbox="allow-same-origin" 화면 밖). share는 공개 링크 확인(M6) 전까지 404 ② 자산 URL은 루트 상대(`/fonts/…`·`/assets/…`)로 두어 문서 오리진(preview = PREVIEW_ORIGIN, srcdoc = 부모 WEB_ORIGIN)으로 해석되게 한다(6.11.4 "WEB_ORIGIN 절대 URL"과 같은 대상, 본문 외부 URL 0) ③ compileForEdit(tokens, tree, vw, {webOrigin, spec, data}) = 편집 토큰으로 컴파일 + `<head>` 첫 요소 CSP meta ④ 하네스 parentProbe: JS 켠 부모 페이지에 sandbox="" iframe srcdoc → `window.__xss` 미설정·`contentDocument === null` 확인 ⑤ web → renderer 의존 추가
 - 영향 범위: apps/web(lib/preview), packages/renderer(m2 compileForEdit), apps/worker(harness parentProbe)
 - 되돌리기 비용: 낮음
+
+## ASM-060 · M2 · gap · 2026-11-25T21:00Z
+- 질문: AC-06-24 정적 검사(`\son\w+=`)가 이스케이프된 사용자 문구(`<img onerror=…>` → `&lt;img onerror=…`)까지 잡는다
+- 근거 탐색: 04장 CM-05, 06장 AC-06-24, render.test staticBad
+- 선택: 컴파일러 `esc`가 `=`도 `&#61;`로 바꾼다(텍스트·속성 값 공통, 브라우저 표시는 같음). 폰트 서브셋 글자 수집은 `&#61;`을 되돌려 센다
+- 영향 범위: packages/renderer(html·compile), apps/worker(harness facesOf)
+- 되돌리기 비용: 낮음

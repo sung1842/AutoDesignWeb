@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-25T15:28Z, since: 2026-11-25T17:28Z}
+- lock: {owner: 2026-11-25T15:28Z, since: 2026-11-25T17:42Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-26 05:28  # 이 세션 시작(00:28 KST)+5h 추정. 한도로 끊기면 이 시각 이후 정기 세션이 이어감
-- 마지막 갱신: 2026-11-26 02:28 KST (세션: M2-11 완료, 다음 M2-12·13·09d·09e)
+- 마지막 갱신: 2026-11-26 02:42 KST (세션: M2 수용 render 19/22, 다음 09d extractL1·M3 linter 의존)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -123,7 +123,7 @@
   - [x] 10 worker render 잡(뷰포트 5 PNG·차단 카운터, JS off, 글꼴 /fonts/, ASM-058)
   - [x] 11 미리보기: 서명 URL·preview 헤더·iframe·compileForEdit CSP·parentProbe(⑧, ASM-059). Next 라우트 연결은 M5
   - [ ] 12 시각 회귀 기준선 24장(⑤, 로컬 chromium 가능분만, 나머지 needs_ci)
-  - [ ] 13 renderer 금지 의존성 검사(⑦) 확인
+  - [x] 13 renderer 금지 의존성 검사(⑦) 확인(수용 테스트 통과)
   - [ ] 14 verify:m2 → m2-done(tags 맵)
 - M3 이월: B18 정규화기를 추출기로 재생성(9.2.4 코퍼스 200 렌더, ASM-020), B15 골격을 실제 예시로 교체 후 자체 잠금(ASM-021)
 - [x] M0 [x] M1 [ ] M2 [ ] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
@@ -132,6 +132,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-26 02:42 | AC-06-24 이스케이프(= → &#61;)·⑦ 금지 의존성 확인, render 수용 19/22(남은 3 = treeLint·extractL1), ASM-060
 - 2026-11-26 02:28 | M2-11 미리보기 서명·헤더·iframe·편집 CSP·parentProbe, ASM-059 → 다음: 09e G-12 또는 13 금지 의존성
 - 2026-11-26 02:26 | M2-10 render 잡(뷰포트 5 PNG·render_blocked_requests)·하네스 JS off·글꼴 /fonts/, ASM-058 → 다음: M2-11 미리보기
 - 2026-11-26 02:20 | M2-09c G-03 비텍스트 대비(폴백 72×2 게이트 6종 위반 0), ASM-057 → 다음: M2-10 render 잡
@@ -146,4 +147,3 @@
 - 2026-11-26 00:59 | M2-07a 아이콘 iconSvg(임시 40×3)·icon-grid·location 연결, ASM-049·BLK-011 → 다음: 07b @font-face
 - 2026-11-26 00:56 | M2-06b2d nav·footer variant·sticky → M2-06 완료(53 variant 템플릿), ASM-048 → 다음: M2-07 assets
 - 2026-11-26 00:54 | M2-06b2c 7블록 16 variant·폼·갤러리(넘침 0), ASM-047·BLK-010 → 다음: b2d
-- 2026-11-26 00:50 | M2-06b2b proof·pricing·faq·cta·menu 12 variant(넘침 0), ASM-046 → 다음: b2c

@@ -5,11 +5,13 @@ const ESC: Record<string, string> = {
   ">": "&gt;",
   '"': "&quot;",
   "'": "&#39;",
+  "=": "&#61;",
 };
 
 /** 텍스트·속성 값 공용 이스케이프. */
 export function esc(s: string): string {
-  return s.replace(/[&<>"']/g, (c) => ESC[c] ?? c);
+  // `=`도 문자 참조로 바꾼다: 이스케이프된 사용자 문구가 정적 검사(`\son\w+=`, AC-06-24)에 걸리지 않게(ASM-060)
+  return s.replace(/[&<>"'=]/g, (c) => ESC[c] ?? c);
 }
 
 /** 이스케이프된 HTML 조각. 문자열을 그대로 넣는 경로를 타입으로 막는다. */

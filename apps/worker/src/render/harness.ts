@@ -85,6 +85,7 @@ export function facesOf(html: string): { faces: FaceIn[]; chars: string } {
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
+    .replace(/&#61;/g, "=")
     .replace(/&amp;/g, "&");
   const title = /<title>([^<]*)<\/title>/.exec(html)?.[1] ?? "";
   const base =
