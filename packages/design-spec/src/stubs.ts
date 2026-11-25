@@ -2,6 +2,7 @@
 import type { L1, L2 } from "@tastefit/taxonomy";
 import type { DesignData } from "./data.js";
 import { todo } from "./todo.js";
+import { compileSpecsImpl } from "./compile.js";
 import { predictL1Vec } from "./predict.js";
 import { exportTokensImpl } from "./export.js";
 import { deriveTokensImpl, expectedSizeImpl } from "./tokens.js";
@@ -52,9 +53,9 @@ export interface CompileInput {
   brand: { brand_color: string } | null;
   jobSeed: string;
 }
-export function compileSpecs(_input: CompileInput, _data: DesignData): Record<Variant, DesignSpec> {
-  void [_input, _data];
-  return todo("M2-03", "compileSpecs");
+/** 04장 4.2.2(ASM-037). */
+export function compileSpecs(input: CompileInput, data: DesignData): Record<Variant, DesignSpec> {
+  return compileSpecsImpl(input, data);
 }
 /** 03장 3.13(ASM-032). 반드시 4종 결과(+null) 중 하나로 끝나고 예외를 던지지 않는다. */
 export function applyBrandColor(

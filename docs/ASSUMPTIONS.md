@@ -256,3 +256,10 @@
 - 선택: ① 교체 대상 = 7키 중 L2 키 6개(pairing·palette·radius·depth.style·shadow_level·density). hero·signature는 l2에서 다시 계산하는 extras 콜백으로 차이에 반영 ② V-FIT은 (TRUE, FIT) 쌍만, V-BAL은 (TRUE, BAL)·(FIT, BAL) 부족분 합을 줄이는 단일 키 교체 중 J 증가량 최소(동률이면 키·값 순서 앞)를 F 안에서 반복(≤ 7회) ③ 페어링 교체 시 헤드라인 굵기가 새 페어링 허용값 밖이면 페어링 기본값(없으면 첫 허용값)으로 맞춘 뒤 F 판정 ④ 끝까지 미달이면 예외 없이 satisfied=false(4.4 렌더 층·low_separation으로 넘김) ⑤ spec_id = sha256(키 정렬 JSON(compile 입력 + variant + 버전)) 앞 16자. 조립 필드는 M2-03d4 compileSpecs에서 확정
 - 영향 범위: packages/design-spec/src/enforce.ts
 - 되돌리기 비용: 낮음
+
+## ASM-037 · M2 · gap · 2026-11-25T04:05Z
+- 질문: 04장 4.2.2 compileSpec 조립 순서(시그니처가 L2 차이 7키에 들어가는데 9단계에서 정해짐)와 DesignSpecSchema 세부(버전 필드·forbidden·hero 형식)
+- 근거 탐색: 04장 4.2.1·4.2.2·4.4, 03장 3.2.4·AC-03-06, data/normalizers(2026-S0)·presets.version(2026-S4)
+- 선택: ① 순서: variantTargets → 변형별 mapL1toL2ForPurpose·snapToFeasible(시그니처 = 프리셋 기본) → enforceVariantL2Diff(extras = hero_variants·pickSignatures를 후보 l2로 다시 계산) → pickSignatures 확정 → 변형별 브랜드·토큰·제약·톤·apply_to·decor ② preset_version = 프리셋 version, normalizer_version = data/normalizers 최신 파일명(R-30은 둘이 같은 시즌이라 했으나 temp 데이터는 S4/S0으로 다름 → 데이터 값을 그대로 기록, M3 B18 재생성 때 맞춤) ③ forbidden.lint_rules_strict = [](용도·유형 엄격 규칙 원천 미정), conflict_ids = l2Conflicts(확정 시그니처 기준) ④ DesignSpecSchema는 strict, l2는 taxonomy.json에서 단방향 생성(18키 enum), tokens는 record(TokenSet 세부 검증은 validateTokenSet) ⑤ staticLint 실패 시 재시도(11단계)는 M2-03d4b에서 붙인다
+- 영향 범위: packages/design-spec/src/compile.ts·data.ts, packages/data-contracts/src/m2.ts
+- 되돌리기 비용: 낮음

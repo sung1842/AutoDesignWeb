@@ -30,8 +30,8 @@ export interface VariantL2 {
   sigma: Vec5;
   ctx: SnapContext;
 }
-/** l2가 정해졌을 때 그 변형의 [hero_variants 결합 문자열, signature id]. */
-export type Extras = (variant: Variant, l2: L2) => [string, string];
+/** l2가 정해졌을 때 그 변형의 [hero_variants 결합 문자열, signature id]. all = 그 시점 세 변형 l2(v는 후보값). */
+export type Extras = (variant: Variant, l2: L2, all: Record<Variant, L2>) => [string, string];
 
 /** 4.4 7키 벡터: pairing, palette, radius, depth(style|level), density, hero, signature. */
 export function l2DiffVector(l2: L2, extras: [string, string]): string[] {
@@ -79,7 +79,8 @@ export function enforceVariantL2Diff(
     v_fit: input.v_fit.l2,
     v_bal: input.v_bal.l2,
   };
-  const vec = (v: Variant, x: L2 = l2[v]): string[] => l2DiffVector(x, extras(v, x));
+  const vec = (v: Variant, x: L2 = l2[v]): string[] =>
+    l2DiffVector(x, extras(v, x, { ...l2, [v]: x }));
   const changed: EnforceResult["changed"] = [];
   const peers: Record<"v_fit" | "v_bal", Variant[]> = {
     v_fit: ["v_true"],

@@ -14,6 +14,7 @@ export interface Palette extends PaletteLite {
   roles: Record<string, PaletteRole>;
 }
 export interface Preset extends PresetLite {
+  version: string;
   theme: "light" | "dark";
   palettes: string[];
   signatureIds: string[];
@@ -66,6 +67,8 @@ export interface DesignData extends MapData {
   blocks: JsonObj[];
   /** 03장 3.6.5 이미지 태그 전체(manifest 태그 합집합, orient.·tone. 제외). */
   imageTags: string[];
+  /** 05장 정규화기 최신 버전(data/normalizers/<시즌>.json 파일명). */
+  normalizerVersion: string;
 }
 
 interface Envelope<T> {
@@ -97,6 +100,12 @@ export function loadDesignData(root: string): DesignData {
     fonts: read<FontEntry>(root, "data/fonts/registry.json").items,
     pairingsFull: read<PairingFull>(root, "data/fonts/pairings.json").items,
     blocks: read<JsonObj>(root, "data/taxonomy/blocks.json").items,
+    normalizerVersion:
+      readdirSync(join(root, "data/normalizers"))
+        .filter((f) => f.endsWith(".json"))
+        .map((f) => f.slice(0, -5))
+        .sort()
+        .at(-1) ?? "",
     imageTags: imageTagSet(read<JsonObj>(root, "data/images/manifest.json").items),
   };
 }
