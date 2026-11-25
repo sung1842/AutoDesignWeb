@@ -1,4 +1,6 @@
 // seed:temp — config/ 묶음 B20·B21·B22·B24(09장 9.2.4). 결정적(난수 미사용), provenance temp.
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { COLOR_NAMES } from "../../packages/taxonomy/src/color-name.js";
 import type { Json, Obj } from "./load.js";
 import { type Ctx, type Out, bundle } from "./seed-temp.js";
@@ -499,6 +501,13 @@ const FEATURE_RANGE: Record<string, { transform: "identity" | "log1p"; lo: numbe
 const r6 = (x: number): number => Math.round(x * 1e6) / 1e6;
 
 export function genNormalizer(ctx: Ctx): Out[] {
+  // 코퍼스로 다시 만든 파일(corpus.n > 0, `seed:temp --corpus`)은 1단계가 덮어쓰지 않는다(ASM-068)
+  const cur = join(ctx.root, "data/normalizers/2026-S0.json");
+  if (
+    existsSync(cur) &&
+    ((JSON.parse(readFileSync(cur, "utf8")) as Obj).corpus as Obj | undefined)?.n
+  )
+    return [];
   const sec = section(chapter(ctx.root, "05_reference_trend.md"), "### 5.5.4");
   const mapping: Obj = {};
   for (const [axisCell = "", comp = ""] of table(sec)) {

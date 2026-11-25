@@ -189,3 +189,4 @@
 - 2026-11-26 01:10 | M2-07b2 fontTools 페이지 서브셋 woff2(결정적, 첫 화면 약 150KB), ASM-051·AD-032 → 다음: 07c 이미지
 - 2026-11-26 01:17 | M2-07c 미디어 슬롯 img·shape-graphic G1~4·폰트/이미지 /assets 절대 경로(외부 요청 0 확인), ASM-052 → 다음: 07d
 - 2026-11-26 01:20 | M2-07d 100회 컴파일 SHA 1종(프리셋 8) → M2-07 완료 → 다음: M2-08 폴백 생성기·fixtures
+- 2026-11-26 01:26 | M2-08a standardTree·fallbackMockup·resolveTree(24 표준·72 폴백 스키마 유효, 넘침 0), ASM-053 → 다음: 08b

@@ -82,6 +82,8 @@ export interface TreeOptions {
   paletteId?: string;
   brandName?: string;
   copyOverride?: string;
+  /** L2 전체 덮어쓰기(9.2.4 B18 코퍼스 렌더, ASM-068). 트리 제약은 앵커 명세 그대로. */
+  l2?: L2;
 }
 /** 3.4.7 유형 앵커 취향(μ = predictL1(기본 L2), σ 확신, κ 0.8). */
 export function anchorTaste(typeId: string, data: DesignData): TasteResult {
@@ -118,9 +120,10 @@ function treeFor(
 
 /** 페어링·팔레트 덮어쓰기(AC-03-23 등 검사용): l2를 바꾸고 토큰을 다시 만든다. */
 function withOverrides(spec: DesignSpec, data: DesignData, opts: TreeOptions): DesignSpec {
-  if (!opts.pairingId && !opts.paletteId) return spec;
+  if (!opts.pairingId && !opts.paletteId && !opts.l2) return spec;
   const l2 = {
     ...spec.l2,
+    ...(opts.l2 ?? {}),
     ...(opts.pairingId ? { "type.pairing_id": opts.pairingId } : {}),
     ...(opts.paletteId ? { "color.palette_id": opts.paletteId } : {}),
   } as L2;

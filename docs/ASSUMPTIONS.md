@@ -480,3 +480,11 @@
 - 결과: AC-04-08 실행 가능, 부트스트랩 자리표시 분위(2026-S0 placeholder)로는 충족률 0.406 < 0.95 → 9.2.4 B18 코퍼스 200 렌더 재생성(ASM-020 M3 이월분)을 M2-09d3으로 당긴다
 - 영향 범위: packages/extractor(l1), apps/worker(harness.extractL1)
 - 되돌리기 비용: 낮음
+
+## ASM-068 · M2 · gap · 2026-11-25T22:30Z
+- 질문: 9.2.4 B18 코퍼스 200 렌더를 seed:temp에서 어떻게 돌리나(렌더는 브라우저·비동기, seed:temp 1단계는 동기·결정적)
+- 근거 탐색: 09장 9.2.4 B18·F19, 05장 5.5.4·5.8.2·5.9 temp 분기, 03장 3.4.5
+- 선택: ① `pnpm seed:temp --corpus` = 1단계 뒤 2단계(scripts/data/seed-normalizer.ts). 빌드된 worker dist 하네스 사용(tsx keepNames가 page.evaluate를 깨뜨림) ② 1단계 genNormalizer는 corpus.n > 0 파일이 있으면 덮어쓰지 않는다(빈 data/면 자리표시 생성 → AC-09-04 그대로) ③ 변형 = 프리셋 기본 L2에서 키마다 allowedValues(팔레트는 preset.palettes) 균등 추출, mulberry32(20261116), inFeasible 통과·홀드아웃(앵커 기본·카드 48·A/B 이미지 L2) 밖·중복 없음, 용도는 saas·local_business·portfolio 순환 ④ standardTree에 `l2` 전체 덮어쓰기 옵션(트리 제약은 앵커 명세) ⑤ 분위 = R type 7, 소수 6자리 ⑥ b0·b1 = s_k(초기 가중치) → predictL1(l2) OLS ⑦ reliable = 앵커 8 왕복 오차 ≤ roundtripAbsMax 인 축(이번 결과 전 축 false), corpus에 fit·anchor_roundtrip_max 기록
+- 결과: 200 렌더 정규화기 생성, AC-04-08 0.365 < 0.95(추출 특징 다수가 퇴화: F22·F07~F09 상수, F01 중앙값 0) → 다음 단위에서 원인 진단
+- 영향 범위: scripts/data(seed-normalizer·seed-temp·seed-config), packages/design-spec(stubs TreeOptions.l2), data/normalizers/2026-S0.json
+- 되돌리기 비용: 낮음

@@ -2260,4 +2260,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   process.stdout.write(
     `seed:temp: ${r.written.length}개 파일 생성, human 건너뜀 ${r.skippedHuman.length}\n`,
   );
+  // 2단계(9.2.4 B18 코퍼스 200 렌더, ASM-068): 빌드된 worker 하네스가 필요해 명시 옵션으로만 돈다
+  if (process.argv.includes("--corpus")) {
+    const { seedNormalizer } = await import("./seed-normalizer.js");
+    process.stdout.write(`seed:temp --corpus: ${await seedNormalizer(process.cwd())}\n`);
+  }
 }
