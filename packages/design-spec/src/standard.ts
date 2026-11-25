@@ -27,6 +27,7 @@ export interface PSection {
   bg: "bg" | "surface" | "inverse" | "image";
   pad: -1 | 0 | 1;
   slots: Record<string, PSlot>;
+  role_overrides?: Record<string, string>;
 }
 export interface PageTree {
   schemaVersion: "1";
@@ -194,6 +195,11 @@ function seedIndex(seed: string, n: number): number {
 }
 
 export interface ResolveOpts {
+  /** 3.8.1 줄 예산 판정용(없으면 건너뜀). */
+  budget?: {
+    tokens: Record<string, unknown>;
+    sizeOf: (tokens: Record<string, unknown>, step: string, vw: number) => number;
+  };
   deck: Deck;
   brand: Brand;
   seed: string;
@@ -202,6 +208,40 @@ export interface ResolveOpts {
 }
 
 /** 4.5.2 원시 트리 → 확정 트리(PageSchema). 이미지: 같은 태그·미사용 후보 중 seed 선택(4.9.4, 톤 규칙은 M5). */
+/** 3.1.5a 헤드라인 역할의 기본 단계(조건부 variant 포함). */
+function headlineStep(variant: string): string | null {
+  if (variant === "hero.type-only" || variant === "hero.full-bleed-image") return "t-display";
+  if (variant.startsWith("hero.")) return "t-1";
+  if (variant === "cta.big-type") return "t-display";
+  if (variant.startsWith("cta.")) return "t-2";
+  return null;
+}
+function applyHeadlineBudget(
+  sec: PSection,
+  raw: RawSection,
+  data: DesignData,
+  o: ResolveOpts,
+): void {
+  const b = o.budget;
+  const step = headlineStep(sec.variant);
+  const slot = raw.slots.headline;
+  if (!b || !step || !slot || !("copy" in slot)) return;
+  const m = /^deck:([a-z_.]+)#(\d)$/.exec(slot.copy);
+  if (!m) return;
+  const key = m[1] ?? "";
+  const options = (o.deck[key] ?? []).map((_, i) => resolveRef(`deck:${key}#${i}`, o.deck).text);
+  if (options.length === 0) return;
+  const blk = data.blocks.find((x) => x.id === sec.block) as unknown as
+    { variants: { id: string; text_cols?: { lg: number; base: number } }[] } | undefined;
+  const cols = blk?.variants.find((v) => v.id === sec.variant)?.text_cols ?? { lg: 12, base: 4 };
+  const lay = (b.tokens.layout as Record<string, { $value?: { value?: number } }> | undefined)
+    ?.container;
+  const containerPx = lay?.$value?.value ?? HEADLINE_SPEC.contentMax;
+  const r = fitHeadline(options, Number(m[2] ?? 0), step, b.tokens, cols, containerPx, b.sizeOf);
+  sec.slots.headline = { copy: resolveRef(`deck:${key}#${r.index}`, o.deck) };
+  if (r.step) sec.role_overrides = { ...(sec.role_overrides ?? {}), headline: r.step };
+}
+
 export function resolveTree(raw: RawTree, data: DesignData, o: ResolveOpts): PageTree {
   const used = new Set<string>();
   const blocks = new Map(data.blocks.map((b) => [b.id as string, b]));
@@ -230,7 +270,16 @@ export function resolveTree(raw: RawTree, data: DesignData, o: ResolveOpts): Pag
         slots[k] = { list: items.map((copy) => ({ copy })) };
       }
     }
-    return { id: s.id, block: s.block, variant: s.variant, bg: s.bg, pad: s.pad, slots };
+    const sec: PSection = {
+      id: s.id,
+      block: s.block,
+      variant: s.variant,
+      bg: s.bg,
+      pad: s.pad,
+      slots,
+    };
+    if (o.budget) applyHeadlineBudget(sec, s, data, o);
+    return sec;
   });
   const navItems = raw.sections
     .map((s) => ({ label: String(blocks.get(s.block)?.nav_label ?? ""), target: `#${s.id}` }))
@@ -427,4 +476,89 @@ export function patternRaw(
     sections,
     footer: { variant: footer },
   };
+}
+
+// --- 3.8.1 헤드라인 줄 예산(S-39·T-30·U-11): 덱 옵션 교체 → 단계 1단 하향(role_overrides) → warn. ASM-064 ---
+/** 3.8.1 계수: 한글 평균 글자 폭 0.95, keep-all 손실 0.85, 콘텐츠 폭 상한 1200, 375 텍스트 폭 343, 거터 보정 24. */
+export const HEADLINE_SPEC = {
+  glyphW: 0.95,
+  keepAll: 0.85,
+  contentMax: 1200,
+  mobileText: 343,
+  gutter: 24,
+  orphanMax: 2,
+  desktopVw: 1280,
+} as const;
+const LOWER: Readonly<Record<string, string>> = { "t-display": "t-1", "t-1": "t-2" };
+/** 3.8.1 줄 예산 데스크톱 2줄·375 3줄. */
+export const HEADLINE_LINES: Readonly<Record<number, number>> = { 1280: 2, 375: 3 };
+
+export function textWidthPx(
+  vw: number,
+  cols: { lg: number; base: number },
+  containerPx: number,
+): number {
+  return vw >= HEADLINE_SPEC.desktopVw
+    ? Math.floor(
+        (Math.min(containerPx, HEADLINE_SPEC.contentMax) * cols.lg) / 12 - HEADLINE_SPEC.gutter,
+      )
+    : Math.floor((HEADLINE_SPEC.mobileText * cols.base) / 4);
+}
+
+/** 3.8.1 headlineBudget: maxChars와 한 줄 글자 수(perLine). */
+export function headlineBudget(
+  sizePx: number,
+  vw: number,
+  cols: { lg: number; base: number },
+  containerPx: number,
+): { maxChars: number; perLine: number } {
+  const perLine = Math.max(
+    1,
+    Math.floor(textWidthPx(vw, cols, containerPx) / (sizePx * HEADLINE_SPEC.glyphW)),
+  );
+  return {
+    maxChars: Math.floor(perLine * (HEADLINE_LINES[vw] ?? 2) * HEADLINE_SPEC.keepAll),
+    perLine,
+  };
+}
+
+/** 토큰 계산 판정: 예산 안이고 마지막 줄(글자 수 근사)이 1~2자가 아니다(1줄 2자 이하도 고아로 본다). */
+export function headlineFits(
+  text: string,
+  step: string,
+  tokens: Record<string, unknown>,
+  cols: { lg: number; base: number },
+  containerPx: number,
+  sizeOf: (tokens: Record<string, unknown>, step: string, vw: number) => number,
+): boolean {
+  const n = [...text.replace(/\s+/g, "")].length;
+  for (const vw of [1280, 375]) {
+    const { maxChars, perLine } = headlineBudget(sizeOf(tokens, step, vw), vw, cols, containerPx);
+    if (n > maxChars) return false;
+    const last = n - Math.floor((n - 1) / perLine) * perLine;
+    if (last <= HEADLINE_SPEC.orphanMax) return false;
+  }
+  return true;
+}
+
+/**
+ * 헤드라인 슬롯 확정: ① 같은 덱 키의 다른 옵션 중 처음 맞는 것 → ② 단계 1단 하향 후 다시 → ③ 원래 옵션 유지(warn).
+ * 반환: 쓸 옵션 index와 하향 단계(없으면 null).
+ */
+export function fitHeadline(
+  options: string[],
+  startIdx: number,
+  baseStep: string,
+  tokens: Record<string, unknown>,
+  cols: { lg: number; base: number },
+  containerPx: number,
+  sizeOf: (tokens: Record<string, unknown>, step: string, vw: number) => number,
+): { index: number; step: string | null; warn: boolean } {
+  const order = [startIdx, ...options.map((_, i) => i).filter((i) => i !== startIdx)];
+  for (const step of [baseStep, LOWER[baseStep]].filter((s): s is string => !!s)) {
+    for (const i of order)
+      if (headlineFits(options[i] ?? "", step, tokens, cols, containerPx, sizeOf))
+        return { index: i, step: step === baseStep ? null : step, warn: false };
+  }
+  return { index: startIdx, step: null, warn: true };
 }

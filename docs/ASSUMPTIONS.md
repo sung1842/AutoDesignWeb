@@ -447,3 +447,11 @@
 - 선택: seed:temp가 "블록 제거"가 든 셀(〃 포함)을 `fallback_variant: "remove"`로 적는다. 조건부 문구(saas에서 value 없으면 value.numbered 등)는 `fallbackKo`로 남기지 않고 제거로 본다(생성 파이프라인 M5에서 용도 필수 블록 처리)
 - 영향 범위: scripts/data/seed-temp.ts, data/taxonomy/blocks.json(temp)
 - 되돌리기 비용: 낮음
+
+## ASM-064 · M2 · gap · 2026-11-25T22:35Z
+- 질문: 3.8.1 헤드라인 넘침 처리(덱 교체 → 단계 하향 → warn)를 확정 단계에서 어떻게 계산하나
+- 근거 탐색: 03장 3.8.1 headlineBudget(S-39·T-30·U-11)·AC-03-26, 04장 4.10.2
+- 선택: ① headlineBudget(size = expectedSize(단계, vw), vw, text_cols, container) = floor(floor(textWidth / (size × 0.95)) × 줄수 × 0.85), 1280 2줄·375 3줄. 상수는 HEADLINE_SPEC ② 토큰 판정: 공백 뺀 글자 수 ≤ maxChars, 마지막 줄 글자 수(한 줄 글자 수로 나눈 나머지 근사) ≥ 3(1줄 2자 이하도 고아로 봄) ③ resolveTree에 budget(tokens, sizeOf)이 오면 hero·cta 헤드라인에 적용: 같은 덱 키 옵션을 시작 옵션부터 순서대로 → 다 안 되면 한 단 하향(t-display → t-1 → t-2) 후 다시 → 그래도 안 되면 원래 옵션 유지(warn, M3 AIL-24). 하향은 섹션 role_overrides.headline ④ 렌더러는 role_overrides를 `data-step`으로 내고 text-roles.css 끝의 `[data-role][data-step=…]` 규칙이 문맥 규칙을 이긴다 ⑤ cta는 text_cols가 없어 {lg 12, base 4}
+- 결과: 표준 트리 24 중 8개 하향, AC-03-26 통과
+- 영향 범위: packages/design-spec(standard·stubs), packages/renderer(compile·text-roles)
+- 되돌리기 비용: 낮음

@@ -220,6 +220,7 @@ function sectionHtml(spec: SpecLike, s: PSection, data: DataLike, media: MediaCt
             id: headingId,
             class: "tf-hero__headline",
             "data-role": "hero.headline",
+            "data-step": s.role_overrides?.headline ?? null,
             "data-slot-id": ctx.slotId("headline"),
             "data-placeholder": hl.copy.placeholder ? "true" : null,
           },
@@ -237,6 +238,7 @@ function sectionHtml(spec: SpecLike, s: PSection, data: DataLike, media: MediaCt
           class:
             heading || isCopy(hl) ? "tf-section__title" : "tf-section__title tf-visually-hidden",
           "data-role": s.block === "cta" && isCopy(hl) ? "cta.headline" : "section.title",
+          "data-step": s.role_overrides?.[s.slots.headline ? "headline" : "title"] ?? null,
           "data-slot-id": isCopy(hl) ? ctx.slotId(s.slots.headline ? "headline" : "title") : null,
         },
         text,

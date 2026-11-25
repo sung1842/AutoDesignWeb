@@ -110,7 +110,11 @@ function search(start: Lch, ok: (v: ColorVal) => boolean): ColorVal | null {
   return null;
 }
 
-function tryPrimary(pal: Palette, theme: "light" | "dark", b: Lch): Record<string, ColorVal> | null {
+function tryPrimary(
+  pal: Palette,
+  theme: "light" | "dark",
+  b: Lch,
+): Record<string, ColorVal> | null {
   const { body, large } = limits();
   const bg = roleHex(pal, "bg") ?? "#FFFFFF";
   const onPal = pal.roles["on-primary"];
@@ -146,7 +150,10 @@ function tryAccent(pal: Palette, b: Lch): Record<string, ColorVal> | null {
   const surface = roleHex(pal, "surface") ?? bg;
   const pc = pal.roles.primary?.oklch[1] ?? b[1];
   const c0 = Math.min(b[1], r6(pc * BRAND_SPEC.accentCRatio));
-  const a = search([b[0], c0, b[2]], (v) => ratio2(v.hex, bg) >= large && ratio2(v.hex, surface) >= large);
+  const a = search(
+    [b[0], c0, b[2]],
+    (v) => ratio2(v.hex, bg) >= large && ratio2(v.hex, surface) >= large,
+  );
   if (!a) return null;
   // on-accent 쓰임(배지 채움)은 강등 경로에서 금지지만, 값은 대비가 가장 큰 쪽으로 둔다.
   const cands: ColorVal[] = [colorValue([1, 0, 0]), colorValue([0.145, 0, 0])];

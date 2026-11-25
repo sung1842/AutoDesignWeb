@@ -41,9 +41,20 @@ describe("pickSignatures 4.14", () => {
   });
   it("후보가 비면 SIG-01(조건 불가면 SIG-09), 순위표는 SIG-05 제외 11종", () => {
     const p = data.presets[0]!;
-    const none: SigCtx = { ...base, sectionCount: 0, hasNumberSlot: false, hasImageSlot: false, motionLevel: "none", theme: "dark", displayPx: 0, gridMode: "bento" };
+    const none: SigCtx = {
+      ...base,
+      sectionCount: 0,
+      hasNumberSlot: false,
+      hasImageSlot: false,
+      motionLevel: "none",
+      theme: "dark",
+      displayPx: 0,
+      gridMode: "bento",
+    };
     expect(signatureCandidates({ ...p, signatureIds: ["SIG-05"] }, none)).toEqual(["SIG-01"]);
-    expect(signatureCandidates({ ...p, signatureIds: ["SIG-05"] }, { ...none, shapeBorder: "bold" })).toEqual(["SIG-09"]);
+    expect(
+      signatureCandidates({ ...p, signatureIds: ["SIG-05"] }, { ...none, shapeBorder: "bold" }),
+    ).toEqual(["SIG-09"]);
     for (const r of Object.values(PURPOSE_RANK)) {
       expect(new Set(r).size).toBe(11);
       expect(r).not.toContain("SIG-05");

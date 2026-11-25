@@ -185,3 +185,4 @@
 - 2026-11-26 00:54 | M2-06b2c 7블록 16 variant·폼·갤러리(넘침 0), ASM-047·BLK-010 → 다음: b2d
 - 2026-11-26 00:56 | M2-06b2d nav·footer variant·sticky → M2-06 완료(53 variant 템플릿), ASM-048 → 다음: M2-07 assets
 - 2026-11-26 00:59 | M2-07a 아이콘 iconSvg(임시 40×3)·icon-grid·location 연결, ASM-049·BLK-011 → 다음: 07b @font-face
+- 2026-11-26 01:04 | M2-07b1 폰트 계획(≤5면·preload 2·글자 해시 파일명)·@font-face, ASM-050 → 다음: 07b2

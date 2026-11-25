@@ -13,9 +13,30 @@ const BODY = thresholdNumber("generation.contrastBodyMin");
 const LARGE = thresholdNumber("generation.contrastLargeMin");
 type Obj = { [k: string]: unknown };
 const HEX24 = [
-  "#000000", "#FFFFFF", "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF",
-  "#808080", "#F5F5DC", "#0A0A0A", "#F0F0F0", "#123456", "#FEDCBA", "#FF7F00", "#8A2BE2",
-  "#2E8B57", "#DC143C", "#4B0082", "#7FFF00", "#39FF14", "#FDFD96", "#AAF0D1", "#FFF5CC",
+  "#000000",
+  "#FFFFFF",
+  "#FF0000",
+  "#00FF00",
+  "#0000FF",
+  "#FFFF00",
+  "#00FFFF",
+  "#FF00FF",
+  "#808080",
+  "#F5F5DC",
+  "#0A0A0A",
+  "#F0F0F0",
+  "#123456",
+  "#FEDCBA",
+  "#FF7F00",
+  "#8A2BE2",
+  "#2E8B57",
+  "#DC143C",
+  "#4B0082",
+  "#7FFF00",
+  "#39FF14",
+  "#FDFD96",
+  "#AAF0D1",
+  "#FFF5CC",
 ];
 const hexOf = (c: Obj, k: string): string | null =>
   c[k] ? ((((c[k] as Obj).$value as Obj).hex as string) ?? null) : null;
@@ -37,15 +58,23 @@ describe("applyBrandColor 3.13", () => {
       for (const hex of HEX24) {
         const paletteId = p.l2["color.palette_id"] as string;
         const r = applyBrandColorImpl({ presetId: p.id, paletteId, hex }, data);
-        expect([null, "adjusted", "demoted_to_accent", "used_as_tint", "ignored"]).toContain(r.notice);
+        expect([null, "adjusted", "demoted_to_accent", "used_as_tint", "ignored"]).toContain(
+          r.notice,
+        );
         const c = (deriveTokens({ presetId: p.id, l2: p.l2, brand: { hex } }, data).tokenSet as Obj)
           .color as Obj;
         const pairs: [string, string, number][] = [
-          ["fg", "bg", BODY], ["fg", "surface", BODY], ["fg-muted", "bg", BODY],
-          ["fg-inverse", "surface-inverse", BODY], ["border-strong", "bg", LARGE],
-          ["primary", "bg", LARGE], ["on-primary", "primary", BODY],
-          ["on-primary", "primary-hover", BODY], ["on-primary", "primary-active", BODY],
-          ["focus", "bg", LARGE], ["focus", "surface", LARGE],
+          ["fg", "bg", BODY],
+          ["fg", "surface", BODY],
+          ["fg-muted", "bg", BODY],
+          ["fg-inverse", "surface-inverse", BODY],
+          ["border-strong", "bg", LARGE],
+          ["primary", "bg", LARGE],
+          ["on-primary", "primary", BODY],
+          ["on-primary", "primary-hover", BODY],
+          ["on-primary", "primary-active", BODY],
+          ["focus", "bg", LARGE],
+          ["focus", "surface", LARGE],
         ];
         if (r.role === "accent") pairs.push(["accent", "bg", LARGE]);
         for (const [f, b, min] of pairs) {
@@ -68,9 +97,11 @@ describe("applyBrandColor 3.13", () => {
         const paletteId = p.l2["color.palette_id"] as string;
         const r = applyBrandColorImpl({ presetId: p.id, paletteId, hex }, data);
         expect(["brand_neutral_ignored", "brand_neutral_inverse"]).toContain(r.reason);
-        const base = (deriveTokens({ presetId: p.id, l2: p.l2 }, data).tokenSet as Obj).color as Obj;
-        const withB = (deriveTokens({ presetId: p.id, l2: p.l2, brand: { hex } }, data).tokenSet as Obj)
+        const base = (deriveTokens({ presetId: p.id, l2: p.l2 }, data).tokenSet as Obj)
           .color as Obj;
+        const withB = (
+          deriveTokens({ presetId: p.id, l2: p.l2, brand: { hex } }, data).tokenSet as Obj
+        ).color as Obj;
         expect((withB.primary as Obj).$value).toEqual((base.primary as Obj).$value);
       }
   });
@@ -80,6 +111,8 @@ describe("applyBrandColor 3.13", () => {
     const paletteId = p.l2["color.palette_id"] as string;
     const a = applyBrandColorImpl({ presetId: p.id, paletteId, hex: "#DC143C" }, data);
     expect(applyBrandColorImpl({ presetId: p.id, paletteId, hex: "#dc143c" }, data)).toEqual(a);
-    expect(applyBrandColorImpl({ presetId: p.id, paletteId, hex: "nope" }, data).notice).toBe("ignored");
+    expect(applyBrandColorImpl({ presetId: p.id, paletteId, hex: "nope" }, data).notice).toBe(
+      "ignored",
+    );
   });
 });

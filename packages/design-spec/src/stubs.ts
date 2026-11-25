@@ -112,6 +112,7 @@ function treeFor(
     seed: spec.spec_id,
     navVariant: spec.layout_constraints.allowed_variants.nav?.[0] ?? "nav.split",
     mediaMode: String(spec.l2["media.mode"]),
+    budget: { tokens: spec.tokens, sizeOf: expectedSizeImpl },
   }) as unknown as LayoutTreeLike;
 }
 

@@ -92,7 +92,17 @@ export function roleRules(r: TextRole, opts: TextRoleOpts = {}): string[] {
   return out;
 }
 
+/** 확정 트리 role_overrides(3.8.1 단계 하향) → [data-step]. 역할 규칙 뒤에 두어 문맥 규칙보다 이긴다(ASM-064). */
+export function stepOverrideCss(): string {
+  return Object.entries(STEP_TOKEN)
+    .map(
+      ([step, k]) =>
+        `[data-role][data-step="${step}"] { font-size: var(--tf-type-${k}); line-height: var(--tf-type-${k}-leading); letter-spacing: var(--tf-type-${k}-tracking); }`,
+    )
+    .join("\n");
+}
+
 /** text-roles.css 본문. 역할 순서는 B25 순서 그대로(결정론, CM-14). */
 export function textRoleCss(roles: readonly TextRole[], opts: TextRoleOpts = {}): string {
-  return `/* TasteFit text-roles.css (B25) */\n${roles.flatMap((r) => roleRules(r, opts)).join("\n")}\n`;
+  return `/* TasteFit text-roles.css (B25) */\n${roles.flatMap((r) => roleRules(r, opts)).join("\n")}\n${stepOverrideCss()}\n`;
 }

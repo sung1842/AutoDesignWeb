@@ -12,7 +12,8 @@ const data = loadDesignData(join(import.meta.dirname, "../../.."));
 const MIN = thresholdNumber("generation.variant.l2DiffMin");
 const PURPOSES: Purpose[] = ["saas", "local_business", "portfolio"];
 const KEYS = ["expression", "temperature", "shape", "density", "depth"] as const;
-const vec = (a: readonly number[]): Vec5 => Object.fromEntries(KEYS.map((k, i) => [k, a[i] ?? 0])) as Vec5;
+const vec = (a: readonly number[]): Vec5 =>
+  Object.fromEntries(KEYS.map((k, i) => [k, a[i] ?? 0])) as Vec5;
 const sigma = vec([0.08, 0.08, 0.08, 0.08, 0.08]);
 const same = (): [string, string] => ["hero.x", "SIG-x"];
 

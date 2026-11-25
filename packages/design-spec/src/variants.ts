@@ -52,8 +52,7 @@ export function variantTargets(
   const trF = calibrate({ taste, purpose, alpha: alphaFit }, data);
   const tT = toArr(trT.v2);
   const fit0 = toArr(trF.v2);
-  const clipP = (a: number[]): number[] =>
-    a.map((x, i) => clip(x, p.lo[i] ?? 0, p.hi[i] ?? 1));
+  const clipP = (a: number[]): number[] => a.map((x, i) => clip(x, p.lo[i] ?? 0, p.hi[i] ?? 1));
 
   let tF = fit0;
   let enforced = false;
@@ -61,9 +60,7 @@ export function variantTargets(
   if (d0 < dMin) {
     enforced = true;
     const e =
-      d0 >= VARIANT_SPEC.unitDirMin
-        ? fit0.map((x, i) => (x - (tT[i] ?? 0)) / d0)
-        : [...p.emphasis];
+      d0 >= VARIANT_SPEC.unitDirMin ? fit0.map((x, i) => (x - (tT[i] ?? 0)) / d0) : [...p.emphasis];
     const fwd = clipP(fit0.map((x, i) => x + (dMin - d0) * (e[i] ?? 0)));
     tF = fwd;
     if (l1Dist(tT, fwd) < dMin) {
