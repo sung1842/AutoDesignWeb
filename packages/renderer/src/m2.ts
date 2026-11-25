@@ -2,6 +2,7 @@
 export { cssLiteralViolations, declarations } from "./css/literal.js";
 export { rendererCssSources, stylesCss, type CssSource } from "./css/sources.js";
 import { compilePageImpl, type PTree, type SpecLike } from "./compile.js";
+import "./blocks/index.js";
 export * from "./compile.js";
 export { esc } from "./html.js";
 const pending = (n: string): never => {
@@ -9,7 +10,11 @@ const pending = (n: string): never => {
 };
 /** 04장 4.9 컴파일(ASM-025 ③·ASM-042). spec = DesignSpec, tree = 확정 PageSchema, data = DesignData. */
 export function compilePage(spec: unknown, tree: unknown, data: unknown): { html: string } {
-  return compilePageImpl(spec as SpecLike, tree as PTree, data as Parameters<typeof compilePageImpl>[2]);
+  return compilePageImpl(
+    spec as SpecLike,
+    tree as PTree,
+    data as Parameters<typeof compilePageImpl>[2],
+  );
 }
 export function compileForEdit(
   _tokens: unknown,

@@ -305,3 +305,10 @@
 - 선택: ① tokens.css에 단계별 `--tf-type-<키>-leading`·`-tracking` 추가, 모바일 자간은 모바일 크기로 계산해 `:root` 안 `@media (max-width: 47.99rem)`로 재선언(clamp 중간 크기는 두 값 중 하나로 근사) ② `text-roles.css`를 스펙마다 B25에서 생성해 components 층 뒤·blocks 층 앞에 둔다. weight heading→heading 글꼴·웨이트, emphasis→본문 글꼴·emphasis 웨이트, tracking label은 0(한글 기본, 라틴 대문자 +0.06·SIG-09는 시그니처 층) ③ 조건부 단계: hero.type-only·full-bleed-image / cta.big-type / footer.big-type → t-display, button sm → t-small, nav.link는 데스크톱 t-small < 15px면 컴파일 시 t-body. nav.wordmark 줄 예산 강등은 하네스(M2-09) 이후 ④ blocks.json 슬롯 textRoles는 seed:temp `BLOCK_SLOT_TEXT_ROLES` 표로 고정(list 슬롯은 항목 요소 순서) ⑤ 버튼 라벨은 `a > span[data-role=button.label][data-size]`, 스킵 링크는 nav.link
 - 영향 범위: packages/design-spec(tokens·tokens-css·data), packages/renderer(compile·css/text-roles), data/taxonomy/blocks.json(temp)
 - 되돌리기 비용: 낮음
+
+## ASM-044 · M2 · gap · 2026-11-25T15:58Z
+- 질문: hero 6 variant의 칸 배치·모바일 변환을 어떻게 그리나, offset의 둘째 이미지(1:1)는 PageSchema에 슬롯이 없는데 어떻게 하나
+- 근거 탐색: 03장 3.6.1·3.6.2(text_cols)·3.11.3, 04장 CM-01·4.5.2, blocks.json hero variants
+- 선택: ① 텍스트 칼럼(eyebrow → h1 → sub → CTA lg)은 공통, 칸 수 = text_cols.lg(12열 그리드, ≥64rem), 48~63.99rem은 split·offset 2열, 그 미만 1열(텍스트 → 이미지) ② full-bleed는 이미지·텍스트를 같은 격자 칸에 겹치고 스크림 `--tf-color-overlay`, 모바일 4:5·≥48rem 16:9, 텍스트 폭 7/12 ③ offset 보조 1:1은 같은 자산을 1:1로 자른 장식(aria-hidden, ≥64rem에서만 표시) — 둘째 이미지 슬롯은 스키마 밖이라 추가하지 않음 ④ variant 템플릿은 컴파일러가 만든 제목(ctx.heading)을 직접 배치, 등록은 패키지 진입점(blocks/index)에서 1회(순환 import 방지) ⑤ 헤드라인 단계 강등(role_overrides)은 M2-08·09 헤드라인 예산과 함께
+- 영향 범위: packages/renderer(blocks/hero·css/blocks/hero·compile)
+- 되돌리기 비용: 낮음

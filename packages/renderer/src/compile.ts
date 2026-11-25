@@ -63,6 +63,8 @@ export interface BlockCtx {
   spec: SpecLike;
   section: PSection;
   headingId: string;
+  /** 섹션 제목 요소(h1/h2). variant 템플릿은 이것을 직접 배치한다(일반 템플릿은 컴파일러가 앞에 둔다). */
+  heading: Html;
   /** 슬롯 요소 id(CM-04 data-slot-id): `<섹션>.<슬롯>[.<항목>]`. */
   slotId: (slot: string, i?: number) => string;
   /** 슬롯 텍스트 역할(blocks.json slots[].textRoles, 3.1.5a). 없으면 빈 배열. */
@@ -195,8 +197,9 @@ function sectionHtml(spec: SpecLike, s: PSection, data: DataLike): Html {
     headingId,
     slotId: (slot, i) => (i === undefined ? `${s.id}.${slot}` : `${s.id}.${slot}.${i}`),
     roles: (slot) => slotRoles(data, s.block, slot),
+    heading: raw(""),
   };
-  const tpl = TEMPLATES.get(s.variant) ?? genericBlock;
+  const custom = TEMPLATES.get(s.variant);
   const isHero = s.block === "hero";
   const head: Html[] = [];
   if (isHero) {
@@ -252,7 +255,9 @@ function sectionHtml(spec: SpecLike, s: PSection, data: DataLike): Html {
       "data-pad": s.pad,
       "aria-labelledby": headingId,
     },
-    el("div", { class: "tf-container" }, ...head, tpl(rest, ctx)),
+    custom
+      ? el("div", { class: "tf-container" }, custom(rest, { ...ctx, heading: join(head) }))
+      : el("div", { class: "tf-container" }, ...head, genericBlock(rest, ctx)),
   );
 }
 

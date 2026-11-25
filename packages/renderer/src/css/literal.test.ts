@@ -11,7 +11,9 @@ describe("CM-02 리터럴 검사", () => {
     expect(cssLiteralViolations(".a{color:var(--tf-color-fg) !important}")).toEqual([
       "color: !important",
     ]);
-    expect(cssLiteralViolations(".a{background:color-mix(in oklab, var(--a), var(--b))}")).toHaveLength(1);
+    expect(
+      cssLiteralViolations(".a{background:color-mix(in oklab, var(--a), var(--b))}"),
+    ).toHaveLength(1);
   });
   it("@media 머리·선택자·0 단위·단위 없는 수는 통과", () => {
     expect(

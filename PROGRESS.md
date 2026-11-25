@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-25T15:28Z, since: 2026-11-25T15:47Z}
+- lock: {owner: 2026-11-25T15:28Z, since: 2026-11-25T15:59Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-26 05:28
-- 마지막 갱신: 2026-11-26 00:47 KST (예약 세션: M2-06b0 텍스트 역할 층, 다음 M2-06 b1 hero 6 variant)
+- 마지막 갱신: 2026-11-26 00:59 KST (예약 세션: M2-06b0·b1, 다음 M2-06 b2 나머지 블록 템플릿)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -115,7 +115,7 @@
   - [x] 03 design-spec b: [x] a signatureEligible(AC-03-08 12/12)·letterSpacingEm(단위 8/8) [x] b0 validateTokenSet(최소 JSON Schema 검증기, ASM-030) [x] b1 deriveTokens·expectedSize(AC-03-02~04·44 8/8, ASM-031; expectedSize 브라우저 대조는 M2-09) [x] b2 exportTokens(AC-03-05 ① 녹색, CSS 리터럴 ②③은 renderer M2-05) [x] c applyBrandColor(3.13, brand.test 4/4·192건 대비 통과, ASM-032) [ ] d compileSpecs: [x] d1 variantTargets(4.4 α·거리 강제, variants.test 2/2, ASM-033) [x] d2a pickSignatures(4.14, PURPOSE_RANK 임시, ASM-034) [x] d3 layoutConstraints(hero_variants·SigCtx·apply_to)·copyTone(4.6.1)·decor(layout.test 9/9, ASM-035) [x] d3b enforceVariantL2Diff(4.4 L2 7키 ≥3)·spec_id(enforce.test 4/4, ASM-036) [x] d4a compileSpecs 조립·DesignSpecSchema(zod, l2 단방향 생성) — spec.test AC-04-03·06·08 녹색, ASM-037 [x] d4b staticLint(S)·장식 예산 후보 거름 → spec.test AC-04-03~09·30 녹색(10은 M2-04), ASM-038
   - [x] 04 layout-schema: [x] a LayoutTreeRaw zod(blocks.json enum·슬롯 kind)·JSON Schema·copyDeckLimits·기준 픽스처 → AC-04-10 녹색, ASM-039·BLK-009 [x] b PageSchema(확정 LayoutTree: text·asset_id·role_overrides)·JSON Schema 정적 검사(⑥, schema.test 4/4, ASM-040)
   - [x] 05 renderer a: [x] a1 CM-02 리터럴 검사·CSS 층 레지스트리·base.css·Button·TextLink(literal.test 4/4, 토큰 리터럴 AC 녹색, ASM-041) [x] a2 컴포넌트 CSS 나머지 16종(3.5.1·3.5.3 state, 12파일 리터럴 0) [x] a3 compilePage 골격(문서·nav·footer·섹션 속성 CM-04~06·14·16, 일반 템플릿, compile.test 3/3, ASM-042)
-  - [ ] 06 renderer b: [x] b0 텍스트 역할 층(B25 33역할 → text-roles.css·모든 텍스트 노드 data-role·blocks 슬롯 textRoles, 단위 4/4, ASM-043) [ ] b1 hero 6 variant [ ] b2 나머지 블록 — variant 템플릿 전부(blocks.json 20블록·53 variant, registerTemplate) + 블록 CSS(blocks/*.css)
+  - [ ] 06 renderer b: [x] b0 텍스트 역할 층(B25 33역할 → text-roles.css·모든 텍스트 노드 data-role·blocks 슬롯 textRoles, 단위 4/4, ASM-043) [x] b1 hero 6 variant(hero.css 12열 text_cols, hero.test 4/4, ASM-044) [ ] b2 나머지 블록 — variant 템플릿 전부(blocks.json 20블록·53 variant, registerTemplate) + 블록 CSS(blocks/*.css)
   - [ ] 07 assets: 로컬 @font-face·이미지 경로·아이콘 SVG 인라인, 100회 SHA 동일(④)
   - [ ] 08 폴백 생성기(앵커 프리셋 + standardTree, AC-04-25 72조합) + fixtures/layouts 30+(①)
   - [ ] 09 Playwright(chromium) 렌더 하네스 + 하드 게이트 4종 선구현(②: 대비 AA·가로 넘침·겹침·깨진 이미지)
@@ -131,6 +131,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-26 00:59 | M2-06b1 hero 6 variant 템플릿·hero.css(1280·375 넘침 0 확인), ASM-044 → 다음: b2 나머지 블록
 - 2026-11-26 00:47 | M2-06b0 텍스트 역할 층(text-roles.css·data-role·슬롯 textRoles·단계 leading/tracking 변수), ASM-043 → 다음: b1 hero
 - 2026-11-25 16:52 | M2-05a3 compilePage 골격·tokens-css 분리(ASM-042) → M2-05 완료, 다음: M2-06 variant 템플릿
 - 2026-11-25 16:31 | M2-05a2 컴포넌트 CSS 16종(state 3.5.3, 리터럴 0) → 다음: 05a3 compilePage 골격
@@ -145,4 +146,3 @@
 - 2026-11-20 07:27 | M2-03d1 variantTargets(t_TRUE·t_FIT·t_BAL, D≥0.50 강제), ASM-033 → 다음: 03d2
 - 2026-11-20 07:20 | M2-03c applyBrandColor(primary→accent→tint→ignored, 무채 반전)·hexToOklch, ASM-032 → 다음: 03d
 - 2026-11-20 04:32 | M2-03b2 exportTokens(tokens.json 별칭·css :root 1블록·@theme), 잠금 해제 → 다음: 03c 브랜드 색
-- 2026-11-20 04:29 | M2-03b1 deriveTokens(AC-03-02~04·44 녹색)·expectedSize, palettes null 역할 생략(ASM-031) → 다음: 03b2

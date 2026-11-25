@@ -164,3 +164,4 @@
 - 2026-11-20 04:15 | M2-02a2 mapL1toL2ForPurpose·snapToFeasible(F 상충 7종·J), ASM-029 → 다음: M2-03
 - 2026-11-20 04:13 | M2-02a1 predictL1(8/8)·calibrate(31/31), ASM-028(감사 리터럴→사양 표) → 다음: 02a2 snap
 - 2026-11-20 04:18 | M2-03b0 validateTokenSet(MiniValidator, ajv 없음 ASM-030) → 다음: 03b1 deriveTokens
+- 2026-11-20 04:29 | M2-03b1 deriveTokens(AC-03-02~04·44 녹색)·expectedSize, palettes null 역할 생략(ASM-031) → 다음: 03b2
