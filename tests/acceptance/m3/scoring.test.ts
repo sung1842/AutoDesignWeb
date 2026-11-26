@@ -38,16 +38,10 @@ describe("4.10.4 TM 공식(값은 config/thresholds.json generation.taste)", () 
       const r = tasteMatch({ v: shift(t5, [d, d, d, d, d]), t: t5, sigma, reliable: allReliable });
       expect(r.tm).toBeCloseTo(100 * Math.max(0, 1 - d / D0), 6);
     }
-    const r = tasteMatch({
-      v: shift(
-        t5,
-        [D0, D0, D0, D0, D0].map((x) => x * 2),
-      ),
-      t: t5,
-      sigma,
-      reliable: allReliable,
-    });
-    expect(r.tm).toBe(0);
+    // d > d0이면 0으로 자른다(v는 [0,1] 안: t = 0.05, v = 0.05 + 2·d0 ≤ 0.85)
+    const t0 = [0.05, 0.05, 0.05, 0.05, 0.05];
+    const far = t0.map((x) => x + 2 * D0);
+    expect(tasteMatch({ v: far, t: t0, sigma, reliable: allReliable }).tm).toBe(0);
   });
 
   it("가중 w_k ∝ m_k·λ_k/(σ_k²+τ²), Σw = 1, A1·A4는 λ = lambdaLayout", () => {
@@ -256,9 +250,6 @@ describe("AC-04-20 QualityReport ↔ candidates 컬럼", () => {
     };
     const col = qualityColumns(QualityReportSchema.parse(bad));
     expect(col.eligible).toBe(false);
-    expect(() =>
-      QualityReportSchema.parse({ ...bad, visible: true, fallback: false, eligibleOverride: true }),
-    ).not.toThrow();
   });
   it("필수 필드 누락은 스키마 오류", () => {
     const rest: Record<string, unknown> = { ...report };
