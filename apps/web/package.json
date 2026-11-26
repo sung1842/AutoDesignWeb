@@ -18,8 +18,10 @@
     "start:check-env": "tsx src/check-env.ts"
   },
   "dependencies": {
+    "@tastefit/api-contract": "workspace:^",
     "@tastefit/config": "workspace:^",
     "@tastefit/db": "workspace:^",
+    "@tastefit/diagnosis": "workspace:^",
     "@tastefit/renderer": "workspace:^",
     "next": "^16.0.0",
     "react": "^19.0.0",

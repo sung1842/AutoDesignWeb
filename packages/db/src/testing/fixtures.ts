@@ -1,5 +1,7 @@
 // M1 수용 테스트 픽스처 헬퍼(ASM-008). 쓰기는 전부 withService(6.3.5 쓰기 원칙). 값은 스키마 제약을 만족하는 최소 임시값.
 import { randomBytes, randomUUID } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { type DbPort, type Tx, q } from "../port.js";
 
 export interface Ownership {
@@ -183,4 +185,99 @@ export function insertAuditLog(db: DbPort, o: { ageDays: number }): Promise<stri
       [o.ageDays],
     ),
   );
+}
+
+// ---------- M4 설문 자극물 픽스처(ASM-095 ③) ----------
+interface PlanCard {
+  id: string;
+  svId: string;
+  templateId: string;
+  targetL1: number[];
+  altKo: string;
+}
+interface PlanPair {
+  id: string;
+  axis: string;
+  levelA: number;
+  levelB: number;
+  pairImageIds: [string, string];
+  focusRegion: number[];
+  images: { id: string; targetL1: number[] }[];
+}
+const AXIS_KEY: Record<string, string> = {
+  A1: "expression",
+  A2: "temperature",
+  A3: "shape",
+  A4: "density",
+  A5: "depth",
+};
+const l1 = (v: number[]): string =>
+  JSON.stringify(Object.fromEntries(Object.values(AXIS_KEY).map((k, i) => [k, v[i] ?? 0])));
+const fakeAssets = (id: string): string => {
+  const a = (dev: string, w: number, h: number) => ({
+    path: `survey-assets/${FIXTURE_TAXONOMY}/${id}.${dev}.000000000000.webp`,
+    sha256: "0".repeat(64),
+    w,
+    h,
+    bytes: 1000,
+  });
+  return JSON.stringify({ desktop: a("desktop", 1280, 800), mobile: a("mobile", 780, 1560) });
+};
+
+/** 카드 48·A/B 이미지 120·쌍 120을 x = 계획 L1·더미 자산으로 upsert. activeCard가 false인 카드는 draft. */
+export async function seedSurveyFixture(
+  db: DbPort,
+  o: { activeCard?: (c: PlanCard) => boolean } = {},
+): Promise<void> {
+  const root = join(import.meta.dirname, "../../../..");
+  const items = <T>(rel: string): T[] =>
+    (JSON.parse(readFileSync(join(root, rel), "utf8")) as { items: T[] }).items;
+  const cards = items<PlanCard>("data/survey/card_plan.json");
+  const pairs = items<PlanPair>("data/survey/ab_plan.json");
+  const cols = `(taxonomy_version, id, kind, stage, template_id, axis, level, pair_image_ids, target_l1, x_card, assets, alt_text, dominant_colors, focus_region, status)`;
+  const up = `on conflict (taxonomy_version, id) do update set status = excluded.status, x_card = excluded.x_card`;
+  await db.withService(async (tx) => {
+    await ensureRelease(tx);
+    for (const c of cards)
+      await q(
+        tx,
+        `insert into survey_items ${cols} values ($1, $2, 'card', 1, $3, null, null, null, $4, $4, $5, $6, array['#111111','#888888','#EEEEEE'], '{"x":0,"y":0,"w":1,"h":1}', $7) ${up}`,
+        [
+          FIXTURE_TAXONOMY,
+          c.id,
+          c.templateId,
+          l1(c.targetL1),
+          fakeAssets(c.id),
+          c.altKo,
+          (o.activeCard ?? (() => true))(c) ? "active" : "draft",
+        ],
+      );
+    const seen = new Set<string>();
+    for (const p of pairs) {
+      const [fx, fy, fw, fh] = p.focusRegion;
+      const focus = JSON.stringify({ x: fx, y: fy, w: fw, h: fh });
+      for (const im of p.images) {
+        if (seen.has(im.id)) continue;
+        seen.add(im.id);
+        await q(
+          tx,
+          `insert into survey_items ${cols} values ($1, $2, 'ab_image', 2, 'tpl-hero', $3, $4, null, $5, $5, $6, '선택지 {n}: 픽스처 A/B', array['#111111','#888888','#EEEEEE'], $7, 'active') ${up}`,
+          [
+            FIXTURE_TAXONOMY,
+            im.id,
+            AXIS_KEY[p.axis],
+            Number(im.id.split("-").at(-1)) / 100,
+            l1(im.targetL1),
+            fakeAssets(im.id),
+            focus,
+          ],
+        );
+      }
+      await q(
+        tx,
+        `insert into survey_items ${cols} values ($1, $2, 'ab_pair', 2, 'tpl-hero', $3, null, $4, null, null, null, null, null, $5, 'active') ${up}`,
+        [FIXTURE_TAXONOMY, p.id, AXIS_KEY[p.axis], p.pairImageIds, focus],
+      );
+    }
+  });
 }

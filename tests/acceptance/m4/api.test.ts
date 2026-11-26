@@ -304,10 +304,10 @@ describe("완료·결과 · AC-06-46 · 9.4.6 ⑤", () => {
       let v = view(a);
       let n = 0;
       while (v.question) {
-        // 열 칸 중 1칸 cant_tell, 1칸 none_of_these(4지선다만), 나머지 무작위 선택
+        // 열 칸 중 1칸 cant_tell(A/B만), 1칸 none_of_these(4지선다만), 나머지 무작위 선택
         const roll = Math.floor(rnd() * 10);
         const body =
-          roll === 0
+          roll === 0 && v.question.kind === "ab"
             ? { ...answerOf(v), answer: "cant_tell", chosenItemId: undefined }
             : roll === 1 && v.question.kind === "pick4"
               ? { ...answerOf(v), answer: "none_of_these", chosenItemId: undefined }

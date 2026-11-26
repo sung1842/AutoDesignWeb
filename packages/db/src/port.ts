@@ -22,7 +22,10 @@ export interface DbPort {
   close(): Promise<void>;
 }
 
-const clients = new WeakMap<Tx, pg.PoolClient>();
+// 같은 프로세스에 src·dist 두 모듈 인스턴스가 있어도(테스트가 src로 만든 DbPort를 앱의 dist q에 넘김) 한 등록부를 쓴다
+const REG = Symbol.for("tastefit.db.txClients");
+const G = globalThis as unknown as Record<symbol, WeakMap<Tx, pg.PoolClient> | undefined>;
+const clients: WeakMap<Tx, pg.PoolClient> = (G[REG] ??= new WeakMap<Tx, pg.PoolClient>());
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 type Role = "authenticated" | "anon" | "service_role";

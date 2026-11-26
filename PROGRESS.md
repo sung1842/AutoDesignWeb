@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T18:39Z}
+- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T18:43Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
@@ -146,7 +146,7 @@
   - [x] 02 packages/diagnosis 사후분포·1-step 갱신·문항 선택·종료·유형 판정·κ·pickNotice(diagnosis.test 24/24, AC-02-06 BLK-020)
   - [ ] 03 sim:survey(1,000명, 공통 난수 쌍체·부트스트랩)·튜닝 절차: [x] 시뮬레이터·판정·튜너·CLI(합성 dev: RMSE 0.1215·앵커 0.930만 미달, ASM-091) [ ] x_card gate·튜닝 실행(04 뒤)
   - [ ] 04 survey:build(카드 렌더→x_card→게이트→WebP→local Storage→survey_items upsert, manifest.lock): [x] a surveyPage(ASM-092) [x] b 판정 순수 함수 stimuli.ts(judgeCard·judgePair·coverage·stage1Issues, 단위 5/5) [x] c StoragePort fs(멱등 put·서명 URL, 단위 3/3) [x] d 렌더·WebP·추출·manifest(--only, surveyShot·encodeWebp·dominantColors, ASM-094. C-SV01-hero x 오차 0.17~0.45 → draft) [x] e DB upsert·멱등·--check(survey-build.test ②·--check 5/5 녹색) [x] f 전체 실행·manifest 커밋(193장·361파일, 활성 카드 1/48 → BLK-022 survey-items) [x] g AC-02-09 domHash 차이 = shape-graphic·장식 시그니처 → ASM-098 수정, 전체 재빌드 중 [ ] h 하드 게이트·린터 error 0(2.4.7 verified 조건)
-  - [ ] 05 진단 API·익명 쿠키 세션(D-41)·재개·뒤로가기
+  - [ ] 05 진단 API·익명 쿠키 세션(D-41)·재개·뒤로가기: [x] a api-contract zod·handle 라우터·survey 서비스·db 픽스처(api.test 13/13, ASM-099) [ ] b Next route.ts 위임·/api/_storage fs 라우트
   - [ ] 06 POST /api/events·이벤트 레지스트리 zod·identity_links
   - [ ] 07 진단·결과 화면(01장, packages/ui 토큰)·닮은 사이트 3 링크·비제휴 고지
   - [ ] 08 E2E(375·1280)·MBTI grep
@@ -159,6 +159,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 03:43 | M4-05a 진단 API in-process(api.test 13/13, p95 통과), 이벤트 수집 구현
 - 2026-11-27 03:39 | M4-04g AC-02-09 domHash 원인(shape-graphic·SIG 장식) 수정 ASM-098, api-contract zod 추가. 재빌드 중
 - 2026-11-27 03:36 | M4-04f 전체 survey:build: 361파일 규격 위반 0, 활성 카드 1/48 → BLK-022. tpl-hero DOM 3종 확인 필요
 - 2026-11-27 03:35 | M4-01g golden-answers.test WIP(2회 바이트 동일·32행·β 8.5 변이)

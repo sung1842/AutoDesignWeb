@@ -695,3 +695,10 @@
 - 선택: ① 설문 페이지에서는 `media.mode=shape-graphic`을 `photo-led`로 바꿔 템플릿 사진을 쓴다(S-02 우선) ② AC-02-09의 DOM 텍스트 비교는 `aria-hidden="true"` 안의 장식 텍스트를 뺀다(시그니처는 L2 토큰이 정하는 장식, 보조기술에 노출되지 않음)
 - 영향 범위: packages/design-spec/src/survey.ts, apps/worker harness surveyShot, survey:build manifest
 - 되돌리기 비용: 낮음(survey:build 재실행)
+
+## ASM-099 · M4 · gap · 2026-11-26T19:35Z
+- 질문: 진단 서버의 상태 보존·뒤로가기·재시작 종료 방식, propensity 값, 문항 kind 매핑이 장에 다 정해져 있지 않음
+- 근거 탐색: 02장 2.3.1~2.3.3·2.6·2.7, 06장 6.2.2·6.4.3·6.5.1 DDL(diag_one_open_per_anon)
+- 선택: ① 매 요청 활성 응답(superseded=false)을 seq 순 재생해 엔진 상태를 만든다(state 열은 캐시 + backed 표시) ② restart·시즌 변경 시 기존 미완료 세션은 status=completed·completed_at 기록·결과 행 없음·state.ended="restart"(열린 세션 유니크 인덱스 때문에 다른 값 불가) ③ 뒤로가기 = 직전 응답 superseded=true, `fromSeq`는 현재 문항 seq(= 마지막 응답 seq + 1)만 허용, 연속 불가·완료 후 불가(409 UNDO_NOT_ALLOWED). 다시 답하면 question_id attempt +1, survey_answer.revised=true ④ propensity: explore = ε, dopt = 1 − ε, ab_fisher·check = 1 ⑤ 엔진 kind four → pick4, 선택지 2개(ab·check) → ab. none_of_these는 pick4만, cant_tell은 ab만(그 밖은 400) ⑥ 결과 guide = 앵커(또는 override) 프리셋의 페어링 이름·팔레트 bg·surface·fg·primary·accent HEX·radius_family(formatGuide T-32 전 임시). similarSites는 M4-07
+- 영향 범위: apps/web/src/server/survey.ts
+- 되돌리기 비용: 낮음

@@ -24,6 +24,12 @@
     },
     {
       "path": "../../packages/renderer"
+    },
+    {
+      "path": "../../packages/api-contract"
+    },
+    {
+      "path": "../../packages/diagnosis"
     }
   ]
 }

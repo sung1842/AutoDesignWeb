@@ -49,12 +49,18 @@ importers:
 
   apps/web:
     dependencies:
+      '@tastefit/api-contract':
+        specifier: workspace:^
+        version: link:../../packages/api-contract
       '@tastefit/config':
         specifier: workspace:^
         version: link:../../packages/config
       '@tastefit/db':
         specifier: workspace:^
         version: link:../../packages/db
+      '@tastefit/diagnosis':
+        specifier: workspace:^
+        version: link:../../packages/diagnosis
       '@tastefit/renderer':
         specifier: workspace:^
         version: link:../../packages/renderer
