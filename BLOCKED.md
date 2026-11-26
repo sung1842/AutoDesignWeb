@@ -82,7 +82,7 @@
 - 처리: M2 수용 테스트는 AC-03-15의 렌더·케이스 수·G-02·G-07만 검사. axe 검사는 허용 목록에 추가된 뒤 수용 테스트에 넣는다(relock)
 - 제안 수정안(사람): dependency-allowlist에 `axe-core`(MPL-2.0, apps/worker·e2e) 추가 → guard 라이선스 허용 목록에 MPL-2.0 → relock
 - 추가(M3, 2026-11-26T14:37Z): evaluateCandidate는 axe 실행기가 없으면 G-08을 fail "axe 미실행(BLK-008)"로 기록한다(통과로 꾸미지 않음). 그래서 9.4.5 ②·AC-04-25 폴백 72의 실패 게이트는 G-08 하나뿐(나머지 G-01~G-13·H ≥ 80 통과). 재현: pnpm -s exec vitest run tests/acceptance/m3/golden.test.ts -t "폴백"
-- 추가(M5, 2026-11-26T23:55Z): 생성 파이프라인 전 후보·폴백이 G-08 실패 → 노출 0 → 잡 failed. axe 스텁(G-08 통과)으로는 ok → succeeded(n_real 3, ASM-109). 재현: pnpm vitest run tests/acceptance/m5/pipeline.test.ts -t "AC-06-38" / pnpm exec playwright test e2e/m5
+- 추가(M5, 2026-11-26T23:51Z): 생성 파이프라인 전 후보·폴백이 G-08 실패 → 노출 0 → 잡 failed. axe 스텁(G-08 통과)으로는 ok → succeeded(n_real 3, ASM-109). 재현: pnpm vitest run tests/acceptance/m5/pipeline.test.ts -t "AC-06-38" / pnpm exec playwright test e2e/m5
 - 상태: open
 
 ## BLK-009 · M2 · locked-conflict · 2026-11-25T04:25Z

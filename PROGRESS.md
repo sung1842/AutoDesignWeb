@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T22:08Z, since: 2026-11-26T23:50Z}
+- lock: {owner: 2026-11-26T22:08Z, since: 2026-11-26T23:52Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
@@ -155,7 +155,7 @@
   - [~] 09 eval:golden:build-answers·골든 자체 잠금: [x] buildGoldenAnswers·replayGolden·CLI(엔진 beta 덮어쓰기, 계획 L1 픽스처 32/32·M1a 24/24·β8.5 9/24) [ ] 실데이터 실행(BLK-022로 0/32) [ ] m4-done에서 data/golden 자체 잠금
   - [ ] 10 verify:m4 → m4-done: [x] 1차(592aa1f 워크트리, reports/verify-m4.json) fail — 비BLK 3건: AC-06-32 m0(verify 안에서만, 단독 통과·재발), AC-03-33(빈 폰트 캐시 + 동시 부하 180s), e2e/m4 quiz(빈 /tmp/tastefit-storage). [ ] 2차: survey:build·폰트 캐시 데운 뒤 조용한 상태에서 재실행
 - M5 계획(9.4.7, AC: 00-14~17, 01-01·02·22~34·51·58, 04-01·02·14~16·22~25·37·38·44·46·47, 06-07b·09·10·13·15~18·20~23·38~40·45·47·52·55·56·59~63, 07-02·13, 08-24~26·38~42, 09-07·13·18. 읽을 장은 CLAUDE.md 구현 규칙 3절):
-  - [ ] 01 M5 수용 테스트(tests/acceptance/m5, AD-031): [x] a 인증·귀속(AuthPort local·매직링크·dev_mail_outbox·attach_anon, auth.test WIP, ASM-103) [x] b 브랜드 입력·BrandInput 검증·인젝션 방어(brief.test WIP, fixtures/brands 3파일, ASM-105) [x] c 생성 API·Idempotency·진행 잡 1개·폴링(generation-api.test 9/9, ASM-108) [x] d llm gateway·models.yaml·MockProvider 시나리오(llm.test WIP 20건, ASM-107) [x] e pipeline 3변형→후보 6→검증·수리→렌더→게이트→점수→노출·재생성·폴백(pipeline.test WIP 14건, ASM-109. 시간·비용 시나리오는 f) [x] f 비용·quota_ledger·킬 스위치·초대·환불(quota.test 12/12, ASM-110. 비용 시나리오 AC-06-21·61·07b는 워커 예산 배선 후 pipeline 테스트에 추가) [ ] g S04~S08 화면 E2E(01장) → traceability·자체 잠금
+  - [ ] 01 M5 수용 테스트(tests/acceptance/m5, AD-031): [x] a 인증·귀속(AuthPort local·매직링크·dev_mail_outbox·attach_anon, auth.test WIP, ASM-103) [x] b 브랜드 입력·BrandInput 검증·인젝션 방어(brief.test WIP, fixtures/brands 3파일, ASM-105) [x] c 생성 API·Idempotency·진행 잡 1개·폴링(generation-api.test 9/9, ASM-108) [x] d llm gateway·models.yaml·MockProvider 시나리오(llm.test WIP 20건, ASM-107) [x] e pipeline 3변형→후보 6→검증·수리→렌더→게이트→점수→노출·재생성·폴백(pipeline.test WIP 14건, ASM-109. 시간·비용 시나리오는 f) [x] f 비용·quota_ledger·킬 스위치·초대·환불(quota.test 12/12, ASM-110. 비용 시나리오 AC-06-21·61·07b는 워커 예산 배선 후 pipeline 테스트에 추가) [x] g S04~S08 화면 E2E(e2e/m5/flow.spec: /g 도달까지 통과, 카드 3은 BLK-008) [ ] h traceability M5·qa:trace --audit·단일 test(acc)·자체 잠금
   - [x] 02 AuthPort local·세션 쿠키·매직링크·attach_anon·/api/me·/api/consents(auth.test 7/7, ASM-104. MeView quota 등은 07·08)
   - [~] 03 동의(S05)·초대 코드: [x] API(consents·invites/redeem·inviteOk) [ ] S05 화면(09)
   - [x] 04 BrandInput zod·정규화·maskPII·judgeBrief(편집 거리 (c))·brief-drafts POST/GET(brief.test 8/8, ASM-106). 레퍼런스명 attestation(⑥)은 projects(08)
@@ -163,7 +163,7 @@
   - [~] 06 pipeline: [x] a apps/worker/src/jobs/generation.ts S1~S9 1차(카피 폴백 체인·레이아웃 6·스키마 수리·평가·비전 기록·선택·폴백·R-15·예외 격리. axe 스텁 로컬 확인: ok·copy_schema_fail·copy_refusal·invalid_json@0·schema_violation@2·injection_echo·lint_error 기대대로) [~] b [x] 다양성 조건·재호출(packages/pipeline)·Mock 다양화·수리 규칙 [x] 수정 루프(≤3)·S3 덱 범위(→ repair_schema) [ ] 효과표(mock:effects)·mixed 2·4·low_score 트리·카피 패치(gen_copy repair_quality) [ ] c SLO 타이머 120/180s·예산 예약(6.9.4)·pg-boss 소비자
   - [~] 07 worker: [x] a quota_ledger reserve/refund·finishGenerationJob·applyKillSwitch·취소 API·JobBudget(packages/pipeline) [x] b JobBudget·finish 배선(budget_skipped·COST_CAP·A11, 스텁: ok 원가 0.23362 = C_base) [ ] c U-01 두 물결 예약·SLO 120/180s·취소 신호 abort·pg-boss 소비자·GEN_MAX_CONCURRENT_JOBS
   - [~] 08 생성 API·폴링·이벤트: [x] a projects·generations·GET 폴링·ETag·멱등·attestation·retention brief_drafts [~] b [x] MockupCard 채우기 [ ] cancel·generate_request 이벤트·GET /api/projects(:id)
-  - [ ] 09 S04 로그인·S05 동의·S06 브리프·S07 대기·S08 비교 화면
+  - [~] 09 화면: [x] S04·S05·S06·S07·S08 1차(서버 액션·검증 공유·자동 제출·폴링·취소 시트·카드), next build 통과 [ ] 점진 노출(변형 확정 즉시 mockups)·미리보기 URL·S08 선택(M6 연결)·Google 버튼(supabase needs_ci)
   - [ ] 10 verify:m5 → m5-done
 - M3 이월: (B18 재생성은 M2-09d3으로 당김), B15 골격을 실제 예시로 교체 후 자체 잠금(ASM-021)
 - [x] M0 [x] M1 [x] M2 [x] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
@@ -172,6 +172,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 08:52 | M5-01g e2e/m5 흐름(로그인·동의·자동 제출·/g 통과, 카드는 BLK-008). mail 템플릿 경로 수정
 - 2026-11-27 08:50 | verify:m4 1차 fail: 비BLK 3건 모두 환경(간헐 env·폰트 캐시·빈 저장소). M5-09 화면 S04~S08 1차·next build 통과
 - 2026-11-27 08:39 | M5-07b 워커 예산 예약·정산(ok 원가 = C_base), A11은 alerts 테이블 부재로 warnings(ASM-111)
 - 2026-11-27 08:35 | M5-07a 한도·취소·킬 스위치·예산·레이트리밋·초대(quota.test 12/12)
