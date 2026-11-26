@@ -184,3 +184,12 @@
 - 시도: (1) 일관된 응답자로 바꿔 봄 → 여전히 > 0.05 (2) 갱신 식 변경 → 02장 2.5 원천 변경이라 하지 않음
 - 제안(사람): AC-02-06 기준을 실측 분포에 맞춰 개정(예: 중앙값 ≤ 0.30)하거나, 재생 시 원래 순서를 지키는 것만 요구(AC-02-16·18이 이미 순서 보존 재생 일치를 검사)
 - 상태: open
+
+## BLK-021 · M4 · locked-conflict · 2026-11-26T18:50Z
+- 대상: 07장 7.12.2 리터럴 감사 ↔ 05장 5.9 카드 채택 "카드×축 95% 이상 ≤ 0.10"(0.95 = release.golden.fullSuccessMin 등 잎 값, 0.10 = release.extractor.roundtripAbsMax 등), 02장 2.3.6·06장 DDL 대체 텍스트 "5~160자"(5·160 = 다른 잎 값)
+- 증상: 두 기준은 thresholds 키도 사양 상수 표(7.12.1) 행도 아닌데 값이 잎 값과 같아 수용 테스트 비교 매처로 쓰면 qa:trace --audit FAIL(BLK-014와 같은 유형)
+- 재현: tests/acceptance/m4/survey-build.test.ts에 `expect(ratio).toBeGreaterThanOrEqual(0.95)`를 넣고 pnpm -s qa:trace --audit
+- 시도: (1) thresholds 키 탐색 → 없음 (2) spec-constants.ts → SC 행 없음 (3) 계산식으로 숨기기 → 감사 우회라 하지 않음
+- 처리: 두 기준은 `survey:build --check`(packages/diagnosis 명명 상수)가 판정하고 수용 테스트는 그 종료 코드를 본다. 대체 텍스트 길이는 DB CHECK(06장 DDL)도 강제
+- 제안 수정안(사람): 7.12.1 사양 상수 표에 "설문 카드 채택 비율 95%·오차 0.10(05장 5.9)", "대체 텍스트 5~160자(02장 2.3.6)" 행 추가 → spec-constants.ts → 수용 테스트에 직접 대조 후 relock
+- 상태: open

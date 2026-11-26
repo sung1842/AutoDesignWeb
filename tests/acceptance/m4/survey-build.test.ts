@@ -52,11 +52,15 @@ const MAN_PATH = join(ROOT, "data/survey/manifest.lock.json");
 const read = <T>(rel: string): T => JSON.parse(readFileSync(join(ROOT, rel), "utf8")) as T;
 const manifest = (): Manifest => JSON.parse(readFileSync(MAN_PATH, "utf8")) as Manifest;
 const AXES = ["A1", "A2", "A3", "A4", "A5"] as const;
-const DIAG = getThresholds().diagnosis as unknown as { surveyAssetL1AbsMax: number };
-/** 02장 2.4.5·06장 DDL 규격(R-07). */
+const TH = getThresholds() as unknown as {
+  diagnosis: { surveyAssetL1AbsMax: number };
+  perf: { cardImageDesktopKbMax: number; cardImageMobileKbMax: number };
+};
+const KB = 1024;
+/** 02장 2.4.5·06장 DDL 규격(R-07). 용량 상한은 thresholds perf. */
 const SPEC = {
-  desktop: { w: 1280, h: 800, maxBytes: 140 * 1024 },
-  mobile: { w: 780, h: 1560, maxBytes: 160 * 1024 },
+  desktop: { w: 1280, h: 800, maxBytes: TH.perf.cardImageDesktopKbMax * KB },
+  mobile: { w: 780, h: 1560, maxBytes: TH.perf.cardImageMobileKbMax * KB },
 } as const;
 /** 2.4.4 축별 focus_region. */
 const FOCUS: Record<string, [number, number, number, number]> = {
@@ -115,20 +119,22 @@ describe("9.4.6 ① · AC-05-23 manifest 수량·활성 기준", () => {
         .join(", "),
     ).toBe(48);
   });
-  it("활성 카드는 모두 x_card를 갖고 모든 축 |x − target| ≤ surveyAssetL1AbsMax, 카드×축 95% 이상 ≤ 0.10(5.9)", () => {
+  it("활성 카드는 모두 x_card를 갖고 모든 축 |x − target| ≤ surveyAssetL1AbsMax(5.9)", () => {
     const m = manifest();
     const act = m.items.filter((i) => i.kind === "card" && i.status === "active");
-    let within = 0;
     for (const c of act) {
-      expect(c.x?.length, c.assetId).toBe(5);
-      expect(c.target?.length, c.assetId).toBe(5);
-      for (let k = 0; k < 5; k++) {
-        const d = Math.abs(c.x![k]! - c.target![k]!);
-        expect(d, `${c.assetId} ${AXES[k]}`).toBeLessThanOrEqual(DIAG.surveyAssetL1AbsMax);
-        if (d <= 0.1) within++;
-      }
+      expect(c.x?.length, c.assetId).toBe(AXES.length);
+      expect(c.target?.length, c.assetId).toBe(AXES.length);
+      AXES.forEach((a, k) =>
+        expect(Math.abs(c.x![k]! - c.target![k]!), `${c.assetId} ${a}`).toBeLessThanOrEqual(
+          TH.diagnosis.surveyAssetL1AbsMax,
+        ),
+      );
     }
-    if (act.length) expect(within / (act.length * 5)).toBeGreaterThanOrEqual(0.95);
+  });
+  it("커밋된 manifest로 survey:build --check 종료 코드 0(커버리지·문항 후보·카드×축 95% ≤ 0.10·대체 텍스트 길이, BLK-021)", async () => {
+    const r = await run("pnpm", ["-s", "survey:build", "--check"], ROOT);
+    expect(r.code, r.out.slice(-2000)).toBe(0);
   });
   it("A/B 수준은 {0.2, 0.5, 0.8}이고 축별 활성 쌍 ≥ 19", () => {
     const m = manifest();
@@ -183,13 +189,12 @@ describe("AC-02-10 · AC-02-08 · 2.3.6 자산 메타", () => {
       }
     }
   });
-  it("대체 텍스트 5~160자·유형명 없음, dominant_colors 대문자 HEX 3, focus_region(카드 전체·A/B 축별)", () => {
+  it("대체 텍스트 있음·유형명 없음(길이 5~160은 --check, BLK-021), dominant_colors 대문자 HEX 3, focus_region(카드 전체·A/B 축별)", () => {
     const m = manifest();
     const axisOf = new Map(ab.flatMap((p) => p.images.map((i) => [i.id, p.axis] as const)));
     for (const i of m.items) {
       if (i.kind === "ab_pair") continue;
-      expect(i.altText!.length, i.assetId).toBeGreaterThanOrEqual(5);
-      expect(i.altText!.length, i.assetId).toBeLessThanOrEqual(160);
+      expect(i.altText, i.assetId).toMatch(/^선택지 \{n\}: \S/);
       for (const t of typeNames) expect(i.altText, i.assetId).not.toContain(t);
       expect(i.dominantColors, i.assetId).toHaveLength(3);
       for (const c of i.dominantColors!) expect(c).toMatch(/^#[0-9A-F]{6}$/);
@@ -306,8 +311,8 @@ describe("AC-02-07 · AC-02-37 survey:build --check(커버리지·문항 후보)
     expect(r.code, r.out.slice(-2000)).toBe(0);
   });
   it("tpl-grid 활성 3장만 남기면 종료 코드 1과 부족한 (템플릿, 문항 순번) 출력", async () => {
-    let n = 0;
-    const p = fixture("grid3.json", (c) => c.templateId !== "tpl-grid" || n++ < 3);
+    const grid3 = new Set(["SV01", "SV02", "SV03"]);
+    const p = fixture("grid3.json", (c) => c.templateId !== "tpl-grid" || grid3.has(c.svId));
     const r = await run("pnpm", ["-s", "survey:build", "--check", "--items", p], ROOT);
     expect(r.code).toBe(1);
     // template(seq) = [hero, grid, text][(seq-1) % 3] → grid = 2, 5, 8

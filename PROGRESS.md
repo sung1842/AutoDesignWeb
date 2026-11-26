@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T18:35Z}
+- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T18:52Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
@@ -159,6 +159,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 03:52 | M4-01c 감사 리터럴 정리(perf 키·--check 위임), BLK-021 locked-conflict
 - 2026-11-27 03:35 | M4-01c survey-build.test WIP(manifest 수량·규격·DOM·멱등·--check, ASM-093)
 - 2026-11-27 03:09 | 세션 시작, 잠금 획득(이전 잠금 16:24Z 90분 초과). M4-04a surveyPage 커밋 확인
 - 2026-11-27 01:24 | M4-01b sim 수용 테스트 WIP(x_card 7건은 survey:build 뒤 녹색 예정)
