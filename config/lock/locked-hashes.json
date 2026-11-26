@@ -235,6 +235,12 @@
       "lockedBy": "agent",
       "lockedAt": "2026-11-19T18:28:11Z",
       "commit": "eded1cd"
+    },
+    "e2e/m2/renderer-visual.spec.ts": {
+      "sha256": "6a3dd0e5ec91b24017d64d669d8365ddc96c6c816e675e9498e2eb9f20369778",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:12Z",
+      "commit": "d4fff93"
     }
   }
 }
