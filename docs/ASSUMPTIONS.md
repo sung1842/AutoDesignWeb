@@ -625,3 +625,10 @@
 - 선택: ① 조합 = 프리셋 기본 L2에서 키 1개를 allowedValues(페어링 제약 반영)의 다른 값으로 바꾼 것, standardTree(용도 saas) → compilePage → S·C·T 린트 + 375·1280 D·P 린트, AIL error가 있으면 error 조합 ② harmony.json에 top-level `conflicts` = CF-01~12(id·comboKo) + lint-matrix 등록분 {id, preset, key, value, rules, comboKo, source}. seed:temp의 LINT_MATRIX_CONFLICTS가 원천(현재 CF-13 = PS-T7 depth.style=flat → AIL-09) ③ 등록분은 inFeasible에서 제외(F 밖) ④ editChoices = 프리셋 allowed 키 × allowedValues, 현재 값이 아니면서 inFeasible이 아니면 disabled ⑤ AIL-16 기본 색 쌍은 03장 목록의 쌍(0.141 0.005 285.823 / 0.985 0 0)만 쓴다(앞서 넣은 shadcn v4 쌍 0.145/1은 T2·T6 팔레트와 우연히 같아 오탐이라 뺌)
 - 영향 범위: scripts/data(presets-lint-matrix·seed-temp), data/taxonomy/harmony.json, design-spec snap, linter defaults
 - 되돌리기 비용: 낮음
+
+## ASM-089 · M3 · gap · 2026-11-26T14:37Z
+- 질문: 폴백 시안 63/72가 G-10(hero에 브랜드명)에서 실패. 템플릿 hero.headline 0번 "{name}"이 짧은 이름(예 "한결")이면 헤드라인 예산(headlineFits)에 걸려 [임시] 옵션으로 바뀌고 hero의 다른 슬롯에도 이름이 없음
+- 근거 탐색: 04장 4.10.2 G-10·4.12 폴백(사전 검증 트리, 템플릿 치환 name·description·primary_action·key_points), seed-config TOKEN_BASE
+- 선택: temp 템플릿(B20) hero.eyebrow 0번을 "{name}"으로 둔다(seed:temp 재생성). 헤드라인 예산 규칙은 바꾸지 않는다. 사람 템플릿 확정 때 확인(HUMAN_TODO)
+- 영향 범위: scripts/data/seed-config.ts, config/copy_templates.json(temp)
+- 되돌리기 비용: 낮음

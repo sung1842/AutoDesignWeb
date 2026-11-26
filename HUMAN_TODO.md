@@ -46,3 +46,8 @@
 
 - [ ] (BLK-005 추가) 사람 커밋 a0217bb `Update SHA256 hashes in locked-hashes.json`도 AC-09-11(Conventional+Milestone 꼬리말) 위반. force push 금지라 그대로 둠 → 예외 목록 처리 후 relock
 - [ ] (AD-034) 예약 작업 'AutoDesignWeb 자율 진행' 주기를 앱에서 `*/10 * * * *`(10분)로 바꿔 주세요(에이전트 변경은 권한 거부). 주간 한도 소진 시 초기화 시각을 PROGRESS `limit.weekly_block_until_kst`에 적으면 그때까지 세션이 바로 종료합니다
+- [ ] (BLK-016) 잠긴 tests/acceptance/m3/linter.test.ts의 4.13.2 표 칸 분리가 백틱 안 `|`(AIL-04·AIL-23 패턴)에서 깨져 "규칙 메타" 테스트가 항상 실패합니다. 백틱 구간을 먼저 치환한 뒤 split하도록 고쳐 relock해 주세요
+- [ ] (BLK-017) 추출기 평가(AC-05-15)용 사람 라벨 세트(data/references/labels.json, provenance human)가 필요합니다
+- [ ] (BLK-018) temp 정규화기 2026-S0로는 프리셋 앵커 왕복(5축 모두 0.10 초과)·앵커 분리(0.129 < 0.25)를 통과할 수 없습니다. human 정규화기(사람 라벨 코퍼스) 또는 05장 5.9 앵커 실패 절차(블라인드 라벨)로 3.4.7 의도값·프리셋 조정이 필요합니다
+- [ ] (BLK-019) 원본 유사도 보정 보고서(08장 8.3.4, 2인 라벨 30쌍)를 작성해 eval/originality/report-2027-S1.1.md(provenance human, labelers 2, yes_count 0)로 넣어 주세요
+- [ ] (ASM-089) config/copy_templates.json(temp)의 hero.eyebrow 0번을 {name}으로 바꿨습니다(폴백 시안 G-10 브랜드명 hero 존재). 템플릿 문안 확정 때 함께 확인해 주세요

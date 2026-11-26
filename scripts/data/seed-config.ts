@@ -89,6 +89,8 @@ function ctaVerbs(sec: string): Record<Purpose, string[]> {
 const HEADLINE_KINDS = ["factual", "benefit", "emotive"] as const;
 /** 치환 토큰(04장 4.7 폴백: name·description·primary_action 라벨·key_points). */
 const TOKEN_BASE: Record<string, string> = {
+  // G-10(브랜드명 hero 존재): headline 0번이 헤드라인 예산에 걸려 다른 옵션으로 바뀌어도 hero에 이름이 남게 eyebrow 0번도 {name}(ASM-089)
+  "hero.eyebrow": "{name}",
   "hero.headline": "{name}",
   "hero.sub": "{description}",
   "about.body": "{description}",

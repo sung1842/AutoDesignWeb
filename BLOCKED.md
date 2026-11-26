@@ -80,6 +80,7 @@
 - 시도: (1) 허용 목록 패키지로 대체 → 같은 규칙 세트 없음 (2) 자체 구현 → G-08 정의(axe 규칙)와 달라 판정이 바뀜
 - 처리: M2 수용 테스트는 AC-03-15의 렌더·케이스 수·G-02·G-07만 검사. axe 검사는 허용 목록에 추가된 뒤 수용 테스트에 넣는다(relock)
 - 제안 수정안(사람): dependency-allowlist에 `axe-core`(MPL-2.0, apps/worker·e2e) 추가 → guard 라이선스 허용 목록에 MPL-2.0 → relock
+- 추가(M3, 2026-11-26T14:37Z): evaluateCandidate는 axe 실행기가 없으면 G-08을 fail "axe 미실행(BLK-008)"로 기록한다(통과로 꾸미지 않음). 그래서 9.4.5 ②·AC-04-25 폴백 72의 실패 게이트는 G-08 하나뿐(나머지 G-01~G-13·H ≥ 80 통과). 재현: pnpm -s exec vitest run tests/acceptance/m3/golden.test.ts -t "폴백"
 - 상태: open
 
 ## BLK-009 · M2 · locked-conflict · 2026-11-25T04:25Z
@@ -166,4 +167,11 @@
 - 재현: pnpm -s exec vitest run tests/acceptance/m3/extractor.test.ts -t "앵커"
 - 시도: 5.9 temp 분기 규칙상 앵커 실패를 이유로 정규화기를 재적합하지 않는다(09장 F19) → 수정하지 않음
 - 제안(사람): human 정규화기(사람 라벨 코퍼스, 5.8) 마련, 또는 5.9 앵커 실패 절차 1~4(블라인드 라벨)로 3.4.7 의도값·프리셋 토큰 조정
+- 상태: open
+
+## BLK-019 · M3 · needs_human · 2026-11-26T14:37Z
+- 대상: AC-08-16 원본 유사도 보정 보고서(08장 8.3.4) ↔ 사람 2인 라벨
+- 증상: `eval/originality/report-<version>.md`(provenance human, labelers 2, yes_count 0)는 운영자 포함 2인이 레퍼런스–시안 30쌍을 라벨해야 만들 수 있다. 에이전트가 temp로 대신 만들지 않는다(ASM-081 ⑥)
+- 재현: pnpm -s exec vitest run tests/acceptance/m3/golden.test.ts -t "AC-08-16"
+- 제안(사람): 8.3.4 절차 1~4 수행 후 보고서 작성(레퍼런스 originality_sig·phash_1280도 함께 필요)
 - 상태: open

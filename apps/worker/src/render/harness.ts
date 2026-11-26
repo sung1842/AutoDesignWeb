@@ -178,6 +178,8 @@ async function openPage(browser: Browser, html: string, vw: number): Promise<Ses
     return route.fulfill({ body, contentType: type });
   });
   await page.goto(`${HARNESS_ORIGIN}/`, { waitUntil: "load" });
+  // tsx(esbuild keepNames)로 실행하면 evaluate 함수 안 이름 있는 함수에 __name 호출이 붙는다 → 항등 함수를 둔다
+  await page.evaluate("globalThis.__name = globalThis.__name || ((f) => f)");
   await page.evaluate(() => document.fonts.ready.then(() => undefined));
   return s;
 }

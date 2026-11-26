@@ -269,8 +269,6 @@ async function lumStd(
 
 /** 열린 페이지에서 D·P 스냅숏을 만든다. */
 export async function lintSnapshotOf(page: Page, vw: number, spec?: unknown): Promise<Snapshot> {
-  // tsx(esbuild keepNames)로 실행하면 collect 안 이름 있는 함수에 __name 호출이 붙는다 → 페이지에 항등 함수로 둔다
-  await page.evaluate("globalThis.__name = globalThis.__name || ((f) => f)");
   const c = await page.evaluate(collect);
   const glass: Snapshot["glass"] = [];
   for (const g of c.glassRects) glass.push({ lumStd: await lumStd(page, g.i, g) });
