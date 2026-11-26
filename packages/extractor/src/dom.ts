@@ -24,6 +24,8 @@ export const DOM_SPEC = {
   gridTopTol: 4,
   cellPx: 4,
   topSecs: 3,
+  /** 5.5.3 행·묶음 판정: 형제 요소 최소 수 */
+  groupMin: 2,
 } as const;
 export type DomSpec = typeof DOM_SPEC;
 
@@ -189,7 +191,9 @@ export function collectDomFeatures(arg: DomArg): DomFeatures {
     const hasImg = v.cs.backgroundImage !== "none";
     const parentBg = effBg(v.el.parentElement);
     const comp =
-      bg[3] > 0 ? bg.map((x, i) => (i < 3 ? x * bg[3] + parentBg[i]! * (1 - bg[3]) : 1)) : parentBg;
+      bg[3] > 0
+        ? bg.map((x, i) => (i < bg.length - 1 ? x * bg[3] + parentBg[i]! * (1 - bg[3]) : 1))
+        : parentBg;
     const diff = bg[3] > 0 && dE(comp, parentBg) >= S.surfaceDeltaE;
     if (
       (diff || hasImg || visibleBorder(v.cs)) &&
@@ -418,7 +422,7 @@ export function collectDomFeatures(arg: DomArg): DomFeatures {
         continue;
       }
       const kids = [...c.children].filter(qual);
-      if (kids.length >= 2) walk(c);
+      if (kids.length >= S.groupMin) walk(c);
       else secs.push(c);
     }
   };
@@ -461,13 +465,13 @@ export function collectDomFeatures(arg: DomArg): DomFeatures {
     const kids = [...p.children].filter(
       (c) => vEls.has(c) && getComputedStyle(c).display !== "inline",
     );
-    if (kids.length < 2) continue;
+    if (kids.length < S.groupMin) continue;
     const tops = kids.map((c) => c.getBoundingClientRect().top).sort((a, b) => a - b);
     let run = 1;
     for (let i = 1; i <= tops.length; i++) {
       if (i < tops.length && Math.abs(tops[i]! - tops[i - 1]!) <= S.gridTopTol) run++;
       else {
-        if (run >= 2) rowCounts.set(run, (rowCounts.get(run) ?? 0) + 1);
+        if (run >= S.groupMin) rowCounts.set(run, (rowCounts.get(run) ?? 0) + 1);
         run = 1;
       }
     }

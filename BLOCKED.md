@@ -134,3 +134,12 @@
 - 처리: ≥ 2는 파일 이름 규약(pos-1·pos-2·neg-1·neg-2, pass-1·pass-2·fail-1·fail-2) 존재 검사로 본다(같은 조건, 수치 비교 아님). ΔE < 5는 `eval:extractor:selfcheck` 종료 코드와 packages/extractor 단위 테스트로 대조하고 수용 테스트는 필드 존재만 본다
 - 제안 수정안(사람): 7.12.1 사양 상수 표에 "규칙·게이트 픽스처 최소 수 2(04장 AC-04-19·26)", "자기검증 색 ΔE2000 < 5·radius ±1px(05장 5.9·AC-05-22)" 행 추가 → spec-constants.ts에 SC 상수 → 수용 테스트에 대조 추가 후 relock
 - 상태: open
+
+## BLK-015 · M3 · locked-conflict(HALT) · 2026-11-26T11:20Z
+- 대상: tests/acceptance/m3/*.test.ts(test(acc) 09da0ab, 자체 잠금 0b9d1d0) ↔ guard:patterns F06(테스트별 타임아웃 금지, ASM-004)
+- 증상: 에이전트가 잠근 M3 수용 테스트 5파일에 it·beforeAll 3번째 인자 타임아웃 14곳이 있어 `pnpm guard`가 F06 FAIL. 잠긴 파일이라 고칠 수 없음 → 9.5.3 "guard가 에이전트 자신의 잠금 위반을 탐지" = HALT
+- 재현: pnpm typecheck && pnpm -s guard 2>&1 | grep F06
+- 원인: 잠그기 전 guard:patterns를 돌리지 않음(qa:trace --audit·eslint만 확인)
+- 수정안(준비됨): 브랜치 `wip/blocked-m3-timeouts`(origin)에 타임아웃을 빼고 긴 반복을 항목별 it로 나눈 5파일. 판정 기준·매핑·수치는 그대로. guard:patterns ok·qa:trace --audit 리터럴 0 확인
+- 사람 절차: 브랜치 diff 검토 → 5파일을 main에 반영 → `pnpm guard:relock --human tests/acceptance/m3` → 커밋 → PROGRESS status를 IN_PROGRESS로
+- 상태: open

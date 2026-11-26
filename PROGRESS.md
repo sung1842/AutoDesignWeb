@@ -1,14 +1,14 @@
 # PROGRESS
 
 ## 현재 상태
-- status: IN_PROGRESS
+- status: HALT  # BLK-015: 잠긴 M3 수용 테스트의 테스트별 타임아웃(F06) → 사람 relock 필요(HUMAN_TODO 맨 아래)
 - phase: P4
-- lock: {owner: 2026-11-26T08:07Z, since: 2026-11-26T08:23Z}
+- lock: 
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-26 22:07  # 이 세션 시작(17:07 KST)+5h 추정
-- 마지막 갱신: 2026-11-26 16:47 KST (세션 종료: verify:m2 3·4차, m2-done. 다음 M3-01)
+- 마지막 갱신: 2026-11-26 20:25 KST (HALT: BLK-015. M3-01 수용 테스트 잠금 후 guard F06 발견, 수정안 브랜치 wip/blocked-m3-timeouts)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -75,7 +75,7 @@
 | M0 | done | 2026-11-19T12:50Z | 2026-11-19T14:46Z | m0-done | pass_blocked | 5 | 7 |
 | M1 | done | 2026-11-19T14:47Z | 2026-11-19T17:53Z | m1-done | pass_blocked | 6 | 15 |
 | M2 | done | 2026-11-19T17:54Z | 2026-11-26T07:41Z | m2-done | pass_blocked | 13 | 54 |
-| M3 | in_progress | 2026-11-26T07:41Z | – | – | – | – | – |
+| M3 | halted | 2026-11-26T07:41Z | – | – | – | 2 | 5 |
 | M4 | todo | – | – | – | – | – | – |
 | M5 | todo | – | – | – | – | – | – |
 | M6 | todo | – | – | – | – | – | – |
@@ -147,6 +147,8 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-26 20:25 | HALT(BLK-015): 잠근 M3 테스트에 per-test 타임아웃 → guard F06. 수정안 wip/blocked-m3-timeouts, 사람 relock 대기
+- 2026-11-26 20:05 | extractor dom.ts 리터럴 4건 → DOM_SPEC.groupMin·bg.length(감사 0건)
 - 2026-11-26 19:50 | M3-01 완료: test(acc) 09da0ab 자체 잠금 5파일(AD-031) → 다음: M3-02 linter 공개 API 자리표시·규칙
 - 2026-11-26 19:40 | M3-01f 준비: traceability M3 23행, audit 테스트 리터럴 0(BLK-014), toL1 사용 수정
 - 2026-11-26 19:15 | M3-01e golden.test(폴백 72·골든 CP·G-11·CF 픽스처·lint-matrix·AC-08-14~16)·ASM-081
@@ -160,12 +162,3 @@
 - 2026-11-26 15:55 | verify:m2 2차 fail(비BLK 4: 03-33 시간·06-32 간헐·BLK-009/012 재현 명령 누락→보완), 하네스 서체 묶음 생성
 - 2026-11-26 15:57 | 세션 종료(잠금 해제). 다음 M2-14e 3차 verify:m2
 - 2026-11-26 14:42 | M2-14d AC-03-18 PS-T1~T8 녹색(각 50~90s). 남은 14d = 빈 캐시 대비 검토
-- 2026-11-26 14:27 | M2-14d AC-03-23 한글 서체(라틴 서브셋·mono 스택·하네스), AC-03-26·45②④ 녹색 확인, ASM-076
-- 2026-11-26 13:52 | M2-14d AC-03-33 터치 타깃(skip·wordmark·nav·drawer 44px)·하네스 폰트 캐시, 녹색, ASM-075
-- 2026-11-26 13:22 | M2-14c harmonyScore H1~H12·CF 판정(정적+선택 렌더·위반 입력), AC-03-20 녹색, ASM-074
-- 2026-11-26 12:55 | 세션 종료(잠금 해제). 다음 M2-14c harmonyScore(메모는 P4 14c 아래)
-- 2026-11-26 12:40 | M2-14b treeLint 단계 T(ASM-073)·표준 트리 LT-03 하한·리듬 수정, BLK-013(PL-1 기준선 ↔ AC-04-11)
-- 2026-11-26 11:58 | verify:m2 1차 fail 17 → SIG-11 G-05 회귀·AC-09-09(AD-033)·validateBundle(ASM-072) 수정, 14b~e 계획
-- 2026-11-26 11:05 | M2-12 렌더러 시각 회귀 기준선 24장(지문 7303eb92a5bd)·스펙 자체 잠금, ASM-071
-- 2026-11-26 10:45 | M2-09d4d2 스냅 진단: 벌점 0.02로 96쌍 중 69쌍 6키 동일(사양대로) → BLK-012, 09 종료
-- 2026-11-26 09:23 | M2-09d4d1 카드 그림자 단계·radius 역할(3.1.7·3.1.8) 렌더 수정, B18 재생성, AC-04-08 0.5625, ASM-070
