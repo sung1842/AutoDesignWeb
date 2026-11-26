@@ -1,0 +1,105 @@
+{
+  "fixture": "brands/normal",
+  "provenance": "temp",
+  "source": "09장 9.4.7 산출물(정상 10), 01장 1.5.5.2 BrandInput. 저장값 = 입력값(정규화로 바뀌지 않는 입력), maskedFields 0",
+  "items": [
+    {
+      "id": "nb-01",
+      "purpose": "local_business",
+      "brand": {
+        "name": "온결 베이커리",
+        "description": "망원동에서 매일 아침 굽는 사워도우 빵집",
+        "primaryAction": "reserve"
+      }
+    },
+    {
+      "id": "nb-02",
+      "purpose": "local_business",
+      "brand": {
+        "name": "모래알 공방",
+        "description": "주말마다 여는 작은 도자기 원데이 클래스",
+        "primaryAction": "visit",
+        "audience": "손으로 만드는 걸 좋아하는 직장인",
+        "keyPoints": ["소규모 4인 수업", "재료 전부 포함"]
+      }
+    },
+    {
+      "id": "nb-03",
+      "purpose": "local_business",
+      "brand": {
+        "name": "느린 오후 카페",
+        "description": "책 읽기 좋은 조용한 동네 카페입니다",
+        "primaryAction": "menu",
+        "brandColor": "#7A5C3E"
+      }
+    },
+    {
+      "id": "nb-04",
+      "purpose": "saas",
+      "brand": {
+        "name": "택스퀵",
+        "description": "프리랜서의 세금 신고를 10분 만에 끝내 주는 앱",
+        "primaryAction": "signup"
+      }
+    },
+    {
+      "id": "nb-05",
+      "purpose": "saas",
+      "brand": {
+        "name": "플로우노트",
+        "description": "회의록을 자동으로 정리해 주는 팀 메모 도구",
+        "primaryAction": "demo",
+        "primaryActionLabel": "데모 보기",
+        "keyPoints": ["실시간 공동 편집", "할 일 자동 추출", "슬랙 연동"]
+      }
+    },
+    {
+      "id": "nb-06",
+      "purpose": "saas",
+      "brand": {
+        "name": "Lumen Studio",
+        "description": "A tiny app that turns notes into calm daily plans",
+        "primaryAction": "download",
+        "brandColor": "#1F2A44"
+      }
+    },
+    {
+      "id": "nb-07",
+      "purpose": "portfolio",
+      "brand": {
+        "name": "노을 사진관",
+        "description": "브랜드 사진을 찍는 서울의 포토그래퍼",
+        "primaryAction": "view_work"
+      }
+    },
+    {
+      "id": "nb-08",
+      "purpose": "portfolio",
+      "brand": {
+        "name": "은하 일러스트",
+        "description": "그림책과 포스터 일러스트를 그리는 작가입니다",
+        "primaryAction": "contact",
+        "audience": "출판사·브랜드 담당자"
+      }
+    },
+    {
+      "id": "nb-09",
+      "purpose": "portfolio",
+      "brand": {
+        "name": "브릭 디자인랩",
+        "description": "스타트업 브랜딩과 웹 디자인을 하는 2인 스튜디오",
+        "primaryAction": "resume",
+        "keyPoints": ["브랜드 아이덴티티", "웹사이트 디자인"]
+      }
+    },
+    {
+      "id": "nb-10",
+      "purpose": "local_business",
+      "brand": {
+        "name": "👨‍👩‍👧카페",
+        "description": "아이와 함께 쉬어 가는 가족 친화 카페예요",
+        "primaryAction": "contact"
+      }
+    }
+  ]
+}
