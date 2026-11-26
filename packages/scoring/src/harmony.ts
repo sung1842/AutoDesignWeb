@@ -5,6 +5,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { findRepoRoot } from "@tastefit/config";
+import { staticLint } from "@tastefit/linter";
 
 export interface HarmonyRender {
   /** OKLCH [L, C, h] */
@@ -182,7 +183,33 @@ function slotText(sec: Section, slot: string): string {
 }
 
 // 3.14.4 CF-06 "순흑(L < 0.05)", CF-09 "장식 효과 3종 이상"(design-spec snap.ts CF_SPEC와 같은 값)
-const CF_SPEC = { decorConflictMin: 3, shadowBlackL: 0.05 } as const;
+// CF-02 하드 그림자 = 05장 F07 정의(blur ≤ 2px & offset ≥ 3px)
+const CF_SPEC = {
+  decorConflictMin: 3,
+  shadowBlackL: 0.05,
+  hardBlurMax: 2,
+  hardOffsetMin: 3,
+} as const;
+
+/** 그림자 토큰(level-*)의 층: blur·최대 offset(px). */
+function shadowLayers(tokens: unknown): { blur: number; offset: number }[] {
+  const sh = get(tokens, "shadow");
+  if (!isObj(sh)) return [];
+  const out: { blur: number; offset: number }[] = [];
+  for (const [k, v] of Object.entries(sh)) {
+    const val = get(v, "$value");
+    if (!k.startsWith("level-") || !Array.isArray(val)) continue;
+    for (const l of val)
+      out.push({
+        blur: num(get(l, "blur", "value")),
+        offset: Math.max(
+          Math.abs(num(get(l, "offsetX", "value"))),
+          Math.abs(num(get(l, "offsetY", "value"))),
+        ),
+      });
+  }
+  return out;
+}
 
 const EYEBROW_NEW = /(new|신규|출시|✨|introducing)/i;
 
@@ -196,6 +223,15 @@ function specConflicts(spec: unknown, tree: unknown, shadowBlackL: number): stri
   const effects = get(spec, "decor", "effects");
   const secs = sectionsOf(tree);
   if (style === "glass" && !secs.some(hasImage)) out.push("CF-01");
+  // CF-02 brutal-offset(blur ≤ 2·offset ≥ 3)과 흐린 그림자(blur > 2) 혼용: 그림자 토큰 층 기준
+  const layers = shadowLayers(get(spec, "tokens"));
+  if (
+    layers.some((x) => x.blur <= CF_SPEC.hardBlurMax && x.offset >= CF_SPEC.hardOffsetMin) &&
+    layers.some((x) => x.blur > CF_SPEC.hardBlurMax)
+  )
+    out.push("CF-02");
+  // CF-07 보라→파랑 그라디언트 = AIL-01과 같은 판정(단계 S)
+  if (staticLint(spec).some((f) => f.rule === "AIL-01")) out.push("CF-07");
   if (sig === "SIG-07" && style === "glass") out.push("CF-05");
   if (theme === "dark") {
     const tokens = get(spec, "tokens");

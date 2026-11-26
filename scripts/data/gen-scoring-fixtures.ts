@@ -2,7 +2,12 @@
 // 사용: pnpm exec tsx scripts/data/gen-scoring-fixtures.ts
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { fallbackMockup, loadDesignData } from "../../packages/design-spec/src/index.js";
+import {
+  fallbackMockup,
+  l2Conflicts,
+  loadDesignData,
+  standardTree,
+} from "../../packages/design-spec/src/index.js";
 
 type J = unknown;
 const ROOT = join(import.meta.dirname, "../..");
@@ -312,6 +317,155 @@ fx.H12 = [
   },
 ];
 
+// ---------- AC-03-39 상충 CF-01~CF-12 픽스처(conflicts/CF-xx/fail-1.json = {cf, spec, tree}) ----------
+type AnySpec = Record<string, unknown> & {
+  l2: Record<string, string>;
+  tokens: Record<string, unknown>;
+};
+const base = standardTree("T1", "saas", data) as unknown as {
+  spec: AnySpec;
+  tree: Record<string, unknown>;
+};
+const clone = <T>(x: T): T => structuredClone(x);
+const withL2 = (sp: AnySpec, l2: Record<string, string>, typeId?: string, d = data): AnySpec => {
+  const out = clone(sp);
+  out.l2 = { ...out.l2, ...l2 };
+  if (typeId) out.type_id = typeId;
+  const ids = l2Conflicts(out.l2 as never, { typeId: String(out.type_id), purpose: "saas" }, d);
+  out.forbidden = { ...(out.forbidden as object), conflict_ids: ids };
+  return out;
+};
+const plainTree = {
+  sections: [{ id: "hero", block: "hero", variant: "hero.type-only", bg: "bg", pad: 1, slots: {} }],
+};
+const px = (v: number): J => ({ value: v, unit: "px" });
+const pillPreset = data.presets.find(
+  (p) => (p as unknown as { buttonPill?: boolean }).buttonPill === true,
+);
+// CF-04 조합(고대비 세리프 + 기하 고딕 본문)은 temp 페어링 20쌍에 없어(컴파일이 막는 조합) 대비 세리프 페어링 1쌍의
+// 본문 분류만 sans_geometric으로 바꾼 가상 데이터로 l2Conflicts를 돌린다
+const serifPair = data.pairings.find(
+  (p) => (p as unknown as { contrastSerif?: boolean }).contrastSerif === true,
+);
+const dataCf04 = {
+  ...data,
+  pairings: data.pairings.map((p) => (p === serifPair ? { ...p, classBody: "sans_geometric" } : p)),
+} as typeof data;
+const vividPal = data.palettes.find(
+  (p) => (p as unknown as { chroma?: string }).chroma === "vivid",
+);
+const conflicts: Record<string, { spec: J; tree: J }> = {
+  "CF-01": { spec: withL2(base.spec, { "depth.style": "glass" }), tree: plainTree },
+  "CF-02": {
+    spec: (() => {
+      const sp = clone(base.spec);
+      sp.tokens.shadow = {
+        "level-1": {
+          $type: "shadow",
+          $value: [{ offsetX: px(6), offsetY: px(6), blur: px(0), spread: px(0) }],
+        },
+        "level-2": {
+          $type: "shadow",
+          $value: [{ offsetX: px(0), offsetY: px(8), blur: px(24), spread: px(0) }],
+        },
+      };
+      return sp;
+    })(),
+    tree: base.tree,
+  },
+  "CF-03": {
+    spec: withL2(base.spec, { "shape.radius_family": "sharp" }, pillPreset?.typeId),
+    tree: base.tree,
+  },
+  "CF-04": {
+    spec: withL2(
+      base.spec,
+      { "type.pairing_id": serifPair?.code ?? "", "shape.radius_family": "round" },
+      undefined,
+      dataCf04,
+    ),
+    tree: base.tree,
+  },
+  "CF-05": {
+    spec: {
+      ...withL2(base.spec, { "depth.style": "glass" }),
+      signature: { id: "SIG-07", intensity: 1, apply_to: [] },
+    },
+    tree: base.tree,
+  },
+  "CF-06": {
+    spec: (() => {
+      const sp = clone(base.spec);
+      sp.theme = "dark";
+      sp.tokens.shadow = {
+        color: {
+          $type: "color",
+          $value: { colorSpace: "oklch", components: [0.02, 0, 0], alpha: 1 },
+        },
+        "level-1": {
+          $type: "shadow",
+          $value: [{ offsetX: px(0), offsetY: px(4), blur: px(12), spread: px(0) }],
+        },
+      };
+      return sp;
+    })(),
+    tree: base.tree,
+  },
+  "CF-07": {
+    spec: (() => {
+      const sp = clone(base.spec);
+      sp.tokens.gradient = {
+        hero: {
+          $type: "gradient",
+          $value: [
+            { color: { colorSpace: "oklch", components: [0.55, 0.2, 290], alpha: 1 }, position: 0 },
+            { color: { colorSpace: "oklch", components: [0.6, 0.15, 230], alpha: 1 }, position: 1 },
+          ],
+        },
+      };
+      return sp;
+    })(),
+    tree: base.tree,
+  },
+  "CF-08": {
+    spec: withL2(base.spec, {
+      "media.treatment": "duotone",
+      "color.palette_id": vividPal?.id ?? "",
+    }),
+    tree: base.tree,
+  },
+  "CF-09": {
+    spec: { ...clone(base.spec), decor: { max: 3, effects: ["grain", "rule-lines", "glass"] } },
+    tree: base.tree,
+  },
+  "CF-10": {
+    spec: { ...withL2(base.spec, { "depth.style": "brutal-offset" }), theme: "dark" },
+    tree: base.tree,
+  },
+  "CF-11": {
+    spec: {
+      ...withL2(base.spec, { "motion.level": "none" }),
+      signature: { id: "SIG-06", intensity: 1, apply_to: [] },
+    },
+    tree: base.tree,
+  },
+  "CF-12": {
+    spec: clone(base.spec),
+    tree: {
+      sections: [
+        {
+          id: "hero",
+          block: "hero",
+          variant: "hero.centered",
+          bg: "bg",
+          pad: 1,
+          slots: { eyebrow: { copy: { text: "✨ New", placeholder: false } } },
+        },
+      ],
+    },
+  },
+};
+
 rmSync(OUT, { recursive: true, force: true });
 let n = 0;
 for (const [id, list] of Object.entries(fx)) {
@@ -322,5 +476,13 @@ for (const [id, list] of Object.entries(fx)) {
     writeFileSync(join(OUT, id, file), `${JSON.stringify({ id, expect, input }, null, 2)}\n`);
     n++;
   });
+}
+for (const [cf, v] of Object.entries(conflicts)) {
+  mkdirSync(join(OUT, "conflicts", cf), { recursive: true });
+  writeFileSync(
+    join(OUT, "conflicts", cf, "fail-1.json"),
+    `${JSON.stringify({ cf, ...v }, null, 2)}\n`,
+  );
+  n++;
 }
 process.stdout.write(`scoring fixtures: ${n}개\n`);

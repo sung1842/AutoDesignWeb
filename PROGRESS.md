@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T13:45Z, since: 2026-11-26T17:20Z}
+- lock: {owner: 2026-11-26T13:45Z, since: 2026-11-26T17:45Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
@@ -148,6 +148,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 02:45 | M3-08b CF-01~12 픽스처·조화 CF-02·07 판정. AC-03-39 녹색
 - 2026-11-27 02:20 | M3-08a CP-01~12 copyRules·buildFallback, 브랜드 색 없는 입력 처리. AC-04-13 녹색
 - 2026-11-27 01:50 | M3-07 추출기 경로·evaluateCandidate·자기검증 8/8·정규화기 트리거. 앵커 왕복 BLK-018·라벨 BLK-017
 - 2026-11-27 01:10 | M3-06 tasteMatch·eligibility·rankScore·selectVisible·QualityReportSchema. scoring.test 17/17

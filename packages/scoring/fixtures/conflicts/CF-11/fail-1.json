@@ -1,0 +1,2042 @@
+{
+  "cf": "CF-11",
+  "spec": {
+    "spec_version": "1",
+    "spec_id": "d7fe34e8964efaa7",
+    "variant": "v_true",
+    "taxonomy_version": "2026-S4",
+    "preset_version": "2026-S4",
+    "normalizer_version": "2026-S0",
+    "type_id": "T1",
+    "diagnosed_type_id": "T1",
+    "purpose": "saas",
+    "theme": "light",
+    "target_vector": {
+      "expression": 0.26,
+      "temperature": 0.8,
+      "shape": 0.12,
+      "density": 0.2,
+      "depth": 0
+    },
+    "calibration_trace": {
+      "mu": {
+        "expression": 0.26,
+        "temperature": 0.81,
+        "shape": 0.12,
+        "density": 0,
+        "depth": 0
+      },
+      "sigma": {
+        "expression": 0.08,
+        "temperature": 0.08,
+        "shape": 0.08,
+        "density": 0.08,
+        "depth": 0.08
+      },
+      "kappa": 0.8,
+      "insensitive_axes": [],
+      "anchor": {
+        "expression": 0.26,
+        "temperature": 0.81,
+        "shape": 0.12,
+        "density": 0,
+        "depth": 0
+      },
+      "type_range": {
+        "lo": {
+          "expression": 0.06,
+          "temperature": 0.6100000000000001,
+          "shape": 0,
+          "density": 0,
+          "depth": 0
+        },
+        "hi": {
+          "expression": 0.46,
+          "temperature": 1,
+          "shape": 0.32,
+          "density": 0.2,
+          "depth": 0.2
+        }
+      },
+      "g": {
+        "expression": 1,
+        "temperature": 1,
+        "shape": 1,
+        "density": 1,
+        "depth": 1
+      },
+      "v1": {
+        "expression": 0.26,
+        "temperature": 0.81,
+        "shape": 0.12,
+        "density": 0,
+        "depth": 0
+      },
+      "alpha": 0,
+      "v2": {
+        "expression": 0.26,
+        "temperature": 0.8,
+        "shape": 0.12,
+        "density": 0.2,
+        "depth": 0
+      },
+      "distance_enforced": false,
+      "moved_axes": [
+        {
+          "axis": "density",
+          "from": 0,
+          "to": 0.2,
+          "reason": "purpose"
+        }
+      ]
+    },
+    "l2": {
+      "type.pairing_id": "FP01",
+      "type.scale_ratio": "1.2",
+      "type.display_boost": "1.5",
+      "type.headline_weight": "600",
+      "type.body_size": "18",
+      "type.body_leading": "1.8",
+      "color.palette_id": "PAL-T1-0",
+      "shape.radius_family": "sharp",
+      "shape.border": "hairline",
+      "depth.style": "flat",
+      "depth.shadow_level": "0",
+      "space.density": "airy",
+      "space.container": "1200",
+      "layout.grid_mode": "symmetric",
+      "media.mode": "photo-led",
+      "media.treatment": "none",
+      "motion.level": "none",
+      "icon.set": "phosphor"
+    },
+    "tokens": {
+      "$schemaVersion": "tokens-1",
+      "color": {
+        "bg": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.975,
+              0.008,
+              85
+            ],
+            "alpha": 1,
+            "hex": "#F9F6F1"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "palette"
+            }
+          }
+        },
+        "surface": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.945,
+              0.01,
+              85
+            ],
+            "alpha": 1,
+            "hex": "#F0ECE5"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "palette"
+            }
+          }
+        },
+        "surface-inverse": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.24,
+              0.012,
+              60
+            ],
+            "alpha": 1,
+            "hex": "#241E1A"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "palette"
+            }
+          }
+        },
+        "fg": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.22,
+              0.01,
+              60
+            ],
+            "alpha": 1,
+            "hex": "#1E1A16"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "palette"
+            }
+          }
+        },
+        "fg-muted": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.46,
+              0.01,
+              60
+            ],
+            "alpha": 1,
+            "hex": "#5C5753"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "palette"
+            }
+          }
+        },
+        "fg-inverse": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.96,
+              0.008,
+              85
+            ],
+            "alpha": 1,
+            "hex": "#F4F1EC"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "palette"
+            }
+          }
+        },
+        "border": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.88,
+              0.01,
+              85
+            ],
+            "alpha": 1,
+            "hex": "#DAD7D0"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "palette"
+            }
+          }
+        },
+        "border-strong": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.6,
+              0.01,
+              60
+            ],
+            "alpha": 1,
+            "hex": "#857F7A"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "palette"
+            }
+          }
+        },
+        "primary": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.26,
+              0.012,
+              60
+            ],
+            "alpha": 1,
+            "hex": "#29231E"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "palette"
+            }
+          }
+        },
+        "on-primary": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.975,
+              0.008,
+              85
+            ],
+            "alpha": 1,
+            "hex": "#F9F6F1"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "palette"
+            }
+          }
+        },
+        "primary-hover": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.34,
+              0.012,
+              60
+            ],
+            "alpha": 1,
+            "hex": "#3D3732"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "palette"
+            }
+          }
+        },
+        "accent": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.5,
+              0.085,
+              32
+            ],
+            "alpha": 1,
+            "hex": "#8D5044"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "palette"
+            }
+          }
+        },
+        "on-accent": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.985,
+              0.005,
+              85
+            ],
+            "alpha": 1,
+            "hex": "#FCFAF6"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "palette"
+            }
+          }
+        },
+        "focus": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.5,
+              0.085,
+              32
+            ],
+            "alpha": 1,
+            "hex": "#8D5044"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "palette"
+            }
+          }
+        },
+        "primary-active": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.38,
+              0.012,
+              60
+            ],
+            "alpha": 1,
+            "hex": "#47413C"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula"
+            }
+          }
+        },
+        "focus-inverse": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.96,
+              0.008,
+              85
+            ],
+            "alpha": 1,
+            "hex": "#F4F1EC"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "palette"
+            }
+          }
+        },
+        "neutral": {
+          "50": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [
+                0.985,
+                0.012,
+                85
+              ],
+              "alpha": 1,
+              "hex": "#FEFAF1"
+            },
+            "$extensions": {
+              "app.tastefit": {
+                "source": "formula"
+              }
+            }
+          },
+          "100": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [
+                0.965,
+                0.012,
+                85
+              ],
+              "alpha": 1,
+              "hex": "#F7F3EB"
+            },
+            "$extensions": {
+              "app.tastefit": {
+                "source": "formula"
+              }
+            }
+          },
+          "200": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [
+                0.925,
+                0.012,
+                85
+              ],
+              "alpha": 1,
+              "hex": "#EAE6DD"
+            },
+            "$extensions": {
+              "app.tastefit": {
+                "source": "formula"
+              }
+            }
+          },
+          "300": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [
+                0.87,
+                0.012,
+                85
+              ],
+              "alpha": 1,
+              "hex": "#D8D4CC"
+            },
+            "$extensions": {
+              "app.tastefit": {
+                "source": "formula"
+              }
+            }
+          },
+          "400": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [
+                0.71,
+                0.012,
+                85
+              ],
+              "alpha": 1,
+              "hex": "#A5A199"
+            },
+            "$extensions": {
+              "app.tastefit": {
+                "source": "formula"
+              }
+            }
+          },
+          "500": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [
+                0.555,
+                0.012,
+                85
+              ],
+              "alpha": 1,
+              "hex": "#76736B"
+            },
+            "$extensions": {
+              "app.tastefit": {
+                "source": "formula"
+              }
+            }
+          },
+          "600": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [
+                0.45,
+                0.012,
+                85
+              ],
+              "alpha": 1,
+              "hex": "#58554E"
+            },
+            "$extensions": {
+              "app.tastefit": {
+                "source": "formula"
+              }
+            }
+          },
+          "700": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [
+                0.37,
+                0.012,
+                85
+              ],
+              "alpha": 1,
+              "hex": "#433F39"
+            },
+            "$extensions": {
+              "app.tastefit": {
+                "source": "formula"
+              }
+            }
+          },
+          "800": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [
+                0.27,
+                0.012,
+                85
+              ],
+              "alpha": 1,
+              "hex": "#292620"
+            },
+            "$extensions": {
+              "app.tastefit": {
+                "source": "formula"
+              }
+            }
+          },
+          "900": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [
+                0.205,
+                0.012,
+                85
+              ],
+              "alpha": 1,
+              "hex": "#1A1711"
+            },
+            "$extensions": {
+              "app.tastefit": {
+                "source": "formula"
+              }
+            }
+          },
+          "950": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [
+                0.145,
+                0.012,
+                85
+              ],
+              "alpha": 1,
+              "hex": "#0C0A05"
+            },
+            "$extensions": {
+              "app.tastefit": {
+                "source": "formula"
+              }
+            }
+          }
+        },
+        "overlay": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.145,
+              0.012,
+              85
+            ],
+            "alpha": 0.35,
+            "hex": "#0C0A05"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula"
+            }
+          }
+        },
+        "success": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.5,
+              0.12,
+              150
+            ],
+            "alpha": 1,
+            "hex": "#21763C"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula"
+            }
+          }
+        },
+        "on-success": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              1,
+              0,
+              0
+            ],
+            "alpha": 1,
+            "hex": "#FFFFFF"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula"
+            }
+          }
+        },
+        "warning": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.53,
+              0.11,
+              65
+            ],
+            "alpha": 1,
+            "hex": "#975C16"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula"
+            }
+          }
+        },
+        "on-warning": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              1,
+              0,
+              0
+            ],
+            "alpha": 1,
+            "hex": "#FFFFFF"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula"
+            }
+          }
+        },
+        "danger": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.53,
+              0.19,
+              27
+            ],
+            "alpha": 1,
+            "hex": "#C22826"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula"
+            }
+          }
+        },
+        "on-danger": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              1,
+              0,
+              0
+            ],
+            "alpha": 1,
+            "hex": "#FFFFFF"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula"
+            }
+          }
+        }
+      },
+      "font": {
+        "heading": {
+          "$type": "fontFamily",
+          "$value": [
+            "tf-kr-maruburi",
+            "tf-fb-serif",
+            "serif"
+          ]
+        },
+        "body": {
+          "$type": "fontFamily",
+          "$value": [
+            "tf-kr-pretendard",
+            "tf-fb-sans",
+            "sans-serif"
+          ]
+        },
+        "weight": {
+          "heading": {
+            "$type": "fontWeight",
+            "$value": 600
+          },
+          "body": {
+            "$type": "fontWeight",
+            "$value": 400
+          },
+          "emphasis": {
+            "$type": "fontWeight",
+            "$value": 700
+          }
+        }
+      },
+      "type": {
+        "caption": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": [
+              "tf-kr-pretendard",
+              "tf-fb-sans",
+              "sans-serif"
+            ],
+            "fontSize": {
+              "value": 13,
+              "unit": "px"
+            },
+            "fontWeight": 400,
+            "lineHeight": 1.8,
+            "letterSpacing": {
+              "value": 0,
+              "unit": "em"
+            }
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula",
+              "step": "t-caption",
+              "mobileSize": 13,
+              "mobileLetterSpacing": 0
+            }
+          }
+        },
+        "small": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": [
+              "tf-kr-pretendard",
+              "tf-fb-sans",
+              "sans-serif"
+            ],
+            "fontSize": {
+              "value": 15,
+              "unit": "px"
+            },
+            "fontWeight": 400,
+            "lineHeight": 1.8,
+            "letterSpacing": {
+              "value": 0,
+              "unit": "em"
+            }
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula",
+              "step": "t-small",
+              "mobileSize": 15,
+              "mobileLetterSpacing": 0
+            }
+          }
+        },
+        "body": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": [
+              "tf-kr-pretendard",
+              "tf-fb-sans",
+              "sans-serif"
+            ],
+            "fontSize": {
+              "value": 18,
+              "unit": "px"
+            },
+            "fontWeight": 400,
+            "lineHeight": 1.8,
+            "letterSpacing": {
+              "value": 0,
+              "unit": "em"
+            }
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula",
+              "step": "t-body",
+              "mobileSize": 17,
+              "mobileLetterSpacing": 0
+            }
+          }
+        },
+        "lead": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": [
+              "tf-kr-pretendard",
+              "tf-fb-sans",
+              "sans-serif"
+            ],
+            "fontSize": {
+              "value": 22,
+              "unit": "px"
+            },
+            "fontWeight": 400,
+            "lineHeight": 1.8,
+            "letterSpacing": {
+              "value": 0,
+              "unit": "em"
+            }
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula",
+              "step": "t-lead",
+              "mobileSize": 20,
+              "mobileLetterSpacing": 0
+            }
+          }
+        },
+        "h4": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": [
+              "tf-kr-maruburi",
+              "tf-fb-serif",
+              "serif"
+            ],
+            "fontSize": {
+              "value": 26,
+              "unit": "px"
+            },
+            "fontWeight": 600,
+            "lineHeight": 1.35,
+            "letterSpacing": {
+              "value": -0.005,
+              "unit": "em"
+            }
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula",
+              "step": "t-4",
+              "mobileSize": 22,
+              "mobileLetterSpacing": 0
+            }
+          }
+        },
+        "h3": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": [
+              "tf-kr-maruburi",
+              "tf-fb-serif",
+              "serif"
+            ],
+            "fontSize": {
+              "value": 31,
+              "unit": "px"
+            },
+            "fontWeight": 600,
+            "lineHeight": 1.35,
+            "letterSpacing": {
+              "value": -0.005,
+              "unit": "em"
+            }
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula",
+              "step": "t-3",
+              "mobileSize": 26,
+              "mobileLetterSpacing": -0.005
+            }
+          }
+        },
+        "h2": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": [
+              "tf-kr-maruburi",
+              "tf-fb-serif",
+              "serif"
+            ],
+            "fontSize": {
+              "value": 37,
+              "unit": "px"
+            },
+            "fontWeight": 600,
+            "lineHeight": 1.3,
+            "letterSpacing": {
+              "value": -0.01,
+              "unit": "em"
+            }
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula",
+              "step": "t-2",
+              "mobileSize": 30,
+              "mobileLetterSpacing": -0.005
+            }
+          }
+        },
+        "h1": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": [
+              "tf-kr-maruburi",
+              "tf-fb-serif",
+              "serif"
+            ],
+            "fontSize": {
+              "value": 67,
+              "unit": "px"
+            },
+            "fontWeight": 600,
+            "lineHeight": 1.2,
+            "letterSpacing": {
+              "value": -0.015,
+              "unit": "em"
+            }
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula",
+              "step": "t-1",
+              "mobileSize": 43,
+              "mobileLetterSpacing": -0.01
+            }
+          }
+        },
+        "display": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": [
+              "tf-kr-maruburi",
+              "tf-fb-serif",
+              "serif"
+            ],
+            "fontSize": {
+              "value": 81,
+              "unit": "px"
+            },
+            "fontWeight": 600,
+            "lineHeight": 1.1,
+            "letterSpacing": {
+              "value": -0.02,
+              "unit": "em"
+            }
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula",
+              "step": "t-display",
+              "mobileSize": 49,
+              "mobileLetterSpacing": -0.015
+            }
+          }
+        },
+        "leading-body": {
+          "$type": "number",
+          "$value": 1.8
+        }
+      },
+      "space": {
+        "0": {
+          "$type": "dimension",
+          "$value": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        "1": {
+          "$type": "dimension",
+          "$value": {
+            "value": 4,
+            "unit": "px"
+          }
+        },
+        "2": {
+          "$type": "dimension",
+          "$value": {
+            "value": 8,
+            "unit": "px"
+          }
+        },
+        "3": {
+          "$type": "dimension",
+          "$value": {
+            "value": 12,
+            "unit": "px"
+          }
+        },
+        "4": {
+          "$type": "dimension",
+          "$value": {
+            "value": 16,
+            "unit": "px"
+          }
+        },
+        "5": {
+          "$type": "dimension",
+          "$value": {
+            "value": 20,
+            "unit": "px"
+          }
+        },
+        "6": {
+          "$type": "dimension",
+          "$value": {
+            "value": 24,
+            "unit": "px"
+          }
+        },
+        "8": {
+          "$type": "dimension",
+          "$value": {
+            "value": 32,
+            "unit": "px"
+          }
+        },
+        "10": {
+          "$type": "dimension",
+          "$value": {
+            "value": 40,
+            "unit": "px"
+          }
+        },
+        "12": {
+          "$type": "dimension",
+          "$value": {
+            "value": 48,
+            "unit": "px"
+          }
+        },
+        "16": {
+          "$type": "dimension",
+          "$value": {
+            "value": 64,
+            "unit": "px"
+          }
+        },
+        "20": {
+          "$type": "dimension",
+          "$value": {
+            "value": 80,
+            "unit": "px"
+          }
+        },
+        "24": {
+          "$type": "dimension",
+          "$value": {
+            "value": 96,
+            "unit": "px"
+          }
+        },
+        "32": {
+          "$type": "dimension",
+          "$value": {
+            "value": 128,
+            "unit": "px"
+          }
+        },
+        "40": {
+          "$type": "dimension",
+          "$value": {
+            "value": 160,
+            "unit": "px"
+          }
+        },
+        "section-y": {
+          "$type": "dimension",
+          "$value": {
+            "value": 128,
+            "unit": "px"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula",
+              "l2Key": "space.density"
+            }
+          }
+        },
+        "section-y-mobile": {
+          "$type": "dimension",
+          "$value": {
+            "value": 80,
+            "unit": "px"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula",
+              "l2Key": "space.density"
+            }
+          }
+        },
+        "section-y-pad-minus": {
+          "$type": "dimension",
+          "$value": {
+            "value": 96,
+            "unit": "px"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula",
+              "l2Key": "space.density"
+            }
+          }
+        },
+        "section-y-pad-plus": {
+          "$type": "dimension",
+          "$value": {
+            "value": 160,
+            "unit": "px"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula",
+              "l2Key": "space.density"
+            }
+          }
+        },
+        "stack": {
+          "$type": "dimension",
+          "$value": {
+            "value": 24,
+            "unit": "px"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula",
+              "l2Key": "space.density"
+            }
+          }
+        },
+        "stack-lg": {
+          "$type": "dimension",
+          "$value": {
+            "value": 64,
+            "unit": "px"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula",
+              "l2Key": "space.density"
+            }
+          }
+        },
+        "inset": {
+          "$type": "dimension",
+          "$value": {
+            "value": 24,
+            "unit": "px"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula",
+              "l2Key": "space.density"
+            }
+          }
+        },
+        "card": {
+          "$type": "dimension",
+          "$value": {
+            "value": 32,
+            "unit": "px"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula",
+              "l2Key": "space.density"
+            }
+          }
+        },
+        "gap": {
+          "$type": "dimension",
+          "$value": {
+            "value": 32,
+            "unit": "px"
+          },
+          "$extensions": {
+            "app.tastefit": {
+              "source": "formula",
+              "l2Key": "space.density"
+            }
+          }
+        },
+        "section-y-mobile-pad-minus": {
+          "$type": "dimension",
+          "$value": {
+            "value": 64,
+            "unit": "px"
+          }
+        },
+        "section-y-mobile-pad-plus": {
+          "$type": "dimension",
+          "$value": {
+            "value": 128,
+            "unit": "px"
+          }
+        }
+      },
+      "radius": {
+        "sm": {
+          "$type": "dimension",
+          "$value": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        "md": {
+          "$type": "dimension",
+          "$value": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        "lg": {
+          "$type": "dimension",
+          "$value": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        "full": {
+          "$type": "dimension",
+          "$value": {
+            "value": 999,
+            "unit": "px"
+          }
+        }
+      },
+      "border": {
+        "width": {
+          "thin": {
+            "$type": "dimension",
+            "$value": {
+              "value": 1,
+              "unit": "px"
+            }
+          },
+          "thick": {
+            "$type": "dimension",
+            "$value": {
+              "value": 2,
+              "unit": "px"
+            }
+          }
+        },
+        "card": {
+          "$type": "border",
+          "$value": {
+            "color": {
+              "colorSpace": "oklch",
+              "components": [
+                0.88,
+                0.01,
+                85
+              ],
+              "alpha": 1,
+              "hex": "#DAD7D0"
+            },
+            "width": {
+              "value": 1,
+              "unit": "px"
+            },
+            "style": "solid"
+          }
+        },
+        "input": {
+          "$type": "border",
+          "$value": {
+            "color": {
+              "colorSpace": "oklch",
+              "components": [
+                0.6,
+                0.01,
+                60
+              ],
+              "alpha": 1,
+              "hex": "#857F7A"
+            },
+            "width": {
+              "value": 1,
+              "unit": "px"
+            },
+            "style": "solid"
+          }
+        }
+      },
+      "shadow": {
+        "color": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.145,
+              0.012,
+              85
+            ],
+            "alpha": 1,
+            "hex": "#0C0A05"
+          }
+        },
+        "level-0": {
+          "$type": "shadow",
+          "$value": []
+        },
+        "level-1": {
+          "$type": "shadow",
+          "$value": []
+        },
+        "level-2": {
+          "$type": "shadow",
+          "$value": []
+        },
+        "level-3": {
+          "$type": "shadow",
+          "$value": []
+        }
+      },
+      "motion": {
+        "duration": {
+          "fast": {
+            "$type": "duration",
+            "$value": {
+              "value": 120,
+              "unit": "ms"
+            }
+          },
+          "base": {
+            "$type": "duration",
+            "$value": {
+              "value": 200,
+              "unit": "ms"
+            }
+          },
+          "slow": {
+            "$type": "duration",
+            "$value": {
+              "value": 320,
+              "unit": "ms"
+            }
+          }
+        },
+        "easing": {
+          "standard": {
+            "$type": "cubicBezier",
+            "$value": [
+              0.2,
+              0,
+              0,
+              1
+            ]
+          },
+          "emphasized": {
+            "$type": "cubicBezier",
+            "$value": [
+              0.3,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "enter": {
+          "$type": "duration",
+          "$value": {
+            "value": 0,
+            "unit": "ms"
+          }
+        }
+      },
+      "layout": {
+        "container": {
+          "$type": "dimension",
+          "$value": {
+            "value": 1200,
+            "unit": "px"
+          }
+        },
+        "base": {
+          "min": {
+            "$type": "dimension",
+            "$value": {
+              "value": 0,
+              "unit": "px"
+            }
+          },
+          "columns": {
+            "$type": "number",
+            "$value": 4
+          },
+          "gutter": {
+            "$type": "dimension",
+            "$value": {
+              "value": 16,
+              "unit": "px"
+            }
+          },
+          "margin": {
+            "$type": "dimension",
+            "$value": {
+              "value": 20,
+              "unit": "px"
+            }
+          }
+        },
+        "md": {
+          "min": {
+            "$type": "dimension",
+            "$value": {
+              "value": 768,
+              "unit": "px"
+            }
+          },
+          "columns": {
+            "$type": "number",
+            "$value": 8
+          },
+          "gutter": {
+            "$type": "dimension",
+            "$value": {
+              "value": 24,
+              "unit": "px"
+            }
+          },
+          "margin": {
+            "$type": "dimension",
+            "$value": {
+              "value": 32,
+              "unit": "px"
+            }
+          }
+        },
+        "lg": {
+          "min": {
+            "$type": "dimension",
+            "$value": {
+              "value": 1024,
+              "unit": "px"
+            }
+          },
+          "columns": {
+            "$type": "number",
+            "$value": 12
+          },
+          "gutter": {
+            "$type": "dimension",
+            "$value": {
+              "value": 24,
+              "unit": "px"
+            }
+          },
+          "margin": {
+            "$type": "dimension",
+            "$value": {
+              "value": 40,
+              "unit": "px"
+            }
+          }
+        },
+        "xl": {
+          "min": {
+            "$type": "dimension",
+            "$value": {
+              "value": 1280,
+              "unit": "px"
+            }
+          },
+          "columns": {
+            "$type": "number",
+            "$value": 12
+          },
+          "gutter": {
+            "$type": "dimension",
+            "$value": {
+              "value": 32,
+              "unit": "px"
+            }
+          },
+          "margin": {
+            "$type": "dimension",
+            "$value": {
+              "value": 40,
+              "unit": "px"
+            }
+          }
+        },
+        "2xl": {
+          "min": {
+            "$type": "dimension",
+            "$value": {
+              "value": 1536,
+              "unit": "px"
+            }
+          },
+          "columns": {
+            "$type": "number",
+            "$value": 12
+          },
+          "gutter": {
+            "$type": "dimension",
+            "$value": {
+              "value": 32,
+              "unit": "px"
+            }
+          },
+          "margin": {
+            "$type": "dimension",
+            "$value": {
+              "value": 40,
+              "unit": "px"
+            }
+          }
+        }
+      },
+      "media": {
+        "grayscale": {
+          "$type": "number",
+          "$value": 0
+        },
+        "contrast": {
+          "$type": "number",
+          "$value": 1
+        },
+        "sepia": {
+          "$type": "number",
+          "$value": 0
+        },
+        "saturate": {
+          "$type": "number",
+          "$value": 1
+        }
+      },
+      "z": {
+        "base": {
+          "$type": "number",
+          "$value": 0
+        },
+        "sticky": {
+          "$type": "number",
+          "$value": 100
+        },
+        "drawer": {
+          "$type": "number",
+          "$value": 200
+        },
+        "overlay": {
+          "$type": "number",
+          "$value": 300
+        }
+      },
+      "opacity": {
+        "disabled": {
+          "$type": "number",
+          "$value": 0.45
+        },
+        "overlay": {
+          "min": {
+            "$type": "number",
+            "$value": 0.35
+          },
+          "max": {
+            "$type": "number",
+            "$value": 0.6
+          }
+        }
+      },
+      "$extensions": {
+        "app.tastefit": {
+          "accentTextSafe": true,
+          "inverseButtonMode": "invert"
+        }
+      }
+    },
+    "layout_constraints": {
+      "section_count": {
+        "min": 6,
+        "max": 8
+      },
+      "required_blocks": [
+        "hero",
+        "cta"
+      ],
+      "optional_blocks": [
+        "value",
+        "feature",
+        "showcase",
+        "stats",
+        "process",
+        "proof",
+        "pricing",
+        "faq"
+      ],
+      "forbidden_blocks": [
+        "menu",
+        "highlight",
+        "gallery",
+        "location",
+        "story"
+      ],
+      "allowed_variants": {
+        "nav": [
+          "nav.split",
+          "nav.center",
+          "nav.minimal"
+        ],
+        "hero": [
+          "hero.type-only",
+          "hero.split",
+          "hero.left-aligned"
+        ],
+        "value": [
+          "value.numbered",
+          "value.rule-list"
+        ],
+        "feature": [
+          "feature.zigzag",
+          "feature.stack",
+          "feature.split-list"
+        ],
+        "showcase": [
+          "showcase.wide",
+          "showcase.framed"
+        ],
+        "stats": [
+          "stats.row",
+          "stats.split"
+        ],
+        "process": [
+          "process.horizontal",
+          "process.vertical"
+        ],
+        "proof": [
+          "proof.quote-large",
+          "proof.cards"
+        ],
+        "pricing": [
+          "pricing.cards",
+          "pricing.single"
+        ],
+        "faq": [
+          "faq.accordion",
+          "faq.two-col"
+        ],
+        "cta": [
+          "cta.band",
+          "cta.big-type",
+          "cta.image"
+        ],
+        "footer": [
+          "footer.minimal",
+          "footer.columns",
+          "footer.big-type"
+        ]
+      },
+      "hero_variants": [
+        "hero.type-only",
+        "hero.split",
+        "hero.left-aligned"
+      ],
+      "pattern_slots": [
+        "PS-1",
+        "PS-4"
+      ],
+      "rhythm": {
+        "max_centered_ratio": 0.4,
+        "inverse_sections": [
+          1,
+          2
+        ],
+        "max_same_bg_run": 2,
+        "forbid_strict_alternation": true,
+        "pad_variation_min": 1
+      },
+      "image_tags_allowed": [
+        "saas.architecture",
+        "common.texture-concrete",
+        "common.texture-fabric",
+        "common.texture-paper"
+      ]
+    },
+    "copy": {
+      "tone_id": "T-EDITORIAL",
+      "ending": "plain",
+      "headline_option_preference": [
+        "emotive",
+        "factual",
+        "benefit"
+      ],
+      "exclaim_max_per_page": 0
+    },
+    "signature": {
+      "id": "SIG-06",
+      "intensity": 1,
+      "apply_to": []
+    },
+    "decor": {
+      "effects": [],
+      "max": 2
+    },
+    "forbidden": {
+      "lint_rules_strict": [],
+      "conflict_ids": []
+    },
+    "brand_color": null,
+    "brand_color_notice": null
+  },
+  "tree": {
+    "schemaVersion": "1",
+    "spec_id": "d7fe34e8964efaa7",
+    "pattern_id": "PS-1",
+    "nav": {
+      "variant": "nav.split",
+      "items": [
+        {
+          "label": "특징",
+          "target": "#value"
+        },
+        {
+          "label": "기능",
+          "target": "#feature"
+        },
+        {
+          "label": "FAQ",
+          "target": "#faq"
+        }
+      ]
+    },
+    "sections": [
+      {
+        "id": "hero",
+        "block": "hero",
+        "variant": "hero.split",
+        "bg": "bg",
+        "pad": 1,
+        "slots": {
+          "eyebrow": {
+            "copy": {
+              "text": "[임시] 문구 1",
+              "placeholder": true,
+              "deck_ref": "deck:hero.eyebrow#0"
+            }
+          },
+          "headline": {
+            "copy": {
+              "text": "[임시] 문구 3",
+              "placeholder": true,
+              "deck_ref": "deck:hero.headline#2"
+            }
+          },
+          "sub": {
+            "copy": {
+              "text": "[예시] 브랜드 소개 문장을 여기에 넣어 주세요. 실제 문구로 바꿔 주세요.",
+              "placeholder": true,
+              "deck_ref": "deck:hero.sub#0"
+            }
+          },
+          "primaryCta": {
+            "link": {
+              "label": {
+                "text": "무료로 써보기",
+                "placeholder": false,
+                "deck_ref": "deck:cta.primary#0"
+              },
+              "target": "#cta"
+            }
+          },
+          "media": {
+            "image": {
+              "tag": "saas.architecture",
+              "ratio": "4:5",
+              "asset_id": "tmp_img:saas.architecture-008",
+              "alt": "현대 건축·구조 장면 임시 자리 8번",
+              "focal": [
+                0.6,
+                0.6
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "value",
+        "block": "value",
+        "variant": "value.numbered",
+        "bg": "surface",
+        "pad": 0,
+        "slots": {
+          "items": {
+            "list": [
+              {
+                "copy": {
+                  "text": "[임시] 제목 1",
+                  "sub": "[예시] 핵심 장점",
+                  "placeholder": true,
+                  "deck_ref": "deck:value.items#0"
+                }
+              },
+              {
+                "copy": {
+                  "text": "[임시] 제목 2",
+                  "sub": "[임시] 본문 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다.",
+                  "placeholder": true,
+                  "deck_ref": "deck:value.items#1"
+                }
+              },
+              {
+                "copy": {
+                  "text": "[임시] 제목 3",
+                  "sub": "[임시] 본문 3 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다.",
+                  "placeholder": true,
+                  "deck_ref": "deck:value.items#2"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "feature",
+        "block": "feature",
+        "variant": "feature.zigzag",
+        "bg": "bg",
+        "pad": 0,
+        "slots": {
+          "items": {
+            "list": [
+              {
+                "copy": {
+                  "text": "[임시] 제목 1",
+                  "sub": "[임시] 본문 1 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다.",
+                  "placeholder": true,
+                  "deck_ref": "deck:feature.items#0"
+                }
+              },
+              {
+                "copy": {
+                  "text": "[임시] 제목 2",
+                  "sub": "[임시] 본문 2 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다.",
+                  "placeholder": true,
+                  "deck_ref": "deck:feature.items#1"
+                }
+              },
+              {
+                "copy": {
+                  "text": "[임시] 제목 3",
+                  "sub": "[임시] 본문 3 실제 문구로 바꿔 주세요. 이 문장은 자리를 채우는 임시 안내입니다.",
+                  "placeholder": true,
+                  "deck_ref": "deck:feature.items#2"
+                }
+              }
+            ]
+          },
+          "media": {
+            "image": {
+              "tag": "saas.architecture",
+              "ratio": "3:2",
+              "asset_id": "tmp_img:saas.architecture-010",
+              "alt": "현대 건축·구조 장면 임시 자리 10번",
+              "focal": [
+                0.56,
+                0.52
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "proof",
+        "block": "proof",
+        "variant": "proof.quote-large",
+        "bg": "bg",
+        "pad": 0,
+        "slots": {
+          "items": {
+            "list": [
+              {
+                "copy": {
+                  "text": "[예시] 고객 후기 1",
+                  "sub": "김○○",
+                  "placeholder": true,
+                  "deck_ref": "deck:proof.items#0"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "faq",
+        "block": "faq",
+        "variant": "faq.accordion",
+        "bg": "surface",
+        "pad": 0,
+        "slots": {
+          "items": {
+            "list": [
+              {
+                "copy": {
+                  "text": "[예시] 문구",
+                  "placeholder": true,
+                  "deck_ref": "deck:faq.items#0"
+                }
+              },
+              {
+                "copy": {
+                  "text": "[예시] 문구",
+                  "placeholder": true,
+                  "deck_ref": "deck:faq.items#1"
+                }
+              },
+              {
+                "copy": {
+                  "text": "[예시] 문구",
+                  "placeholder": true,
+                  "deck_ref": "deck:faq.items#2"
+                }
+              },
+              {
+                "copy": {
+                  "text": "[예시] 문구",
+                  "placeholder": true,
+                  "deck_ref": "deck:faq.items#3"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "cta",
+        "block": "cta",
+        "variant": "cta.band",
+        "bg": "inverse",
+        "pad": 0,
+        "slots": {
+          "headline": {
+            "copy": {
+              "text": "[임시] 문구 2",
+              "placeholder": true,
+              "deck_ref": "deck:hero.headline#1"
+            }
+          },
+          "primaryCta": {
+            "link": {
+              "label": {
+                "text": "무료로 써보기",
+                "placeholder": false,
+                "deck_ref": "deck:cta.primary#0"
+              },
+              "target": "#cta"
+            }
+          }
+        }
+      }
+    ],
+    "footer": {
+      "variant": "footer.minimal",
+      "slots": {
+        "wordmark": {
+          "copy": {
+            "text": "한결",
+            "placeholder": false,
+            "deck_ref": "deck:meta.title#0"
+          }
+        },
+        "tagline": {
+          "copy": {
+            "text": "한결",
+            "placeholder": false,
+            "deck_ref": "deck:footer.tagline#0"
+          }
+        },
+        "businessInfo": {
+          "copy": {
+            "text": "상호 한결 · 사업자등록번호 000-00-00000 · 서울시 ○○구 ○○로 00",
+            "placeholder": true,
+            "deck_ref": "deck:contact.biz#0"
+          }
+        }
+      }
+    }
+  }
+}
