@@ -96,8 +96,8 @@ describe("POST /api/events · AC-00-12", () => {
   });
   it("같은 eventId 재전송은 저장 1건(on conflict do nothing)", async () => {
     const e = ev("landing_view", { path: "/again" });
-    for (let i = 0; i < 3; i++)
-      expect((await post("/api/events", { events: [e] })).status).toBe(204);
+    for (const n of ["1회", "2회", "3회"])
+      expect((await post("/api/events", { events: [e] })).status, n).toBe(204);
     expect(await rows("select 1 from events where event_id = $1", [e.eventId])).toHaveLength(1);
   });
   it("미등록 이름·props 위반·server 전용 이름·빈 배열·21개 → 400, 저장 0(배치 전체 거부)", async () => {
