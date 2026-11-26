@@ -555,3 +555,10 @@
 - 선택: ① scoring `GATE_FNS: Record<G-01..G-13, (input) => {id, pass, violations[]}>`, `HARMONY_FNS: Record<H1..H12, (input) => {score, max, measured}>`(max 합 100). 픽스처 `packages/scoring/fixtures/<id>/*.json` = `{id, expect: pass|fail, input}`, H는 pass = 만점·fail = 감점 ② `checkOriginality({sig, phash, texts}, ReferenceSig[], cfg) → OriginalityReport`(8.3.3 필드 + g5_max_run), G-11 게이트 입력 `{originality}` ③ extractor `phash64(rgb, w, h, channels) → 16자리 hex`(그레이스케일 DCT 64비트), `hamming64(a, b)` ④ `config/originality.json`은 08장 8.3.3 블록을 그대로 옮긴 파일(구현 단위에서 생성·잠금 대상 등록), `loadOriginalityConfig(root)` ⑤ 레퍼런스 temp 시드에 서명이 없어 픽스처는 합성 서명 10개와 하네스 렌더 1장으로 만든다. 변형 이미지는 worker 의존성 sharp로 만든다
 - 영향 범위: tests/acceptance/m3/gates.test.ts, packages/scoring, packages/extractor, config/originality.json
 - 되돌리기 비용: 중간(자체 잠금 전까지 낮음)
+
+## ASM-079 · M3 · gap · 2026-11-26T09:15Z
+- 질문: AC-04-20(QualityReport 저장·컬럼 일치)·AC-04-45(reliable·subjective)·AC-04-43(임계값 원천)을 M3에서 어떻게 검사할지. 후보 저장은 파이프라인(M5) 몫이고 M3에는 잡이 없음
+- 근거 탐색: 04장 4.10.4·4.10.7·4.12·4.19, 06장 candidates DDL(harmony_score·taste_score smallint, rank_score real, eligible), 07장 7.12.1 배정표(M3)
+- 선택: ① scoring `tasteMatch({v, t, sigma, reliable, subjective?}) → {tm, sFree|null, warnings[], weights, rawWeights, axisGaps[{axis,…}]}`(축 키 A1~A5, 벡터는 5원소 배열) ② `eligibility({gatesPass, harmony, tm, sFree, warn, fallback})`(경계 포함, 폴백은 G·H만), `rankScore({tm, harmony})`, `selectVisible(CandidateScore[]) → {v_true|v_fit|v_bal: id|null}`(동률은 patternSlot 1) ③ `QualityReportSchema`(zod, 4.10.7 + warnings[]), `qualityColumns(report) → {quality_report, harmony_score, taste_score, eligible, rank_score}`(반올림, rank는 eligible일 때 공식값). M3 AC-04-20은 이 유도 함수 일치로 보고, 실제 DB 저장·노출 100%는 M5 파이프라인 테스트가 같은 함수를 쓴다 ④ AC-04-43 리터럴 검사는 packages/scoring/src(주석 제외)에서 비교·곱·나눗셈 뒤 generation 임계값 숫자, 잠금 검사는 guard lockStage
+- 영향 범위: tests/acceptance/m3/scoring.test.ts, packages/scoring
+- 되돌리기 비용: 중간(자체 잠금 전까지 낮음)
