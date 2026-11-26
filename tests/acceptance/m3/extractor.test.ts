@@ -4,13 +4,8 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { extractL2, l1Distance, toL1 } from "../../../packages/extractor/src/index.js";
-import {
-  compileSpecs,
-  loadDesignData,
-  type TasteResult,
-} from "../../../packages/design-spec/src/index.js";
-import { anchorTaste } from "../../../packages/design-spec/src/stubs.js";
-import { compilePage, fallbackMockup } from "../../../packages/renderer/src/index.js";
+import { fallbackMockup, loadDesignData } from "../../../packages/design-spec/src/index.js";
+import { compilePage } from "../../../packages/renderer/src/index.js";
 import { openHarness, type Harness } from "../../../apps/worker/src/render/harness.js";
 import { evaluateCandidate } from "../../../apps/worker/src/quality/evaluate.js";
 import { createDbPort, q, type DbPort } from "../../../packages/db/src/index.js";
@@ -51,13 +46,8 @@ function anchorPage(typeId: string): {
     }
   ).items.find((t) => t.id === typeId);
   const purpose = type?.goodPurposes[0] ?? "saas";
-  const taste: TasteResult = anchorTaste(typeId, data);
-  const specs = compileSpecs(
-    { taste, purpose: purpose as never, brand: null, jobSeed: `anchor-${typeId}` },
-    data,
-  );
-  const spec = specs.v_true;
-  const { tree } = fallbackMockup(typeId, purpose, "v_true", data, { spec });
+  // fallbackMockup(명세 생략) = anchorTaste(typeId) v_true 명세 + 표준 트리(design-spec stubs)
+  const { spec, tree } = fallbackMockup(typeId, purpose, "v_true", data);
   const { html } = compilePage(spec, tree, data);
   return { spec, tree, html, purpose };
 }
