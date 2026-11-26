@@ -1597,6 +1597,78 @@
       "lockedBy": "agent",
       "lockedAt": "2026-11-26T14:08:55Z",
       "commit": "c26b11c"
+    },
+    "packages/scoring/fixtures/conflicts/CF-01/fail-1.json": {
+      "sha256": "7835b256a2ee0f09172cf6d58fd229cf38e34c3c36dde544a0766f9b25a64c49",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:25:15Z",
+      "commit": "68f6065"
+    },
+    "packages/scoring/fixtures/conflicts/CF-02/fail-1.json": {
+      "sha256": "a42c5e820a792d74712c31faba93df7993647994b9e6edea8e259f4ee145fb29",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:25:15Z",
+      "commit": "68f6065"
+    },
+    "packages/scoring/fixtures/conflicts/CF-03/fail-1.json": {
+      "sha256": "661ad870f957a692c61ce912b4818e724fe7e4978bc3e51c0a93805275d8528c",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:25:15Z",
+      "commit": "68f6065"
+    },
+    "packages/scoring/fixtures/conflicts/CF-04/fail-1.json": {
+      "sha256": "4a5d31ea26f36b88eab9a8e4183fea7dc5c6092eab28178b5593745024d65859",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:25:15Z",
+      "commit": "68f6065"
+    },
+    "packages/scoring/fixtures/conflicts/CF-05/fail-1.json": {
+      "sha256": "183e58f4da50b958879e321185089ca017e3fcc57df31629a66789528660c80c",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:25:15Z",
+      "commit": "68f6065"
+    },
+    "packages/scoring/fixtures/conflicts/CF-06/fail-1.json": {
+      "sha256": "0fe7c5b95ec172c87af05c4416f9124c965b678ee9f4da9269412fc45b41daea",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:25:15Z",
+      "commit": "68f6065"
+    },
+    "packages/scoring/fixtures/conflicts/CF-07/fail-1.json": {
+      "sha256": "6102970c74d8ca4e0c8f4d6e4496f5651672dd384dbdf5d5a76fe39fac8d94b2",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:25:15Z",
+      "commit": "68f6065"
+    },
+    "packages/scoring/fixtures/conflicts/CF-08/fail-1.json": {
+      "sha256": "b6b290432c5747870e1a81514aa0f33774cb980bcd4102c3755d9ea380bd4eda",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:25:15Z",
+      "commit": "68f6065"
+    },
+    "packages/scoring/fixtures/conflicts/CF-09/fail-1.json": {
+      "sha256": "43f8c09989eec364662aa180832a1dfe6329342dc0584c4604e221ccb460f91d",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:25:15Z",
+      "commit": "68f6065"
+    },
+    "packages/scoring/fixtures/conflicts/CF-10/fail-1.json": {
+      "sha256": "917448a3170dc0932a4a8a17e1b9a2851f5e0a0fe2573c8d74ce90e8a65527dc",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:25:15Z",
+      "commit": "68f6065"
+    },
+    "packages/scoring/fixtures/conflicts/CF-11/fail-1.json": {
+      "sha256": "9fd52cf59478b99a639591ff5921442270af946c703d49f92b34e28b4752323d",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:25:15Z",
+      "commit": "68f6065"
+    },
+    "packages/scoring/fixtures/conflicts/CF-12/fail-1.json": {
+      "sha256": "319239600c86437fb084987e1823db8d620cdc1d58bded49414abd791f699641",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:25:15Z",
+      "commit": "68f6065"
     }
   }
 }
