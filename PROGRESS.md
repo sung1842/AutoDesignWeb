@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T19:43Z}
+- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T19:50Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
@@ -159,6 +159,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 04:50 | e2e quiz 폭 측정 안정화(2회 11/11)
 - 2026-11-27 04:43 | M4-01h contract.test 4/4, qa:trace ≤M4 191/191, audit 리터럴 0. 다음: 단일 test(acc)·자체 잠금
 - 2026-11-27 04:40 | M4 traceability 190/191, BLK-024·025 등록. 남은 AC-06-08 계약 테스트
 - 2026-11-27 04:40 | results.test 결정화(AC-02-28 단일 쌍), 응답 후 다음 문항 부족 503

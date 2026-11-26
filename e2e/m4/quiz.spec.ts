@@ -81,17 +81,16 @@ test("AC-01-07 한 문항 이미지 표시 시작 시각 차이 ≤ 16ms", async
 test("AC-01-08 360px에서 1·2단계 카드 표시 폭 ≥ 328px", async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 760 });
   await start(page);
-  const widthNow = async () => {
-    await expect(page.locator(".svc-card").first()).toBeVisible();
-    return (await page.locator(".svc-card").first().boundingBox())?.width ?? 0;
-  };
-  expect(await widthNow()).toBeGreaterThanOrEqual(328);
+  const widthNow = () =>
+    expect
+      .poll(async () => (await page.locator(".svc-card").first().boundingBox())?.width ?? 0)
+      .toBeGreaterThanOrEqual(328);
+  await widthNow();
   let n = 0;
   while ((await page.getByTestId("question").getAttribute("data-kind")) !== "ab") {
     if ((await answerOne(page, n++)) === "done") break;
   }
-  if ((await page.getByTestId("question").getAttribute("data-kind")) === "ab")
-    expect(await widthNow()).toBeGreaterThanOrEqual(328);
+  if ((await page.getByTestId("question").getAttribute("data-kind")) === "ab") await widthNow();
 });
 
 test("AC-01-10 문항 6 응답 후 탭 닫기 → S01 배너 16문항 중 6문항 완료 → 이어서 하기 = 문항 7", async ({
@@ -175,18 +174,18 @@ test("AC-01-55 ② 768~1366: 카드 폭 ≥ 480·layoutMode = 1.4.3 표", async 
     const page = await ctx.newPage();
     await start(page);
     await expect(page.getByTestId("question")).toHaveAttribute("data-layout", c.stage1);
-    await expect(page.locator(".svc-card").first()).toBeVisible();
-    expect(
-      (await page.locator(".svc-card").first().boundingBox())?.width ?? 0,
-    ).toBeGreaterThanOrEqual(480);
+    // 문항 전환 직후 카드가 다시 그려질 수 있어 폭이 정해질 때까지 기다린다
+    await expect
+      .poll(async () => (await page.locator(".svc-card").first().boundingBox())?.width ?? 0)
+      .toBeGreaterThanOrEqual(480);
     let n = 0;
     while ((await page.getByTestId("question").getAttribute("data-kind")) !== "ab")
       if ((await answerOne(page, n++)) === "done") break;
     await expect(page.getByTestId("question")).toHaveAttribute("data-layout", c.stage2);
-    await expect(page.locator(".svc-card").first()).toBeVisible();
-    expect(
-      (await page.locator(".svc-card").first().boundingBox())?.width ?? 0,
-    ).toBeGreaterThanOrEqual(480);
+    // 문항 전환 직후 카드가 다시 그려질 수 있어 폭이 정해질 때까지 기다린다
+    await expect
+      .poll(async () => (await page.locator(".svc-card").first().boundingBox())?.width ?? 0)
+      .toBeGreaterThanOrEqual(480);
     await ctx.close();
   }
 });
