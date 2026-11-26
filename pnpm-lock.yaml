@@ -266,6 +266,9 @@ importers:
 
   packages/mail:
     dependencies:
+      '@tastefit/config':
+        specifier: workspace:^
+        version: link:../config
       '@tastefit/db':
         specifier: workspace:^
         version: link:../db

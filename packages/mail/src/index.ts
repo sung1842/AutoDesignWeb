@@ -1,6 +1,8 @@
 // MailPort(06장 6.4.x 메일 템플릿, 6.13.1). 고정 문구는 templates/<id>.ko.md, 사용자 입력 본문 삽입 0(08장 8.9.5).
 // 템플릿 형식(ASM-104): 첫 줄 `subject: …`, `---` 줄, 본문. 변수는 {{name}} 자리에만 들어간다.
 import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { findRepoRoot } from "@tastefit/config";
 import { q, type DbPort } from "@tastefit/db";
 
 export const PACKAGE_NAME = "@tastefit/mail";
@@ -19,7 +21,8 @@ const cache = new Map<string, { subject: string; body: string }>();
 function load(id: MailTemplate): { subject: string; body: string } {
   const hit = cache.get(id);
   if (hit) return hit;
-  const raw = readFileSync(new URL(`../templates/${id}.ko.md`, import.meta.url), "utf8");
+  // 번들러(Next)는 import.meta.url 상대 경로를 보존하지 않으므로 저장소 루트 기준으로 읽는다(layout-schema와 같은 방식)
+  const raw = readFileSync(join(findRepoRoot(), "packages/mail/templates", `${id}.ko.md`), "utf8");
   const m = /^subject:\s*(.+)\n---\n([\s\S]*)$/.exec(raw);
   if (!m?.[1] || m[2] === undefined) throw new Error(`mail: 템플릿 형식 오류 ${id}`);
   const t = { subject: m[1].trim(), body: m[2] };
