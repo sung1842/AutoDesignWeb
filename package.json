@@ -42,7 +42,8 @@
     "fixtures:layouts": "tsx scripts/data/fixtures-layouts.ts",
     "eval:extractor:selfcheck": "tsx scripts/eval/extractor-selfcheck.ts",
     "eval:extractor": "tsx scripts/eval/extractor-eval.ts",
-    "presets:lint-matrix": "tsx scripts/data/presets-lint-matrix.ts"
+    "presets:lint-matrix": "tsx scripts/data/presets-lint-matrix.ts",
+    "sim:survey": "tsx scripts/sim/survey.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

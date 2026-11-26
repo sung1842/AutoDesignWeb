@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T13:45Z, since: 2026-11-26T16:15Z}
+- lock: {owner: 2026-11-26T13:45Z, since: 2026-11-26T16:22Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
@@ -144,7 +144,7 @@
 - M4 계획(9.4.6, AC: 00-02·03·11·12, 01-04~21·55·57, 02-02~11·13~31·33~37, 03-12~14, 05-10·23, 06-08·11·12·46, 07-08·20, 09-17. 읽을 장은 CLAUDE.md 구현 규칙 3절):
   - [ ] 01 M4 수용 테스트(tests/acceptance/m4, AD-031 방식): [x] a diagnosis 엔진(02장 2.5~2.7·2.12, ③⑤⑥, ASM-090) [ ] b sim:survey 게이트·튜닝 규칙(④, 2.16) [ ] c survey:build 산출·멱등·x_card(①②③) [ ] d 진단 API·익명 세션·p95(⑦, 06장) [ ] e 이벤트 API·레지스트리·identity_links(⑫, 00장 8.3) [ ] f 진단·결과 화면 E2E(⑧⑨⑩, 01장) [ ] g build-answers·골든 잠금(⑪) → qa:trace --audit·guard:patterns·단일 test(acc)·자체 잠금
   - [x] 02 packages/diagnosis 사후분포·1-step 갱신·문항 선택·종료·유형 판정·κ·pickNotice(diagnosis.test 24/24, AC-02-06 BLK-020)
-  - [ ] 03 sim:survey(1,000명, 공통 난수 쌍체·부트스트랩)·튜닝 절차(seeds.dev, diagnosis-tuned.json)
+  - [ ] 03 sim:survey(1,000명, 공통 난수 쌍체·부트스트랩)·튜닝 절차: [x] 시뮬레이터·판정·튜너·CLI(합성 dev: RMSE 0.1215·앵커 0.930만 미달, ASM-091) [ ] x_card gate·튜닝 실행(04 뒤)
   - [ ] 04 survey:build(카드 렌더→x_card→게이트→WebP→local Storage→survey_items upsert, manifest.lock)
   - [ ] 05 진단 API·익명 쿠키 세션(D-41)·재개·뒤로가기
   - [ ] 06 POST /api/events·이벤트 레지스트리 zod·identity_links
@@ -159,6 +159,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 01:22 | M4-03 sim:survey 시뮬레이터·튜너. 합성 dev 미달 2(RMSE 0.1215/0.12, 앵커 0.930/0.95)
 - 2026-11-27 01:15 | M4-02 진단 엔진(updateMNL·nearestType·stage1Score·세션 엔진). 재생 순서 기준 BLK-020
 - 2026-11-27 01:11 | M4-01a 진단 엔진 수용 테스트 WIP(ASM-090)
 - 2026-11-27 01:08 | M4 계획 10단위(9.4.6)
