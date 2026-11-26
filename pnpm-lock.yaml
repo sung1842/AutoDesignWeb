@@ -173,7 +173,14 @@ importers:
         specifier: workspace:^
         version: link:../taxonomy
 
-  packages/diagnosis: {}
+  packages/diagnosis:
+    dependencies:
+      '@tastefit/config':
+        specifier: workspace:^
+        version: link:../config
+      '@tastefit/design-spec':
+        specifier: workspace:^
+        version: link:../design-spec
 
   packages/exporter: {}
 
