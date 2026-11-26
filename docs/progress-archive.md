@@ -194,3 +194,4 @@
 - 2026-11-26 02:20 | M2-09c G-03 비텍스트 대비(폴백 72×2 게이트 6종 위반 0), ASM-057 → 다음: M2-10 render 잡
 - 2026-11-26 02:13 | M2-09b headlineLines·compileInBrowser(브라우저·Node SHA 동일), ASM-056 → 다음: 09c G-03·G-12
 - 2026-11-26 01:43 | M2-09a 렌더 하네스·G-02/04/05/06/07(폴백 72×2 통과)·inverse 버튼·이미지 위 텍스트 판, ASM-055 → 다음: 09b
+- 2026-11-26 02:26 | M2-10 render 잡(뷰포트 5 PNG·render_blocked_requests)·하네스 JS off·글꼴 /fonts/, ASM-058 → 다음: M2-11 미리보기

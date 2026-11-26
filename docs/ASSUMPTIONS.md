@@ -495,3 +495,10 @@
 - 선택: ① 루트 `<html data-signature data-signature-intensity>`, 적용 블록(spec.signature.apply_to) 섹션·nav·footer에 `data-sig="on"` ② 정적 층 `signatures.css`(층 맨 끝, 리터럴 0)에 SIG-01~04·06~08·10~12 규칙 ③ 요소형: SIG-06 마키 띠(apply_to 첫 블록이 hero면 그 뒤, cta면 그 앞, 문구 = 브랜드, aria-hidden, reduced-motion 정지), SIG-07 인라인 SVG feTurbulence 그레인(fixed, z -1, α 0.05, 배경색 섹션 background none), SIG-11 aria-hidden 아웃라인 브랜드 텍스트(hero·footer, 채움 = 섹션 배경색) ④ SIG-09 자간은 역할 단계 토큰 × 비율(라틴 0.08·한글 0.02, 3.2.4 우선) 생성 CSS, 라틴 판정 = eyebrow·nav.link 텍스트가 ASCII만이고 문자 포함 → `data-script="latin"` + 대문자 ⑤ SIG-10 = grayscale + primary screen 겹침, SIG-12 = md 이상 이미지 오프셋 그림자(space-4)·상단 여백 ⑥ 시그니처 없는 명세(검사용 페이지)는 층이 꺼진다
 - 영향 범위: packages/renderer(signature.ts·css/signatures.ts·compile.ts·sources.ts)
 - 되돌리기 비용: 낮음
+
+## ASM-070 · M2 · gap · 2026-11-26T00:50Z
+- 질문: 카드 그림자 단계(3.1.8 S-33)와 radius 역할(3.1.7)을 renderer가 어떻게 따르나(기존 카드 level-1 고정, 카드 lg·미디어 md로 표와 뒤바뀜)
+- 근거 탐색: 03장 3.1.7 표(radius.md = 버튼·카드, radius.lg = 이미지·큰 패널), 3.1.8(카드 = depth.shadow_level, 강조·hover +1 최대 2, 3은 떠 있는 레이어), CM-02
+- 선택: ① 루트 `<html data-shadow-level="0|1|2">`(l2 값이 0~2일 때만) ② components.css: level 0이면 카드 level-0, 2면 level-2, `data-featured` 카드는 +1, level 0 hover는 level-1 ③ `.tf-card` radius-md, `.tf-media` radius-lg ④ B18 temp 정규화기 재생성(`seed:temp --corpus`)
+- 영향 범위: packages/renderer(compile.ts·css/components.ts), data/normalizers/2026-S0.json(temp)
+- 되돌리기 비용: 낮음

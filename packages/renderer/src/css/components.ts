@@ -249,7 +249,7 @@ export const CARD_CSS = `/* C11 Card (링크 카드 hover = depth.style별 1종,
   gap: var(--tf-space-4);
   padding: var(--tf-space-card);
   border: var(--tf-border-card);
-  border-radius: var(--tf-radius-lg);
+  border-radius: var(--tf-radius-md); /* 3.1.7 radius.md = 버튼·카드 */
   background: var(--tf-color-bg);
   box-shadow: var(--tf-shadow-level-1);
   color: inherit;
@@ -265,6 +265,16 @@ a.tf-card:focus-visible { ${FOCUS} }
 [data-depth="subtle"] a.tf-card:hover, [data-depth="layered"] a.tf-card:hover, [data-depth="glass"] a.tf-card:hover {
   box-shadow: var(--tf-shadow-level-2);
 }
+/* 3.1.8(S-33): 카드 기본 = depth.shadow_level, 강조 카드·hover = +1(최대 2) */
+[data-shadow-level="0"] .tf-card { box-shadow: var(--tf-shadow-level-0); }
+[data-shadow-level="2"] .tf-card { box-shadow: var(--tf-shadow-level-2); }
+.tf-card[data-featured="true"] { box-shadow: var(--tf-shadow-level-2); }
+[data-shadow-level="0"] .tf-card[data-featured="true"] { box-shadow: var(--tf-shadow-level-1); }
+[data-shadow-level="0"][data-depth="subtle"] a.tf-card:hover,
+[data-shadow-level="0"][data-depth="layered"] a.tf-card:hover,
+[data-shadow-level="0"][data-depth="glass"] a.tf-card:hover {
+  box-shadow: var(--tf-shadow-level-1);
+}
 [data-depth="brutal-offset"] a.tf-card:hover {
   transform: translate(calc(-1 * var(--tf-border-width-thick)), calc(-1 * var(--tf-border-width-thick)));
   box-shadow: var(--tf-shadow-level-3);
@@ -272,7 +282,7 @@ a.tf-card:focus-visible { ${FOCUS} }
 `;
 
 export const MEDIA_CSS = `/* C12 MediaFrame · C13 Avatar */
-.tf-media { position: relative; overflow: hidden; border-radius: var(--tf-radius-md); background: var(--tf-color-surface); }
+.tf-media { position: relative; overflow: hidden; border-radius: var(--tf-radius-lg); /* 3.1.7 radius.lg = 이미지 */ background: var(--tf-color-surface); }
 .tf-media--1-1 { aspect-ratio: 1 / 1; }
 .tf-media--4-5 { aspect-ratio: 4 / 5; }
 .tf-media--3-2 { aspect-ratio: 3 / 2; }

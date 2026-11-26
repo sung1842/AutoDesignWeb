@@ -24,6 +24,9 @@ import {
   type SignatureLike,
 } from "./signature.js";
 
+/** 3.1.8 페이지 선택 카드 그림자 단계(3은 떠 있는 레이어 예약). */
+const CARD_SHADOW_LEVELS = new Set(["0", "1", "2"]);
+
 /** 08장 8.x AI 고지(CM-16). */
 export const GENERATOR_META = "TasteFit (AI-generated design draft)";
 export const GENERATOR_COMMENT = "<!-- Generated with TasteFit (AI). See AI_NOTICE.md -->";
@@ -519,6 +522,9 @@ export function documentHtml(
       ? textRoleCss(data.textRoles, { smallPx: stepPx(spec.tokens, "small") })
       : undefined);
   const depth = typeof spec.l2["depth.style"] === "string" ? spec.l2["depth.style"] : null;
+  // 3.1.8(S-33): 카드 그림자 단계 = depth.shadow_level(0~2, 3은 떠 있는 레이어 예약). ASM-070
+  const sl = String(spec.l2["depth.shadow_level"] ?? "");
+  const shadowLevel = CARD_SHADOW_LEVELS.has(sl) ? sl : null;
   // 폰트 계획(3.7.5 페이지 서브셋, CM-09). 글자 집합 = 본문 텍스트 + 제목(brand)
   const plan = fontPlan({
     pairingId: String(spec.l2["type.pairing_id"] ?? ""),
@@ -548,6 +554,7 @@ export function documentHtml(
     lang: "ko",
     "data-theme": spec.theme,
     "data-depth": depth,
+    "data-shadow-level": shadowLevel,
     "data-inverse-button": inverseMode(spec.tokens),
     "data-type": spec.type_id,
     "data-spec-id": spec.spec_id,
