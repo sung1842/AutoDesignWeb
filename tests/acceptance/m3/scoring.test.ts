@@ -261,7 +261,8 @@ describe("AC-04-20 QualityReport ↔ candidates 컬럼", () => {
     ).not.toThrow();
   });
   it("필수 필드 누락은 스키마 오류", () => {
-    const { originality: _o, ...rest } = report;
+    const rest: Record<string, unknown> = { ...report };
+    delete rest.originality;
     expect(QualityReportSchema.safeParse(rest).success).toBe(false);
     expect(QualityReportSchema.safeParse({ ...report, harmony: 101 }).success).toBe(false);
   });

@@ -562,3 +562,10 @@
 - 선택: ① scoring `tasteMatch({v, t, sigma, reliable, subjective?}) → {tm, sFree|null, warnings[], weights, rawWeights, axisGaps[{axis,…}]}`(축 키 A1~A5, 벡터는 5원소 배열) ② `eligibility({gatesPass, harmony, tm, sFree, warn, fallback})`(경계 포함, 폴백은 G·H만), `rankScore({tm, harmony})`, `selectVisible(CandidateScore[]) → {v_true|v_fit|v_bal: id|null}`(동률은 patternSlot 1) ③ `QualityReportSchema`(zod, 4.10.7 + warnings[]), `qualityColumns(report) → {quality_report, harmony_score, taste_score, eligible, rank_score}`(반올림, rank는 eligible일 때 공식값). M3 AC-04-20은 이 유도 함수 일치로 보고, 실제 DB 저장·노출 100%는 M5 파이프라인 테스트가 같은 함수를 쓴다 ④ AC-04-43 리터럴 검사는 packages/scoring/src(주석 제외)에서 비교·곱·나눗셈 뒤 generation 임계값 숫자, 잠금 검사는 guard lockStage
 - 영향 범위: tests/acceptance/m3/scoring.test.ts, packages/scoring
 - 되돌리기 비용: 중간(자체 잠금 전까지 낮음)
+
+## ASM-080 · M3 · gap · 2026-11-26T09:45Z
+- 질문: 9.4.5 ③④⑤·AC-05-12·14·15·22·24·25의 "프리셋 앵커 렌더"가 어떤 페이지인지, extractL2의 형태, 후보 1개 평가 함수, 왕복 보고 형식이 장에 없음
+- 근거 탐색: 05장 5.5.3~5.5.6·5.8·5.9, 03장 3.4.7, 기존 extractor(extractFeatures·toL1)·하네스 extractL1·design-spec anchorTaste, 06장 normalizers DDL(트리거 주석만 있음)
+- 선택: ① 앵커 렌더 = `anchorTaste(T)`(μ = predictL1(기본 L2))로 compileSpecs한 v_true 명세 + fallbackMockup 표준 트리, 용도 = types.json goodPurposes[0], 1280 ② `extractL2(page, opts)` = 5.5.3 원시 특징(기존 extractFeatures의 공개 이름), `toL1(l2, normalizer)`, 하네스에 `extractOptions()`·`normalizer()` 노출(계약 확장) ③ `l1Distance({version, vector}, {version, vector})` 버전 불일치 예외 ④ worker `evaluateCandidate(harness, {spec, tree, html}, data) → {viewports[], report: QualityReport}`(렌더 5뷰포트 + 추출 + 린트 + 게이트) ⑤ `eval:extractor:selfcheck --json <path>` 보고 `{presets[{typeId, intended, measured, radiusErrPx, bgDeltaE, accentDeltaE, bodyFontMatch}]}`, `eval:extractor` → reports/extractor_eval.md + .json `{normalizer, axes[{axis, rho, mae}]}` ⑥ released 정규화기 UPDATE 거부 트리거는 새 마이그레이션으로 추가(6.3.3 표의 주석 "05장 5.3.7"을 구현) ⑦ AC-05-15는 사람 라벨이 없으면 실패가 정상이고 BLOCKED로 넘긴다(temp 라벨로 합격 처리하지 않음)
+- 영향 범위: tests/acceptance/m3/extractor.test.ts, packages/extractor, apps/worker(harness·quality/evaluate), scripts(eval), packages/db 마이그레이션
+- 되돌리기 비용: 중간(자체 잠금 전까지 낮음)
