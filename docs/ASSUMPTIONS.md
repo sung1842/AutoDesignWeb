@@ -667,3 +667,10 @@
 - 선택: ① 군집은 05장 5.5.1 colorClusters(320px 축소) 결과를 HEX로 바꿔 중복 제거, 3개 미만이면 마지막 색 반복 ② sharp webp quality 80/78, effort 4, smartSubsample false ③ 앵커 ID = `ANC-{A}-{000|025|050|075|100}`, 대체 텍스트 "기준 이미지 {A}: {축 서술}"(사용자 비노출), DB axis·level은 null ④ ab_image level = 대상 축 수준, ab_pair level = null·axis = 대상 축 ⑤ 촬영 시 애니메이션 정지 CSS는 문서에 삽입(JS off에서 addStyleTag 대기 불가)
 - 영향 범위: apps/worker/src/render/survey.ts·harness.ts surveyShot, scripts/survey/build.ts
 - 되돌리기 비용: 낮음
+
+## ASM-095 · M4 · gap · 2026-11-26T18:45Z
+- 질문: 진단 API를 수용 테스트에서 어떻게 호출할지(Next 서버 기동은 느리고 라우트 매니페스트 수집은 AC-06-08 M5 이후), 서버 처리 시간 측정 지점, 테스트용 활성 자극물 픽스처(실제 survey:build 산출은 대부분 draft)
+- 근거 탐색: 06장 6.2.2·6.4.1~6.4.4·6.5.1, 09장 9.4.6 ⑤⑥⑦, 07장 7.12.1 SC-04
+- 선택: ① 라우트 로직은 `apps/web/src/server/api.ts`의 `handle(req: Request, deps: {db, webOrigin, now?}) → Response`(표준 Fetch API), Next 라우트 파일(`app/api/**/route.ts`)은 이것에 위임만 한다 → 수용 테스트는 in-process 호출 ② 서버 처리 시간 = 응답 헤더 `Server-Timing: app;dur=<ms>`(입력 파싱~DB 커밋), 관측 시간 = 테스트가 잰 handle 왕복. HTTP 경유 관측은 M4 E2E(⑧)에서 ③ `seedSurveyFixture(db, {activeCard?})`(packages/db testing) = card_plan·ab_plan 전부를 x = 계획 L1·더미 자산으로 survey_items에 upsert(active, 필터 밖 카드는 draft) ④ 계약 zod는 `@tastefit/api-contract`의 `SurveyViewSchema`·`ResultViewSchema`·`SurveyItemsViewSchema`(6.4.3 타입 그대로) ⑤ 문항 kind 매핑: 엔진 four → pick4
+- 영향 범위: apps/web/src/server, packages/api-contract, packages/db/src/testing, tests/acceptance/m4/api.test.ts
+- 되돌리기 비용: 중간
