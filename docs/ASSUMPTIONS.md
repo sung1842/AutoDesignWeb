@@ -716,3 +716,10 @@
 - 선택: ① `ResultView.similarSites[].matchAxes`(축 키 2개, 표시 시점 계산)를 추가 ② 품질 감시 = 세션 완료 시 `refreshPairStats`(같은 시즌 ab 응답 집계 → stats.exposures·cant_tell_rate, 조건 충족 시 flag=low_discrimination·flagged_at). 운영자 복원 flag=restored는 다시 표시하지 않음 ③ 제외는 flagged_at 이후 시작한 세션부터(진행 중 세션의 문항 풀을 바꾸면 응답 로그 재생이 달라짐)
 - 영향 범위: apps/web/src/server/survey.ts, packages/api-contract
 - 되돌리기 비용: 낮음
+
+## ASM-102 · M4 · gap · 2026-11-26T22:10Z
+- 질문: AC-06-08(6.4.3 모든 라우트 스키마 + 라우트마다 정상·오류 계약 테스트, 라우트는 빌드 매니페스트에서 수집)을 M4에서 어떻게 만족하는지(대부분 라우트는 M5~M7 구현)
+- 근거 탐색: 06장 6.4.3·6.4.6, 07장 7.12.1 배정표(AC-06-08 = M4)
+- 선택: ① `@tastefit/api-contract` ROUTES = 6.4.3 표 51개 키 전부(구현 라우트는 req·res 스키마, 미구현은 담당 마일스톤만) ② 빌드된 라우트 = `apps/web/.next/server/app-paths-manifest.json`(없으면 app/api의 route.ts, 같은 원천)에서 수집 × route.ts가 내보내는 메서드, `/api/_storage`(local 전용) 제외 ③ 빌드된 라우트마다 스키마와 정상·오류 사례가 없으면 FAIL → 이후 마일스톤에서 라우트를 추가하면 같은 테스트가 계약을 요구한다 ④ health는 route 모듈 GET 직접 호출(200 또는 503 둘 다 계약 응답), 오류 사례 = 다른 메서드 미노출(Next가 405)
+- 영향 범위: packages/api-contract/src/routes.ts, tests/acceptance/m4/contract.test.ts
+- 되돌리기 비용: 낮음

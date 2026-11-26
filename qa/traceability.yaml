@@ -194,3 +194,4 @@ AC-01-55: [tests/acceptance/m4/ui.test.ts#"AC-01-04 · AC-01-05 · AC-01-06 · A
 AC-01-20: [tests/acceptance/m4/blocked.test.ts#"AC-01-20 공개 결과 화면 /r/[shareId]와 GET /api/share/:shareId가 있다"]
 AC-09-17: [tests/acceptance/m4/golden-answers.test.ts#"9.4.6 ⑪ · AC-07-20 · AC-09-17 build-answers"]
 AC-09-19: [tests/acceptance/m4/blocked.test.ts#"AC-09-19 verify:m4 계획에 survey-items-count(blockable) 단계가 있다"]
+AC-06-08: [tests/acceptance/m4/contract.test.ts#"AC-06-08 ① api-contract 레지스트리 = 06장 6.4.3 라우트 51개(누락·추가 0)", tests/acceptance/m4/contract.test.ts#"AC-06-08 ② 빌드된 라우트마다 레지스트리 응답 스키마(본문 메서드는 요청 스키마)와 정상·오류 사례가 있다", tests/acceptance/m4/contract.test.ts#"AC-06-08 ③ 라우트별 정상 1건(응답 스키마 parse) + 오류 1건(ErrorBody parse)", tests/acceptance/m4/contract.test.ts#"AC-06-08 ④ GET /api/health 정상 응답 스키마, 다른 메서드는 내보내지 않음(프레임워크 405)"]
