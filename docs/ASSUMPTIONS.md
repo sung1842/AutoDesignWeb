@@ -577,42 +577,42 @@
 - 영향 범위: tests/acceptance/m3/golden.test.ts, design-spec, linter, llm, scoring, worker, scripts
 - 되돌리기 비용: 중간(자체 잠금 전까지 낮음)
 
-## ASM-082 · M3 · gap · 2026-11-26T14:40Z
+## ASM-082 · M3 · gap · 2026-11-26T14:00Z
 - 질문: AIL 규칙의 D·C·T 입력 형태(카피 역할·스냅숏 필드)와 표의 모호한 조건(AIL-04 pill 판정, AIL-12 항목 유형, AIL-14 고유명사, AIL-16 기본값 목록 위치)이 장에 없음
 - 근거 탐색: 04장 4.13.1·4.13.2·4.6.3 CP-10·4.6.4, 03장 3.1.7 radius 표·theme.css 초기화 목록, blocks.json(align·icon_grid), data/taxonomy/harmony.json(defaultsBlacklist 없음)
 - 선택: ① 카피 = `CopyItem{role, text, source?: llm|user, style?}[]`(role 예 hero.headline·hero.eyebrow·button·proof.quote·proof.author) ② AIL-04 pill = eyebrow style "pill" 또는 spec `shape.radius_family=pill`(태그 999) ③ AIL-12 항목 유형 = 숫자 포함→number, 인용부호 시작→quote, 그 밖→text, 섹션 image 슬롯→image 1칸 ④ AIL-14 키워드 = brand keywords·keyPoints·tags·properNouns·location, 고유명사 = 대문자 시작 라틴 단어 ⑤ AIL-16 목록은 harmony.json에 키가 없어 `packages/linter/data/defaults.json`(03장 목록 + 표 예시)에 둔다. 서체(Inter 등)는 AIL-03이 맡는다 ⑥ AIL-13 사용자 원문 슬롯의 사용자 표현은 4.6.4대로 warn(메타 심각도는 표대로 error) ⑦ D 탐지 상수는 rule-params.json에 추가 ⑧ 규칙이 받는 입력은 그 규칙 단계의 입력뿐(spec은 톤·프리셋 문맥으로 항상 전달)
 - 영향 범위: packages/linter(rules·data), apps/worker harness(lintSnapshot)
 - 되돌리기 비용: 낮음
 
-## ASM-083 · M3 · gap · 2026-11-26T15:10Z
+## ASM-083 · M3 · gap · 2026-11-26T14:20Z
 - 질문: 하네스 lintSnapshot의 스냅숏 필드와 카드·버튼·배지 판정 기준, B15 예시를 어떻게 만들지(seed:temp 골격과의 관계)가 장에 없음
 - 근거 탐색: 04장 4.13.1·4.13.2, 03장 3.8.1(헤드라인 줄), 기존 하네스 headlineLines·features, seed-config genLinterExamples 골격(ASM-021)
 - 선택: ① 스냅숏 = 요소별 computed style(본문 하위 전 요소, svg 내부 제외) + 아이콘 카드 행(자식 전부가 ≤48px svg+제목+본문) + :root custom property 원문 + 헤드라인 줄(3.8.1과 같은 방법) + 글래스 뒤 휘도 표준편차(요소를 숨긴 스크린샷, 0–255) + spec.tokens 허용 집합(색 hex·radius·space px·스텝별 expectedSize) ② 카드 = data-card·article·클래스 card/__item/__cell, 버튼 = button·role=button·btn 클래스·cta 역할, 배지 = eyebrow·badge 역할·badge/pill/tag 클래스, 장식 = aria-hidden 또는 글자 없음, margin:auto = 좌우 여백 같고 0보다 큼 ③ B15 예시는 seed:temp가 scripts/data/linter-examples.ts 정의로 만든다(골격 교체, provenance temp). 손으로 쓴 최소 HTML·JSON이며 실제 렌더러 출력 검증은 골든·폴백 단위가 맡는다
 - 영향 범위: apps/worker/src/render/lint-snapshot.ts, scripts/data, data/linter/examples
 - 되돌리기 비용: 낮음
 
-## ASM-084 · M3 · gap · 2026-11-26T15:50Z
+## ASM-084 · M3 · gap · 2026-11-26T14:20Z
 - 질문: 게이트 순수 함수의 입력 형태(G-01·G-08~G-11·G-13), G-13이 쓸 abuse 판정 함수(08장 8.9.2 `packages/compliance/abuse.ts`)가 없음, ΔE2000을 OKLab 값에 어떻게 적용할지
 - 근거 탐색: 04장 4.10.2·4.10.6, 08장 8.3.2·8.3.3·8.9.2, 기존 scoring evaluateGates·harmonyScore, config/high_risk_brands.json·prohibited_categories.json
 - 선택: ① 측정 게이트(G-02~07·12) 입력 = PageMeasure 1개 또는 `{measures: []}`, G-01 = `{spec, tree}`(treeLint의 G-01·LT-01~04·09·10 error), G-08 = `{axe: [{vw, violations[{id, impact}]}]}`(serious·critical 차단), G-09 = `{lint}`(error 수 > generation.lint.errorMax), G-10 = `{brandName, nav[], hero[], footer[]}`(NFC 포함), G-11 = `{originality}`, G-13 = `{texts}` ② `judgeAbuse(texts)`: 8.9.2 정규화 후 canonical·alias(길이 ≥ 3) 포함·도메인 포함 = high_risk, 피싱 문구 11개 = phishing_term, 금지 업종 키워드 = prohibited_category. 편집 거리(c)는 브랜드명 단독 판정(브리프)에서 M5에 추가 ③ ΔE2000 = OKLab → 선형 sRGB → XYZ(D65) → CIELAB 후 CIEDE2000 ④ G3 비교 대상이 없으면 min_phash_distance = 64(비트 수), 참조 id null ⑤ H 항목 함수 입력 = `{spec, tree, render?, violations?, conflicts?}` → harmonyScore의 해당 항목 {score, max, measured} ⑥ 픽스처는 scripts/data/gen-scoring-fixtures.ts가 결정적으로 만들고 자체 잠금
 - 영향 범위: packages/scoring(gate-fns·originality·fixtures), packages/compliance, packages/extractor(phash), config/originality.json
 - 되돌리기 비용: 낮음
 
-## ASM-085 · M3 · gap · 2026-11-26T16:50Z
+## ASM-085 · M3 · gap · 2026-11-26T14:20Z
 - 질문: evaluateCandidate의 구성(뷰포트별 측정·린트 입력·G-08 미실행 처리·G-10 브랜드명 출처·원본 유사도 비교 집합)과 자기검증 토큰 수준 판정 방법이 장에 없음
 - 근거 탐색: 04장 4.10.1~4.10.7·4.13, 05장 5.9, 08장 8.3.1, 하네스 measure·features·lintSnapshot
 - 선택: ① 측정 = generation.renderViewports 5개 measure, L1 = 1280 features→toL1, 린트 = S·C·T(spec·트리 카피·brand) + D·P(375·1280 스냅숏) ② 트리 카피 role = `블록.슬롯`(목록 항목 `.item`, 링크 라벨 = button) ③ G-08은 axe 실행기를 받을 때만 판정하고 없으면 fail "axe 미실행(BLK-008)" ④ G-10 브랜드명 = opts.brand.name, 없으면 nav 워드마크 텍스트 ⑤ 원본 유사도 비교 집합 기본 = 빈 집합(temp 레퍼런스에 originality_sig 없음), phash는 비교 대상이 있을 때만 계산 ⑥ TM reliable = 정규화기 reliable ∧ 측정 가능, σ = spec.calibration_trace.sigma ⑦ 자기검증 radius = 요소별 computed radius(원형·pill 상한 제외)와 토큰 radius 집합의 최대 차, 주 배경 = body·html·첫 자식 중 처음 불투명한 배경, accent = 페이지 computed 색 중 최소 ΔE2000(accent 토큰이 없는 단색 팔레트는 0, accentToken false)
 - 영향 범위: apps/worker/src/quality/evaluate.ts, scripts/eval
 - 되돌리기 비용: 낮음
 
-## ASM-086 · M3 · gap · 2026-11-26T17:20Z
+## ASM-086 · M3 · gap · 2026-11-26T14:20Z
 - 질문: CP-01~12를 확정 트리에서 어떻게 판정할지(표의 검사 칸이 AIL 규칙이 아닌 CP-01·02·06·08·10·11), 브랜드 입력에 brand_color가 없을 때 compileSpecs 동작
 - 근거 탐색: 04장 4.6.3·4.6.4·4.13.2, 08장 8.7.5·8.9.2, 골든 32 brand(brand_color 없음), 3.13(브랜드 색 선택 입력)
 - 선택: ① CP-03·04·05·07·09·12 = AIL-21·21·13·19·22·23 error(단계 C) ② CP-01 = 워드마크 슬롯 텍스트 = NFC 브랜드명 ③ CP-02 = hero.headline·sub에 브랜드명 또는 입력 문장(description·key_points·audience, 자리표시 제외)의 2자 이상 어절 ④ CP-06 = 종결 어미(다·요·까·시오)로 끝나는 문장 중 tone.ending 패턴 비율 ≥ 90%(자리표시·사용자 원문·브랜드명 제외) ⑤ CP-08 = 브랜드명 제외 라틴 4단어 연속 ⑥ CP-10 = 전화·이메일·사업자번호 패턴이 8.7.5 예시값과 다르면 위반 ⑦ CP-11 = 고위험 브랜드 사전(judgeAbuse high_risk)에서 브랜드 입력에 없는 상표 ⑧ brand_color가 없거나 빈 값이면 브랜드 색 단계를 건너뛴다(팔레트 그대로) ⑨ buildFallback = fallbackMockup 명세 + 브랜드 치환 템플릿 트리
 - 영향 범위: packages/linter(copy-rules·tree-copy), packages/design-spec(compile·stubs)
 - 되돌리기 비용: 낮음
 
-## ASM-087 · M3 · gap · 2026-11-26T18:00Z
+## ASM-087 · M3 · gap · 2026-11-26T14:20Z
 - 질문: 프롬프트 조립 함수의 블록 구성과 BRAND_DATA에 자리표시 입력을 넣을지, AC-08-14 eTLD+1 계산(공개 접미사 목록)을 어떻게 할지
 - 근거 탐색: 04장 4.7.2, 08장 8.3.2 G1·AC-08-14, dependency-allowlist(PSL 패키지 없음)
 - 선택: ① assemblePrompt = SYSTEM(prompts/<role>@v1.md) + DESIGN_SPEC + BRAND_DATA(경계 id = 입력 해시 8자리, 잡 id를 받으면 그것). 레이아웃 = purpose·primary_action·key_points 개수, 카피 = BrandInput(brand_color 제외). CATALOG·FEWSHOT·PATTERN·COPY_KEYS·FORBIDDEN·OUTPUT_SCHEMA는 M5 파이프라인 단위에서 붙인다 ② `[임시]`·`[예시]`로 시작하는 입력은 브랜드 사실이 아니므로 BRAND_DATA에서 뺀다 ③ eTLD+1 = 국내·주요 2단계 공개 접미사 27개 최소 목록 + 마지막 2라벨(전체 PSL은 허용 목록 밖) ④ 저장소의 프리셋 파일은 모두 approved로 보고 data:validate에서 판정

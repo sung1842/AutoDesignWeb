@@ -3,13 +3,13 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T13:45Z, since: 2026-11-26T18:05Z}
+- lock: {owner: 2026-11-26T13:45Z, since: 2026-11-26T14:28Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-27 03:45  # 이 세션 시작(22:45 KST)+5h 추정
-- 마지막 갱신: 2026-11-26 22:50 KST (BLK-015 해결·재개, M3-02 착수)
+- 마지막 갱신: 2026-11-26 23:28 KST (M3-02~08b 진행)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -148,14 +148,14 @@
 - [ ] release:check 요약
 
 ## 로그
-- 2026-11-27 03:05 | M3-08b assemblePrompt(AC-08-15)·G1 eTLD+1(AC-08-14) 녹색
-- 2026-11-27 02:45 | M3-08b CF-01~12 픽스처·조화 CF-02·07 판정. AC-03-39 녹색
-- 2026-11-27 02:20 | M3-08a CP-01~12 copyRules·buildFallback, 브랜드 색 없는 입력 처리. AC-04-13 녹색
-- 2026-11-27 01:50 | M3-07 추출기 경로·evaluateCandidate·자기검증 8/8·정규화기 트리거. 앵커 왕복 BLK-018·라벨 BLK-017
-- 2026-11-27 01:10 | M3-06 tasteMatch·eligibility·rankScore·selectVisible·QualityReportSchema. scoring.test 17/17
-- 2026-11-27 00:55 | M3-05 게이트·조화 순수 함수, 원본 유사도 G2·G3·G5, phash64, abuse 판정. gates.test 35/35
-- 2026-11-27 00:10 | M3-03 lintSnapshot·M3-04 B15 예시 96 자체 잠금. linter.test 30/31(BLK-016)
-- 2026-11-26 23:40 | M3-02 linter 24규칙·lintAll·matchCliche(AC-04-12 녹색). 메타 테스트 칸 분리 버그 BLK-016
+- 2026-11-26 23:27 | M3-08b assemblePrompt(AC-08-15)·G1 eTLD+1(AC-08-14) 녹색
+- 2026-11-26 23:23 | M3-08b CF-01~12 픽스처·조화 CF-02·07 판정. AC-03-39 녹색
+- 2026-11-26 23:20 | M3-08a CP-01~12 copyRules·buildFallback, 브랜드 색 없는 입력 처리. AC-04-13 녹색
+- 2026-11-26 23:16 | M3-07 추출기 경로·evaluateCandidate·자기검증 8/8·정규화기 트리거. 앵커 왕복 BLK-018·라벨 BLK-017
+- 2026-11-26 23:12 | M3-06 tasteMatch·eligibility·rankScore·selectVisible·QualityReportSchema. scoring.test 17/17
+- 2026-11-26 23:10 | M3-05 게이트·조화 순수 함수, 원본 유사도 G2·G3·G5, phash64, abuse 판정. gates.test 35/35
+- 2026-11-26 23:05 | M3-03 lintSnapshot·M3-04 B15 예시 96 자체 잠금. linter.test 30/31(BLK-016)
+- 2026-11-26 23:00 | M3-02 linter 24규칙·lintAll·matchCliche(AC-04-12 녹색). 메타 테스트 칸 분리 버그 BLK-016
 - 2026-11-26 22:50 | BLK-015 해결(사람 relock), 재개. 세션 운영 변경 AD-034(끊길 때까지 진행·주간 게이트)
 - 2026-11-26 20:25 | HALT(BLK-015): 잠근 M3 테스트에 per-test 타임아웃 → guard F06. 수정안 wip/blocked-m3-timeouts, 사람 relock 대기
 - 2026-11-26 20:05 | extractor dom.ts 리터럴 4건 → DOM_SPEC.groupMin·bg.length(감사 0건)

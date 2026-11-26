@@ -145,7 +145,7 @@
 - 사람 절차: 브랜치 diff 검토 → 5파일을 main에 반영 → `pnpm guard:relock --human tests/acceptance/m3` → 커밋 → PROGRESS status를 IN_PROGRESS로
 - 상태: resolved 2026-11-26 — 사람이 PR #1 squash(01c9596)·해시 갱신(a0217bb)·재개(1ecf213). 4파일(scoring 무변경). `guard:relock` 명령은 없음(locked-hashes.json 직접 수정). a0217bb 메시지가 AC-09-11 형식 위반 → BLK-005에 추가
 
-## BLK-016 · M3 · locked-conflict · 2026-11-26T14:40Z
+## BLK-016 · M3 · locked-conflict · 2026-11-26T14:20Z
 - 대상: tests/acceptance/m3/linter.test.ts `specRules()`(자체 잠금) ↔ 04장 4.13.2 AIL-04·AIL-23 행
 - 증상: 표 행을 `split("|")`로 나누는데 AIL-04 패턴 칸(`/new|beta|…/i`)과 AIL-23 칸(`/lorem ipsum|your company|…/i`)에 `|`가 있어 칸이 밀림 → 심각도 칸을 "beta"·"your company"로 읽어 기대 심각도가 `[]`가 됨. 표의 실제 심각도는 둘 다 error라 "규칙 메타" 테스트가 항상 실패
 - 재현: pnpm -s exec vitest run tests/acceptance/m3/linter.test.ts -t "규칙 수·ID·단계·심각도"
@@ -153,14 +153,14 @@
 - 제안 수정안(사람): 칸 분리를 백틱 구간 안의 `|`를 무시하도록 고친다(예: 줄에서 `` `[^`]*` `` 구간을 먼저 자리표시로 바꾼 뒤 split) 후 relock
 - 상태: open
 
-## BLK-017 · M3 · needs_human_data · 2026-11-26T16:50Z
+## BLK-017 · M3 · needs_human_data · 2026-11-26T14:20Z
 - 대상: AC-05-15 `eval:extractor`(05장 5.7.4) ↔ 사람 라벨 없음(B18·레퍼런스 라벨 전부 temp)
 - 증상: ρ·MAE를 잴 사람 라벨(`data/references/labels.json`, provenance human)이 없어 평가 불가. 스크립트는 보고서에 사실을 적고 종료 코드 1(temp 라벨로 합격 처리하지 않음, ASM-080 ⑦)
 - 재현: pnpm -s exec vitest run tests/acceptance/m3/extractor.test.ts -t "eval:extractor"
 - 제안(사람): 5.7 방식 블라인드 라벨 세트 작성 → labels.json(human) → 평가 구현 확정
 - 상태: open
 
-## BLK-018 · M3 · needs_human_data · 2026-11-26T16:50Z
+## BLK-018 · M3 · needs_human_data · 2026-11-26T14:20Z
 - 대상: 9.4.5 ③④·AC-05-22·24 앵커 왕복·분리 ↔ temp 정규화기 2026-S0(B18 합성 부트스트랩)
 - 증상: 앵커 8개 측정 L1이 3.4.7 의도값과 5축 모두 0.10 초과(reliable 0축 < reliableAxesMin 3), 앵커 간 최소 거리 0.129 < anchorMinDist 0.25. depth 축이 전 프리셋 0.25로 고정(b1 0.385로 압축), shape가 0.37 근처에 몰림. 토큰 수준 자기검증(radius·배경·accent·본문 서체)은 8/8 통과라 렌더·추출은 토큰을 맞게 읽음 → 정규화기(분위·b0·b1) 문제
 - 재현: pnpm -s exec vitest run tests/acceptance/m3/extractor.test.ts -t "앵커"
