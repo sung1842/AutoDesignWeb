@@ -315,7 +315,7 @@ describe("AC-08-12 · AC-04-21 ② pHash 거리 0·밝기 ±10%·JPEG 재압축 
       expect(rep.min_phash_reference_id).toBe(REFS[0].reference_id);
       expect(rep.min_phash_distance).toBeLessThanOrEqual(cfg.g3_phash_max_distance);
     }
-  }, 120_000);
+  });
 
   it("다른 페이지는 G3 통과(거리 > 상한)", async () => {
     const cfg = loadOriginalityConfig(ROOT);
@@ -332,7 +332,7 @@ describe("AC-08-12 · AC-04-21 ② pHash 거리 0·밝기 ±10%·JPEG 재압축 
     );
     expect(rep.min_phash_distance).toBeGreaterThan(cfg.g3_phash_max_distance);
     expect(rep.violated).not.toContain("G3");
-  }, 120_000);
+  });
 });
 
 describe("AC-08-13a G5 연속 어절 일치", () => {

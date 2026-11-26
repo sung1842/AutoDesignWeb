@@ -43,11 +43,11 @@ const failedGates = (rep: { hard: { id: string; status: string }[] }): string[] 
   rep.hard.filter((g) => g.status !== "pass").map((g) => g.id);
 
 describe("9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제)", () => {
-  it("8유형 × 3용도 × 3변형", async () => {
-    const bad: string[] = [];
-    let n = 0;
-    for (const t of TYPES)
-      for (const p of PURPOSES)
+  let n = 0;
+  for (const t of TYPES)
+    for (const p of PURPOSES)
+      it(`폴백 ${t}/${p} × 3변형`, async () => {
+        const bad: string[] = [];
         for (const v of VARIANTS) {
           const { spec, tree } = fallbackMockup(t, p, v, data);
           const { html } = compilePage(spec, tree, data);
@@ -62,9 +62,11 @@ describe("9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ har
           );
           n++;
         }
+        expect(bad).toEqual([]);
+      });
+  it("폴백 조합 수 = 72", () => {
     expect(n).toBe(72);
-    expect(bad).toEqual([]);
-  }, 3_600_000);
+  });
 });
 
 interface Golden {
@@ -136,10 +138,10 @@ describe("AC-04-13 골든 노출 시안 CP-01~CP-12 위반 0(CP-06 비율 기준
 });
 
 describe("AC-08-13 골든 노출 시안 원본 유사도 위반 0, 모든 후보 OriginalityReport", () => {
-  it("골든 32 × 3", async () => {
-    const cfg = loadOriginalityConfig(ROOT);
-    const bad: string[] = [];
-    for (const g of goldens())
+  for (const g of goldens())
+    it(`골든 ${g.id} × 3`, async () => {
+      const cfg = loadOriginalityConfig(ROOT);
+      const bad: string[] = [];
       for (const m of goldenMockups(g)) {
         const { html } = compilePage(m.spec as never, m.tree as never, data);
         const { report } = await evaluateCandidate(h, { spec: m.spec, tree: m.tree, html }, data, {
@@ -160,8 +162,8 @@ describe("AC-08-13 골든 노출 시안 원본 유사도 위반 0, 모든 후보
           expect(Object.keys(o), k).toContain(k);
         if (!o.passed) bad.push(`${g.id}/${m.variant} ${o.violated.join(",")}`);
       }
-    expect(bad).toEqual([]);
-  }, 3_600_000);
+      expect(bad).toEqual([]);
+    });
 });
 
 describe("AC-08-14 cluster_median 프리셋 eTLD+1 < g1_min_domains → 시드 검증 실패", () => {
@@ -177,7 +179,7 @@ describe("AC-08-14 cluster_median 프리셋 eTLD+1 < g1_min_domains → 시드 �
   it("서로 다른 eTLD+1 2개(서브도메인·co.kr 공개 접미사 처리)는 실패, 3개는 통과", async () => {
     expect(await withDomains(["www.example.com", "shop.example.com", "a.co.kr"])).not.toBe(0);
     expect(await withDomains(["a.co.kr", "b.co.kr", "shop.example.com"])).toBe(0);
-  }, 300_000);
+  });
 });
 
 describe("AC-08-15 프롬프트 조립 출력에 reference_* 유래 문자열 0", () => {
@@ -254,26 +256,35 @@ describe("AC-03-39 표준 트리 H = 100·상충 0, CF-01~12 위반 픽스처 H 
 });
 
 describe("AC-03-43 presets:lint-matrix", () => {
-  it("프리셋별 조합 수 > 0, 미등록 조합 AIL error 0, CF-13 이후 등록 값은 편집 선택지 disabled", async () => {
-    const out = "reports/presets-lint-matrix.json";
-    const r = await run("pnpm", ["-s", "presets:lint-matrix", "--json", out], ROOT);
-    expect(r.code, r.out.slice(-600)).toBe(0);
-    const rep = JSON.parse(readFileSync(join(ROOT, out), "utf8")) as {
-      presets: {
-        presetId: string;
-        combos: number;
-        errors: { key: string; value: string; rules: string[]; cf: string | null }[];
-      }[];
-    };
-    expect(rep.presets.map((p) => p.presetId).sort()).toEqual(data.presets.map((p) => p.id).sort());
+  type Rep = {
+    presets: {
+      presetId: string;
+      combos: number;
+      errors: { key: string; value: string; rules: string[]; cf: string | null }[];
+    }[];
+  };
+  // 프리셋마다 실행(러너 타임아웃 1곳 규칙, ASM-004)
+  for (const pr of data.presets)
+    it(`lint-matrix ${pr.id}: 조합 수 > 0, 미등록 조합 AIL error 0`, async () => {
+      const out = `reports/presets-lint-matrix-${pr.id}.json`;
+      const r = await run(
+        "pnpm",
+        ["-s", "presets:lint-matrix", "--preset", pr.id, "--json", out],
+        ROOT,
+      );
+      expect(r.code, r.out.slice(-600)).toBe(0);
+      const rep = JSON.parse(readFileSync(join(ROOT, out), "utf8")) as Rep;
+      expect(rep.presets.map((p) => p.presetId)).toEqual([pr.id]);
+      for (const p of rep.presets) {
+        expect(p.combos, p.presetId).toBeGreaterThan(0);
+        for (const e of p.errors)
+          expect(e.cf, `${p.presetId} ${e.key}=${e.value} 미등록`).toMatch(/^CF-(1[3-9]|[2-9]\d)$/);
+      }
+    });
+  it("CF-13 이후 등록 값은 편집 선택지 disabled", () => {
     const harmony = JSON.parse(readFileSync(join(ROOT, "data/taxonomy/harmony.json"), "utf8")) as {
       conflicts: { id: string; preset?: string; key?: string; value?: string }[];
     };
-    for (const p of rep.presets) {
-      expect(p.combos, p.presetId).toBeGreaterThan(0);
-      for (const e of p.errors)
-        expect(e.cf, `${p.presetId} ${e.key}=${e.value} 미등록`).toMatch(/^CF-(1[3-9]|[2-9]\d)$/);
-    }
     for (const c of harmony.conflicts.filter((x) => Number(x.id.slice(3)) >= 13)) {
       const preset = data.presets.find((x) => x.id === c.preset);
       expect(preset, c.id).toBeDefined();
@@ -282,5 +293,5 @@ describe("AC-03-43 presets:lint-matrix", () => {
       const choice = editChoices(spec, data).find((x) => x.key === c.key && x.value === c.value);
       expect(choice?.disabled, `${c.id} ${c.key}=${c.value}`).toBe(true);
     }
-  }, 3_600_000);
+  });
 });

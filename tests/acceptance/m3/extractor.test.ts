@@ -125,14 +125,17 @@ describe("AC-05-12 L1 계산 단일 경로·extractor 의존성", () => {
       return KEYS.map((k) => l1[k]);
     });
     expect(viaPath).toEqual(viaHarness);
-  }, 120_000);
+  });
 });
 
 describe("9.4.5 ③ · AC-05-22 프리셋 앵커 왕복, ④ · AC-05-24 앵커 분리", () => {
   const measured: Record<string, number[]> = {};
-  beforeAll(async () => {
-    for (const t of TYPES) measured[t] = await h.extractL1(anchorPage(t).html, 1280);
-  }, 600_000);
+  // 측정은 프리셋마다 별도 it(러너 타임아웃 1곳 규칙, ASM-004). 아래 판정 it보다 먼저 순서대로 실행된다
+  for (const t of TYPES)
+    it(`앵커 측정 ${t}`, async () => {
+      measured[t] = await h.extractL1(anchorPage(t).html, 1280);
+      expect(measured[t]).toHaveLength(5);
+    });
 
   it("③ 축별 |x̂−x| ≤ roundtripAbsMax. temp 정규화기는 초과 축 = reliable false, reliable 축 수 ≥ reliableAxesMin", () => {
     const norm = releasedNormalizer();
@@ -193,7 +196,7 @@ describe("9.4.5 ③ · AC-05-22 프리셋 앵커 왕복, ④ · AC-05-24 앵커 
       expect(typeof p.accentDeltaE).toBe("number");
       expect(p.bodyFontMatch, p.typeId).toBe(true);
     }
-  }, 600_000);
+  });
 });
 
 describe("AC-05-14 · 9.4.5 ⑤ 성능", () => {
@@ -210,21 +213,23 @@ describe("AC-05-14 · 9.4.5 ⑤ 성능", () => {
       );
     }
     expect(p95(ms) / 1000).toBeLessThanOrEqual(EXTRACT_L2_P95_SEC);
-  }, 600_000);
+  });
 
-  it("⑤ 후보 1개 렌더+추출+린트+게이트(뷰포트 5) p95 ≤ versionGateP95Sec(20회)", async () => {
-    const ms: number[] = [];
-    for (let i = 0; i < 20; i++) {
+  const gateMs: number[] = [];
+  for (let i = 0; i < 20; i++)
+    it(`⑤ 후보 평가 측정 ${i + 1}/20`, async () => {
       const { spec, tree, html } = anchorPage(TYPES[i % TYPES.length]!);
       const t0 = performance.now();
       const res = await evaluateCandidate(h, { spec, tree, html }, data);
-      ms.push(performance.now() - t0);
+      gateMs.push(performance.now() - t0);
       expect(res.viewports.sort((a, b) => a - b)).toEqual([...VIEWPORTS].sort((a, b) => a - b));
       expect(res.report.hard.length).toBe(13);
       expect(res.report.harmonyItems.length).toBe(12);
-    }
-    expect(p95(ms) / 1000).toBeLessThanOrEqual(GATE_P95);
-  }, 900_000);
+    });
+  it("⑤ 후보 1개 렌더+추출+린트+게이트(뷰포트 5) p95 ≤ versionGateP95Sec(20회)", () => {
+    expect(gateMs).toHaveLength(20);
+    expect(p95(gateMs) / 1000).toBeLessThanOrEqual(GATE_P95);
+  });
 });
 
 describe("AC-05-15 eval:extractor", () => {
@@ -244,7 +249,7 @@ describe("AC-05-15 eval:extractor", () => {
     expect(good.length).toBeGreaterThanOrEqual(RELIABLE_MIN);
     for (const a of ev.axes.filter((x) => !(x.rho >= rho && x.mae <= mae)))
       expect(norm.reliable[a.axis], a.axis).toBe(false);
-  }, 900_000);
+  });
 });
 
 describe("AC-05-25 정규화기 버전", () => {
@@ -270,7 +275,7 @@ describe("AC-05-25 정규화기 버전", () => {
       const r = await run("pnpm", ["-s", "db:reset"], ROOT, ENV);
       expect(r.code, r.out).toBe(0);
       db = createDbPort(DB_URL);
-    }, 300_000);
+    });
     afterAll(async () => {
       await db?.close();
     });
