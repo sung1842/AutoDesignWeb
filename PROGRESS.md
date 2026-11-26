@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T20:24Z}
+- lock: {owner: 2026-11-26T22:08Z, since: 2026-11-26T22:08Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
-- limit.next_reset_kst: 2026-11-27 08:08  # 이 세션 시작(03:08 KST)+5h 추정
+- limit.next_reset_kst: 2026-11-27 12:08  # 이 세션 시작(07:08 KST)+5h 추정
 - 마지막 갱신: 2026-11-27 01:07 KST (M3 완료 pass_blocked, 다음 M4)
 
 ## 실행 환경 사실(2026-11-18 점검)
