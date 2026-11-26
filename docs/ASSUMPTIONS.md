@@ -681,3 +681,10 @@
 - 선택: ① Event = `{eventId: uuid, name, sessionId, device: mobile|tablet|desktop, clientTs, referrerHost?, utm?: {source?,medium?,campaign?}, props}`(strict). 서버가 ts·anon_id(쿠키)·user_id·source='client'·app_version·taxonomy_version(현재 active 시즌)을 채운다 ② 레지스트리 `EVENT_REGISTRY: Record<name, {source, props: zod strict}>`(@tastefit/api-contract), source=server 이름이 client 배치에 오면 400 ③ 배치 중 하나라도 위반이면 배치 전체 400 `VALIDATION_FAILED`·저장 0 ④ `linkIdentity(tx, anonId, userId)`는 packages/db(insert … on conflict do nothing). 최초 연결 우선은 분석 쿼리 쪽(8.4) ⑤ 서버 이벤트는 진단 응답과 같은 트랜잭션에서 events에 insert(source='server', session_id = 'server')
 - 영향 범위: packages/api-contract, packages/db, apps/web/src/server, tests/acceptance/m4/events.test.ts
 - 되돌리기 비용: 낮음
+
+## ASM-097 · M4 · gap · 2026-11-26T19:00Z
+- 질문: build-answers의 자극물 입력·출력 위치·재생 함수 API, 응답 로그 행 형식
+- 근거 탐색: 07장 7.2.2(answers = survey_answers 행 형식, seed = 케이스 번호, 오프셋 축 교체 규칙 1회)·7.2.4 M1a, 02장 2.15 재생, 09장 B16·9.4.6 ⑪
+- 선택: ① 자극물 = data/survey/manifest.lock.json의 active 항목 x_card(2.4.1 S-05, 진단 런타임과 같은 입력). 활성 자극물이 부족해 엔진이 SURVEY_ITEMS_INSUFFICIENT면 build-answers 실패(종료 1)·BLOCKED ② CLI `pnpm eval:golden:build-answers [--out <dir>]`(기본 data/golden 제자리 갱신) ③ answers 행 = `{seq, stage, kind, item_id, shown:[{option_id, slot}], answer, chosen_option_id}`(survey_answers 컬럼 이름, 시각·latency 없음) ④ `replayGolden(case, {beta?}) → {mu, typeId}`(packages/diagnosis, 엔진 seed = 케이스 번호, purpose = case.purpose) ⑤ 시뮬레이터 응답 = persona.simulator(beta 16, argmax) θ* 기준 최대 효용 선택지
+- 영향 범위: packages/diagnosis, scripts/eval, tests/acceptance/m4/golden-answers.test.ts
+- 되돌리기 비용: 낮음

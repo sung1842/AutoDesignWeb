@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T18:34Z}
+- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T18:35Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
@@ -142,7 +142,7 @@
   - [x] 02 linter 규칙 24파일·RULES·lintAll·matchCliche(사전 어간 정규식, AC-04-12 녹색, ASM-082·BLK-016) [x] 03 하네스 lintSnapshot(D·P, ASM-083) [x] 04 B15 예시 24×(2+2) 작성·자체 잠금(70f0f82, linter.test 30/31 — 남은 1 = BLK-016)
   - [x] 05 gates G-01~G-13·H1~H12 순수 함수·checkOriginality·phash64·judgeAbuse(gates.test 35/35, ASM-084) [x] 06 scoring TM·S_free·노출 선택·QualityReport(scoring.test 17/17) [x] 07 extractor 왕복·앵커 거리·p95(extractL2·l1Distance·evaluateCandidate·selfcheck·eval·normalizer 트리거. extractor.test 36/39, 남은 3 = BLK-017·018) [x] 08a CP-01~12 copyRules·buildFallback(AC-04-13 녹색, ASM-086) [ ] 08b [x] CF 픽스처 [x] assemblePrompt [x] eTLD+1 [x] lint-matrix·editChoices·harmony.conflicts(AC-03-43 녹색, ASM-088) [x] AC-08-16 BLK-019 [x] 08c verify:m3 2차 pass_blocked(BLK-002·004·005·006·008·009·012·013·016~019) → m3-done(25e1b05)(주의: qa:trace --audit가 packages/extractor/src/dom.ts 리터럴 4건 FAIL — M2부터 있던 것, M3-07에서 정리)
 - M4 계획(9.4.6, AC: 00-02·03·11·12, 01-04~21·55·57, 02-02~11·13~31·33~37, 03-12~14, 05-10·23, 06-08·11·12·46, 07-08·20, 09-17. 읽을 장은 CLAUDE.md 구현 규칙 3절):
-  - [ ] 01 M4 수용 테스트(tests/acceptance/m4, AD-031 방식): [x] a diagnosis 엔진(02장 2.5~2.7·2.12, ③⑤⑥, ASM-090) [x] b sim:survey 게이트·튜닝 규칙(④, 2.16, ASM-091) [x] c survey:build 산출·멱등·x_card·--check(①②③, AC-02-07~10·37, survey-build.test, ASM-093) [x] d 진단 API·익명 세션·멱등·CSRF·소유·p95(⑤⑥⑦, AC-06-11·12·46, api.test, ASM-095) [x] e 이벤트 API·레지스트리·서버 이벤트·identity_links(⑫, AC-00-11·12, events.test, ASM-096) [ ] f 진단·결과 화면 E2E(⑧⑨⑩, 01장) [ ] g build-answers·골든 잠금(⑪) → qa:trace --audit·guard:patterns·단일 test(acc)·자체 잠금
+  - [ ] 01 M4 수용 테스트(tests/acceptance/m4, AD-031 방식): [x] a diagnosis 엔진(02장 2.5~2.7·2.12, ③⑤⑥, ASM-090) [x] b sim:survey 게이트·튜닝 규칙(④, 2.16, ASM-091) [x] c survey:build 산출·멱등·x_card·--check(①②③, AC-02-07~10·37, survey-build.test, ASM-093) [x] d 진단 API·익명 세션·멱등·CSRF·소유·p95(⑤⑥⑦, AC-06-11·12·46, api.test, ASM-095) [x] e 이벤트 API·레지스트리·서버 이벤트·identity_links(⑫, AC-00-11·12, events.test, ASM-096) [ ] f 진단·결과 화면 E2E(⑧⑨⑩, 01장) [~] g build-answers 결정성·M1a 변이(⑪, AC-07-20, golden-answers.test, ASM-097. 골든 잠금은 guard)  → qa:trace --audit·guard:patterns·단일 test(acc)·자체 잠금
   - [x] 02 packages/diagnosis 사후분포·1-step 갱신·문항 선택·종료·유형 판정·κ·pickNotice(diagnosis.test 24/24, AC-02-06 BLK-020)
   - [ ] 03 sim:survey(1,000명, 공통 난수 쌍체·부트스트랩)·튜닝 절차: [x] 시뮬레이터·판정·튜너·CLI(합성 dev: RMSE 0.1215·앵커 0.930만 미달, ASM-091) [ ] x_card gate·튜닝 실행(04 뒤)
   - [ ] 04 survey:build(카드 렌더→x_card→게이트→WebP→local Storage→survey_items upsert, manifest.lock): [x] a surveyPage(ASM-092) [x] b 판정 순수 함수 stimuli.ts(judgeCard·judgePair·coverage·stage1Issues, 단위 5/5) [x] c StoragePort fs(멱등 put·서명 URL, 단위 3/3) [x] d 렌더·WebP·추출·manifest(--only, surveyShot·encodeWebp·dominantColors, ASM-094. C-SV01-hero x 오차 0.17~0.45 → draft) [x] e DB upsert·멱등·--check(survey-build.test ②·--check 5/5 녹색) [ ] f 전체 실행·manifest 커밋
@@ -159,6 +159,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 03:35 | M4-01g golden-answers.test WIP(2회 바이트 동일·32행·β 8.5 변이)
 - 2026-11-27 03:34 | M4-01e events.test WIP(레지스트리·400 배치 거부·서버 이벤트·identity_links)
 - 2026-11-27 03:33 | M4-01d api.test WIP(익명 세션·재개·멱등·CSRF·소유·완료·p95), SC_04 상수
 - 2026-11-27 03:30 | M4-04e survey-build ②(2회차 업로드 0·DB 0)·--check 녹색. 전체 빌드 시작
