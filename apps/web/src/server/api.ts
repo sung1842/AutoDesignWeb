@@ -10,6 +10,7 @@ import type { AuthPort } from "@tastefit/auth";
 import type { DbPort } from "@tastefit/db";
 import { PUBLIC_BUCKETS, type StoragePort } from "@tastefit/storage";
 import { callback, me, saveConsents } from "./auth";
+import { createBriefDraft, getBriefDraft } from "./brief";
 import { clientEvents } from "./events";
 import {
   ApiError,
@@ -55,6 +56,16 @@ const PUBLIC_CACHE = "public, max-age=31536000, immutable";
 type Route = (c: Ctx, d: Deps, m: RegExpExecArray) => Promise<Response>;
 const R: [string, RegExp, Route][] = [
   ["GET", /^\/auth\/callback$/, (c, d) => callback(c, d)],
+  [
+    "POST",
+    /^\/api\/brief-drafts$/,
+    async (c, d) => json(c, 201, await createBriefDraft(c, d, await readJson(c))),
+  ],
+  [
+    "GET",
+    /^\/api\/brief-drafts\/([^/]+)$/,
+    async (c, d, m) => json(c, 200, await getBriefDraft(c, d, m[1] ?? "")),
+  ],
   ["GET", /^\/api\/me$/, async (c, d) => json(c, 200, await me(c, d))],
   [
     "POST",

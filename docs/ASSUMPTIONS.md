@@ -744,3 +744,10 @@
 - 선택: ① `maskedFields` = 종류별 건수 객체 `{phone?, email?, rrn?, bizno?, card?, account?}`(0은 키 생략, 마스킹 없으면 `{}`). M1·M2 → phone, M3 email, M4 rrn, M5 bizno, M6 card, M7 account. S06 배너 "전화번호 1건"을 그대로 만들 수 있는 형태 ② 형식·길이·빈 값 위반은 모두 400 `VALIDATION_FAILED` + `details.issues[{path, code}]`(path는 요청 본문 기준 `brand.name`, `brand.keyPoints.0` 등, 미지 필드는 `brand`). 01장이 BrandInput 원천이고 6.4.2 코드표도 400 → TC-B-07의 422 표기는 01장을 따른다 ③ 422는 남용 판정(`BLOCKED_BRAND`)·`BRAND_ATTESTATION_REQUIRED`만 ④ 거부 시 `admin_audit_logs` 1행: action `brand_blocked`, target_type `brief`, target_id = 정규화 브랜드명 SHA-256(hex), after = `{reason, ref}`(원문 없음), admin_hash null ⑤ 픽스처 `fixtures/brands/normal.json`(정상 10, 저장값 = 입력값), `security.json`(보안 페이로드 21, 기대 결과 포함), `high-risk.json`(고위험 변형 20 + 일반 50, AC-08-41). 편집 거리 규칙 8.9.2 (c)는 high-risk.json의 `Coupamg Eats`로 검사 ⑥ 길이는 정규화 후 grapheme 수, keyPoints 중복은 정규화 후 완전 일치
 - 영향 범위: tests/acceptance/m5/brief.test.ts, apps/web/src/server/brief.ts(예정), packages/compliance
 - 되돌리기 비용: 낮음
+
+## ASM-106 · M5 · gap · 2026-11-26T23:15Z
+- 질문: 6.4.5 ② 제로폭 제거(U+200D 포함) ↔ 07장 TC-B-03 가족 이모지 원문 유지 충돌, maskPII 패턴 적용 순서, 브리프 남용 판정의 필드 범위
+- 근거 탐색: 06장 6.4.5, 07장 TC-B-03, 08장 8.7.5 M1~M7·8.9.2 (a)~(d)·입력별 적용 단계 표
+- 선택: ① U+200D(ZWJ)는 앞뒤가 그림 문자(Extended_Pictographic, 변이 선택자·피부색 수식 허용)인 이모지 ZWJ 시퀀스 안에서만 남기고 나머지는 제거. U+200B·U+200C·U+FEFF는 항상 제거 ② maskPII 적용 순서 M3 → M4 → M6(Luhn) → M5 → M7 → M1 → M2(긴·구체적 패턴 먼저, 사업자번호·카드가 전화로 오인되지 않게) ③ `judgeBrief`(packages/compliance): 고위험 (a)~(c)는 브랜드명만, (d) 도메인은 브랜드명·한 줄 소개·강점, 피싱은 한 줄 소개·강점·주요 고객, 금지 업종은 넷 다. 판정 입력은 정규화·마스킹 후 값. G-13용 `judgeAbuse`는 기존대로 모든 텍스트에 (a)~(c)를 적용하고 (c) 편집 거리·접미 분리 비교를 추가 ④ 8.9.2 사양 상수(alias 길이 3·5, 거리 1)는 thresholds가 아니므로 상수 객체로 둔다(0c8eca9와 같은 방식)
+- 영향 범위: packages/api-contract/src/brand.ts, packages/compliance, apps/web/src/server/brief.ts
+- 되돌리기 비용: 낮음

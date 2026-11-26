@@ -20,6 +20,7 @@
   "dependencies": {
     "@tastefit/api-contract": "workspace:^",
     "@tastefit/auth": "workspace:^",
+    "@tastefit/compliance": "workspace:^",
     "@tastefit/config": "workspace:^",
     "@tastefit/db": "workspace:^",
     "@tastefit/diagnosis": "workspace:^",

@@ -55,6 +55,9 @@ importers:
       '@tastefit/auth':
         specifier: workspace:^
         version: link:../../packages/auth
+      '@tastefit/compliance':
+        specifier: workspace:^
+        version: link:../../packages/compliance
       '@tastefit/config':
         specifier: workspace:^
         version: link:../../packages/config
