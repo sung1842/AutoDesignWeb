@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T04:07Z, since: 2026-11-26T05:42Z}
+- lock: 
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-26 15:08  # 이 세션 시작(10:08 KST)+5h 추정
-- 마지막 갱신: 2026-11-26 12:55 KST (세션 종료: M2-14b treeLint·BLK-013, 다음 14c harmonyScore)
+- 마지막 갱신: 2026-11-26 15:57 KST (세션 종료: M2-14c·14d, verify:m2 2차, 다음 14e 3차 실행)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -17,6 +17,7 @@
 - npm 레지스트리 접근 가능.
 - 2026-11-25 컨테이너 2코어: blocks.test AC-03-18 PS-T1이 180s 타임아웃(변경 전 코드도 동일, 환경 속도). 타임아웃 상향 금지 → 빠른 환경에서 재확인
 - 새 컨테이너: shallow clone이면 `git fetch --unshallow` 후 태그 복원(guard:lock·tuned 필요). `pnpm install` 뒤 `pnpm typecheck`(tsc -b)로 dist 빌드해야 vitest·guard:count가 동작(루트 build 스크립트 없음)
+- 하네스 폰트 캐시 `/tmp/tastefit-harness-fonts`: 빈 캐시면 AC-03-33·03-18이 2코어에서 180s 근처(페이지별 서브셋). 3차 verify 전 같은 컨테이너에서 한 번 돌려 데운다(캐시는 결과에 영향 없음)
 - 폰트 서브셋(M2-07b2~)은 python3 fontTools(기본 설치) + brotli 필요. 컨테이너마다 `pip install --break-system-packages brotli` 1회(AD-032).
 
 ## 배경
@@ -131,8 +132,8 @@
     - [x] 14b treeLint 단계 T(G-01·LT-01~11·RH-01~02, ASM-073). patternRaw LT-03 하한 채우기·리듬 DFS·덱 index 분배, 픽스처 29 재생성. AC-04-11은 pl1-00(기준선 입력) LT-03 1건 → BLK-013
     - [x] 14c harmonyScore(packages/scoring/src/harmony.ts, AC-03-20 녹색, 단위 6, ASM-074)
       - 메모(다음 세션): 03장 3.14.3~5·04장 4.10.3, data/taxonomy/harmony.json(items H1~H12·constants). 테스트 시그니처 `harmonyScore(spec, tree).total`(렌더 없음) → 정적 판정: H1~H3 팔레트 토큰(primary·accent·bg·surface·surface-inverse, 상태·hover 제외), H4·H5 font 토큰+registry, H6·H8·H9 토큰 생성이라 만점(렌더 측정 입력은 선택 인자, M3), H7 type display/body, H10 design-spec `l2Conflicts`(snap.ts, CF-03·04 등)+CF-05·06·08~12, H11 decor.effects ≤ max, H12 트리 리듬. scoring 의존은 config뿐(09장 9.1.3 표) → 리듬 판정을 scoring 안에 둘지(중복) 확인 후 ASM
-    - [ ] 14d 원인 미확인 실패 개별 재현(`npx vitest run tests/acceptance/m2/<f> -t <AC>`): [x] AC-03-33(터치 타깃 CSS·하네스 폰트 캐시, ASM-075; 빈 캐시는 180s 초과 위험) [x] AC-03-18 PS-T1~T8(녹색, 각 50~90s: ASM-075 하네스 캐시 효과) [x] AC-03-23(라틴 서브셋 한글 제외·mono 스택·하네스 한글 구간, ASM-076) [x] AC-03-26·AC-03-45 ②④(재현 안 됨, 녹색) [ ] 빈 캐시 대비: 상주 서브셋 프로세스(CJK 원본 1회 로드) 검토
-    - [ ] 14e verify:m2 재실행(약 60분, 백그라운드 nohup 후 reports/verify-m2.partial.json 확인). 남는 것: AC-03-19(BLK-009)·AC-04-08(BLK-012) blocked
+    - [ ] 14d 원인 미확인 실패 개별 재현(`npx vitest run tests/acceptance/m2/<f> -t <AC>`): [x] AC-03-33(터치 타깃 CSS·하네스 폰트 캐시, ASM-075; 빈 캐시는 180s 초과 위험) [x] AC-03-18 PS-T1~T8(녹색, 각 50~90s: ASM-075 하네스 캐시 효과) [x] AC-03-23(라틴 서브셋 한글 제외·mono 스택·하네스 한글 구간, ASM-076) [x] AC-03-26·AC-03-45 ②④(재현 안 됨, 녹색) [~] 빈 캐시 대비: 페이지당 python 1회로 묶음(ASM-075). 그래도 빈 캐시 AC-03-33 ≈ 400페이지 × 1.2s > 180s(2코어), 데운 캐시 52~132s. 남은 안: 상주 서브셋 프로세스(페이지당 ≈0.8s, 여전히 빠듯) 또는 빠른 환경 확인
+    - [ ] 14e verify:m2 재실행. 2차(2026-11-26, reports/verify-m2-2.json) fail 17→4 비BLK: AC-03-33(전체 실행 중 180s 초과, 단독 통과), AC-06-32 m0(간헐, 단독 통과), AC-03-19·AC-04-08(BLK-009·012 재현 명령 줄이 없어 매핑 실패 → BLOCKED.md에 추가). 다음: 3차 실행(데운 폰트 캐시) → pass_blocked면 m2-done.(약 60분, 백그라운드 nohup 후 reports/verify-m2.partial.json 확인). 남는 것: AC-03-19(BLK-009)·AC-04-08(BLK-012) blocked
 - M3 이월: (B18 재생성은 M2-09d3으로 당김), B15 골격을 실제 예시로 교체 후 자체 잠금(ASM-021)
 - [x] M0 [x] M1 [ ] M2 [ ] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
 
@@ -140,6 +141,8 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-26 15:55 | verify:m2 2차 fail(비BLK 4: 03-33 시간·06-32 간헐·BLK-009/012 재현 명령 누락→보완), 하네스 서체 묶음 생성
+- 2026-11-26 15:57 | 세션 종료(잠금 해제). 다음 M2-14e 3차 verify:m2
 - 2026-11-26 14:42 | M2-14d AC-03-18 PS-T1~T8 녹색(각 50~90s). 남은 14d = 빈 캐시 대비 검토
 - 2026-11-26 14:27 | M2-14d AC-03-23 한글 서체(라틴 서브셋·mono 스택·하네스), AC-03-26·45②④ 녹색 확인, ASM-076
 - 2026-11-26 13:52 | M2-14d AC-03-33 터치 타깃(skip·wordmark·nav·drawer 44px)·하네스 폰트 캐시, 녹색, ASM-075
@@ -153,9 +156,3 @@
 - 2026-11-26 08:10 | 09d4d 진단: shape·depth 축 고정(F01 SB 중앙값, shadow_level 미반영), 세션 종료(잠금 해제)
 - 2026-11-26 08:04 | M2-09d4c B18 재생성(시그니처 층 반영). AC-04-08 0.365→0.490(옛 B18)→0.542, 미달 → 원인 진단 계속
 - 2026-11-26 07:52 | M2-09d4a 시그니처 층(data-signature·data-sig, 요소형 06·07·11, SIG-09 생성 CSS), ASM-069
-- 2026-11-26 07:40 | 09d4 진단: 시그니처 층 미구현으로 변형 렌더 차이 부족 → d4a~c 계획, 세션 종료(잠금 해제)
-- 2026-11-26 07:32 | M2-09d3 B18 정규화기 200 렌더 재생성(seed:temp --corpus), 전 축 temp, AC-04-08 0.365, ASM-068
-- 2026-11-26 07:06 | M2-09d2 toL1(5.5.4)·extractL1, AC-04-08 0.406(B18 자리표시) → 09d3 B18 재생성, ASM-067
-- 2026-11-26 06:58 | M2-09d1 추출기 F01~F30(DOM·k-means)·harness.features, 앵커 8 결정성 통과, ASM-066
-- 2026-11-26 06:33 | M2-09e G-12 명세 무결성·AIL-17(토큰 집합·expectedSize·deriveTokens 대조), AC-03-45 녹색, ASM-065
-- 2026-11-26 03:52 | AC-03-26 헤드라인 줄 예산(덱 교체→단계 하향 role_overrides→warn, 24 중 8 하향), ASM-064

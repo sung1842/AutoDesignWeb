@@ -84,6 +84,7 @@
 ## BLK-009 · M2 · locked-conflict · 2026-11-25T04:25Z
 - 대상: tests/acceptance/m2/blocks.test.ts AC-03-19(자체 잠금) ↔ 04장 4.6.2 덱 상한(목록 키는 필드별 상한) ↔ ASM-025 ⑤ 계약 `copyDeckLimits() → {덱키: 수 | {필드: 수}}`
 - 증상: 테스트가 `min(슬롯 maxLength 값들) ≥ max(덱 상한 값들)`로 비교해, 필드가 2개 이상인 목록 키(value.items {제목 18, 본문 90} 등)는 슬롯과 상한이 같아도 18 < 90으로 항상 실패한다
+- 재현 명령: npx vitest run tests/acceptance/m2/blocks.test.ts -t "AC-03-19"
 - 재현: copyDeckLimits()가 4.6.2 표 그대로(예 "value.items": {제목: 18, 본문: 90}) 반환하고 blocks.json 슬롯 maxLength가 같은 값일 때 AC-03-19 실패
 - 시도: (1) 목록 키 상한을 숫자 하나(최소 필드값)로 반환 → 본문 상한이 사라져 계약·4.6.2와 어긋남 (2) blocks.json 슬롯 maxLength를 부풀림 → 데이터 왜곡
 - 처리: copyDeckLimits는 4.6.2 그대로 구현(M2-04a). AC-03-19 목록 키 비교는 실패로 남고 verify:m2에서 이 BLK로 보고
@@ -110,6 +111,7 @@
 ## BLK-012 · M2 · locked-conflict · 2026-11-26T01:40Z
 - 대상: 04장 4.3 3단계 J의 변경 벌점(0.02 × 앵커 프리셋과 다른 키 수, w_k Σ=1 정규화) ↔ 04장 4.4·AC-04-08 렌더 D ≥ 0.15 충족률 ≥ 95%(tests/acceptance/m2/render.test.ts, 자체 잠금)
 - 증상: 키 하나를 앵커에서 바꾸려면 가중 제곱오차가 0.02 이상 줄어야 한다(축 가중 0.2면 한 축 오차 0.32→0 수준). 변형 목표 차이(축당 0.1~0.3)로는 거의 항상 못 넘어서 v_true·v_fit·v_bal이 모두 앵커 L2로 스냅된다. L2 차이는 enforceVariantL2Diff(J 증가 최소 대안 = 예측 L1이 비슷한 값)와 hero·signature로만 채워져 렌더 차이가 작다
+- 재현 명령: npx vitest run tests/acceptance/m2/render.test.ts -t "변형 쌍 추출 벡터 D"
 - 재현(골든 32 × 3쌍 = 96, σ=0.08): mapL1toL2 결과는 64/64 F 안(불가능 아님). 스냅 뒤 6키(pairing·palette·radius·depth.style·shadow·density)가 같은 쌍: 벌점 0.02 → 69/96, 0.01 → 56, 0.005 → 30, 0 → 20. 예 GS-02 v_fit: soft 반경은 shape 오차 0.14→0.06(가중 이득 0.0032) < 벌점 0.02 → sharp 유지
 - 시도: 구현이 4.3 의사코드·J 식과 일치함을 확인(ASM-029). 사양 상수 변경·테스트 완화는 금지라 하지 않음. 렌더 누락 수정(ASM-069·070)으로 0.365→0.5625까지 올림
 - 처리: AC-04-08 렌더 D 1건 미충족(현재 54/96)으로 verify:m2에서 이 BLK로 보고. L2 ≥3키 조건은 enforce로 충족

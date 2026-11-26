@@ -152,9 +152,11 @@ async function openPage(browser: Browser, html: string, vw: number): Promise<Ses
     else if (url.pathname.startsWith("/fonts/")) {
       file = join(FONT_CACHE, url.pathname);
       // 같은 파일 이름 = 같은 글자 집합(subset_fonts.py). 이미 있으면 python 프로세스를 다시 띄우지 않는다.
-      const face = plan.faces.filter((f) => f.file === url.pathname);
-      if (face.length && !existsSync(file))
-        materializeFonts({ faces: face, chars: plan.chars }, FONT_CACHE);
+      // 없으면 이 페이지의 빠진 서체를 한 번에 만든다(python 기동 1회/페이지, ASM-075).
+      if (plan.faces.some((f) => f.file === url.pathname) && !existsSync(file)) {
+        const missing = plan.faces.filter((f) => !existsSync(join(FONT_CACHE, f.file)));
+        materializeFonts({ faces: missing, chars: plan.chars }, FONT_CACHE);
+      }
     }
     if (!file || !existsSync(file)) {
       s.failed.push(url.pathname);

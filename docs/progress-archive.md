@@ -201,3 +201,9 @@
 - 2026-11-26 02:28 | M2-11 미리보기 서명·헤더·iframe·편집 CSP·parentProbe, ASM-059 → 다음: 09e G-12 또는 13 금지 의존성
 - 2026-11-26 03:49 | AC-03-21 fallback 체인 끝 = remove(seed:temp), ASM-063
 - 2026-11-26 03:32 | AC-03-41 colorName(사전 42, 무채색·조건 색·수식어)·config/color-names.ko.json(temp), ASM-062; 블록 샘플 8×50 넘침·잘림·겹침 0
+- 2026-11-26 07:40 | 09d4 진단: 시그니처 층 미구현으로 변형 렌더 차이 부족 → d4a~c 계획, 세션 종료(잠금 해제)
+- 2026-11-26 07:32 | M2-09d3 B18 정규화기 200 렌더 재생성(seed:temp --corpus), 전 축 temp, AC-04-08 0.365, ASM-068
+- 2026-11-26 07:06 | M2-09d2 toL1(5.5.4)·extractL1, AC-04-08 0.406(B18 자리표시) → 09d3 B18 재생성, ASM-067
+- 2026-11-26 06:58 | M2-09d1 추출기 F01~F30(DOM·k-means)·harness.features, 앵커 8 결정성 통과, ASM-066
+- 2026-11-26 06:33 | M2-09e G-12 명세 무결성·AIL-17(토큰 집합·expectedSize·deriveTokens 대조), AC-03-45 녹색, ASM-065
+- 2026-11-26 03:52 | AC-03-26 헤드라인 줄 예산(덱 교체→단계 하향 role_overrides→warn, 24 중 8 하향), ASM-064
