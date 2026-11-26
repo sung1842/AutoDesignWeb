@@ -1,0 +1,57 @@
+{
+  "ruleId": "AIL-07",
+  "expect": "clean",
+  "stages": [
+    "T"
+  ],
+  "noteKo": "5섹션 리듬 다양",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "tree": {
+      "sections": [
+        {
+          "id": "hero",
+          "block": "hero",
+          "variant": "hero.type-only",
+          "bg": "bg",
+          "pad": 1,
+          "slots": {}
+        },
+        {
+          "id": "m",
+          "block": "menu",
+          "variant": "menu.leader",
+          "bg": "surface",
+          "pad": 0,
+          "slots": {}
+        },
+        {
+          "id": "g",
+          "block": "gallery",
+          "variant": "gallery.grid",
+          "bg": "bg",
+          "pad": 0,
+          "slots": {}
+        },
+        {
+          "id": "st",
+          "block": "story",
+          "variant": "story.split",
+          "bg": "inverse",
+          "pad": -1,
+          "slots": {}
+        },
+        {
+          "id": "l",
+          "block": "location",
+          "variant": "location.info-map",
+          "bg": "bg",
+          "pad": 0,
+          "slots": {}
+        }
+      ]
+    }
+  }
+}

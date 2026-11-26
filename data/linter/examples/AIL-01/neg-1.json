@@ -1,0 +1,14 @@
+{
+  "ruleId": "AIL-01",
+  "expect": "clean",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "같은 hue 계열 2-stop",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}</style></head><body><section><div style=\"height:200px;background:linear-gradient(90deg,#f97316,#fb923c)\"></div></section></body></html>"
+  }
+}

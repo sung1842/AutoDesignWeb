@@ -1,0 +1,42 @@
+{
+  "ruleId": "AIL-07",
+  "expect": "violation",
+  "severity": "error",
+  "stages": [
+    "T"
+  ],
+  "noteKo": "인접 같은 variant",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "tree": {
+      "sections": [
+        {
+          "id": "hero",
+          "block": "hero",
+          "variant": "hero.split",
+          "bg": "bg",
+          "pad": 1,
+          "slots": {}
+        },
+        {
+          "id": "s1",
+          "block": "story",
+          "variant": "story.split",
+          "bg": "surface",
+          "pad": 0,
+          "slots": {}
+        },
+        {
+          "id": "s2",
+          "block": "story",
+          "variant": "story.split",
+          "bg": "bg",
+          "pad": 0,
+          "slots": {}
+        }
+      ]
+    }
+  }
+}

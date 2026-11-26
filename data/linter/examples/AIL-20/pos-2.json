@@ -1,0 +1,29 @@
+{
+  "ruleId": "AIL-20",
+  "expect": "violation",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "페이지 느낌표 3 > 1",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "spec": {
+      "copy": {
+        "tone_id": "T-WARM",
+        "exclaim_max_per_page": 1
+      }
+    },
+    "copy": [
+      {
+        "role": "hero.headline",
+        "text": "아침 원두"
+      },
+      {
+        "role": "body",
+        "text": "향이 좋아요! 맛있어요! 또 와요!"
+      }
+    ]
+  }
+}

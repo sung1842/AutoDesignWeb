@@ -1,0 +1,20 @@
+{
+  "ruleId": "AIL-10",
+  "expect": "violation",
+  "severity": "error",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "헤딩 이모지",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "copy": [
+      {
+        "role": "heading",
+        "text": "🚀 빠른 시작"
+      }
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "ruleId": "AIL-02",
+  "expect": "violation",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "강조 span 그라디언트 텍스트",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}</style></head><body><section><p>매일 <span style=\"background-image:linear-gradient(#22c55e,#06b6d4);-webkit-background-clip:text;background-clip:text;color:transparent\">볶는</span> 원두</p></section></body></html>"
+  }
+}

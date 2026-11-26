@@ -1,0 +1,14 @@
+{
+  "ruleId": "AIL-18",
+  "expect": "clean",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "Phosphor 1.5 stroke 3개",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}</style></head><body><section><div data-icon-set=\"phosphor\"><svg stroke-width=\"1.5\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><path d=\"M4 12h16\"/></svg><svg stroke-width=\"1.5\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><path d=\"M4 12h16\"/></svg><svg stroke-width=\"1.5\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><path d=\"M4 12h16\"/></svg></div></section></body></html>"
+  }
+}

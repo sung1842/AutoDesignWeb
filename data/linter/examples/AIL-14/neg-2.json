@@ -1,0 +1,30 @@
+{
+  "ruleId": "AIL-14",
+  "expect": "clean",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "모든 문장에 고유 정보",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "brand": {
+      "name": "한결로스터리",
+      "keywords": [
+        "핸드드립",
+        "원두 정기배송"
+      ]
+    },
+    "copy": [
+      {
+        "role": "hero.headline",
+        "text": "핸드드립 원두를 집에서"
+      },
+      {
+        "role": "body",
+        "text": "원두 정기배송은 2주마다 갑니다. 한결로스터리가 직접 볶습니다."
+      }
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "ruleId": "AIL-15",
+  "expect": "violation",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "Learn more ×2 + 더 알아보기",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "copy": [
+      {
+        "role": "button",
+        "text": "Learn more"
+      },
+      {
+        "role": "button",
+        "text": "Learn more"
+      },
+      {
+        "role": "button",
+        "text": "더 알아보기"
+      }
+    ]
+  }
+}

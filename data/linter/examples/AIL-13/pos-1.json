@@ -1,0 +1,19 @@
+{
+  "ruleId": "AIL-13",
+  "expect": "violation",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "혁신적인·선사",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "copy": [
+      {
+        "role": "hero.headline",
+        "text": "혁신적인 커피 경험을 선사합니다"
+      }
+    ]
+  }
+}

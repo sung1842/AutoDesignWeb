@@ -1,0 +1,23 @@
+{
+  "ruleId": "AIL-15",
+  "expect": "clean",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "자세히 보기 ×2",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "copy": [
+      {
+        "role": "button",
+        "text": "자세히 보기"
+      },
+      {
+        "role": "button",
+        "text": "자세히 보기"
+      }
+    ]
+  }
+}

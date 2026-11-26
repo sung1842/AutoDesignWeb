@@ -1,0 +1,15 @@
+{
+  "ruleId": "AIL-24",
+  "expect": "clean",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "375 균형 2줄",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "vw": 375,
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}</style></head><body><section><h1 data-role=\"hero.headline\" style=\"font-size:32px\">성수동 아침<br>원두 로스터리</h1></section></body></html>"
+  }
+}

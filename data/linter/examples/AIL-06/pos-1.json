@@ -1,0 +1,14 @@
+{
+  "ruleId": "AIL-06",
+  "expect": "violation",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "모든 카드 radius 14 + blur 30 그림자",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}.card{width:240px;padding:16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.1)}</style></head><body><section><div class=\"card\">원두</div><div class=\"card\">배송</div><div class=\"card\">구독</div></section></body></html>"
+  }
+}

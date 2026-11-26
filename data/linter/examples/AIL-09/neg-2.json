@@ -1,0 +1,24 @@
+{
+  "ruleId": "AIL-09",
+  "expect": "clean",
+  "stages": [
+    "S"
+  ],
+  "noteKo": "depth.style glass + glass 장식",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "spec": {
+      "l2": {
+        "depth.style": "glass"
+      },
+      "decor": {
+        "max": 2,
+        "effects": [
+          "glass"
+        ]
+      }
+    }
+  }
+}

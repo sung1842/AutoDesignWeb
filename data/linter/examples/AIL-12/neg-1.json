@@ -1,0 +1,59 @@
+{
+  "ruleId": "AIL-12",
+  "expect": "clean",
+  "stages": [
+    "T"
+  ],
+  "noteKo": "사진·수치·인용이 섞인 5칸",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "tree": {
+      "sections": [
+        {
+          "id": "v",
+          "block": "value",
+          "variant": "value.bento",
+          "bg": "bg",
+          "pad": 0,
+          "slots": {
+            "media": {
+              "image": {
+                "asset_id": "img_tmp_cafe_01"
+              }
+            },
+            "items": {
+              "list": [
+                {
+                  "copy": {
+                    "text": "연 1,200잔",
+                    "placeholder": false
+                  }
+                },
+                {
+                  "copy": {
+                    "text": "“매일 볶습니다”",
+                    "placeholder": false
+                  }
+                },
+                {
+                  "copy": {
+                    "text": "원두 12종",
+                    "placeholder": false
+                  }
+                },
+                {
+                  "copy": {
+                    "text": "2019년 개업",
+                    "placeholder": false
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

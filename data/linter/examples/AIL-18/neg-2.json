@@ -1,0 +1,53 @@
+{
+  "ruleId": "AIL-18",
+  "expect": "clean",
+  "stages": [
+    "T"
+  ],
+  "noteKo": "phosphor + icon-grid 3항목",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "spec": {
+      "l2": {
+        "icon.set": "phosphor"
+      }
+    },
+    "tree": {
+      "sections": [
+        {
+          "id": "v",
+          "block": "value",
+          "variant": "value.icon-grid",
+          "bg": "bg",
+          "pad": 0,
+          "slots": {
+            "items": {
+              "list": [
+                {
+                  "copy": {
+                    "text": "원두",
+                    "placeholder": false
+                  }
+                },
+                {
+                  "copy": {
+                    "text": "로스팅",
+                    "placeholder": false
+                  }
+                },
+                {
+                  "copy": {
+                    "text": "배송",
+                    "placeholder": false
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

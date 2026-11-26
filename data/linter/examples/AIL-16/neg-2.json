@@ -1,0 +1,14 @@
+{
+  "ruleId": "AIL-16",
+  "expect": "clean",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "토큰 색 버튼 + 고유 그림자",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}</style></head><body><section><button style=\"background:#29231e;color:#f4f1ec;box-shadow:0 2px 0 #000\">시작</button></section></body></html>"
+  }
+}

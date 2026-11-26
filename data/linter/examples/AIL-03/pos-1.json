@@ -1,0 +1,14 @@
+{
+  "ruleId": "AIL-03",
+  "expect": "violation",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "전부 Pretendard",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}body{font-family:Pretendard,sans-serif}</style></head><body><section><h1>성수동 로스터리</h1><p>매일 아침 볶습니다</p></section></body></html>"
+  }
+}

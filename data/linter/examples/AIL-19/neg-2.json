@@ -1,0 +1,23 @@
+{
+  "ruleId": "AIL-19",
+  "expect": "clean",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "권유형 2회",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "copy": [
+      {
+        "role": "body",
+        "text": "원두를 주문해보세요."
+      },
+      {
+        "role": "body",
+        "text": "매장을 예약해 보세요."
+      }
+    ]
+  }
+}

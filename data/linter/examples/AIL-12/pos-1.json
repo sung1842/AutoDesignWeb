@@ -1,0 +1,54 @@
+{
+  "ruleId": "AIL-12",
+  "expect": "violation",
+  "stages": [
+    "T"
+  ],
+  "noteKo": "텍스트 한 줄씩인 4칸",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "tree": {
+      "sections": [
+        {
+          "id": "v",
+          "block": "value",
+          "variant": "value.bento",
+          "bg": "bg",
+          "pad": 0,
+          "slots": {
+            "items": {
+              "list": [
+                {
+                  "copy": {
+                    "text": "좋은 원두",
+                    "placeholder": false
+                  }
+                },
+                {
+                  "copy": {
+                    "text": "정성 로스팅",
+                    "placeholder": false
+                  }
+                },
+                {
+                  "copy": {
+                    "text": "빠른 배송",
+                    "placeholder": false
+                  }
+                },
+                {
+                  "copy": {
+                    "text": "친절한 상담",
+                    "placeholder": false
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

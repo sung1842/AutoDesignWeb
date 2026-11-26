@@ -1,0 +1,14 @@
+{
+  "ruleId": "AIL-02",
+  "expect": "clean",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "그라디언트 배경 위 단색 글자(clip 없음)",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}</style></head><body><section><div style=\"background:linear-gradient(#fde68a,#fcd34d);padding:16px\"><h2>계절 원두</h2></div></section></body></html>"
+  }
+}

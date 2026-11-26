@@ -1,0 +1,19 @@
+{
+  "ruleId": "AIL-23",
+  "expect": "violation",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "Lorem ipsum",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "copy": [
+      {
+        "role": "body",
+        "text": "Lorem ipsum dolor sit amet"
+      }
+    ]
+  }
+}

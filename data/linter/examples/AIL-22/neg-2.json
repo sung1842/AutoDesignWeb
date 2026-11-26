@@ -1,0 +1,23 @@
+{
+  "ruleId": "AIL-22",
+  "expect": "clean",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "[예시] 후기 + 박○○",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "copy": [
+      {
+        "role": "proof.quote",
+        "text": "[예시] 고객 후기가 들어갈 자리"
+      },
+      {
+        "role": "proof.author",
+        "text": "박○○"
+      }
+    ]
+  }
+}

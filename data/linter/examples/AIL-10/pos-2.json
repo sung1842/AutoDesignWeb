@@ -1,0 +1,15 @@
+{
+  "ruleId": "AIL-10",
+  "expect": "violation",
+  "severity": "error",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "버튼 이모지",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}</style></head><body><section><button>✨ 원두 고르기</button></section></body></html>"
+  }
+}

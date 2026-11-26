@@ -1,0 +1,48 @@
+{
+  "ruleId": "AIL-01",
+  "expect": "violation",
+  "stages": [
+    "S"
+  ],
+  "noteKo": "토큰 그라디언트 h 290·230",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "spec": {
+      "tokens": {
+        "gradient": {
+          "hero": {
+            "$type": "gradient",
+            "$value": [
+              {
+                "color": {
+                  "colorSpace": "oklch",
+                  "components": [
+                    0.55,
+                    0.2,
+                    290
+                  ],
+                  "alpha": 1
+                },
+                "position": 0
+              },
+              {
+                "color": {
+                  "colorSpace": "oklch",
+                  "components": [
+                    0.6,
+                    0.15,
+                    230
+                  ],
+                  "alpha": 1
+                },
+                "position": 1
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

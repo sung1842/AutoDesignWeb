@@ -1,0 +1,15 @@
+{
+  "ruleId": "AIL-24",
+  "expect": "violation",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "마지막 줄 1글자",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "vw": 1280,
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}</style></head><body><section><h1 data-role=\"hero.headline\" style=\"font-size:48px\">오늘 아침 볶은 원두입니<br>다</h1></section></body></html>"
+  }
+}

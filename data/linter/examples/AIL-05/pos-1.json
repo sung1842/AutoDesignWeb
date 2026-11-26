@@ -1,0 +1,88 @@
+{
+  "ruleId": "AIL-05",
+  "expect": "violation",
+  "severity": "error",
+  "stages": [
+    "T"
+  ],
+  "noteKo": "아이콘 카드 3열이 두 섹션에 반복",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "tree": {
+      "sections": [
+        {
+          "id": "v1",
+          "block": "value",
+          "variant": "value.icon-grid",
+          "bg": "bg",
+          "pad": 0,
+          "slots": {
+            "items": {
+              "list": [
+                {
+                  "copy": {
+                    "text": "원두",
+                    "placeholder": false
+                  }
+                },
+                {
+                  "copy": {
+                    "text": "로스팅",
+                    "placeholder": false
+                  }
+                },
+                {
+                  "copy": {
+                    "text": "배송",
+                    "placeholder": false
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "p1",
+          "block": "proof",
+          "variant": "proof.cards",
+          "bg": "surface",
+          "pad": 1,
+          "slots": {}
+        },
+        {
+          "id": "v2",
+          "block": "value",
+          "variant": "value.icon-grid",
+          "bg": "bg",
+          "pad": 0,
+          "slots": {
+            "items": {
+              "list": [
+                {
+                  "copy": {
+                    "text": "구독",
+                    "placeholder": false
+                  }
+                },
+                {
+                  "copy": {
+                    "text": "선물",
+                    "placeholder": false
+                  }
+                },
+                {
+                  "copy": {
+                    "text": "매장",
+                    "placeholder": false
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

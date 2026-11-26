@@ -1,0 +1,15 @@
+{
+  "ruleId": "AIL-24",
+  "expect": "violation",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "375px 헤드라인 4줄 이상",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "vw": 375,
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}</style></head><body><section><h1 data-role=\"hero.headline\" style=\"font-size:40px;width:335px\">성수동 골목에서 매일 아침 직접 볶은 원두를 집 앞까지 보내 드립니다</h1></section></body></html>"
+  }
+}

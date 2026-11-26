@@ -1,0 +1,49 @@
+{
+  "ruleId": "AIL-07",
+  "expect": "clean",
+  "stages": [
+    "T"
+  ],
+  "noteKo": "pad +1 섹션 1개, inverse 1개",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "tree": {
+      "sections": [
+        {
+          "id": "hero",
+          "block": "hero",
+          "variant": "hero.split",
+          "bg": "bg",
+          "pad": 1,
+          "slots": {}
+        },
+        {
+          "id": "v",
+          "block": "value",
+          "variant": "value.numbered",
+          "bg": "surface",
+          "pad": 0,
+          "slots": {}
+        },
+        {
+          "id": "p",
+          "block": "proof",
+          "variant": "proof.cards",
+          "bg": "bg",
+          "pad": 0,
+          "slots": {}
+        },
+        {
+          "id": "c",
+          "block": "cta",
+          "variant": "cta.big-type",
+          "bg": "inverse",
+          "pad": 0,
+          "slots": {}
+        }
+      ]
+    }
+  }
+}

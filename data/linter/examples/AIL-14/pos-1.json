@@ -1,0 +1,31 @@
+{
+  "ruleId": "AIL-14",
+  "expect": "violation",
+  "severity": "error",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "hero에 브랜드명·키워드 0",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "brand": {
+      "name": "한결로스터리",
+      "keywords": [
+        "핸드드립",
+        "원두 정기배송"
+      ]
+    },
+    "copy": [
+      {
+        "role": "hero.headline",
+        "text": "당신의 일상을 바꾸는 커피"
+      },
+      {
+        "role": "hero.sub",
+        "text": "매일이 특별해집니다."
+      }
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "ruleId": "AIL-24",
+  "expect": "clean",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "1280 한 줄",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "vw": 1280,
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}</style></head><body><section><h1 data-role=\"hero.headline\" style=\"font-size:48px\">아침 원두</h1></section></body></html>"
+  }
+}

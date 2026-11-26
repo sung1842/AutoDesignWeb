@@ -1,0 +1,26 @@
+{
+  "ruleId": "AIL-21",
+  "expect": "violation",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "입력에 없는 업계 1위",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "brand": {
+      "name": "한결로스터리",
+      "keywords": [
+        "핸드드립",
+        "원두 정기배송"
+      ]
+    },
+    "copy": [
+      {
+        "role": "hero.sub",
+        "text": "성수동 1위 로스터리"
+      }
+    ]
+  }
+}

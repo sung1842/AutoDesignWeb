@@ -1,0 +1,25 @@
+{
+  "ruleId": "AIL-20",
+  "expect": "violation",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "헤드라인 느낌표",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "spec": {
+      "copy": {
+        "tone_id": "T-EDITORIAL",
+        "exclaim_max_per_page": 0
+      }
+    },
+    "copy": [
+      {
+        "role": "hero.headline",
+        "text": "지금 만나보세요!!"
+      }
+    ]
+  }
+}

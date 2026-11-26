@@ -1,0 +1,33 @@
+{
+  "ruleId": "AIL-04",
+  "expect": "clean",
+  "stages": [
+    "T",
+    "C"
+  ],
+  "noteKo": "중앙 hero + pill이지만 배지 문구 아님",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "tree": {
+      "sections": [
+        {
+          "id": "hero",
+          "block": "hero",
+          "variant": "hero.centered",
+          "bg": "bg",
+          "pad": 1,
+          "slots": {}
+        }
+      ]
+    },
+    "copy": [
+      {
+        "role": "hero.eyebrow",
+        "text": "성수동 로스터리",
+        "style": "pill"
+      }
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "ruleId": "AIL-05",
+  "expect": "violation",
+  "severity": "warn",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "한 섹션 아이콘 카드 3열(1회 warn)",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}</style></head><body><section><div style=\"display:flex;gap:16px\"><div style=\"width:280px\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-width=\"1.5\" fill=\"none\"><circle cx=\"12\" cy=\"12\" r=\"9\"/></svg><h3>원두</h3><p>매일 볶음</p></div><div style=\"width:280px\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-width=\"1.5\" fill=\"none\"><circle cx=\"12\" cy=\"12\" r=\"9\"/></svg><h3>배송</h3><p>다음 날 도착</p></div><div style=\"width:280px\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-width=\"1.5\" fill=\"none\"><circle cx=\"12\" cy=\"12\" r=\"9\"/></svg><h3>구독</h3><p>주 1회</p></div></div></section></body></html>"
+  }
+}

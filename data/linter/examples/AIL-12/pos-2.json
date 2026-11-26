@@ -1,0 +1,48 @@
+{
+  "ruleId": "AIL-12",
+  "expect": "violation",
+  "stages": [
+    "T"
+  ],
+  "noteKo": "3칸 벤토",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "tree": {
+      "sections": [
+        {
+          "id": "v",
+          "block": "value",
+          "variant": "value.bento",
+          "bg": "bg",
+          "pad": 0,
+          "slots": {
+            "items": {
+              "list": [
+                {
+                  "copy": {
+                    "text": "원두 12종",
+                    "placeholder": false
+                  }
+                },
+                {
+                  "copy": {
+                    "text": "“매일”",
+                    "placeholder": false
+                  }
+                },
+                {
+                  "copy": {
+                    "text": "배송",
+                    "placeholder": false
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

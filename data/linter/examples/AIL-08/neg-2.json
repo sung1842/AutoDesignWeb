@@ -1,0 +1,14 @@
+{
+  "ruleId": "AIL-08",
+  "expect": "clean",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "작은 그림자 장식(blur 4px)",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}</style></head><body><section><div aria-hidden=\"true\" style=\"position:absolute;top:20px;left:20px;width:40px;height:40px;background:#ddd;filter:blur(4px)\"></div><h1>원두</h1></section></body></html>"
+  }
+}

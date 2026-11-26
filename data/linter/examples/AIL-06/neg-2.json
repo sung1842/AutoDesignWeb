@@ -1,0 +1,20 @@
+{
+  "ruleId": "AIL-06",
+  "expect": "clean",
+  "stages": [
+    "S"
+  ],
+  "noteKo": "flat 프리셋",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "spec": {
+      "l2": {
+        "depth.style": "flat",
+        "depth.shadow_level": "0"
+      },
+      "tokens": {}
+    }
+  }
+}

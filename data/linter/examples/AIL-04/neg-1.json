@@ -1,0 +1,33 @@
+{
+  "ruleId": "AIL-04",
+  "expect": "clean",
+  "stages": [
+    "T",
+    "C"
+  ],
+  "noteKo": "좌측 정렬 hero + 지역 eyebrow",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "tree": {
+      "sections": [
+        {
+          "id": "hero",
+          "block": "hero",
+          "variant": "hero.left-aligned",
+          "bg": "bg",
+          "pad": 1,
+          "slots": {}
+        }
+      ]
+    },
+    "copy": [
+      {
+        "role": "hero.eyebrow",
+        "text": "성수동 로스터리",
+        "style": "pill"
+      }
+    ]
+  }
+}

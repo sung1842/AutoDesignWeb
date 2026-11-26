@@ -1,0 +1,23 @@
+{
+  "ruleId": "AIL-21",
+  "expect": "clean",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "입력된 회원 수 사용",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "brand": {
+      "name": "한결로스터리",
+      "description": "정기배송 회원 1,200명"
+    },
+    "copy": [
+      {
+        "role": "body",
+        "text": "정기배송 회원 1,200명이 함께합니다"
+      }
+    ]
+  }
+}

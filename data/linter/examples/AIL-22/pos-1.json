@@ -1,0 +1,19 @@
+{
+  "ruleId": "AIL-22",
+  "expect": "violation",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "실명 후기",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "copy": [
+      {
+        "role": "proof.quote",
+        "text": "정말 최고예요! — 김지훈 대표"
+      }
+    ]
+  }
+}

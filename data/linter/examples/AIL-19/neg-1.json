@@ -1,0 +1,27 @@
+{
+  "ruleId": "AIL-19",
+  "expect": "clean",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "종결 다양",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "copy": [
+      {
+        "role": "body",
+        "text": "원두는 매일 볶습니다."
+      },
+      {
+        "role": "body",
+        "text": "주문은 오후 2시까지."
+      },
+      {
+        "role": "body",
+        "text": "매장을 예약해 보세요."
+      }
+    ]
+  }
+}

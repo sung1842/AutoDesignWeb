@@ -1,0 +1,14 @@
+{
+  "ruleId": "AIL-02",
+  "expect": "violation",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "히어로 제목 그라디언트 텍스트",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}</style></head><body><section><h1 style=\"background:linear-gradient(90deg,#f43f5e,#8b5cf6);-webkit-background-clip:text;background-clip:text;color:transparent\">원두 이야기</h1></section></body></html>"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "ruleId": "AIL-03",
+  "expect": "clean",
+  "stages": [
+    "S"
+  ],
+  "noteKo": "토큰 명조 + Pretendard",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "spec": {
+      "tokens": {
+        "font": {
+          "heading": {
+            "$type": "fontFamily",
+            "$value": [
+              "Nanum Myeongjo",
+              "serif"
+            ]
+          },
+          "body": {
+            "$type": "fontFamily",
+            "$value": [
+              "Pretendard",
+              "sans-serif"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

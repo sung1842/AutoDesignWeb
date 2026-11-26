@@ -1,0 +1,14 @@
+{
+  "ruleId": "AIL-02",
+  "expect": "clean",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "단색 헤드라인",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}</style></head><body><section><h1 style=\"color:#1e1a16\">원두 이야기</h1></section></body></html>"
+  }
+}

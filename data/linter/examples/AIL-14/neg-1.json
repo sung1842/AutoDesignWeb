@@ -1,0 +1,30 @@
+{
+  "ruleId": "AIL-14",
+  "expect": "clean",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "브랜드명·키워드·숫자 포함",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "brand": {
+      "name": "한결로스터리",
+      "keywords": [
+        "핸드드립",
+        "원두 정기배송"
+      ]
+    },
+    "copy": [
+      {
+        "role": "hero.headline",
+        "text": "한결로스터리, 핸드드립 원두 정기배송"
+      },
+      {
+        "role": "body",
+        "text": "성수동 매장에서 매주 2회 볶습니다."
+      }
+    ]
+  }
+}

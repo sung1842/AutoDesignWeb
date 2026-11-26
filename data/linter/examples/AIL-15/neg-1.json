@@ -1,0 +1,23 @@
+{
+  "ruleId": "AIL-15",
+  "expect": "clean",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "구체적 CTA",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "copy": [
+      {
+        "role": "button",
+        "text": "원두 고르기"
+      },
+      {
+        "role": "button",
+        "text": "매장 위치 보기"
+      }
+    ]
+  }
+}

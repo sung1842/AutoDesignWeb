@@ -1,0 +1,33 @@
+{
+  "ruleId": "AIL-03",
+  "expect": "violation",
+  "stages": [
+    "S"
+  ],
+  "noteKo": "토큰 헤딩·본문 모두 Inter",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "spec": {
+      "tokens": {
+        "font": {
+          "heading": {
+            "$type": "fontFamily",
+            "$value": [
+              "Inter",
+              "serif"
+            ]
+          },
+          "body": {
+            "$type": "fontFamily",
+            "$value": [
+              "Inter",
+              "sans-serif"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

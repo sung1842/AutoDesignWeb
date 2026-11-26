@@ -1,0 +1,14 @@
+{
+  "ruleId": "AIL-16",
+  "expect": "violation",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "indigo-500 버튼",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}</style></head><body><section><button style=\"background:#6366f1;color:#fff\">시작</button></section></body></html>"
+  }
+}

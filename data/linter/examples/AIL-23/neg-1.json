@@ -1,0 +1,19 @@
+{
+  "ruleId": "AIL-23",
+  "expect": "clean",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "[예시] 접두 자리표시",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "copy": [
+      {
+        "role": "body",
+        "text": "[예시] 텍스트를 입력하세요"
+      }
+    ]
+  }
+}

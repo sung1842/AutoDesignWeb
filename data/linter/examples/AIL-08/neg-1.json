@@ -1,0 +1,14 @@
+{
+  "ruleId": "AIL-08",
+  "expect": "clean",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "장식 없음",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}</style></head><body><section><h1>원두</h1><p>매일 볶습니다</p></section></body></html>"
+  }
+}

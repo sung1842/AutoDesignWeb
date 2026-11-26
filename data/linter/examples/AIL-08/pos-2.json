@@ -1,0 +1,14 @@
+{
+  "ruleId": "AIL-08",
+  "expect": "violation",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "뷰포트 23% radial-gradient 블롭",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}</style></head><body><section><div aria-hidden=\"true\" style=\"position:absolute;top:0;left:0;width:600px;height:400px;background:radial-gradient(circle,#f0abfc 0%,transparent 70%)\"></div><h1 style=\"position:relative\">원두</h1></section></body></html>"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "ruleId": "AIL-19",
+  "expect": "violation",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "한 단락에 권유형 3회",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "copy": [
+      {
+        "role": "body",
+        "text": "먼저 시음해 보세요. 그리고 비교해보세요. 마지막으로 선택해 보세요."
+      }
+    ]
+  }
+}

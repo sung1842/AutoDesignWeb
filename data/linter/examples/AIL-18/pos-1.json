@@ -1,0 +1,15 @@
+{
+  "ruleId": "AIL-18",
+  "expect": "violation",
+  "severity": "error",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "Lucide 기본 아이콘 8개",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}</style></head><body><section><svg class=\"lucide\" stroke-width=\"2\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><path d=\"M4 12h16\"/></svg><svg class=\"lucide\" stroke-width=\"2\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><path d=\"M4 12h16\"/></svg><svg class=\"lucide\" stroke-width=\"2\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><path d=\"M4 12h16\"/></svg><svg class=\"lucide\" stroke-width=\"2\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><path d=\"M4 12h16\"/></svg><svg class=\"lucide\" stroke-width=\"2\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><path d=\"M4 12h16\"/></svg><svg class=\"lucide\" stroke-width=\"2\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><path d=\"M4 12h16\"/></svg><svg class=\"lucide\" stroke-width=\"2\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><path d=\"M4 12h16\"/></svg><svg class=\"lucide\" stroke-width=\"2\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><path d=\"M4 12h16\"/></svg></section></body></html>"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "ruleId": "AIL-04",
+  "expect": "violation",
+  "stages": [
+    "T",
+    "C"
+  ],
+  "noteKo": "중앙 hero + ✨ New pill 배지",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "tree": {
+      "sections": [
+        {
+          "id": "hero",
+          "block": "hero",
+          "variant": "hero.centered",
+          "bg": "bg",
+          "pad": 1,
+          "slots": {
+            "eyebrow": {
+              "copy": {
+                "text": "✨ New",
+                "placeholder": false
+              }
+            }
+          }
+        }
+      ]
+    },
+    "copy": [
+      {
+        "role": "hero.eyebrow",
+        "text": "✨ New",
+        "style": "pill"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "ruleId": "AIL-13",
+  "expect": "clean",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "구체적 문장",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "copy": [
+      {
+        "role": "hero.headline",
+        "text": "성수동에서 매일 아침 볶는 원두"
+      }
+    ]
+  }
+}

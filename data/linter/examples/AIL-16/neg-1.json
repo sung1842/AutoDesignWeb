@@ -1,0 +1,14 @@
+{
+  "ruleId": "AIL-16",
+  "expect": "clean",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "서비스 토큰 radius",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}:root{--radius:3px}button{border-radius:var(--radius)}</style></head><body><section><button>시작</button></section></body></html>"
+  }
+}

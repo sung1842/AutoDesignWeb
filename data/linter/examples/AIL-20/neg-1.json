@@ -1,0 +1,29 @@
+{
+  "ruleId": "AIL-20",
+  "expect": "clean",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "느낌표 0",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "spec": {
+      "copy": {
+        "tone_id": "T-EDITORIAL",
+        "exclaim_max_per_page": 0
+      }
+    },
+    "copy": [
+      {
+        "role": "hero.headline",
+        "text": "아침 원두"
+      },
+      {
+        "role": "body",
+        "text": "매일 볶습니다."
+      }
+    ]
+  }
+}

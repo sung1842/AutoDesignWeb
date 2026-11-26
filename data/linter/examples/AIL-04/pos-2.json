@@ -1,0 +1,37 @@
+{
+  "ruleId": "AIL-04",
+  "expect": "violation",
+  "stages": [
+    "T",
+    "C"
+  ],
+  "noteKo": "pill 프리셋 + 중앙 hero + 신규 출시",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "spec": {
+      "l2": {
+        "shape.radius_family": "pill"
+      }
+    },
+    "tree": {
+      "sections": [
+        {
+          "id": "hero",
+          "block": "hero",
+          "variant": "hero.centered",
+          "bg": "bg",
+          "pad": 1,
+          "slots": {}
+        }
+      ]
+    },
+    "copy": [
+      {
+        "role": "hero.eyebrow",
+        "text": "신규 출시"
+      }
+    ]
+  }
+}

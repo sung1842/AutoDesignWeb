@@ -1,0 +1,19 @@
+{
+  "ruleId": "AIL-13",
+  "expect": "violation",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "영어 unlock",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "copy": [
+      {
+        "role": "hero.sub",
+        "text": "Unlock your mornings with us"
+      }
+    ]
+  }
+}

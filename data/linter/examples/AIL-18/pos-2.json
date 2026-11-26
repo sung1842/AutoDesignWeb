@@ -1,0 +1,31 @@
+{
+  "ruleId": "AIL-18",
+  "expect": "violation",
+  "severity": "error",
+  "stages": [
+    "T"
+  ],
+  "noteKo": "icon.set lucide",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "spec": {
+      "l2": {
+        "icon.set": "lucide"
+      }
+    },
+    "tree": {
+      "sections": [
+        {
+          "id": "hero",
+          "block": "hero",
+          "variant": "hero.split",
+          "bg": "bg",
+          "pad": 1,
+          "slots": {}
+        }
+      ]
+    }
+  }
+}

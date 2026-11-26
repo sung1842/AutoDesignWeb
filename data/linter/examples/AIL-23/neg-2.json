@@ -1,0 +1,14 @@
+{
+  "ruleId": "AIL-23",
+  "expect": "clean",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "CP-10 예시 이메일",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}</style></head><body><section><p>hello@example.com</p><p>02-000-0000</p></section></body></html>"
+  }
+}

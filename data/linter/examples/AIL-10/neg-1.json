@@ -1,0 +1,23 @@
+{
+  "ruleId": "AIL-10",
+  "expect": "clean",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "이모지 없음",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "copy": [
+      {
+        "role": "heading",
+        "text": "빠른 시작"
+      },
+      {
+        "role": "body",
+        "text": "주 1회 배송합니다."
+      }
+    ]
+  }
+}

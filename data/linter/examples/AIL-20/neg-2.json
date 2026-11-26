@@ -1,0 +1,25 @@
+{
+  "ruleId": "AIL-20",
+  "expect": "clean",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "T-PLAYFUL 헤드라인 느낌표 1",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "spec": {
+      "copy": {
+        "tone_id": "T-PLAYFUL",
+        "exclaim_max_per_page": 1
+      }
+    },
+    "copy": [
+      {
+        "role": "hero.headline",
+        "text": "아침 원두 좋아요!"
+      }
+    ]
+  }
+}

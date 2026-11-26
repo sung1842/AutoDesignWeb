@@ -1,0 +1,48 @@
+{
+  "ruleId": "AIL-05",
+  "expect": "clean",
+  "stages": [
+    "T"
+  ],
+  "noteKo": "value.numbered 3항목",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "tree": {
+      "sections": [
+        {
+          "id": "v1",
+          "block": "value",
+          "variant": "value.numbered",
+          "bg": "bg",
+          "pad": 0,
+          "slots": {
+            "items": {
+              "list": [
+                {
+                  "copy": {
+                    "text": "원두",
+                    "placeholder": false
+                  }
+                },
+                {
+                  "copy": {
+                    "text": "로스팅",
+                    "placeholder": false
+                  }
+                },
+                {
+                  "copy": {
+                    "text": "배송",
+                    "placeholder": false
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

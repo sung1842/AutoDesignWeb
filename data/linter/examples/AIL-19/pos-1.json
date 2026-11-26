@@ -1,0 +1,27 @@
+{
+  "ruleId": "AIL-19",
+  "expect": "violation",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "섹션마다 ~해보세요",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "copy": [
+      {
+        "role": "body",
+        "text": "원두를 주문해보세요."
+      },
+      {
+        "role": "body",
+        "text": "매장을 예약해 보세요."
+      },
+      {
+        "role": "body",
+        "text": "정기배송을 구독해보세요."
+      }
+    ]
+  }
+}

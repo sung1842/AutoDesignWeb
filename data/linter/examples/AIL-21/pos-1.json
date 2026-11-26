@@ -1,0 +1,26 @@
+{
+  "ruleId": "AIL-21",
+  "expect": "violation",
+  "stages": [
+    "C"
+  ],
+  "noteKo": "입력에 없는 만족도 99.9%",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "brand": {
+      "name": "한결로스터리",
+      "keywords": [
+        "핸드드립",
+        "원두 정기배송"
+      ]
+    },
+    "copy": [
+      {
+        "role": "body",
+        "text": "고객 만족도 99.9%"
+      }
+    ]
+  }
+}

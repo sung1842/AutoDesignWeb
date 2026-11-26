@@ -1,0 +1,14 @@
+{
+  "ruleId": "AIL-01",
+  "expect": "violation",
+  "stages": [
+    "D"
+  ],
+  "noteKo": "보라→하늘 그라디언트 히어로",
+  "provenance": "temp",
+  "page": null,
+  "tokens": null,
+  "input": {
+    "html": "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><style>*{margin:0;box-sizing:border-box}body{font-family:serif;color:#222;background:#fff}</style></head><body><section><div style=\"height:200px;background:linear-gradient(90deg,#7c3aed,#0284c7)\"></div></section></body></html>"
+  }
+}
