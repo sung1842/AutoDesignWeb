@@ -19,7 +19,7 @@ const dirOf = (d: string): Map<string, string> =>
       .map((f) => [f, readFileSync(join(d, f), "utf8")]),
   );
 
-describe("9.4.6 ⑪ · AC-07-20 build-answers", () => {
+describe("9.4.6 ⑪ · AC-07-20 · AC-09-17 build-answers", () => {
   const outs = [
     mkdtempSync(join(tmpdir(), "tf-golden-a-")),
     mkdtempSync(join(tmpdir(), "tf-golden-b-")),

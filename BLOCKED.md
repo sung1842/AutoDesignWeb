@@ -207,8 +207,33 @@
 ## BLK-023 · M4 · locked-conflict · 2026-11-26T21:30Z
 - 대상: 07장 7.12.1 AC 배정표(acMilestones M4 = AC-01-04~21) ↔ 09장 9.4.8 M6 범위(공유)·01장 1.5.2 공개 보기(`/r/[shareId]`, `GET /api/share/:shareId`)
 - 증상: AC-01-20(공개 모드에서 공감 평가·삭제·"이 취향으로 시안 만들기" 0건, "나도 진단하기"·"신고" 1건)은 공유 링크·ShareView·신고 모달(1.10.3, M7 신고 창구)이 있어야 검사할 수 있는데 공유는 M6 범위
-- 재현: pnpm -s qa:trace --upto M4 (AC-01-20 매핑 없음)
+- 재현: pnpm vitest run tests/acceptance/m4/blocked.test.ts -t "AC-01-20 공개 결과 화면"
 - 시도: (1) 공유 API를 M4에 당겨 구현 → 09장 마일스톤 범위 위반·M6 의존(공유 생성 규칙·share_links RLS) (2) 소유자 화면으로 대체 → 공개 모드 검사가 아님
 - 처리: M6에서 공유 구현 후 tests/acceptance/m6에 AC-01-20 테스트를 두되 배정표가 M4라 qa:trace는 m4 디렉터리만 인정 → 배정표 수정 필요
 - 제안 수정안(사람): 07장 7.12.1 배정표에서 AC-01-20을 M6으로 옮기고 spec:extract 재생성·relock
+- 상태: open
+
+## BLK-024 · M4 · locked-conflict · 2026-11-26T21:50Z
+- 대상: 09장 9.4.6 ①·④(survey-items-count·sim-diagnosis-gate = blockable, BLK 유형 survey-items·sim-limit)·AC-09-19(U-09) ↔ M0에 잠근 verify 러너(scripts/verify/run.ts)
+- 증상: 잠긴 러너는 verify:mN 단계가 guard·lint·typecheck·unit·trace·acceptance·e2e뿐이고 `survey-items-count`(`pnpm survey:build --check`) 단계가 없다. 수용 테스트 실패를 blocked로 바꾸는 것은 locked-conflict 유형 BLK의 재현 명령(-t)뿐이라, BLK-022(survey-items) 때문에 실패하는 수용 테스트가 verify:m4를 fail로 만든다. AC-09-19 메타 테스트(활성 카드 47장 픽스처 → pass_blocked·survey-items-count blocked)도 러너 수정 없이는 만들 수 없음
+- 재현: pnpm vitest run tests/acceptance/m4/survey-build.test.ts -t "활성 카드 = 48장 전부"
+- 재현: pnpm vitest run tests/acceptance/m4/survey-build.test.ts -t "커밋된 manifest로 survey:build --check 종료 코드 0"
+- 재현: pnpm vitest run tests/acceptance/m4/survey-build.test.ts -t "축별 활성 쌍 ≥ 19"
+- 재현: pnpm vitest run tests/acceptance/m4/sim.test.ts -t "x_card를 한 축 +0.1 옮기면 RMSE가 바뀐다"
+- 재현: pnpm vitest run tests/acceptance/m4/sim.test.ts -t "모든 차단 합격선 통과"
+- 재현: pnpm vitest run tests/acceptance/m4/golden-answers.test.ts -t "2회 실행 출력 바이트 동일"
+- 재현: pnpm vitest run tests/acceptance/m4/golden-answers.test.ts -t "β 8 → 8.5로 재생하면"
+- 재현: pnpm vitest run tests/acceptance/m4/blocked.test.ts -t "AC-09-19 verify:m4 계획에"
+- 시도: (1) 러너에 survey-items-count 단계 추가 → scripts/verify 잠금(F01) (2) 테스트 기준 완화 → 금지
+- 처리: 위 7건은 BLK-022(활성 자극물 부족)가 원인. 이 BLK가 verify에서 blocked로 표시되게 한다. 사람 정규화기로 BLK-022가 풀리면 7건은 녹색이 되어야 한다
+- 제안 수정안(사람): scripts/verify/plan.ts에 m4 이상 `survey-items-count`(survey:build --check, blockable) 단계와 survey-items·sim-limit 유형 BLK 매핑을 넣고 relock, AC-09-19 메타 테스트 추가
+- 상태: open
+
+## BLK-025 · M4 · locked-conflict · 2026-11-26T22:00Z
+- 대상: 09장 AC-09-17 뒷부분("m4-done 이후 data/golden/** 1바이트 변경은 guard FAIL", "tuned 변경 커밋에 새 muRef가 없으면(또는 그 반대면) guard FAIL") ↔ 잠긴 guard(scripts/guard)·자체 잠금 규칙 4(HEAD 커밋에서 새로 추가된 파일만)
+- 증상: guard:tuned에 muRef 동반 변경 검사가 없고(scripts/guard 잠금), data/golden/*.json은 M1에 추가된 파일이라 자체 잠금 규칙 4로 바로 등록할 수 없다(AD-031처럼 지웠다 다시 추가하는 단일 커밋 필요). 실데이터 build-answers도 BLK-022로 0/32
+- 재현: pnpm vitest run tests/acceptance/m4/golden-answers.test.ts -t "2회 실행 출력 바이트 동일"
+- 시도: (1) guard 수정 → 잠금 위반 (2) 테스트로 대체 → guard 동작 검사가 아님
+- 처리: BLK-022 해소 후 build-answers 실행 → AD-031 방식으로 data/golden 단일 커밋 재추가·자체 잠금. muRef 동반 검사는 사람 guard 수정 대기
+- 제안 수정안(사람): scripts/guard/stages/tuned.ts에 "config/diagnosis-tuned.json 변경 커밋 ⇔ data/golden/*.json expected.muRef 변경" 검사 추가 후 relock, tests/acceptance/m4에 guard 메타 테스트 추가
 - 상태: open

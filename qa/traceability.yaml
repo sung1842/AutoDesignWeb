@@ -191,3 +191,6 @@ AC-01-18: [tests/acceptance/m4/ui.test.ts#"AC-00-03 · AC-01-17 · AC-01-18 · 9
 AC-01-19: [tests/acceptance/m4/ui.test.ts#"AC-00-02 · AC-01-15 · AC-01-16 · AC-01-19 · AC-01-57 · AC-05-10 e2e/m4/result.spec.ts 전부 통과"]
 AC-01-21: [release/manual-checklist.md#"AC-01-21"]
 AC-01-55: [tests/acceptance/m4/ui.test.ts#"AC-01-04 · AC-01-05 · AC-01-06 · AC-01-07 · AC-01-08 · AC-01-10 · AC-01-11 · AC-01-12 · AC-01-55 e2e/m4/quiz.spec.ts 전부 통과"]
+AC-01-20: [tests/acceptance/m4/blocked.test.ts#"AC-01-20 공개 결과 화면 /r/[shareId]와 GET /api/share/:shareId가 있다"]
+AC-09-17: [tests/acceptance/m4/golden-answers.test.ts#"9.4.6 ⑪ · AC-07-20 · AC-09-17 build-answers"]
+AC-09-19: [tests/acceptance/m4/blocked.test.ts#"AC-09-19 verify:m4 계획에 survey-items-count(blockable) 단계가 있다"]
