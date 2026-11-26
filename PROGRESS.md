@@ -3,13 +3,13 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T22:08Z, since: 2026-11-26T23:17Z}
+- lock: {owner: 2026-11-26T22:08Z, since: 2026-11-26T22:43Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-27 12:08  # 이 세션 시작(07:08 KST)+5h 추정
-- 마지막 갱신: 2026-11-27 08:17 KST (M5-04 brief 완료, verify:m4 진행 중)
+- 마지막 갱신: 2026-11-27 07:43 KST (M5-01d llm.test WIP, verify:m4 진행 중)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -153,7 +153,7 @@
   - [~] 09 eval:golden:build-answers·골든 자체 잠금: [x] buildGoldenAnswers·replayGolden·CLI(엔진 beta 덮어쓰기, 계획 L1 픽스처 32/32·M1a 24/24·β8.5 9/24) [ ] 실데이터 실행(BLK-022로 0/32) [ ] m4-done에서 data/golden 자체 잠금
   - [ ] 10 verify:m4 → m4-done: [ ] 1차 실행(2026-11-26 19:51Z 시작, 컨테이너 교체로 결과 없음 → 재실행)
 - M5 계획(9.4.7, AC: 00-14~17, 01-01·02·22~34·51·58, 04-01·02·14~16·22~25·37·38·44·46·47, 06-07b·09·10·13·15~18·20~23·38~40·45·47·52·55·56·59~63, 07-02·13, 08-24~26·38~42, 09-07·13·18. 읽을 장은 CLAUDE.md 구현 규칙 3절):
-  - [ ] 01 M5 수용 테스트(tests/acceptance/m5, AD-031): [x] a 인증·귀속(AuthPort local·매직링크·dev_mail_outbox·attach_anon, auth.test WIP, ASM-103) [x] b 브랜드 입력·BrandInput 검증·인젝션 방어(brief.test WIP, fixtures/brands 3파일, ASM-105) [ ] c 생성 API·Idempotency·진행 잡 1개·폴링(06장) [ ] d llm gateway·models.yaml·MockProvider 시나리오(9.6.2·TC-R) [ ] e pipeline 3변형→후보 6→검증·수리→렌더→게이트→점수→노출·재생성·폴백 [ ] f 비용·quota_ledger·킬 스위치·초대·환불(06장 6.9.4·6.10) [ ] g S04~S08 화면 E2E(01장) → traceability·자체 잠금
+  - [ ] 01 M5 수용 테스트(tests/acceptance/m5, AD-031): [x] a 인증·귀속(AuthPort local·매직링크·dev_mail_outbox·attach_anon, auth.test WIP, ASM-103) [x] b 브랜드 입력·BrandInput 검증·인젝션 방어(brief.test WIP, fixtures/brands 3파일, ASM-105) [ ] c 생성 API·Idempotency·진행 잡 1개·폴링(06장) [x] d llm gateway·models.yaml·MockProvider 시나리오(llm.test WIP 20건, ASM-107) [ ] e pipeline 3변형→후보 6→검증·수리→렌더→게이트→점수→노출·재생성·폴백 [ ] f 비용·quota_ledger·킬 스위치·초대·환불(06장 6.9.4·6.10) [ ] g S04~S08 화면 E2E(01장) → traceability·자체 잠금
   - [x] 02 AuthPort local·세션 쿠키·매직링크·attach_anon·/api/me·/api/consents(auth.test 7/7, ASM-104. MeView quota 등은 07·08)
   - [ ] 03 동의(S05)·초대 코드
   - [x] 04 BrandInput zod·정규화·maskPII·judgeBrief(편집 거리 (c))·brief-drafts POST/GET(brief.test 8/8, ASM-106). 레퍼런스명 attestation(⑥)은 projects(08)
@@ -170,9 +170,10 @@
 - [ ] release:check 요약
 
 ## 로그
-- 2026-11-27 08:17 | M5-04 brief-drafts·정규화·마스킹·고위험 판정(brief.test 8/8, AC-08-41)
-- 2026-11-27 07:58 | M5-01b brief.test WIP·fixtures/brands. verify:m4 백그라운드 진행 중
-- 2026-11-27 07:31 | M5-02 AuthPort local·mail local·콜백·me·consents(auth.test 7/7). BLK-026 재현
+- 2026-11-27 07:43 | M5-01d llm.test WIP(시나리오 파서·models.yaml·Mock 역할·장애). 타임스탬프 오기 정정
+- 2026-11-27 07:32 | M5-04 brief-drafts·정규화·마스킹·고위험 판정(brief.test 8/8, AC-08-41)
+- 2026-11-27 07:25 | M5-01b brief.test WIP·fixtures/brands. verify:m4 백그라운드 진행 중
+- 2026-11-27 07:16 | M5-02 AuthPort local·mail local·콜백·me·consents(auth.test 7/7). BLK-026 재현
 - 2026-11-27 07:08 | 잠금 회수(이전 20:24Z, 104분). 로컬 main이 11-19 옛 이력 → 백업 브랜치로 두고 origin/main 사용
 - 2026-11-27 05:24 | M5-01a auth.test WIP(매직링크·귀속·로그아웃·동의). verify:m4 진행 중
 - 2026-11-27 05:20 | BLK-026 등록(잠긴 contract.test 사례 하드코딩), HUMAN_TODO 정리

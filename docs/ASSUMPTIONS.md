@@ -731,28 +731,28 @@
 - 영향 범위: packages/auth, apps/web/src/server, packages/db/src/testing
 - 되돌리기 비용: 중간
 
-## ASM-104 · M5 · gap · 2026-11-26T22:20Z
+## ASM-104 · M5 · gap · 2026-11-26T22:14Z
 - 질문: AuthPort local 세부(세션 수명·리프레시, 메일 템플릿 형식, 문서 현재 버전 원천, 의존 방향), consents 필수 판정
 - 근거 탐색: 06장 6.5.2·6.5.4·6.13.1 AuthPort 행·메일 템플릿 표, 08장 8.7.4 B·C, 09장 9.1.3 auth/mail 행
 - 선택: ① 세션 JWT exp 30일, 실제 유효성은 shim `auth.sessions.not_after`(signOut·adminSignOutAll = now()). 6.13.1의 "세션 세대 번호"와 같은 효과(이전 JWT 거부), 액세스 1시간·리프레시 회전은 supabase 드라이버 몫 ② 메일 템플릿 `packages/mail/templates/<id>.ko.md` = `subject: …` / `---` / 본문, 변수 `{{name}}`만. auth local은 MailPort local(dev_mail_outbox)로 보낸다. auth·mail → db 의존(9.1.3 표에 금지 없음) ③ 현재 문서 버전은 `apps/web/src/server/auth.ts` `CURRENT_DOC_VERSIONS`(terms·age_14·privacy_notice = 2026-11-16, legal/*.md에 frontmatter가 없어 임시). legal 확정 시 frontmatter에서 읽게 바꾼다 ④ POST /api/consents: 현재 버전 age_14·terms agreed=true가 없으면 400 VALIDATION_FAILED(issues code `required_consent`), 첫 동의 화면 이동은 "첫 로그인"이 아니라 `consentsOk=false`면 매번(문서 버전 변경 재동의를 같이 처리, 8.7.4) ⑤ supabase 드라이버(GoTrue)는 needs_ci, M5는 local만 ⑥ CONSENT_HASH_KEY·ADMIN_EMAILS는 Deps 값 → env 순, 테스트에서 키가 없으면 프로세스별 임시 키 ⑦ MeView는 이번 단위에서 id·email·role·consentsOk·inviteOk만(quota·retest·adoptionFollowup은 M5-07·08)
 - 영향 범위: packages/auth, packages/mail, apps/web/src/server/auth.ts
 - 되돌리기 비용: 낮음
 
-## ASM-105 · M5 · gap · 2026-11-26T22:55Z
+## ASM-105 · M5 · gap · 2026-11-26T22:24Z
 - 질문: 브리프 임시본 API의 `maskedFields` 형태, 경계값 위반 상태 코드(07장 TC-B-07 "422 {field, code}" ↔ 01장 AC-01-25·1.5.5.3 "400 VALIDATION_FAILED"), 브랜드 판정 거부 감사 기록 형태, fixtures/brands 구성
 - 근거 탐색: 06장 6.4.3 brief-drafts·6.4.5, 01장 1.5.5.2·1.5.5.3, 07장 7.4.2, 08장 8.7.5·8.9.2, 09장 9.4.7 산출물
 - 선택: ① `maskedFields` = 종류별 건수 객체 `{phone?, email?, rrn?, bizno?, card?, account?}`(0은 키 생략, 마스킹 없으면 `{}`). M1·M2 → phone, M3 email, M4 rrn, M5 bizno, M6 card, M7 account. S06 배너 "전화번호 1건"을 그대로 만들 수 있는 형태 ② 형식·길이·빈 값 위반은 모두 400 `VALIDATION_FAILED` + `details.issues[{path, code}]`(path는 요청 본문 기준 `brand.name`, `brand.keyPoints.0` 등, 미지 필드는 `brand`). 01장이 BrandInput 원천이고 6.4.2 코드표도 400 → TC-B-07의 422 표기는 01장을 따른다 ③ 422는 남용 판정(`BLOCKED_BRAND`)·`BRAND_ATTESTATION_REQUIRED`만 ④ 거부 시 `admin_audit_logs` 1행: action `brand_blocked`, target_type `brief`, target_id = 정규화 브랜드명 SHA-256(hex), after = `{reason, ref}`(원문 없음), admin_hash null ⑤ 픽스처 `fixtures/brands/normal.json`(정상 10, 저장값 = 입력값), `security.json`(보안 페이로드 21, 기대 결과 포함), `high-risk.json`(고위험 변형 20 + 일반 50, AC-08-41). 편집 거리 규칙 8.9.2 (c)는 high-risk.json의 `Coupamg Eats`로 검사 ⑥ 길이는 정규화 후 grapheme 수, keyPoints 중복은 정규화 후 완전 일치
 - 영향 범위: tests/acceptance/m5/brief.test.ts, apps/web/src/server/brief.ts(예정), packages/compliance
 - 되돌리기 비용: 낮음
 
-## ASM-106 · M5 · gap · 2026-11-26T23:15Z
+## ASM-106 · M5 · gap · 2026-11-26T22:31Z
 - 질문: 6.4.5 ② 제로폭 제거(U+200D 포함) ↔ 07장 TC-B-03 가족 이모지 원문 유지 충돌, maskPII 패턴 적용 순서, 브리프 남용 판정의 필드 범위
 - 근거 탐색: 06장 6.4.5, 07장 TC-B-03, 08장 8.7.5 M1~M7·8.9.2 (a)~(d)·입력별 적용 단계 표
 - 선택: ① U+200D(ZWJ)는 앞뒤가 그림 문자(Extended_Pictographic, 변이 선택자·피부색 수식 허용)인 이모지 ZWJ 시퀀스 안에서만 남기고 나머지는 제거. U+200B·U+200C·U+FEFF는 항상 제거 ② maskPII 적용 순서 M3 → M4 → M6(Luhn) → M5 → M7 → M1 → M2(긴·구체적 패턴 먼저, 사업자번호·카드가 전화로 오인되지 않게) ③ `judgeBrief`(packages/compliance): 고위험 (a)~(c)는 브랜드명만, (d) 도메인은 브랜드명·한 줄 소개·강점, 피싱은 한 줄 소개·강점·주요 고객, 금지 업종은 넷 다. 판정 입력은 정규화·마스킹 후 값. G-13용 `judgeAbuse`는 기존대로 모든 텍스트에 (a)~(c)를 적용하고 (c) 편집 거리·접미 분리 비교를 추가 ④ 8.9.2 사양 상수(alias 길이 3·5, 거리 1)는 thresholds가 아니므로 상수 객체로 둔다(0c8eca9와 같은 방식)
 - 영향 범위: packages/api-contract/src/brand.ts, packages/compliance, apps/web/src/server/brief.ts
 - 되돌리기 비용: 낮음
 
-## ASM-107 · M5 · gap · 2026-11-26T23:50Z
+## ASM-107 · M5 · gap · 2026-11-26T22:41Z
 - 질문: MockProvider·models.yaml의 코드 계약(공급자 계층 인터페이스, L1~L5 필드 위치, 계열 필드, 기동 검사 명령, mock usage 픽스처 형식), CopyDeck zod 위치
 - 근거 탐색: 06장 6.9.1~6.9.6, 08장 8.7.6·8.8.1~8.8.4, 09장 9.6.1·9.6.2, 04장 4.6.2·4.10.5
 - 선택: ① 공급자 계층 `createMockProvider({scenario, latencyMs?, sleep?}).complete(MockCall)`. MockCall = `{role, callKind, candidateIndex: 0..5|null, attempt, input, signal, cacheState?: 'none'|'cache_write'|'cached'}`. 결과 = `{kind:'ok', text, usage:{tokensIn, cachedTokensIn, cacheWriteTokensIn, tokensOut, images}, latencyMs, priceMultiplier, estimateMultiplier}` | `{kind:'rate_limited', retryAfterMs}` | `{kind:'provider_error', httpStatus}` | `{kind:'refused'}` | `{kind:'aborted'}`. 스키마 검증·재시도·폴백·예산·llm_calls 기록은 그 위의 `callLlm`(6.9.1) 몫 ② 입력: gen_copy `{brand, purpose}`, gen_layout `{spec(DesignSpec), purpose, brand, deck}`, judge_vision `{candidates:[{id},{id}]}`(배열 순서 = 위치 A·B), ref_tagger `{referenceId}` ③ `parseScenario(s)` → `{name, sticky, scope:{kind:'all'}|{kind:'candidate', index}|{kind:'role', role}}`, `*`는 all, 모르는 값은 `LlmError('E_MOCK_SCENARIO')` ④ models.yaml 각 항목(primary·fallbacks)에 `family`(공급자 계열, 4.10.5 judge 분리 검사)와 `compliance:{L1..L5: boolean, checked_at}`(8.8.1. 사람이 원문 확인 후 true). `checkModelsCompliance(models)` = 미충족·미승인 목록(temp 상태면 비어 있지 않음 → AC-08-39는 사람 확인 전까지 BLK) ⑤ 기동 검사 `pnpm llm:check`(LLM_MODE=live|record면 `assertLiveReady` → `UnapprovedProcessorError`면 종료 코드 1, mock·replay는 승인 검사 생략 후 0) ⑥ `fixtures/llm/mock-prompt-sizes.json` = `{roles:{<role>:{static, dynamic, output, repair_dynamic?}}}` 문자 수(6.9.4 ② 표 토큰 × 3), usage = ceil(문자/3). cache_write면 static을 cacheWriteTokensIn, cached면 cachedTokensIn, none이면 tokensIn에 더한다 ⑦ 배율: cost_spike 단가·추정 10, cost_ramp 1.2, usage_overrun usage 3배·추정 1 ⑧ `CopyDeckSchema(purpose)`는 packages/layout-schema(4.6.2 키 표, 용도별 고정 키, 추가·삭제 금지) ⑨ `mockSeed({specHash, candidateIndex, role, callKind, attempt})` = SHA-256 하위 32비트(부호 없는 정수)
