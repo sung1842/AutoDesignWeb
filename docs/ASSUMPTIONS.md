@@ -674,3 +674,10 @@
 - 선택: ① 라우트 로직은 `apps/web/src/server/api.ts`의 `handle(req: Request, deps: {db, webOrigin, now?}) → Response`(표준 Fetch API), Next 라우트 파일(`app/api/**/route.ts`)은 이것에 위임만 한다 → 수용 테스트는 in-process 호출 ② 서버 처리 시간 = 응답 헤더 `Server-Timing: app;dur=<ms>`(입력 파싱~DB 커밋), 관측 시간 = 테스트가 잰 handle 왕복. HTTP 경유 관측은 M4 E2E(⑧)에서 ③ `seedSurveyFixture(db, {activeCard?})`(packages/db testing) = card_plan·ab_plan 전부를 x = 계획 L1·더미 자산으로 survey_items에 upsert(active, 필터 밖 카드는 draft) ④ 계약 zod는 `@tastefit/api-contract`의 `SurveyViewSchema`·`ResultViewSchema`·`SurveyItemsViewSchema`(6.4.3 타입 그대로) ⑤ 문항 kind 매핑: 엔진 four → pick4
 - 영향 범위: apps/web/src/server, packages/api-contract, packages/db/src/testing, tests/acceptance/m4/api.test.ts
 - 되돌리기 비용: 중간
+
+## ASM-096 · M4 · gap · 2026-11-26T18:55Z
+- 질문: `POST /api/events`의 Event 본문 필드(06장은 `Event[1..20]`만), client가 server 이벤트를 보낼 때 처리, 배치 일부 위반 처리, identity_links 기록 함수 위치
+- 근거 탐색: 00장 8.2~8.4, 06장 6.4.1(camelCase)·6.4.3 events 행·6.4.4(event_id on conflict)
+- 선택: ① Event = `{eventId: uuid, name, sessionId, device: mobile|tablet|desktop, clientTs, referrerHost?, utm?: {source?,medium?,campaign?}, props}`(strict). 서버가 ts·anon_id(쿠키)·user_id·source='client'·app_version·taxonomy_version(현재 active 시즌)을 채운다 ② 레지스트리 `EVENT_REGISTRY: Record<name, {source, props: zod strict}>`(@tastefit/api-contract), source=server 이름이 client 배치에 오면 400 ③ 배치 중 하나라도 위반이면 배치 전체 400 `VALIDATION_FAILED`·저장 0 ④ `linkIdentity(tx, anonId, userId)`는 packages/db(insert … on conflict do nothing). 최초 연결 우선은 분석 쿼리 쪽(8.4) ⑤ 서버 이벤트는 진단 응답과 같은 트랜잭션에서 events에 insert(source='server', session_id = 'server')
+- 영향 범위: packages/api-contract, packages/db, apps/web/src/server, tests/acceptance/m4/events.test.ts
+- 되돌리기 비용: 낮음
