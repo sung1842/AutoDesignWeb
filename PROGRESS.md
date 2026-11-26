@@ -3,13 +3,13 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T22:08Z, since: 2026-11-26T23:04Z}
+- lock: {owner: 2026-11-26T22:08Z, since: 2026-11-26T23:15Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-27 12:08  # 이 세션 시작(07:08 KST)+5h 추정
-- 마지막 갱신: 2026-11-27 08:04 KST (M5-01e pipeline.test WIP, 다음 M5-06 파이프라인 구현)
+- 마지막 갱신: 2026-11-27 08:15 KST (M5-06a 파이프라인 1차, 다음 06b 다양성·수정 루프)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -158,9 +158,9 @@
   - [ ] 03 동의(S05)·초대 코드
   - [x] 04 BrandInput zod·정규화·maskPII·judgeBrief(편집 거리 (c))·brief-drafts POST/GET(brief.test 8/8, ASM-106). 레퍼런스명 attestation(⑥)은 projects(08)
   - [~] 05 packages/llm: [x] models.yaml(temp)·승인 검사·llm:check·시나리오 파서·MockProvider(ok·장애·usage)·CopyDeck(llm.test 19/20, BLK-027) [ ] callLlm(스키마 검증·재시도·폴백·예산·llm_calls·비용식) [ ] 효과표·mixed 2·4·low_score 트리·수리 규칙 [ ] 프롬프트 프런트매터·prompts.lock
-  - [ ] 06 pipeline(변형·후보·수리·렌더·게이트·점수·노출·재생성·폴백)
+  - [~] 06 pipeline: [x] a apps/worker/src/jobs/generation.ts S1~S9 1차(카피 폴백 체인·레이아웃 6·스키마 수리·평가·비전 기록·선택·폴백·R-15·예외 격리. axe 스텁 로컬 확인: ok·copy_schema_fail·copy_refusal·invalid_json@0·schema_violation@2·injection_echo·lint_error 기대대로) [ ] b 다양성(diversity)·수정 루프(repair_quality)·전 후보 재생성 1회·효과표·mixed 2·4·low_score 트리 [ ] c SLO 타이머 120/180s·예산 예약(6.9.4)·pg-boss 소비자
   - [ ] 07 worker generation 잡·SLO 타이머·취소 환불·quota_ledger
-  - [~] 08 생성 API·폴링·이벤트: [x] a projects·generations·GET 폴링·ETag·멱등·attestation·retention brief_drafts [ ] b MockupCard 채우기(워커 후)·cancel·generate_request 이벤트·GET /api/projects(:id)
+  - [~] 08 생성 API·폴링·이벤트: [x] a projects·generations·GET 폴링·ETag·멱등·attestation·retention brief_drafts [~] b [x] MockupCard 채우기 [ ] cancel·generate_request 이벤트·GET /api/projects(:id)
   - [ ] 09 S04 로그인·S05 동의·S06 브리프·S07 대기·S08 비교 화면
   - [ ] 10 verify:m5 → m5-done
 - M3 이월: (B18 재생성은 M2-09d3으로 당김), B15 골격을 실제 예시로 교체 후 자체 잠금(ASM-021)
@@ -170,6 +170,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 08:15 | M5-06a 파이프라인 1차(잡 ~12s). 실제 실행은 BLK-008(G-08 axe)로 전부 failed — 스텁으로만 확인
 - 2026-11-27 08:04 | M5-01e pipeline.test WIP(14건). 주의: BLK-008(axe 없음) 때문에 G-08 실패 → 노출 0 예상
 - 2026-11-27 07:59 | M5-08a 프로젝트·생성 API(generation-api.test 9/9). verify:m4는 /home/claude/tf-verify-m4 워크트리(592aa1f)에서 실행
 - 2026-11-27 07:51 | M5-05 MockProvider·models.yaml·CopyDeck(llm.test 19/20, AC-08-39 = BLK-027 사람)
