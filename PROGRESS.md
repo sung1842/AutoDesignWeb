@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T13:45Z, since: 2026-11-26T16:24Z}
+- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T18:09Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
-- limit.next_reset_kst: 2026-11-27 03:45  # 이 세션 시작(22:45 KST)+5h 추정
+- limit.next_reset_kst: 2026-11-27 08:08  # 이 세션 시작(03:08 KST)+5h 추정
 - 마지막 갱신: 2026-11-27 01:07 KST (M3 완료 pass_blocked, 다음 M4)
 
 ## 실행 환경 사실(2026-11-18 점검)
@@ -159,6 +159,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 03:09 | 세션 시작, 잠금 획득(이전 잠금 16:24Z 90분 초과). M4-04a surveyPage 커밋 확인
 - 2026-11-27 01:24 | M4-01b sim 수용 테스트 WIP(x_card 7건은 survey:build 뒤 녹색 예정)
 - 2026-11-27 01:22 | M4-03 sim:survey 시뮬레이터·튜너. 합성 dev 미달 2(RMSE 0.1215/0.12, 앵커 0.930/0.95)
 - 2026-11-27 01:15 | M4-02 진단 엔진(updateMNL·nearestType·stage1Score·세션 엔진). 재생 순서 기준 BLK-020
@@ -173,21 +174,3 @@
 - 2026-11-26 23:16 | M3-07 추출기 경로·evaluateCandidate·자기검증 8/8·정규화기 트리거. 앵커 왕복 BLK-018·라벨 BLK-017
 - 2026-11-26 23:12 | M3-06 tasteMatch·eligibility·rankScore·selectVisible·QualityReportSchema. scoring.test 17/17
 - 2026-11-26 23:10 | M3-05 게이트·조화 순수 함수, 원본 유사도 G2·G3·G5, phash64, abuse 판정. gates.test 35/35
-- 2026-11-26 23:05 | M3-03 lintSnapshot·M3-04 B15 예시 96 자체 잠금. linter.test 30/31(BLK-016)
-- 2026-11-26 23:00 | M3-02 linter 24규칙·lintAll·matchCliche(AC-04-12 녹색). 메타 테스트 칸 분리 버그 BLK-016
-- 2026-11-26 22:50 | BLK-015 해결(사람 relock), 재개. 세션 운영 변경 AD-034(끊길 때까지 진행·주간 게이트)
-- 2026-11-26 20:25 | HALT(BLK-015): 잠근 M3 테스트에 per-test 타임아웃 → guard F06. 수정안 wip/blocked-m3-timeouts, 사람 relock 대기
-- 2026-11-26 20:05 | extractor dom.ts 리터럴 4건 → DOM_SPEC.groupMin·bg.length(감사 0건)
-- 2026-11-26 19:50 | M3-01 완료: test(acc) 09da0ab 자체 잠금 5파일(AD-031) → 다음: M3-02 linter 공개 API 자리표시·규칙
-- 2026-11-26 19:40 | M3-01f 준비: traceability M3 23행, audit 테스트 리터럴 0(BLK-014), toL1 사용 수정
-- 2026-11-26 19:15 | M3-01e golden.test(폴백 72·골든 CP·G-11·CF 픽스처·lint-matrix·AC-08-14~16)·ASM-081
-- 2026-11-26 18:50 | M3-01d extractor.test(단일 경로·왕복·앵커 거리·p95·정규화기 버전)·ASM-080
-- 2026-11-26 18:20 | M3-01c scoring.test(TM·S_free·eligible·rank·QualityReport·임계값 원천)·ASM-079
-- 2026-11-26 18:00 | M3-01b gates.test(G·H 순수 함수 픽스처, G-11 G2·G3·G5)·ASM-078
-- 2026-11-26 17:35 | M3 계획 8단위, M3-01a linter.test(AC-04-12·26·①)·ASM-077
-- 2026-11-26 16:47 | 세션 종료(잠금 해제). 다음 M3-01 계획(9.4.5)·수용 테스트
-- 2026-11-26 16:45 | verify:m2 4차 pass_blocked → m2-done(ae60108, tags 맵). 다음 M3-01 계획·수용 테스트
-- 2026-11-26 16:15 | verify:m2 3차 fail: 비BLK는 AC-06-32 m0(verify 안에서만 재현) 1건. 4차 진단 실행
-- 2026-11-26 15:55 | verify:m2 2차 fail(비BLK 4: 03-33 시간·06-32 간헐·BLK-009/012 재현 명령 누락→보완), 하네스 서체 묶음 생성
-- 2026-11-26 15:57 | 세션 종료(잠금 해제). 다음 M2-14e 3차 verify:m2
-- 2026-11-26 14:42 | M2-14d AC-03-18 PS-T1~T8 녹색(각 50~90s). 남은 14d = 빈 캐시 대비 검토
