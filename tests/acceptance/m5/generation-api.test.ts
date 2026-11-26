@@ -162,13 +162,13 @@ afterAll(async () => {
 });
 
 describe("AC-06-17 · AC-06-13 인증·동의 게이트", () => {
-  it("비로그인 POST /api/projects·생성 요청 → 401", async () => {
+  it("AC-06-17 비로그인 POST /api/projects·생성 요청 → 401", async () => {
     const jar = new Jar();
     const rid = await completeSurvey(jar);
     expect((await project(jar, rid)).status).toBe(401);
     expect((await generate(jar, randomUUID(), key())).status).toBe(401);
   });
-  it("동의 없는 로그인 사용자의 프로젝트·생성 요청 → 403 CONSENT_REQUIRED(details.docTypes)", async () => {
+  it("AC-06-13 동의 없는 로그인 사용자의 프로젝트·생성 요청 → 403 CONSENT_REQUIRED(details.docTypes)", async () => {
     const { jar, resultId } = await readyUser();
     const pid = String((await project(jar, resultId)).body.projectId);
     const fresh = new Jar();

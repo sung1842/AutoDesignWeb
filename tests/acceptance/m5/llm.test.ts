@@ -221,7 +221,7 @@ describe("06장 6.9.2 models.yaml · 08장 8.8", () => {
 });
 
 describe("AC-04-15 MockProvider 역할별 결정 응답(ok)", () => {
-  it("gen_copy: 용도마다 CopyDeck 스키마 통과, hero.headline 3개의 kind가 모두 다름, 2회 동일", async () => {
+  it("AC-04-15 gen_copy: 용도마다 CopyDeck 스키마 통과, hero.headline 3개의 kind가 모두 다름, 2회 동일", async () => {
     for (const purpose of PURPOSES) {
       const d = await copyDeck(purpose);
       const r = CopyDeckSchema(purpose).safeParse(d);
@@ -233,7 +233,7 @@ describe("AC-04-15 MockProvider 역할별 결정 응답(ok)", () => {
       expect(JSON.stringify(await copyDeck(purpose))).toBe(JSON.stringify(d));
     }
   });
-  it("gen_layout: 후보 6개 모두 LayoutTreeRaw 통과, 텍스트 리터럴 0(덱 참조만), 같은 입력 2회 바이트 동일", async () => {
+  it("AC-04-15 gen_layout: 후보 6개 모두 LayoutTreeRaw 통과, 텍스트 리터럴 0(덱 참조만), 같은 입력 2회 바이트 동일", async () => {
     for (const purpose of PURPOSES)
       for (const i of CANDIDATES) {
         const r = await layout(purpose, i);
@@ -260,7 +260,7 @@ describe("AC-04-15 MockProvider 역할별 결정 응답(ok)", () => {
         expect(again.kind === "ok" && again.text).toBe(r.text);
       }
   });
-  it("공통 시드 = hash(designSpec.hash, candidateIndex, role, callKind, attempt) 하위 32비트: 인자마다 다르다", () => {
+  it("AC-04-15 공통 시드 = hash(designSpec.hash, candidateIndex, role, callKind, attempt) 하위 32비트: 인자마다 다르다", () => {
     const base = {
       specHash: "a".repeat(64),
       candidateIndex: 0,
@@ -275,7 +275,7 @@ describe("AC-04-15 MockProvider 역할별 결정 응답(ok)", () => {
     expect(mockSeed({ ...base, attempt: 2 })).not.toBe(s0);
     expect(mockSeed({ ...base })).toBe(s0);
   });
-  it("judge_vision: A/B 순서를 바꿔도 승자 후보 ID가 같다, 항목 5개(R1~R5)", async () => {
+  it("AC-04-15 judge_vision: A/B 순서를 바꿔도 승자 후보 ID가 같다, 항목 5개(R1~R5)", async () => {
     const p = createMockProvider({ scenario: "ok", latencyMs: 0, sleep: fakeSleep().sleep });
     const ids = ["cand-aaaa", "cand-bbbb"];
     const judge = async (a: string, b: string) => {
@@ -293,7 +293,7 @@ describe("AC-04-15 MockProvider 역할별 결정 응답(ok)", () => {
     };
     expect(await judge(ids[0]!, ids[1]!)).toBe(await judge(ids[1]!, ids[0]!));
   });
-  it("AC-09-18 judge_position_bias@judge_vision: ID와 무관하게 항상 위치 A 승", async () => {
+  it("AC-04-15 AC-09-18 judge_position_bias@judge_vision: ID와 무관하게 항상 위치 A 승", async () => {
     const p = createMockProvider({
       scenario: "judge_position_bias@judge_vision",
       latencyMs: 0,
@@ -309,7 +309,7 @@ describe("AC-04-15 MockProvider 역할별 결정 응답(ok)", () => {
       expect(r.kind === "ok" && (JSON.parse(r.text) as { overall: string }).overall).toBe("A");
     }
   });
-  it("ref_tagger: JSON, 점수 1~5 정수, 같은 입력 2회 동일", async () => {
+  it("AC-04-15 ref_tagger: JSON, 점수 1~5 정수, 같은 입력 2회 동일", async () => {
     const p = createMockProvider({ scenario: "ok", latencyMs: 0, sleep: fakeSleep().sleep });
     const go = () =>
       p.complete(
@@ -331,7 +331,7 @@ describe("AC-04-15 MockProvider 역할별 결정 응답(ok)", () => {
 });
 
 describe("AC-04-15 장애 주입(9.6.2 표, Mock 동작만)", () => {
-  it("invalid_json·schema_violation·forbidden_field·lint_error·injection_echo 출력 형태", async () => {
+  it("AC-04-15 invalid_json·schema_violation·forbidden_field·lint_error·injection_echo 출력 형태", async () => {
     const t = async (s: string) => {
       const r = await layout("saas", 0, s);
       return r.kind === "ok" ? r.text : `<${r.kind}>`;
@@ -348,7 +348,7 @@ describe("AC-04-15 장애 주입(9.6.2 표, Mock 동작만)", () => {
       "https://evil.example",
     );
   });
-  it("rate_limit → rate_limited(retryAfterMs), server_error → provider_error 500, copy_refusal@gen_copy → refused", async () => {
+  it("AC-04-15 rate_limit → rate_limited(retryAfterMs), server_error → provider_error 500, copy_refusal@gen_copy → refused", async () => {
     expect((await layout("saas", 0, "rate_limit")).kind).toBe("rate_limited");
     const se = await layout("saas", 0, "server_error");
     expect(se.kind === "provider_error" && se.httpStatus).toBe(500);
@@ -364,7 +364,7 @@ describe("AC-04-15 장애 주입(9.6.2 표, Mock 동작만)", () => {
     // 역할 범위 밖은 정상
     expect((await layout("saas", 0, "copy_refusal@gen_copy")).kind).toBe("ok");
   });
-  it("timeout → abort 전까지 끝나지 않고 abort 시 aborted", async () => {
+  it("AC-04-15 timeout → abort 전까지 끝나지 않고 abort 시 aborted", async () => {
     const p = createMockProvider({ scenario: "timeout", latencyMs: 0 });
     const ac = new AbortController();
     const specs = specsFor("saas");
@@ -383,7 +383,7 @@ describe("AC-04-15 장애 주입(9.6.2 표, Mock 동작만)", () => {
     ac.abort();
     expect((await pending).kind).toBe("aborted");
   });
-  it("slow → 호출당 25초 지연(가짜 sleep), 기본 지연 = MOCK_LLM_LATENCY_MS(기본 200) + gen_copy 1ms", async () => {
+  it("AC-04-15 slow → 호출당 25초 지연(가짜 sleep), 기본 지연 = MOCK_LLM_LATENCY_MS(기본 200) + gen_copy 1ms", async () => {
     const s = fakeSleep();
     const p = createMockProvider({ scenario: "slow", sleep: s.sleep });
     await p.complete(
@@ -397,7 +397,7 @@ describe("AC-04-15 장애 주입(9.6.2 표, Mock 동작만)", () => {
     // gen_copy 지연 = 후보 0 gen_layout 지연(기본 200) + 1ms(9.6.2, U-01)
     expect(d.waits).toContain(201);
   });
-  it("장애 범위: 기본은 initial에만, ! 는 재호출에도, @candidateIndex는 그 후보만", async () => {
+  it("AC-04-15 장애 범위: 기본은 initial에만, ! 는 재호출에도, @candidateIndex는 그 후보만", async () => {
     const valid = (r: Awaited<ReturnType<typeof layout>>) =>
       r.kind === "ok" && LayoutTreeRawSchema.safeParse(JSON.parse(r.text)).success;
     expect(valid(await layout("saas", 2, "schema_violation@2"))).toBe(false);
@@ -411,7 +411,7 @@ describe("AC-04-15 장애 주입(9.6.2 표, Mock 동작만)", () => {
       valid(await layout("saas", 2, "schema_violation!@2", { callKind: "repair_schema" })),
     ).toBe(false);
   });
-  it("usage = mock-prompt-sizes.json 블록 문자 수 ÷ 3 올림, cacheState별 보고, usage_overrun 3배·cost_spike 10배·cost_ramp 1.2배", async () => {
+  it("AC-04-15 usage = mock-prompt-sizes.json 블록 문자 수 ÷ 3 올림, cacheState별 보고, usage_overrun 3배·cost_spike 10배·cost_ramp 1.2배", async () => {
     const sizes = JSON.parse(
       readFileSync(join(ROOT, "fixtures/llm/mock-prompt-sizes.json"), "utf8"),
     ) as {

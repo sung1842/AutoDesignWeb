@@ -233,7 +233,7 @@ describe("00장 9.3 한도·quota_ledger", () => {
 });
 
 describe("06장 6.2.3 취소(AC-06-55·63)", () => {
-  it("queued 취소 → 환불·잔여 불변, 노출 1 이상 running 취소 → 차감, 종료 잡 취소 → 409 JOB_ALREADY_FINISHED", async () => {
+  it("AC-06-55 queued 취소 → 환불·잔여 불변, 노출 1 이상 running 취소 → 차감, 종료 잡 취소 → 409 JOB_ALREADY_FINISHED", async () => {
     const u = await user();
     const a = await gen(u);
     const ca = await call(u.jar, "POST", `/api/generations/${String(a.body.jobId)}/cancel`, {});
@@ -403,7 +403,7 @@ describe("00장 7.2 초대(BETA_INVITE_ONLY)", () => {
 });
 
 describe("06장 6.9.4 ③~⑤ 잡 예산 예약(AC-06-62, 단위)", () => {
-  it("① 동시 reserve 20회에서 spent + reserved > capEff인 순간 0회", async () => {
+  it("AC-06-62 ① 동시 reserve 20회에서 spent + reserved > capEff인 순간 0회", async () => {
     const b = createJobBudget({ jobCapUsd: 0.3 });
     const peaks: number[] = [];
     await Promise.all(
@@ -416,7 +416,7 @@ describe("06장 6.9.4 ③~⑤ 잡 예산 예약(AC-06-62, 단위)", () => {
     expect(Math.max(...peaks)).toBeLessThanOrEqual(b.capEff + 1e-9);
     expect(b.spent).toBeLessThanOrEqual(b.capEff + 1e-9);
   });
-  it("② 재시도 attempt마다 새 예약, 모든 시점 spent + reserved ≤ capEff / ③ JOB_COST_CAP_USD=0.25 → skipVisionEff 0.20·skipRepairEff 0.225", async () => {
+  it("AC-06-62 ② 재시도 attempt마다 새 예약, 모든 시점 spent + reserved ≤ capEff / ③ JOB_COST_CAP_USD=0.25 → skipVisionEff 0.20·skipRepairEff 0.225", async () => {
     const b = createJobBudget({ jobCapUsd: 0.3 });
     const ids = new Set<string>();
     for (let k = 0; k < 7; k++) {
@@ -440,7 +440,7 @@ describe("06장 6.9.4 ③~⑤ 잡 예산 예약(AC-06-62, 단위)", () => {
     expect(r6(c.skipVisionEff)).toBe(0.2);
     expect(r6(c.skipRepairEff)).toBe(0.225);
   });
-  it("stageSkip: judge_vision은 spent + reserved ≥ skipVisionEff, repair_quality·diversity는 ≥ skipRepairEff에서 생략", async () => {
+  it("AC-06-62 stageSkip: judge_vision은 spent + reserved ≥ skipVisionEff, repair_quality·diversity는 ≥ skipRepairEff에서 생략", async () => {
     const b = createJobBudget({ jobCapUsd: 0.3 });
     const r = await b.reserve(0.24, { role: "gen_layout", callKind: "initial" });
     if (r.ok) await b.settle(r.id, 0.24);

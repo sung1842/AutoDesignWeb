@@ -250,7 +250,7 @@ describe("TC-B-13 경계값·TC-B-03 grapheme·TC-B-19 색", () => {
 });
 
 describe("AC-08-41 고위험 브랜드 20종 거부 100%, 일반 50종 오탐 0", () => {
-  it("판정 함수: 20종 모두 의도한 브랜드 id로 high_risk(8.9.2 (a)~(c)), 일반 50종 위반 0", () => {
+  it("AC-08-41 판정 함수: 20종 모두 의도한 브랜드 id로 high_risk(8.9.2 (a)~(c)), 일반 50종 위반 0", () => {
     expect(HIGH.blocked).toHaveLength(20);
     expect(HIGH.normal).toHaveLength(50);
     for (const b of HIGH.blocked) {
@@ -261,7 +261,7 @@ describe("AC-08-41 고위험 브랜드 20종 거부 100%, 일반 50종 오탐 0"
     }
     for (const n of HIGH.normal) expect(judgeAbuse([n]), n).toEqual([]);
   });
-  it("API: 20종 422 BLOCKED_BRAND reason=high_risk + admin_audit_logs brand_blocked(원문 0), 50종 201", async () => {
+  it("AC-08-41 API: 20종 422 BLOCKED_BRAND reason=high_risk + admin_audit_logs brand_blocked(원문 0), 50종 201", async () => {
     const count = async () =>
       Number(
         (

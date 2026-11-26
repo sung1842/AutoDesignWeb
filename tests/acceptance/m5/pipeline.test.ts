@@ -256,7 +256,7 @@ describe("ok 시나리오(AC-06-38·47·56, AC-04-01·02)", () => {
     finished.push(first.row);
     expect(first.row.status).toBe("succeeded");
   });
-  it("AC-04-01·02 2회차: 같은 job_seed·입력·config_snapshot → DesignSpec ×3·확정 트리 ×6·HTML/CSS ×6 SHA-256 동일", async () => {
+  it("AC-04-01·AC-04-02 2회차: 같은 job_seed·입력·config_snapshot → DesignSpec ×3·확정 트리 ×6·HTML/CSS ×6 SHA-256 동일", async () => {
     // 같은 프로젝트(같은 taste·type·purpose·brand)에서 두 번째 잡
     const b = await job("ok", {
       seed: SEED,
