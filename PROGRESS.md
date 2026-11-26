@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T19:50Z}
+- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T19:51Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
@@ -144,14 +144,14 @@
 - M4 계획(9.4.6, AC: 00-02·03·11·12, 01-04~21·55·57, 02-02~11·13~31·33~37, 03-12~14, 05-10·23, 06-08·11·12·46, 07-08·20, 09-17. 읽을 장은 CLAUDE.md 구현 규칙 3절):
   - [x] 01 M4 수용 테스트(tests/acceptance/m4, AD-031 방식): [x] a diagnosis 엔진(02장 2.5~2.7·2.12, ③⑤⑥, ASM-090) [x] b sim:survey 게이트·튜닝 규칙(④, 2.16, ASM-091) [x] c survey:build 산출·멱등·x_card·--check(①②③, AC-02-07~10·37, survey-build.test, ASM-093) [x] d 진단 API·익명 세션·멱등·CSRF·소유·p95(⑤⑥⑦, AC-06-11·12·46, api.test, ASM-095) [x] e 이벤트 API·레지스트리·서버 이벤트·identity_links(⑫, AC-00-11·12, events.test, ASM-096) [x] f 진단·결과 화면 E2E(⑧⑨⑩, e2e/m4/survey.spec + serve.ts webServer, ASM-100) [~] g build-answers 결정성·M1a 변이(⑪, AC-07-20, golden-answers.test, ASM-097. 골든 잠금은 guard) [ ] h traceability M4(45/71, results.test 11/11). presets 3/3. e2e/m4 quiz 11/11(AC-01-04~08·10~12·55, 회전 안내·브라우저 뒤로·단조 진행률 구현). 남은: e2e 결과 화면(01-16~20·57) + vitest 브리지(ui.test), 06-08, 09-17·19, 01-13·14·21 수동/needs [x] i qa:trace --audit 리터럴 0·단일 test(acc) f4dc6b6·자체 잠금 15파일(tests/acceptance/m4·e2e/m4)  → qa:trace --audit·guard:patterns·단일 test(acc)·자체 잠금
   - [x] 02 packages/diagnosis 사후분포·1-step 갱신·문항 선택·종료·유형 판정·κ·pickNotice(diagnosis.test 24/24, AC-02-06 BLK-020)
-  - [ ] 03 sim:survey(1,000명, 공통 난수 쌍체·부트스트랩)·튜닝 절차: [x] 시뮬레이터·판정·튜너·CLI(합성 dev: RMSE 0.1215·앵커 0.930만 미달, ASM-091) [ ] x_card gate·튜닝 실행(04 뒤)
-  - [ ] 04 survey:build(카드 렌더→x_card→게이트→WebP→local Storage→survey_items upsert, manifest.lock): [x] a surveyPage(ASM-092) [x] b 판정 순수 함수 stimuli.ts(judgeCard·judgePair·coverage·stage1Issues, 단위 5/5) [x] c StoragePort fs(멱등 put·서명 URL, 단위 3/3) [x] d 렌더·WebP·추출·manifest(--only, surveyShot·encodeWebp·dominantColors, ASM-094. C-SV01-hero x 오차 0.17~0.45 → draft) [x] e DB upsert·멱등·--check(survey-build.test ②·--check 5/5 녹색) [x] f 전체 실행·manifest 커밋(193장·361파일, 활성 카드 1/48 → BLK-022 survey-items) [x] g AC-02-09 domHash 차이 = shape-graphic·장식 시그니처 → ASM-098 수정, 재빌드 후 템플릿별 1종·쌍 DOM 차이 0(활성 카드 1, BLK-022) [ ] h 하드 게이트·린터 error 0(2.4.7 verified 조건)
+  - [ ] 03 sim:survey(1,000명, 공통 난수 쌍체·부트스트랩)·튜닝 절차: [x] 시뮬레이터·판정·튜너·CLI(합성 dev: RMSE 0.1215·앵커 0.930만 미달, ASM-091) [ ] x_card gate·튜닝 실행(BLK-022로 활성 자극물 부족, 보류)
+  - [ ] 04 survey:build(카드 렌더→x_card→게이트→WebP→local Storage→survey_items upsert, manifest.lock): [x] a surveyPage(ASM-092) [x] b 판정 순수 함수 stimuli.ts(judgeCard·judgePair·coverage·stage1Issues, 단위 5/5) [x] c StoragePort fs(멱등 put·서명 URL, 단위 3/3) [x] d 렌더·WebP·추출·manifest(--only, surveyShot·encodeWebp·dominantColors, ASM-094. C-SV01-hero x 오차 0.17~0.45 → draft) [x] e DB upsert·멱등·--check(survey-build.test ②·--check 5/5 녹색) [x] f 전체 실행·manifest 커밋(193장·361파일, 활성 카드 1/48 → BLK-022 survey-items) [x] g AC-02-09 domHash 차이 = shape-graphic·장식 시그니처 → ASM-098 수정, 재빌드 후 템플릿별 1종·쌍 DOM 차이 0(활성 카드 1, BLK-022) [ ] h 하드 게이트·린터 error 0(2.4.7 verified 조건, 현재는 추출 오차·렌더 오류만 판정 — BLK-022 해소 때 함께)
   - [ ] 05 진단 API·익명 쿠키 세션(D-41)·재개·뒤로가기: [x] a api-contract zod·handle 라우터·survey 서비스·db 픽스처(api.test 13/13, ASM-099) [x] b Next route.ts 위임·/api/_storage/public fs 라우트(next build 확인은 E2E 단위)
   - [x] 06 POST /api/events·이벤트 레지스트리 zod·identity_links(events.test 7/7)
   - [ ] 07 진단·결과 화면(01장, packages/ui 토큰)·닮은 사이트 3 링크·비제휴 고지: [x] a 닮은 사이트 2.14(서버 계산·저장·표시 시 재확인, seedSimilarSites 픽스처) [x] b S02 진단 화면(1.4 R1~R7·레이아웃 5종·뒤로가기·전환) [x] c S03 결과 화면(①②④⑤⑥⑦⑨⑩) [x] d S01 시작·이어하기 [x] e E2E 녹색(e2e/m4 4/4, AD-035)
   - [x] 08 E2E(375·1280)·MBTI grep(e2e/m4 4/4)
   - [~] 09 eval:golden:build-answers·골든 자체 잠금: [x] buildGoldenAnswers·replayGolden·CLI(엔진 beta 덮어쓰기, 계획 L1 픽스처 32/32·M1a 24/24·β8.5 9/24) [ ] 실데이터 실행(BLK-022로 0/32) [ ] m4-done에서 data/golden 자체 잠금
-  - [ ] 10 verify:m4 → m4-done
+  - [ ] 10 verify:m4 → m4-done: [ ] 1차 실행(2026-11-26 19:51Z 시작)
 - M3 이월: (B18 재생성은 M2-09d3으로 당김), B15 골격을 실제 예시로 교체 후 자체 잠금(ASM-021)
 - [x] M0 [x] M1 [x] M2 [x] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
 
@@ -159,6 +159,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 04:51 | verify:m4 1차 시작(백그라운드). M4-03 튜닝·04h 게이트는 BLK-022로 보류
 - 2026-11-27 04:50 | M4-01 완료: test(acc) f4dc6b6, 자체 잠금 15파일. 다음: verify:m4
 - 2026-11-27 04:50 | e2e quiz 폭 측정 안정화(2회 11/11)
 - 2026-11-27 04:43 | M4-01h contract.test 4/4, qa:trace ≤M4 191/191, audit 리터럴 0. 다음: 단일 test(acc)·자체 잠금
