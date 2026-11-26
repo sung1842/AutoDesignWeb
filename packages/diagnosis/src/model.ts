@@ -68,15 +68,15 @@ const clamp01 = (x: number): number => Math.min(1, Math.max(0, x));
 
 /** 2.8.1 μ0 = (1 − w)·0.5 + w·c_p, 용도 없으면 0.5. 중심 c_p 원천 = 04장 4.3 용도 표(design-spec PURPOSE_CALIB). */
 export const NEUTRAL = 0.5;
-export function priorMu(purpose: string | null): Vec {
+export function priorMu(purpose: string | null, tu: Tuned = tuned()): Vec {
   const c = purpose ? PURPOSE_CALIB[purpose as keyof typeof PURPOSE_CALIB] : undefined;
   if (!c) return [NEUTRAL, NEUTRAL, NEUTRAL, NEUTRAL, NEUTRAL];
-  const w = tuned().priorWeight;
+  const w = tu.priorWeight;
   return c.center.map((ck) => (1 - w) * NEUTRAL + w * ck);
 }
-export function priorPosterior(purpose: string | null): Posterior {
+export function priorPosterior(purpose: string | null, tu: Tuned = tuned()): Posterior {
   const s0 = diagConst().sigma0;
-  const mu = priorMu(purpose);
+  const mu = priorMu(purpose, tu);
   return { mu, var: mu.map(() => s0 * s0) };
 }
 
@@ -176,7 +176,12 @@ export function nearestType(mu: Vec, sigma: Vec, types: readonly TypeCenter[]): 
 const TIE = { dpEps: 1e-6 } as const;
 
 /** 2.6.1 1단계 점수 = Σ log(1/σ² + H) + w_type·Σ|P(i|c_m1) − P(i|c_m2)|. */
-export function stage1Score(post: Posterior, X: Vec[], types: readonly TypeCenter[]): number {
+export function stage1Score(
+  post: Posterior,
+  X: Vec[],
+  types: readonly TypeCenter[],
+  tu: Tuned = tuned(),
+): number {
   const D = diagConst();
   const H = fisherDiag(X, post.mu, D.beta, D.lambda);
   const dopt = H.reduce((s, h, k) => s + Math.log(1 / (post.var[k] ?? 1) + h), 0);
@@ -185,7 +190,7 @@ export function stage1Score(post: Posterior, X: Vec[], types: readonly TypeCente
   const c2 = types.find((t) => t.id === nt.secondTypeId)?.centroid ?? post.mu;
   const p1 = choiceProbs(X, c1, D.beta, D.lambda);
   const p2 = choiceProbs(X, c2, D.beta, D.lambda);
-  return dopt + tuned().typeDiscWeight * p1.reduce((s, x, i) => s + Math.abs(x - (p2[i] ?? 0)), 0);
+  return dopt + tu.typeDiscWeight * p1.reduce((s, x, i) => s + Math.abs(x - (p2[i] ?? 0)), 0);
 }
 
 /** 2.13.1 S03 안내 선택(서버가 고른다). */

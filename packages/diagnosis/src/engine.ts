@@ -14,6 +14,7 @@ import {
   updateMNL,
   type Notice,
   type Posterior,
+  type Tuned,
   type TypeCenter,
   type Vec,
 } from "./model.js";
@@ -109,11 +110,16 @@ export interface EngineInput {
   purpose: string | null;
   mobile?: boolean;
   versions?: { types?: string; items?: string; normalizer?: string };
+  /** 튜닝 상수(기본 = config/diagnosis-tuned.json). sim 튜닝이 바꿔 넣는다(2.16.2). */
+  tuned?: Tuned;
+  /** 2.16.1 V-RAND: 1단계 explore만·2단계 축과 수준쌍 무작위(적응형 이득 비교용). */
+  policy?: "adaptive" | "random";
 }
 
 export function createEngine(input: EngineInput) {
   const D = diagConst();
-  const tu = tuned();
+  const tu = input.tuned ?? tuned();
+  const randomPolicy = input.policy === "random";
   const sig0 = Array.from({ length: AXIS_IDS.length }, () => D.sigma0);
   const cardType = new Map(
     input.items.cards.map((c) => [c.id, nearestType(c.x, sig0, input.types).typeId]),
@@ -137,7 +143,7 @@ export function createEngine(input: EngineInput) {
   }
   /** 로그 재생(2.15·AC-02-16·18). */
   function derive(rows: LogRow[]): Derived {
-    let post = priorPosterior(input.purpose);
+    let post = priorPosterior(input.purpose, tu);
     const d: Derived = {
       post,
       noneCount: 0,
@@ -239,7 +245,8 @@ export function createEngine(input: EngineInput) {
       S.map((c) => c.id)
         .sort()
         .join("+");
-    const explore = r() < D.stage1.epsilonExplore || d.noneCount >= D.noneExploreAfter;
+    const explore =
+      randomPolicy || r() < D.stage1.epsilonExplore || d.noneCount >= D.noneExploreAfter;
     let chosen: CardItem[];
     if (explore) chosen = ok[0] as CardItem[];
     else {
@@ -296,10 +303,11 @@ export function createEngine(input: EngineInput) {
       (k) => (sd[k] ?? 0) > D.sigmaStop && !d.insensitive.has(k),
     );
     if (open.length === 0) return null;
-    const kStar = open.reduce(
+    const kMax = open.reduce(
       (best, k) => ((d.post.var[k] ?? 0) > (d.post.var[best] ?? 0) ? k : best),
       open[0] as number,
     );
+    const kStar = randomPolicy ? (open[Math.floor(r() * open.length)] as number) : kMax;
     const axis = AXIS_IDS[kStar] as string;
     const order = nearestType(d.post.mu, sd, input.types).order;
     let cands: PairItem[] = [];
@@ -313,13 +321,15 @@ export function createEngine(input: EngineInput) {
       LEVEL_ORDER.indexOf(lk(p.levels) as (typeof LEVEL_ORDER)[number]);
     let best = cands[0] as PairItem;
     let bestH = -Infinity;
-    for (const p of [...cands].sort((a, b) => lvl(a) - lvl(b))) {
-      const h = fisherDiag([p.a.x, p.b.x], d.post.mu, D.beta, D.lambda)[kStar] ?? 0;
-      if (h > bestH) {
-        bestH = h;
-        best = p;
+    if (randomPolicy) best = cands[Math.floor(r() * cands.length)] as PairItem;
+    else
+      for (const p of [...cands].sort((a, b) => lvl(a) - lvl(b))) {
+        const h = fisherDiag([p.a.x, p.b.x], d.post.mu, D.beta, D.lambda)[kStar] ?? 0;
+        if (h > bestH) {
+          bestH = h;
+          best = p;
+        }
       }
-    }
     const sides = r() < NEUTRAL_SIDE ? [best.a, best.b] : [best.b, best.a];
     return {
       seq,
@@ -330,7 +340,7 @@ export function createEngine(input: EngineInput) {
       pairId: best.id,
       options: sides.map((o, slot) => ({ itemId: o.id, slot, x: o.x })),
       policy: "ab",
-      debug: { argmaxOpenAxis: axis },
+      debug: { argmaxOpenAxis: AXIS_IDS[kMax] as string },
     };
   }
 
