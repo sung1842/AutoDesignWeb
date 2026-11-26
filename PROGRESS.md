@@ -1,7 +1,7 @@
 # PROGRESS
 
 ## 현재 상태
-- status: HALT  # BLK-015: 잠긴 M3 수용 테스트의 테스트별 타임아웃(F06) → 사람 relock 필요(HUMAN_TODO 맨 아래)
+- status: IN_PROGRESS
 - phase: P4
 - lock: 
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
