@@ -42,6 +42,7 @@
     "fixtures:layouts": "tsx scripts/data/fixtures-layouts.ts"
   },
   "devDependencies": {
+    "@playwright/test": "1.63.0",
     "@tastefit/config": "workspace:^",
     "@types/node": "^22.0.0",
     "eslint": "^9.0.0",
