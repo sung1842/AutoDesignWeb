@@ -48,6 +48,7 @@ const SIZE = {
 /** 1.4.4 선택 후 전환 300ms, 1.4.2 R1 디코드 대기 5초, 1.4.8 계속하기 활성 800ms, 1.4.1 조기 종료 안내 1.5초. */
 const TIMING = { selectMs: 300, decodeMs: 5000, continueMs: 800, earlyEndMs: 1500 } as const;
 const STAGE1 = 8;
+const ROTATE = { vhMin: 500, chrome: 276, cardMin: 300 } as const;
 
 function viewportClass(w: number): "mobile" | "tablet" | "desktop" {
   return w < SIZE.mobileMax ? "mobile" : w < SIZE.tabletMax ? "tablet" : "desktop";
@@ -79,13 +80,23 @@ export function Survey({ id }: { id: string }) {
   const shownAt = useRef(0);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [vw, setVw] = useState(1280);
+  const [vh, setVh] = useState(800);
+  const [coarse, setCoarse] = useState(false);
+  /** 1.4.7 막대 표시값 = max(이전 표시값, p): 이전 문항으로 가도 줄지 않는다. */
+  const shownP = useRef(0);
+  const backToast = useRef(false);
 
   const q = view?.question ?? null;
   const lay = useMemo(() => (q ? decideLayout(q.kind, vw) : null), [q, vw]);
   const device = viewportClass(vw) === "mobile" ? "mobile" : "desktop";
+  /** 1.4.3 회전 안내: (pointer: coarse) && vh < 500 이거나 mobile card_h < 300. card_h = vh − 276 − safe-area. */
+  const rotate =
+    (coarse && vh < ROTATE.vhMin) || (device === "mobile" && vh - ROTATE.chrome < ROTATE.cardMin);
 
   useEffect(() => {
     setVw(window.innerWidth);
+    setVh(window.innerHeight);
+    setCoarse(window.matchMedia("(pointer: coarse)").matches);
     void (async () => {
       const [cr, ir] = await Promise.all([
         fetch("/api/surveys/current"),
@@ -112,6 +123,7 @@ export function Survey({ id }: { id: string }) {
     setSeen(new Set([0]));
     setFailed(new Set());
     setVw(window.innerWidth);
+    setVh(window.innerHeight);
     let live = true;
     const bad = new Set<string>();
     const loads = q.items.map((iid) => {
@@ -219,6 +231,25 @@ export function Survey({ id }: { id: string }) {
     }
   }
 
+  // 브라우저 뒤로(AC-01-04): 진단 화면에 머문다. 이전 문항을 쓸 수 있으면 1단계 되돌리고, 아니면 안내 토스트 1회
+  const onBack = useRef<() => void>(() => undefined);
+  onBack.current = () => {
+    if (view?.canUndo) void undo();
+    else if (!backToast.current) {
+      backToast.current = true;
+      setToast(KO["quiz.back.once"]);
+    }
+  };
+  useEffect(() => {
+    window.history.pushState({ tfSurvey: true }, "");
+    const on = () => {
+      window.history.pushState({ tfSurvey: true }, "");
+      onBack.current();
+    };
+    window.addEventListener("popstate", on);
+    return () => window.removeEventListener("popstate", on);
+  }, []);
+
   // 키보드 단축키 1~4 / A·B(1.4.10)
   useEffect(() => {
     const on = (e: KeyboardEvent) => {
@@ -300,6 +331,7 @@ export function Survey({ id }: { id: string }) {
     );
   };
   const cardH = "calc(100dvh - 276px - env(safe-area-inset-bottom))";
+  shownP.current = Math.max(shownP.current, answered / 16);
   const progress = (
     <div
       className="svc-progress"
@@ -309,7 +341,7 @@ export function Survey({ id }: { id: string }) {
       aria-valuenow={answered}
       aria-valuetext={t("quiz.progress.aria", { n: answered })}
     >
-      <span style={{ width: `${(answered / 16) * 100}%` }} />
+      <span style={{ width: `${shownP.current * 100}%` }} data-testid="progress-fill" />
     </div>
   );
 
@@ -348,7 +380,14 @@ export function Survey({ id }: { id: string }) {
         <h1 className="svc-q-title">
           {q.kind === "ab" ? KO["quiz.title.stage2"] : KO["quiz.title.stage1"]}
         </h1>
-        {answered === 0 ? <p className="svc-center svc-muted">{KO["quiz.meta"]}</p> : null}
+        {answered === 0 && device !== "mobile" ? (
+          <p className="svc-center svc-muted">{KO["quiz.meta"]}</p>
+        ) : null}
+        {rotate ? (
+          <p role="alert" className="svc-center">
+            {KO["quiz.rotate"]}
+          </p>
+        ) : null}
         {lay.layout === "grid2x2" || lay.layout === "list1" || lay.layout === "pair" ? (
           <div
             className="svc-grid"
@@ -357,7 +396,9 @@ export function Survey({ id }: { id: string }) {
                 lay.layout === "list1" ? `${lay.width}px` : `repeat(2, ${lay.width}px)`,
             }}
           >
-            {q.items.map((iid, i) => card(iid, i, ready ? () => choose(iid) : undefined))}
+            {q.items.map((iid, i) =>
+              card(iid, i, ready && !rotate ? () => choose(iid) : undefined),
+            )}
           </div>
         ) : (
           <div className="svc-center">
@@ -366,12 +407,12 @@ export function Survey({ id }: { id: string }) {
         )}
         <div
           className="svc-center"
-          style={{ paddingBottom: lay.layout === "pager" || lay.layout === "toggle" ? 140 : 0 }}
+          style={{ paddingBottom: lay.layout === "pager" || lay.layout === "toggle" ? 120 : 0 }}
         >
           {q.allowNone ? (
             <button
               className="svc-btn svc-btn--text"
-              disabled={!ready}
+              disabled={!ready || rotate}
               onClick={() => void submit("none_of_these")}
             >
               {KO["quiz.none"]}
@@ -380,7 +421,7 @@ export function Survey({ id }: { id: string }) {
           {q.allowCantTell ? (
             <button
               className="svc-btn svc-btn--text"
-              disabled={!ready || (lay.layout === "toggle" && seen.size < 2)}
+              disabled={!ready || rotate || (lay.layout === "toggle" && seen.size < 2)}
               onClick={() => void submit("cant_tell")}
             >
               {KO["quiz.cantTell"]}
@@ -410,7 +451,7 @@ export function Survey({ id }: { id: string }) {
             <button
               className="svc-btn svc-btn--primary"
               style={{ width: "100%" }}
-              disabled={!ready}
+              disabled={!ready || rotate}
               onClick={() => q.items[cur] && choose(q.items[cur])}
             >
               {KO["quiz.pick"]}
@@ -440,7 +481,7 @@ export function Survey({ id }: { id: string }) {
                   key={k}
                   className="svc-btn svc-btn--primary"
                   style={{ flex: 1 }}
-                  disabled={!ready || seen.size < 2}
+                  disabled={!ready || rotate || seen.size < 2}
                   onClick={() => q.items[i] && choose(q.items[i])}
                 >
                   {KO[k]}

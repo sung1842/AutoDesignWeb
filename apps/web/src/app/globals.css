@@ -268,3 +268,10 @@ button {
   font-size: 13px;
   color: var(--svc-fg-muted);
 }
+@media (max-width: 767px) {
+  /* 1.4.3 mobile 고정 창: 헤더 56(진행률 포함) + 제목 48 + 카드 card_h + 보조 44 + 하단 바 120 */
+  .svc-stage { padding: 0 16px; min-height: 0; }
+  .svc-q-title { margin: 0; line-height: 48px; height: 48px; font-size: 16px; }
+  .svc-center { margin-top: 0; }
+  .svc-bottombar { height: calc(120px + env(safe-area-inset-bottom)); }
+}

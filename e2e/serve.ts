@@ -2,8 +2,8 @@
 // 자산 경로는 manifest.lock = survey:build 산출과 같은 파일) + 닮은 사이트 픽스처 → next build → next start.
 // 비밀값은 실행마다 임의 생성(저장소에 쓰지 않음).
 import { spawn, spawnSync } from "node:child_process";
-import { randomBytes } from "node:crypto";
-import { existsSync, readFileSync } from "node:fs";
+import { createHash, randomBytes } from "node:crypto";
+import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { createDbPort, q } from "../packages/db/src/index.js";
 import { seedSimilarSites, seedSurveyFixture } from "../packages/db/src/testing/fixtures.js";
@@ -60,7 +60,29 @@ if (existsSync(man)) {
 }
 await db.close();
 const web = join(ROOT, "apps/web");
-sh("pnpm", ["exec", "next", "build"], web);
+// 같은 소스면 빌드를 다시 하지 않는다(apps/web/src·packages/*/dist·next 설정의 내용 해시, .next/.e2e-src-hash)
+const files: string[] = [];
+const walk = (d: string): void => {
+  for (const n of readdirSync(d)) {
+    const p = join(d, n);
+    if (statSync(p).isDirectory()) walk(p);
+    else files.push(p);
+  }
+};
+walk(join(web, "src"));
+for (const pkg of readdirSync(join(ROOT, "packages"))) {
+  const d = join(ROOT, "packages", pkg, "dist");
+  if (existsSync(d)) walk(d);
+}
+files.push(join(web, "next.config.mjs"), join(web, "package.json"));
+const h = createHash("sha256");
+for (const f of files.sort()) h.update(f).update(readFileSync(f));
+const srcHash = h.digest("hex");
+const stamp = join(web, ".next/.e2e-src-hash");
+if (!existsSync(stamp) || readFileSync(stamp, "utf8") !== srcHash) {
+  sh("pnpm", ["exec", "next", "build"], web);
+  writeFileSync(stamp, srcHash);
+}
 const p = spawn("pnpm", ["exec", "next", "start", "-p", String(E2E_PORT)], {
   cwd: web,
   env,
