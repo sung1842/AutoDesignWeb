@@ -75,6 +75,71 @@ function mockScenarioOf(c: Ctx): string | null {
   return h;
 }
 
+type Obj = Record<string, unknown>;
+const at = (o: unknown, ...p: string[]): unknown =>
+  p.reduce<unknown>((x, k) => (x && typeof x === "object" ? (x as Obj)[k] : undefined), o);
+/** 04장 4.4 L2 차이 7키(S-32). depth = style|shadow_level, hero = hero_variants, signature = id. */
+function diffVector(spec: unknown): Record<string, string> {
+  const l2 = (at(spec, "l2") ?? {}) as Record<string, string>;
+  return {
+    "type.pairing_id": l2["type.pairing_id"] ?? "",
+    "color.palette_id": l2["color.palette_id"] ?? "",
+    "shape.radius_family": l2["shape.radius_family"] ?? "",
+    depth: `${l2["depth.style"] ?? ""}|${l2["depth.shadow_level"] ?? ""}`,
+    "space.density": l2["space.density"] ?? "",
+    hero: ((at(spec, "layout_constraints", "hero_variants") as string[] | undefined) ?? []).join(
+      ",",
+    ),
+    signature: String(at(spec, "signature", "id") ?? ""),
+  };
+}
+/** mockups 행 → MockupCard(06장 6.4.3). previewUrl·screenshotUrl은 미리보기 배선(M5-09) 전까지 빈 문자열(ASM-109 ⑤). */
+async function cardsOf(tx: Tx, job: Row): Promise<GenerationView["mockups"]> {
+  const r = await q(
+    tx,
+    `select m.id, m.variant, m.is_fallback, c.harmony_score, c.taste_score, p.use_sample_content
+       from mockups m join candidates c on c.id = m.candidate_id join projects p on p.id = m.project_id
+      where m.job_id = $1 order by array_position(array['v_true','v_fit','v_bal'], m.variant)`,
+    [job.id],
+  );
+  const specs = (job.design_spec ?? {}) as Record<string, unknown>;
+  const base = diffVector(specs.v_true);
+  return r.rows.map((m) => {
+    const v = String(m.variant) as "v_true" | "v_fit" | "v_bal";
+    const spec = specs[v];
+    const moved = (
+      (at(spec, "calibration_trace", "moved_axes") as
+        { axis: string; from: number; to: number; reason: string }[] | undefined) ?? []
+    )
+      .slice()
+      .sort((a, b) => Math.abs(b.to - b.from) - Math.abs(a.to - a.from))
+      .slice(0, 2)
+      .map((x) => ({
+        axis: x.axis as "expression",
+        direction: x.to > x.from ? ("up" as const) : ("down" as const),
+        reason: x.reason as "type",
+      }));
+    const dv = diffVector(spec);
+    return {
+      mockupId: String(m.id),
+      variant: v,
+      isFallback: m.is_fallback === true,
+      harmonyScore: Number(m.harmony_score ?? 0),
+      tasteScore: Number(m.taste_score ?? 0),
+      previewUrl: "",
+      screenshotUrl: "",
+      labelKey: `variant.${v}` as const,
+      photoSubstituted: false,
+      brandColorNotice:
+        (at(spec, "brand_color_notice") as
+          GenerationView["mockups"][number]["brandColorNotice"] | undefined) ?? null,
+      useSampleContent: m.use_sample_content === true,
+      movedAxes: moved,
+      diffFromTrue: v === "v_true" ? [] : Object.keys(dv).filter((k) => dv[k] !== base[k]),
+    };
+  });
+}
+
 /** 잡 행 → GenerationView. queuePosition = 더 이른 queued 잡 수 + 1(6.4.3). */
 export async function viewOf(tx: Tx, job: Row): Promise<GenerationView> {
   const status = String(job.status) as GenerationView["status"];
@@ -96,8 +161,7 @@ export async function viewOf(tx: Tx, job: Row): Promise<GenerationView> {
     queuedAt: iso(job.queued_at) ?? "",
     startedAt: iso(job.started_at),
     finishedAt: iso(job.finished_at),
-    // 노출 시안 카드는 워커 단위(M5-07)에서 채운다
-    mockups: [],
+    mockups: await cardsOf(tx, job),
     errorCode: (job.error_code as string | null) ?? null,
     pollAfterMs: ACTIVE.has(status) ? POLL_AFTER_MS : null,
     copySource: job.copy_deck ? (String(job.copy_source) as "llm" | "template") : null,

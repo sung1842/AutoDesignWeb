@@ -101,15 +101,23 @@ async function invoke(
 ): Promise<MockResult> {
   const started = new Date();
   const ac = new AbortController();
-  const r = await x.provider.complete({
-    role: o.role,
-    callKind: o.callKind,
-    candidateIndex: o.candidateIndex,
-    attempt: o.attempt ?? 1,
-    input: o.input,
-    signal: ac.signal,
-    ...(o.cacheState ? { cacheState: o.cacheState } : {}),
-  });
+  let r: MockResult;
+  let thrown: string | null = null;
+  try {
+    r = await x.provider.complete({
+      role: o.role,
+      callKind: o.callKind,
+      candidateIndex: o.candidateIndex,
+      attempt: o.attempt ?? 1,
+      input: o.input,
+      signal: ac.signal,
+      ...(o.cacheState ? { cacheState: o.cacheState } : {}),
+    });
+  } catch (e) {
+    // 공급자 예외는 호출 실패로 기록하고 잡은 계속(AC-04-22 처리되지 않은 예외 0)
+    thrown = (e as { code?: string }).code ?? "E_PROVIDER";
+    r = { kind: "provider_error", httpStatus: 0 };
+  }
   const roles = (x.snapshot.roles ?? {}) as Record<string, Obj>;
   const rs = roles[o.role] ?? {};
   const ok = r.kind === "ok" ? r : null;
@@ -144,7 +152,7 @@ async function invoke(
         started.toISOString(),
         ok ? new Date().toISOString() : null,
         STATUS_OF[r.kind],
-        r.kind === "ok" ? null : r.kind,
+        r.kind === "ok" ? null : (thrown ?? r.kind),
         requestHash(o.role, `${o.role}@v${Number(rs.promptVersion ?? 1)}`, o.input ?? null),
       ],
     ),
@@ -269,19 +277,29 @@ async function evaluate(
       budget: { tokens: c.spec.tokens, sizeOf: expectedSize },
     });
   }
-  c.html = compilePage(c.spec, c.tree, D).html;
-  const { report } = await evaluateCandidate(
-    x.d.harness,
-    { spec: c.spec, tree: c.tree, html: c.html },
-    D,
-    {
-      brand,
-      candidateId: c.id,
-      fallback,
-      origin: fallback ? "fallback" : "llm",
-      ...(x.d.axe ? { axe: x.d.axe } : {}),
-    },
-  );
+  let report;
+  try {
+    c.html = compilePage(c.spec, c.tree, D).html;
+    ({ report } = await evaluateCandidate(
+      x.d.harness,
+      { spec: c.spec, tree: c.tree, html: c.html },
+      D,
+      {
+        brand,
+        candidateId: c.id,
+        fallback,
+        origin: fallback ? "fallback" : "llm",
+        ...(x.d.axe ? { axe: x.d.axe } : {}),
+      },
+    ));
+  } catch (e) {
+    // 컴파일·렌더 실패 후보는 노출 불가(RENDER_ERROR), 잡은 계속
+    process.stderr.write(
+      `[generation] ${String(c.id)} RENDER_ERROR ${String((e as Error).message ?? e)}\n`,
+    );
+    c.valid = false;
+    return;
+  }
   c.cols = qualityColumns(report);
   c.valid = true;
   await x.d.db.withService((tx) =>
@@ -310,10 +328,28 @@ export function jobStatus(nReal: number, nFallback: number, template: boolean): 
   return template && s === "succeeded" ? "partial" : s;
 }
 
+/** 잡 1건 실행. 예상 밖 예외는 잡을 failed(RENDER_ERROR)로 닫고 돌려준다(무한 대기·미처리 예외 0, AC-04-22). */
 export async function runGenerationJob(
   d: GenerationDeps,
   jobId: string,
 ): Promise<{ status: string }> {
+  try {
+    return await runJob(d, jobId);
+  } catch (e) {
+    process.stderr.write(`[generation] ${jobId} ${String((e as Error).stack ?? e)}\n`);
+    await setJob(d.db, jobId, {
+      status: "failed",
+      phase: "done",
+      error_code: "RENDER_ERROR",
+      error_message: String((e as Error).message ?? e).slice(0, 500),
+      finished_at: (d.now?.() ?? new Date()).toISOString(),
+      progress_pct: 100,
+    });
+    return { status: "failed" };
+  }
+}
+
+async function runJob(d: GenerationDeps, jobId: string): Promise<{ status: string }> {
   const now = (): string => (d.now?.() ?? new Date()).toISOString();
   const jr = await d.db.withService((tx) =>
     q(tx, "select * from generation_jobs where id = $1", [jobId]),
