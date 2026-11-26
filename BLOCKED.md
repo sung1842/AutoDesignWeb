@@ -237,3 +237,12 @@
 - 처리: BLK-022 해소 후 build-answers 실행 → AD-031 방식으로 data/golden 단일 커밋 재추가·자체 잠금. muRef 동반 검사는 사람 guard 수정 대기
 - 제안 수정안(사람): scripts/guard/stages/tuned.ts에 "config/diagnosis-tuned.json 변경 커밋 ⇔ data/golden/*.json expected.muRef 변경" 검사 추가 후 relock, tests/acceptance/m4에 guard 메타 테스트 추가
 - 상태: open
+
+## BLK-026 · M4 · locked-conflict · 2026-11-26T20:20Z
+- 대상: 자체 잠근 tests/acceptance/m4/contract.test.ts(AC-06-08 ②③) ↔ M5 이후 라우트 추가(06장 6.4.3, 09장 9.4.7~)
+- 증상: ②가 "빌드된 라우트마다 계약 사례"를 요구하는데 사례 목록(cases())이 잠긴 테스트 파일 안에 하드코딩돼 있다. M5에서 `/auth/callback`·`/api/projects` 등 route.ts가 생기면 사례를 더할 수 없어 ②가 실패한다(에이전트 설계 오류: 사례를 데이터로 분리했어야 함)
+- 재현: pnpm vitest run tests/acceptance/m4/contract.test.ts -t "AC-06-08 ② 빌드된 라우트마다"
+- 시도: (1) 잠긴 테스트 수정 → 금지(9.5.6) (2) 라우트 추가 보류 → M5 범위 불가
+- 처리: M5부터 ②가 실패하면 이 BLK로 blocked 표시. 새 라우트의 계약 사례는 tests/acceptance/m5 이후 테스트에 둔다
+- 제안 수정안(사람): contract.test.ts의 cases()를 `tests/contract/cases.ts`(마일스톤별 사례 등록부, 잠금 대상)로 옮기고 테스트는 그 등록부를 읽게 바꾼 뒤 relock
+- 상태: open

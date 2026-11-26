@@ -54,3 +54,9 @@
 
 ## BLK-022 (M4 survey-items) · 2026-11-26
 - 설문 자극물 활성 1/48 카드·쌍 축별 0~1(temp 정규화기 탓 추정). 사람 라벨 정규화기(05장 5.7, G7a) 준비 후 `pnpm survey:build` 재실행. 재현 `pnpm survey:build --check`. 상세는 BLOCKED.md BLK-022
+
+## BLK-023~026 (M4 locked-conflict) · 2026-11-26
+- BLK-023: 07장 배정표 AC-01-20(공개 보기)을 M6으로 이동 후 relock
+- BLK-024: scripts/verify에 survey-items-count(blockable) 단계·survey-items/sim-limit BLK 매핑 추가, AC-09-19 메타 테스트
+- BLK-025: guard:tuned에 tuned ⇔ golden muRef 동반 변경 검사, data/golden 잠금 절차
+- BLK-026: tests/acceptance/m4/contract.test.ts 사례 목록을 별도 등록부로 분리 후 relock(M5 라우트 추가 시 ② 실패)

@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T19:51Z}
+- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T20:20Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
@@ -170,6 +170,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 05:20 | BLK-026 등록(잠긴 contract.test 사례 하드코딩), HUMAN_TODO 정리
 - 2026-11-27 04:51 | M5 계획 10단위 초안(verify:m4 진행 중)
 - 2026-11-27 04:51 | verify:m4 1차 시작(백그라운드). M4-03 튜닝·04h 게이트는 BLK-022로 보류
 - 2026-11-27 04:50 | M4-01 완료: test(acc) f4dc6b6, 자체 잠금 15파일. 다음: verify:m4
