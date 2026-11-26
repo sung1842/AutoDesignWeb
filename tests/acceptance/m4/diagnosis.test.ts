@@ -437,7 +437,7 @@ describe("AC-02-33 1단계 점수 = D-최적 + w_type 유형 판별 항(2.6.1)",
   });
 });
 
-describe("AC-02-25·34 결과 필드·pickNotice", () => {
+describe("AC-02-25 · AC-02-34 결과 필드·pickNotice", () => {
   it("결과 필드", () => {
     const { e } = runSession("fields", rng(5), "portfolio");
     const r = e.result();
