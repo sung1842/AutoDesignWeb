@@ -96,7 +96,8 @@ export function parsed<T>(
   });
 }
 
-function finish(c: Ctx, res: Response, opts: { cache?: string } = {}): Response {
+/** 공통 헤더(요청 ID·캐시·Server-Timing·쿠키)를 붙인 응답. */
+export function finish(c: Ctx, res: Response, opts: { cache?: string } = {}): Response {
   const h = new Headers(res.headers);
   h.set("x-request-id", c.requestId);
   h.set("cache-control", opts.cache ?? "private, no-store");

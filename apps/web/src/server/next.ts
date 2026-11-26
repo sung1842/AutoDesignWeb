@@ -5,6 +5,12 @@ import { createFsStorage } from "@tastefit/storage";
 import { serverEnv } from "../server-env";
 import { handle, type Deps } from "./api";
 
+/** APP_ENV=local의 RETENTION_NOW(`+25h`·`+31d`·ISO) → 시계(ASM-108 ①). */
+function relNow(raw: string): Date {
+  const m = /^\+(\d+)([hd])$/.exec(raw.trim());
+  if (m) return new Date(Date.now() + Number(m[1]) * (m[2] === "h" ? 3_600_000 : 86_400_000));
+  return new Date(Date.parse(raw));
+}
 let D: Deps | null = null;
 function deps(): Deps {
   if (D) return D;
@@ -12,8 +18,10 @@ function deps(): Deps {
   const fs = v.APP_ENV === "local" && v.STORAGE_DRIVER === "fs";
   const db = createDbPort(webConnectionString(v));
   // native 프로파일: AuthPort local(6.13.1). supabase 드라이버는 needs_ci(ASM-104 ⑤)
+  const rn = v.APP_ENV === "local" ? process.env.RETENTION_NOW : undefined;
   D = {
     db,
+    ...(rn ? { now: () => relNow(rn) } : {}),
     ...(v.LOCAL_JWT_SECRET
       ? {
           auth: createLocalAuth({

@@ -1,11 +1,7 @@
 // 06장 6.5 인증·세션 귀속(M5, ASM-103·ASM-104). 매직링크 요청·로그아웃은 서버 함수(S04·헤더 서버 액션이 호출),
 // 콜백·/api/me·/api/consents는 handle 라우트.
 import { createHmac, randomBytes, randomUUID } from "node:crypto";
-import {
-  ConsentReqSchema,
-  MagicLinkReqSchema,
-  type MagicLinkReq,
-} from "@tastefit/api-contract";
+import { ConsentReqSchema, MagicLinkReqSchema, type MagicLinkReq } from "@tastefit/api-contract";
 import { isAuthError, SESSION_COOKIE, SESSION_TTL_S, type AuthUser } from "@tastefit/auth";
 import { q, type Tx } from "@tastefit/db";
 import type { Deps } from "./api";
@@ -66,6 +62,15 @@ function authOf(d: Deps) {
 export async function requireUser(c: Ctx, d: Deps): Promise<AuthUser> {
   const u = c.session ? await authOf(d).getUser(c.session) : null;
   if (!u) throw new ApiError("UNAUTHORIZED", "login required");
+  return u;
+}
+
+/** consent 인증(6.4.1 표): 로그인 + 현재 버전 terms·age_14. 아니면 401·403 CONSENT_REQUIRED(details.docTypes). */
+export async function requireConsent(c: Ctx, d: Deps): Promise<AuthUser> {
+  const u = await requireUser(c, d);
+  const missing = await d.db.withService((tx) => missingConsents(tx, u.id));
+  if (missing.length)
+    throw new ApiError("CONSENT_REQUIRED", "consent required", { docTypes: missing });
   return u;
 }
 

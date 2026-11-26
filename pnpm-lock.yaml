@@ -67,6 +67,9 @@ importers:
       '@tastefit/diagnosis':
         specifier: workspace:^
         version: link:../../packages/diagnosis
+      '@tastefit/llm':
+        specifier: workspace:^
+        version: link:../../packages/llm
       '@tastefit/mail':
         specifier: workspace:^
         version: link:../../packages/mail

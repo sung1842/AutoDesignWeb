@@ -11,6 +11,8 @@ import type { DbPort } from "@tastefit/db";
 import { PUBLIC_BUCKETS, type StoragePort } from "@tastefit/storage";
 import { callback, me, saveConsents } from "./auth";
 import { createBriefDraft, getBriefDraft } from "./brief";
+import { createGeneration, getGeneration } from "./generations";
+import { createProject } from "./projects";
 import { clientEvents } from "./events";
 import {
   ApiError,
@@ -49,6 +51,8 @@ export interface Deps {
   adminEmails?: string;
   /** CONSENT_HASH_KEY. 없으면 env. */
   consentHashKey?: string;
+  /** 시계(테스트·APP_ENV=local의 RETENTION_NOW, ASM-108 ①). 없으면 현재 시각. */
+  now?: () => Date;
 }
 /** 6.7 공개 정적 데이터 캐시(1년 immutable). */
 const PUBLIC_CACHE = "public, max-age=31536000, immutable";
@@ -66,6 +70,17 @@ const R: [string, RegExp, Route][] = [
     /^\/api\/brief-drafts\/([^/]+)$/,
     async (c, d, m) => json(c, 200, await getBriefDraft(c, d, m[1] ?? "")),
   ],
+  [
+    "POST",
+    /^\/api\/projects$/,
+    async (c, d) => json(c, 201, await createProject(c, d, await readJson(c))),
+  ],
+  [
+    "POST",
+    /^\/api\/projects\/([^/]+)\/generations$/,
+    (c, d, m) => createGeneration(c, d, m[1] ?? ""),
+  ],
+  ["GET", /^\/api\/generations\/([^/]+)$/, (c, d, m) => getGeneration(c, d, m[1] ?? "")],
   ["GET", /^\/api\/me$/, async (c, d) => json(c, 200, await me(c, d))],
   [
     "POST",

@@ -92,10 +92,10 @@ export async function getBriefDraft(c: Ctx, d: Deps, id: string): Promise<Record
   return d.db.withService(async (tx) => {
     const r = await q(
       tx,
-      `select id, result_id, purpose, brand, use_sample_content, expires_at, expires_at <= now() as expired
+      `select id, result_id, purpose, brand, use_sample_content, expires_at, expires_at <= $4 as expired
          from brief_drafts
         where id = $1 and ((anon_id::text = $2 and $2 is not null) or (user_id = $3 and $3 is not null))`,
-      [id, c.anonId, uid],
+      [id, c.anonId, uid, (d.now?.() ?? new Date()).toISOString()],
     );
     const row = r.rows[0];
     if (!row) throw new ApiError("NOT_FOUND", "no draft");

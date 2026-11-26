@@ -24,6 +24,7 @@
     "@tastefit/config": "workspace:^",
     "@tastefit/db": "workspace:^",
     "@tastefit/diagnosis": "workspace:^",
+    "@tastefit/llm": "workspace:^",
     "@tastefit/mail": "workspace:^",
     "@tastefit/renderer": "workspace:^",
     "@tastefit/storage": "workspace:^",
