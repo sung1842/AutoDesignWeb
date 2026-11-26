@@ -23,6 +23,7 @@
     "@tastefit/db": "workspace:^",
     "@tastefit/diagnosis": "workspace:^",
     "@tastefit/renderer": "workspace:^",
+    "@tastefit/storage": "workspace:^",
     "next": "^16.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

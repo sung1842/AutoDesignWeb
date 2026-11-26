@@ -7,6 +7,7 @@ import {
   UndoReqSchema,
 } from "@tastefit/api-contract";
 import type { DbPort } from "@tastefit/db";
+import { PUBLIC_BUCKETS, type StoragePort } from "@tastefit/storage";
 import { clientEvents } from "./events";
 import {
   ApiError,
@@ -37,12 +38,31 @@ import {
 export interface Deps {
   db: DbPort;
   webOrigin: string;
+  /** fs 드라이버 저장소(06장 6.13.1). APP_ENV=local·STORAGE_DRIVER=fs일 때만 /api/_storage가 응답한다. */
+  storage?: StoragePort | null;
 }
 /** 6.7 공개 정적 데이터 캐시(1년 immutable). */
 const PUBLIC_CACHE = "public, max-age=31536000, immutable";
 
 type Route = (c: Ctx, d: Deps, m: RegExpExecArray) => Promise<Response>;
 const R: [string, RegExp, Route][] = [
+  [
+    "GET",
+    /^\/api\/_storage\/public\/([A-Za-z0-9._-]+)\/(.+)$/,
+    async (c, d, m) => {
+      const [bucket = "", path = ""] = [m[1], m[2]];
+      if (!d.storage || !PUBLIC_BUCKETS.has(bucket)) throw new ApiError("NOT_FOUND", "no object");
+      const b = await d.storage.get(bucket, decodeURIComponent(path)).catch(() => null);
+      if (!b) throw new ApiError("NOT_FOUND", "no object");
+      return new Response(new Uint8Array(b), {
+        status: 200,
+        headers: {
+          "content-type": path.endsWith(".webp") ? "image/webp" : "application/octet-stream",
+          "cache-control": PUBLIC_CACHE,
+        },
+      });
+    },
+  ],
   [
     "GET",
     /^\/api\/survey-items$/,

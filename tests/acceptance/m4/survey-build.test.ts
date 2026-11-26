@@ -194,7 +194,9 @@ describe("AC-02-10 · AC-02-08 · 2.3.6 자산 메타", () => {
     const axisOf = new Map(ab.flatMap((p) => p.images.map((i) => [i.id, p.axis] as const)));
     for (const i of m.items) {
       if (i.kind === "ab_pair") continue;
-      expect(i.altText, i.assetId).toMatch(/^선택지 \{n\}: \S/);
+      // 사용자에게 보이는 카드·A/B만 2.4.6 형식(앵커 참조는 비노출, ASM-094 ③)
+      if (i.kind !== "anchor_ref") expect(i.altText, i.assetId).toMatch(/^선택지 \{n\}: \S/);
+      else expect(i.altText, i.assetId).toMatch(/\S/);
       for (const t of typeNames) expect(i.altText, i.assetId).not.toContain(t);
       expect(i.dominantColors, i.assetId).toHaveLength(3);
       for (const c of i.dominantColors!) expect(c).toMatch(/^#[0-9A-F]{6}$/);
