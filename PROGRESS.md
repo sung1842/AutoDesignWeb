@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T04:07Z, since: 2026-11-26T04:07Z}
+- lock: {owner: 2026-11-26T04:07Z, since: 2026-11-26T04:22Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
@@ -16,7 +16,7 @@
 - PostgreSQL 16 설치됨, pgvector 없음. 06장 DDL은 auth 스키마 stub 위에서 vector 외 46개 테이블 생성 성공.
 - npm 레지스트리 접근 가능.
 - 2026-11-25 컨테이너 2코어: blocks.test AC-03-18 PS-T1이 180s 타임아웃(변경 전 코드도 동일, 환경 속도). 타임아웃 상향 금지 → 빠른 환경에서 재확인
-- 새 컨테이너: `pnpm install` 뒤 `pnpm typecheck`(tsc -b)로 dist 빌드해야 vitest·guard:count가 동작(루트 build 스크립트 없음)
+- 새 컨테이너: shallow clone이면 `git fetch --unshallow` 후 태그 복원(guard:lock·tuned 필요). `pnpm install` 뒤 `pnpm typecheck`(tsc -b)로 dist 빌드해야 vitest·guard:count가 동작(루트 build 스크립트 없음)
 - 폰트 서브셋(M2-07b2~)은 python3 fontTools(기본 설치) + brotli 필요. 컨테이너마다 `pip install --break-system-packages brotli` 1회(AD-032).
 
 ## 배경
@@ -129,7 +129,7 @@
   - [ ] 14 verify:m2 → m2-done(tags 맵). 1차(2026-11-26, reports/verify-m2-1.json) fail: acceptance:m2 17건. 정리:
     - [x] 14a SIG-11 hero G-05 회귀 수정·next peer @playwright/test 끊기(AD-033)·validateBundle 구현(AC-03-22·42 녹색, ASM-072)
     - [x] 14b treeLint 단계 T(G-01·LT-01~11·RH-01~02, ASM-073). patternRaw LT-03 하한 채우기·리듬 DFS·덱 index 분배, 픽스처 29 재생성. AC-04-11은 pl1-00(기준선 입력) LT-03 1건 → BLK-013
-    - [ ] 14c harmonyScore(03장 조화 규칙, 표준 트리 H=100) — AC-03-20(packages/scoring/src/gates.ts 자리표시)
+    - [x] 14c harmonyScore(packages/scoring/src/harmony.ts, AC-03-20 녹색, 단위 6, ASM-074)
       - 메모(다음 세션): 03장 3.14.3~5·04장 4.10.3, data/taxonomy/harmony.json(items H1~H12·constants). 테스트 시그니처 `harmonyScore(spec, tree).total`(렌더 없음) → 정적 판정: H1~H3 팔레트 토큰(primary·accent·bg·surface·surface-inverse, 상태·hover 제외), H4·H5 font 토큰+registry, H6·H8·H9 토큰 생성이라 만점(렌더 측정 입력은 선택 인자, M3), H7 type display/body, H10 design-spec `l2Conflicts`(snap.ts, CF-03·04 등)+CF-05·06·08~12, H11 decor.effects ≤ max, H12 트리 리듬. scoring 의존은 config뿐(09장 9.1.3 표) → 리듬 판정을 scoring 안에 둘지(중복) 확인 후 ASM
     - [ ] 14d 원인 미확인 실패 개별 재현(`npx vitest run tests/acceptance/m2/<f> -t <AC>`): AC-03-18 PS-T1~T8(180s 타임아웃 의심, 2코어), AC-03-33 터치 타깃, AC-03-23 한글 폰트, AC-03-26 헤드라인, AC-03-45 ②④
     - [ ] 14e verify:m2 재실행(약 60분, 백그라운드 nohup 후 reports/verify-m2.partial.json 확인). 남는 것: AC-03-19(BLK-009)·AC-04-08(BLK-012) blocked
@@ -140,6 +140,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-26 13:22 | M2-14c harmonyScore H1~H12·CF 판정(정적+선택 렌더·위반 입력), AC-03-20 녹색, ASM-074
 - 2026-11-26 12:55 | 세션 종료(잠금 해제). 다음 M2-14c harmonyScore(메모는 P4 14c 아래)
 - 2026-11-26 12:40 | M2-14b treeLint 단계 T(ASM-073)·표준 트리 LT-03 하한·리듬 수정, BLK-013(PL-1 기준선 ↔ AC-04-11)
 - 2026-11-26 11:58 | verify:m2 1차 fail 17 → SIG-11 G-05 회귀·AC-09-09(AD-033)·validateBundle(ASM-072) 수정, 14b~e 계획

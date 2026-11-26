@@ -150,8 +150,3 @@ export function evaluateGates(measure: unknown, ids: string[]): GateResult[] {
     return { id, pass: v.length === 0, violations: v };
   });
 }
-
-export function harmonyScore(_spec: unknown, _tree: unknown): { total: number } {
-  void [_spec, _tree];
-  throw new Error("harmonyScore: M3에서 구현 예정");
-}

@@ -519,3 +519,10 @@
 - 선택: ① G-01 = PageSchema 파싱 실패, LT-01~04·09·10 error, LT-05 error(AIL-07 a), LT-06~08·11·RH-01·02 warn. 상수는 linter/data/rule-params.json "T"(skeleton 연속 ≤2, 이미지 유무 연속 ≤3, CTA ≤2, 다크 inverse [0,1]), 리듬 값은 spec.rhythm ② 엄격 교대 = 6섹션 이상이 전부 bg/surface이고 인접이 모두 다름 ③ LT-09는 목록 슬롯 안 같은 참조를 1회로 센다(menu 그룹 펼침), link 라벨 제외 ④ RH-02 이미지 섹션 = image 슬롯 있음 또는 bg=image ⑤ patternRaw: 하한보다 짧으면 용도 선택 블록(명세 순서) 중 없는 것을 마지막 섹션 앞에 넣는다(ASM-053 ②의 “footer 포함으로 셈”을 대체) ⑥ variant는 선호 순 깊이 우선 탐색으로 RH-01·LT-05를 피한다(pick 고정 블록은 그대로) ⑦ 같은 덱 키를 여러 슬롯이 쓰면 이어지는 index(feature·process, showcase·gallery), 헤드라인 줄 예산 교체는 다른 슬롯이 쓰는 옵션을 제외한다 ⑧ AIL-04·05·12·18(단계 T)은 M3 린터에서
 - 영향 범위: packages/linter(stage-t), packages/design-spec(standard.ts), fixtures/layouts(pl1-00 제외 재생성)
 - 되돌리기 비용: 낮음
+
+## ASM-074 · M2 · gap · 2026-11-26T04:20Z
+- 질문: AC-03-20은 `harmonyScore(spec, tree).total`(렌더·린터 입력 없음)인데 3.14.5는 1280 렌더 측정·리듬 위반을 입력으로 둠. scoring 의존은 config뿐(9.1.3)이라 linter·design-spec 데이터를 import할 수 없음
+- 근거 탐색: 03장 3.14.1~5, 04장 4.10.3, 09장 9.1.3(scoring 입력 `{Features, Violation[], DesignSpec}`), design-spec compile.ts(`forbidden.conflict_ids` = l2Conflicts)
+- 선택: ① 3번째 선택 인자 `{render, violations, conflicts}`. 없으면 정적 판정: H1~H3 팔레트 역할 토큰(primary·accent·bg·surface·surface-inverse, 상태·on-*·hover 제외), H4·H5·H7 font·type 토큰, H6·H8·H9 토큰 생성 값이라 만점, H12는 판정 보류(만점, measured "not_provided"; 파이프라인은 linter 위반을 넘긴다) ② 상충 = spec.forbidden.conflict_ids(CF-03·04·08 등 데이터 의존) ∪ 명세·트리 판정(CF-01 glass+이미지 섹션 없음, 05, 06, 09, 10, 11, 12 hero.centered+eyebrow 정규식) ∪ 인자 ③ bg 채도 상한은 theme 키(dark는 light 값 0.03) ④ 상수는 findRepoRoot()/data/taxonomy/harmony.json에서 읽음(scoring 새 의존 없음)
+- 영향 범위: packages/scoring(harmony.ts·harmony.test.ts)
+- 되돌리기 비용: 낮음
