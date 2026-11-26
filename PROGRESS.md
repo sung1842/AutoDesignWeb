@@ -3,13 +3,13 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T22:08Z, since: 2026-11-26T22:08Z}
+- lock: {owner: 2026-11-26T22:08Z, since: 2026-11-26T22:31Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-27 12:08  # 이 세션 시작(07:08 KST)+5h 추정
-- 마지막 갱신: 2026-11-27 01:07 KST (M3 완료 pass_blocked, 다음 M4)
+- 마지막 갱신: 2026-11-27 07:31 KST (M5-02 auth 완료, verify:m4 재실행 필요)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -151,10 +151,10 @@
   - [ ] 07 진단·결과 화면(01장, packages/ui 토큰)·닮은 사이트 3 링크·비제휴 고지: [x] a 닮은 사이트 2.14(서버 계산·저장·표시 시 재확인, seedSimilarSites 픽스처) [x] b S02 진단 화면(1.4 R1~R7·레이아웃 5종·뒤로가기·전환) [x] c S03 결과 화면(①②④⑤⑥⑦⑨⑩) [x] d S01 시작·이어하기 [x] e E2E 녹색(e2e/m4 4/4, AD-035)
   - [x] 08 E2E(375·1280)·MBTI grep(e2e/m4 4/4)
   - [~] 09 eval:golden:build-answers·골든 자체 잠금: [x] buildGoldenAnswers·replayGolden·CLI(엔진 beta 덮어쓰기, 계획 L1 픽스처 32/32·M1a 24/24·β8.5 9/24) [ ] 실데이터 실행(BLK-022로 0/32) [ ] m4-done에서 data/golden 자체 잠금
-  - [ ] 10 verify:m4 → m4-done: [ ] 1차 실행(2026-11-26 19:51Z 시작)
+  - [ ] 10 verify:m4 → m4-done: [ ] 1차 실행(2026-11-26 19:51Z 시작, 컨테이너 교체로 결과 없음 → 재실행)
 - M5 계획(9.4.7, AC: 00-14~17, 01-01·02·22~34·51·58, 04-01·02·14~16·22~25·37·38·44·46·47, 06-07b·09·10·13·15~18·20~23·38~40·45·47·52·55·56·59~63, 07-02·13, 08-24~26·38~42, 09-07·13·18. 읽을 장은 CLAUDE.md 구현 규칙 3절):
   - [ ] 01 M5 수용 테스트(tests/acceptance/m5, AD-031): [x] a 인증·귀속(AuthPort local·매직링크·dev_mail_outbox·attach_anon, auth.test WIP, ASM-103) [ ] b 브랜드 입력·BrandInput 검증·인젝션 방어(04·08장, fixtures/brands) [ ] c 생성 API·Idempotency·진행 잡 1개·폴링(06장) [ ] d llm gateway·models.yaml·MockProvider 시나리오(9.6.2·TC-R) [ ] e pipeline 3변형→후보 6→검증·수리→렌더→게이트→점수→노출·재생성·폴백 [ ] f 비용·quota_ledger·킬 스위치·초대·환불(06장 6.9.4·6.10) [ ] g S04~S08 화면 E2E(01장) → traceability·자체 잠금
-  - [ ] 02 AuthPort local·세션 쿠키·매직링크·attach_anon
+  - [x] 02 AuthPort local·세션 쿠키·매직링크·attach_anon·/api/me·/api/consents(auth.test 7/7, ASM-104. MeView quota 등은 07·08)
   - [ ] 03 동의(S05)·초대 코드
   - [ ] 04 BrandInput zod·정규화·인젝션 방어·brief_drafts
   - [ ] 05 packages/llm models.yaml·프롬프트 파일·MockProvider·비용식
@@ -170,6 +170,8 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 07:31 | M5-02 AuthPort local·mail local·콜백·me·consents(auth.test 7/7). BLK-026 재현
+- 2026-11-27 07:08 | 잠금 회수(이전 20:24Z, 104분). 로컬 main이 11-19 옛 이력 → 백업 브랜치로 두고 origin/main 사용
 - 2026-11-27 05:24 | M5-01a auth.test WIP(매직링크·귀속·로그아웃·동의). verify:m4 진행 중
 - 2026-11-27 05:20 | BLK-026 등록(잠긴 contract.test 사례 하드코딩), HUMAN_TODO 정리
 - 2026-11-27 04:51 | M5 계획 10단위 초안(verify:m4 진행 중)
@@ -183,40 +185,3 @@
 - 2026-11-27 04:24 | M4-01h e2e/m4 quiz 11/11(+survey 4/4), 빌드 캐시로 재실행 5s
 - 2026-11-27 04:19 | M4-07 S01 1.5.1 구성 보강(고지 문구 08장 원문)
 - 2026-11-27 04:18 | M4-01h presets.test 3/3(조화 100·중심 분리·렌더 6속성 ≥3), traceability 48/71
-- 2026-11-27 04:16 | M4-01h results.test 11/11, traceability 45/71
-- 2026-11-27 04:15 | M4-07 matchAxes·품질 감시 refreshPairStats·replayProfile 추가(ASM-101)
-- 2026-11-27 04:11 | M4-01h traceability M4 33/71. 남은 38 AC 테스트 작성 필요
-- 2026-11-27 04:10 | M4-08 e2e/m4 4/4 녹색(375·1280 완료·재개·뒤로가기·MBTI 0). AD-035 Turbopack 경로
-- 2026-11-27 03:55 | M4-07b~d S01·S02·S03 화면 1차(01장 1.4·1.5.2). E2E 확인 전
-- 2026-11-27 03:53 | M4-01f e2e/m4/survey.spec(375·1280 완료·재개·뒤로가기·MBTI), serve.ts(전용 DB·next build/start)
-- 2026-11-27 03:49 | M4-07a 닮은 사이트 2.14 서버 계산·저장·재확인, api.test 13/13
-- 2026-11-27 03:46 | M4-09 build-answers 구현(픽스처 32/32, β8.5 변이 검출). 실데이터는 BLK-022로 0/32
-- 2026-11-27 03:45 | M4-05b Next route.ts 11개 위임. 재빌드 manifest: DOM 일치, survey-build.test 남은 실패 = BLK-022
-- 2026-11-27 03:44 | M4-06 events.test 7/7(레지스트리·배치 거부·서버 이벤트·identity_links)
-- 2026-11-27 03:43 | M4-05a 진단 API in-process(api.test 13/13, p95 통과), 이벤트 수집 구현
-- 2026-11-27 03:39 | M4-04g AC-02-09 domHash 원인(shape-graphic·SIG 장식) 수정 ASM-098, api-contract zod 추가. 재빌드 중
-- 2026-11-27 03:36 | M4-04f 전체 survey:build: 361파일 규격 위반 0, 활성 카드 1/48 → BLK-022. tpl-hero DOM 3종 확인 필요
-- 2026-11-27 03:35 | M4-01g golden-answers.test WIP(2회 바이트 동일·32행·β 8.5 변이)
-- 2026-11-27 03:34 | M4-01e events.test WIP(레지스트리·400 배치 거부·서버 이벤트·identity_links)
-- 2026-11-27 03:33 | M4-01d api.test WIP(익명 세션·재개·멱등·CSRF·소유·완료·p95), SC_04 상수
-- 2026-11-27 03:30 | M4-04e survey-build ②(2회차 업로드 0·DB 0)·--check 녹색. 전체 빌드 시작
-- 2026-11-27 03:29 | M4-04d survey:build --only 동작(4장 렌더·업로드 7). 실측 x 오차 커서 draft(정규화기 temp)
-- 2026-11-27 03:18 | M4-04c StoragePort fs(06장 6.13.1), 단위 3/3
-- 2026-11-27 03:17 | M4-04b stimuli 판정 함수(5.9·2.4.2·2.6.1), 계획 target 48장 커버리지 통과
-- 2026-11-27 03:52 | M4-01c 감사 리터럴 정리(perf 키·--check 위임), BLK-021 locked-conflict
-- 2026-11-27 03:35 | M4-01c survey-build.test WIP(manifest 수량·규격·DOM·멱등·--check, ASM-093)
-- 2026-11-27 03:09 | 세션 시작, 잠금 획득(이전 잠금 16:24Z 90분 초과). M4-04a surveyPage 커밋 확인
-- 2026-11-27 01:24 | M4-01b sim 수용 테스트 WIP(x_card 7건은 survey:build 뒤 녹색 예정)
-- 2026-11-27 01:22 | M4-03 sim:survey 시뮬레이터·튜너. 합성 dev 미달 2(RMSE 0.1215/0.12, 앵커 0.930/0.95)
-- 2026-11-27 01:15 | M4-02 진단 엔진(updateMNL·nearestType·stage1Score·세션 엔진). 재생 순서 기준 BLK-020
-- 2026-11-27 01:11 | M4-01a 진단 엔진 수용 테스트 WIP(ASM-090)
-- 2026-11-27 01:08 | M4 계획 10단위(9.4.6)
-- 2026-11-27 01:07 | verify:m3 2차 pass_blocked → m3-done(25e1b05, 원격 태그 푸시 불가 → tags 맵). 다음 M4 계획
-- 2026-11-27 00:29 | verify:m3 1차 fail: 비BLK = m0 AC-06-32(verify 안 간헐)·m2 AC-03-33(단독 90s 통과, 시간). BLK-008 M3 재현 추가, 017~019 locked-conflict
-- 2026-11-26 23:32 | M3-08b presets:lint-matrix·editChoices·CF-13 등록(AC-03-43 9/9)
-- 2026-11-26 23:27 | M3-08b assemblePrompt(AC-08-15)·G1 eTLD+1(AC-08-14) 녹색
-- 2026-11-26 23:23 | M3-08b CF-01~12 픽스처·조화 CF-02·07 판정. AC-03-39 녹색
-- 2026-11-26 23:20 | M3-08a CP-01~12 copyRules·buildFallback, 브랜드 색 없는 입력 처리. AC-04-13 녹색
-- 2026-11-26 23:16 | M3-07 추출기 경로·evaluateCandidate·자기검증 8/8·정규화기 트리거. 앵커 왕복 BLK-018·라벨 BLK-017
-- 2026-11-26 23:12 | M3-06 tasteMatch·eligibility·rankScore·selectVisible·QualityReportSchema. scoring.test 17/17
-- 2026-11-26 23:10 | M3-05 게이트·조화 순수 함수, 원본 유사도 G2·G3·G5, phash64, abuse 판정. gates.test 35/35

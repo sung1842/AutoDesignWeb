@@ -244,5 +244,6 @@
 - 재현: pnpm vitest run tests/acceptance/m4/contract.test.ts -t "AC-06-08 ② 빌드된 라우트마다"
 - 시도: (1) 잠긴 테스트 수정 → 금지(9.5.6) (2) 라우트 추가 보류 → M5 범위 불가
 - 처리: M5부터 ②가 실패하면 이 BLK로 blocked 표시. 새 라우트의 계약 사례는 tests/acceptance/m5 이후 테스트에 둔다
+- 재현 확인: 2026-11-26T22:30Z 8248a66(M5-02)부터 ② 실패(`/auth/callback`·`/api/me`·`/api/consents` 사례 없음)
 - 제안 수정안(사람): contract.test.ts의 cases()를 `tests/contract/cases.ts`(마일스톤별 사례 등록부, 잠금 대상)로 옮기고 테스트는 그 등록부를 읽게 바꾼 뒤 relock
 - 상태: open
