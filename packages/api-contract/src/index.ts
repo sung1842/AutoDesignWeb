@@ -4,3 +4,4 @@ export * from "./errors.js";
 export * from "./survey.js";
 export * from "./events.js";
 export * from "./routes.js";
+export * from "./account.js";

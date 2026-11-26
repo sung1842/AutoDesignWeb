@@ -33,6 +33,12 @@
     },
     {
       "path": "../../packages/storage"
+    },
+    {
+      "path": "../../packages/auth"
+    },
+    {
+      "path": "../../packages/mail"
     }
   ]
 }

@@ -24,18 +24,35 @@ export interface Ctx {
   anonId: string | null;
   /** 이번 응답에서 새로 발급한 anon_id. */
   issued: string | null;
+  /** 요청 쿠키의 세션 값(tf_session, ASM-103 ④). */
+  session: string | null;
+  /** 응답에 추가할 Set-Cookie(세션 발급·폐기). */
+  cookies: string[];
   t0: number;
 }
 
+/** 요청 Cookie 헤더에서 이름 하나의 값. */
+export function readCookie(req: Request, name: string): string | null {
+  for (const part of (req.headers.get("cookie") ?? "").split(";")) {
+    const i = part.indexOf("=");
+    if (i > 0 && part.slice(0, i).trim() === name) return part.slice(i + 1).trim() || null;
+  }
+  return null;
+}
+/** 6.5.1 anon_id 쿠키 문자열. */
+export const anonCookie = (v: string): string =>
+  `${ANON_COOKIE.name}=${v}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=${ANON_COOKIE.maxAgeS}`;
+
 export function makeCtx(req: Request): Ctx {
-  const m = /(?:^|;\s*)anon_id=([^;]+)/.exec(req.headers.get("cookie") ?? "");
-  const v = m?.[1] ?? null;
+  const v = readCookie(req, ANON_COOKIE.name);
   return {
     req,
     requestId: req.headers.get("x-request-id") ?? randomUUID(),
     url: new URL(req.url),
     anonId: v && UUID.test(v) ? v : null,
     issued: null,
+    session: readCookie(req, "tf_session"),
+    cookies: [],
     t0: performance.now(),
   };
 }
@@ -84,17 +101,11 @@ function finish(c: Ctx, res: Response, opts: { cache?: string } = {}): Response 
   h.set("x-request-id", c.requestId);
   h.set("cache-control", opts.cache ?? "private, no-store");
   h.set("server-timing", `app;dur=${(performance.now() - c.t0).toFixed(1)}`);
-  if (c.issued)
-    h.append(
-      "set-cookie",
-      `${ANON_COOKIE.name}=${c.issued}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=${ANON_COOKIE.maxAgeS}`,
-    );
+  if (c.issued) h.append("set-cookie", anonCookie(c.issued));
   else if (c.anonId && c.url.pathname.startsWith("/api/surveys"))
     // 진단 API 호출마다 만료 연장(6.5.1)
-    h.append(
-      "set-cookie",
-      `${ANON_COOKIE.name}=${c.anonId}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=${ANON_COOKIE.maxAgeS}`,
-    );
+    h.append("set-cookie", anonCookie(c.anonId));
+  for (const ck of c.cookies) h.append("set-cookie", ck);
   return new Response(res.body, { status: res.status, headers: h });
 }
 
@@ -114,6 +125,9 @@ export function json(
   );
 }
 export const noContent = (c: Ctx): Response => finish(c, new Response(null, { status: 204 }));
+/** 302 리다이렉트(Location은 동일 오리진 경로). */
+export const redirect = (c: Ctx, location: string): Response =>
+  finish(c, new Response(null, { status: 302, headers: { location } }));
 
 export function errorResponse(c: Ctx, e: unknown): Response {
   const err =

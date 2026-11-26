@@ -52,6 +52,9 @@ importers:
       '@tastefit/api-contract':
         specifier: workspace:^
         version: link:../../packages/api-contract
+      '@tastefit/auth':
+        specifier: workspace:^
+        version: link:../../packages/auth
       '@tastefit/config':
         specifier: workspace:^
         version: link:../../packages/config
@@ -61,6 +64,9 @@ importers:
       '@tastefit/diagnosis':
         specifier: workspace:^
         version: link:../../packages/diagnosis
+      '@tastefit/mail':
+        specifier: workspace:^
+        version: link:../../packages/mail
       '@tastefit/renderer':
         specifier: workspace:^
         version: link:../../packages/renderer
@@ -135,7 +141,14 @@ importers:
 
   packages/assets: {}
 
-  packages/auth: {}
+  packages/auth:
+    dependencies:
+      '@tastefit/db':
+        specifier: workspace:^
+        version: link:../db
+      '@tastefit/mail':
+        specifier: workspace:^
+        version: link:../mail
 
   packages/compliance:
     dependencies:
@@ -220,7 +233,11 @@ importers:
 
   packages/llm: {}
 
-  packages/mail: {}
+  packages/mail:
+    dependencies:
+      '@tastefit/db':
+        specifier: workspace:^
+        version: link:../db
 
   packages/pipeline: {}
 

@@ -6,8 +6,10 @@ import {
   SubmitAnswerReqSchema,
   UndoReqSchema,
 } from "@tastefit/api-contract";
+import type { AuthPort } from "@tastefit/auth";
 import type { DbPort } from "@tastefit/db";
 import { PUBLIC_BUCKETS, type StoragePort } from "@tastefit/storage";
+import { callback, me, saveConsents } from "./auth";
 import { clientEvents } from "./events";
 import {
   ApiError,
@@ -40,12 +42,28 @@ export interface Deps {
   webOrigin: string;
   /** fs 드라이버 저장소(06장 6.13.1). APP_ENV=local·STORAGE_DRIVER=fs일 때만 /api/_storage가 응답한다. */
   storage?: StoragePort | null;
+  /** AuthPort(6.13.1). 인증 라우트(M5)에서만 필요. */
+  auth?: AuthPort;
+  /** 요청 시점 ADMIN_EMAILS(6.5.4). 없으면 env. */
+  adminEmails?: string;
+  /** CONSENT_HASH_KEY. 없으면 env. */
+  consentHashKey?: string;
 }
 /** 6.7 공개 정적 데이터 캐시(1년 immutable). */
 const PUBLIC_CACHE = "public, max-age=31536000, immutable";
 
 type Route = (c: Ctx, d: Deps, m: RegExpExecArray) => Promise<Response>;
 const R: [string, RegExp, Route][] = [
+  ["GET", /^\/auth\/callback$/, (c, d) => callback(c, d)],
+  ["GET", /^\/api\/me$/, async (c, d) => json(c, 200, await me(c, d))],
+  [
+    "POST",
+    /^\/api\/consents$/,
+    async (c, d) => {
+      await saveConsents(c, d, await readJson(c));
+      return noContent(c);
+    },
+  ],
   [
     "GET",
     /^\/api\/_storage\/public\/([A-Za-z0-9._-]+)\/(.+)$/,

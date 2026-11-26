@@ -341,3 +341,19 @@ export async function seedSimilarSites(db: DbPort): Promise<number> {
   });
   return n;
 }
+
+/** 6.5.2 테스트: dev_mail_outbox의 가장 최근 [magic_link] 메일 본문에서 링크 1개(HTTP 라우트 아님, ASM-103 ⑤). */
+export async function latestMagicLink(db: DbPort, email: string): Promise<string> {
+  const r = await db.withService((tx) =>
+    q(
+      tx,
+      `select body from dev_mail_outbox where to_email = $1 and subject like '[magic_link]%'
+        order by id desc limit 1`,
+      [email.trim().toLowerCase()],
+    ),
+  );
+  const body = String(r.rows[0]?.body ?? "");
+  const m = /https?:\/\/\S+/.exec(body);
+  if (!m) throw new Error(`latestMagicLink: ${email} 메일 없음`);
+  return m[0];
+}

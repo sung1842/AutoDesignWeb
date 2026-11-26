@@ -730,3 +730,10 @@
 - 선택: ① 매직링크 요청·로그아웃은 route.ts가 아니라 서버 함수(`apps/web/src/server/auth.ts`의 `requestMagicLink(deps, {email, next, turnstileToken})`·`logout(deps, req) → Headers`)를 S04·헤더의 서버 액션이 호출(6.4.3 라우트 목록·AC-06-08 레지스트리를 바꾸지 않음) ② 콜백 `GET /auth/callback?token=&next=`(local: 서명 토큰, supabase: `code`) ③ local 토큰 = HS256(LOCAL_JWT_SECRET) `{email, jti, exp(1h)}`, 사용한 jti는 shim `auth.audit_log_entries`(payload.action='magiclink_used')에 기록해 재사용 거부 → `/login?error=CLIENT_LINK_EXPIRED` ④ 세션 = HS256 JWT `{sub, role, aal, sid}` 쿠키 `tf_session`(HttpOnly·Secure·SameSite=Lax·Path=/), sid는 shim `auth.sessions` 행. signOut·adminSignOutAll = 그 행 not_after = now() ⑤ 메일 = `dev_mail_outbox` subject `[magic_link] …`, 본문에 링크 1개. 테스트는 `latestMagicLink(db, email)`(packages/db testing)로 읽는다
 - 영향 범위: packages/auth, apps/web/src/server, packages/db/src/testing
 - 되돌리기 비용: 중간
+
+## ASM-104 · M5 · gap · 2026-11-26T22:20Z
+- 질문: AuthPort local 세부(세션 수명·리프레시, 메일 템플릿 형식, 문서 현재 버전 원천, 의존 방향), consents 필수 판정
+- 근거 탐색: 06장 6.5.2·6.5.4·6.13.1 AuthPort 행·메일 템플릿 표, 08장 8.7.4 B·C, 09장 9.1.3 auth/mail 행
+- 선택: ① 세션 JWT exp 30일, 실제 유효성은 shim `auth.sessions.not_after`(signOut·adminSignOutAll = now()). 6.13.1의 "세션 세대 번호"와 같은 효과(이전 JWT 거부), 액세스 1시간·리프레시 회전은 supabase 드라이버 몫 ② 메일 템플릿 `packages/mail/templates/<id>.ko.md` = `subject: …` / `---` / 본문, 변수 `{{name}}`만. auth local은 MailPort local(dev_mail_outbox)로 보낸다. auth·mail → db 의존(9.1.3 표에 금지 없음) ③ 현재 문서 버전은 `apps/web/src/server/auth.ts` `CURRENT_DOC_VERSIONS`(terms·age_14·privacy_notice = 2026-11-16, legal/*.md에 frontmatter가 없어 임시). legal 확정 시 frontmatter에서 읽게 바꾼다 ④ POST /api/consents: 현재 버전 age_14·terms agreed=true가 없으면 400 VALIDATION_FAILED(issues code `required_consent`), 첫 동의 화면 이동은 "첫 로그인"이 아니라 `consentsOk=false`면 매번(문서 버전 변경 재동의를 같이 처리, 8.7.4) ⑤ supabase 드라이버(GoTrue)는 needs_ci, M5는 local만 ⑥ CONSENT_HASH_KEY·ADMIN_EMAILS는 Deps 값 → env 순, 테스트에서 키가 없으면 프로세스별 임시 키 ⑦ MeView는 이번 단위에서 id·email·role·consentsOk·inviteOk만(quota·retest·adoptionFollowup은 M5-07·08)
+- 영향 범위: packages/auth, packages/mail, apps/web/src/server/auth.ts
+- 되돌리기 비용: 낮음

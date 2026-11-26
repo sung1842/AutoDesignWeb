@@ -19,9 +19,11 @@
   },
   "dependencies": {
     "@tastefit/api-contract": "workspace:^",
+    "@tastefit/auth": "workspace:^",
     "@tastefit/config": "workspace:^",
     "@tastefit/db": "workspace:^",
     "@tastefit/diagnosis": "workspace:^",
+    "@tastefit/mail": "workspace:^",
     "@tastefit/renderer": "workspace:^",
     "@tastefit/storage": "workspace:^",
     "next": "^16.0.0",
