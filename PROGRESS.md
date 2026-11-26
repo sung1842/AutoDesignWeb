@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: 
+- lock: {owner: 2026-11-26T04:07Z, since: 2026-11-26T04:07Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
@@ -155,5 +155,3 @@
 - 2026-11-26 06:58 | M2-09d1 추출기 F01~F30(DOM·k-means)·harness.features, 앵커 8 결정성 통과, ASM-066
 - 2026-11-26 06:33 | M2-09e G-12 명세 무결성·AIL-17(토큰 집합·expectedSize·deriveTokens 대조), AC-03-45 녹색, ASM-065
 - 2026-11-26 03:52 | AC-03-26 헤드라인 줄 예산(덱 교체→단계 하향 role_overrides→warn, 24 중 8 하향), ASM-064
-- 2026-11-26 03:49 | AC-03-21 fallback 체인 끝 = remove(seed:temp), ASM-063
-- 2026-11-26 03:32 | AC-03-41 colorName(사전 42, 무채색·조건 색·수식어)·config/color-names.ko.json(temp), ASM-062; 블록 샘플 8×50 넘침·잘림·겹침 0
