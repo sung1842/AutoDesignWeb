@@ -8,6 +8,7 @@ interface TypeBrief {
   id: string;
   nameKo: string;
   descriptionKo: string;
+  keywordsKo?: string[];
 }
 interface ResultView {
   resultId: string;
@@ -96,7 +97,8 @@ export function Result({ id }: { id: string }) {
       {r.anchorOverrideTypeId ? (
         <p className="svc-muted">직접 고른 유형 · 원래 결과: {r.type.nameKo}</p>
       ) : null}
-      <p>{shown.descriptionKo}</p>
+      <p data-testid="type-description">{shown.descriptionKo}</p>
+      <p data-testid="type-keywords">{(shown.keywordsKo ?? []).join(" · ")}</p>
       {noticeText ? <p role="note">{noticeText}</p> : null}
       {showConfidence ? (
         <p className="svc-muted">{KO[`result.confidence.${r.confidence}`]}</p>

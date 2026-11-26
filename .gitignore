@@ -13,3 +13,4 @@ apps/web/next-env.d.ts
 *.tsbuildinfo
 test-results/
 playwright-report/
+e2e/.results.json

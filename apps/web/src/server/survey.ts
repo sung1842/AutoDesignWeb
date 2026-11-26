@@ -39,6 +39,7 @@ interface TypeRow {
   id: string;
   nameKo: string;
   descriptionKo: string;
+  keywordsKo: string[];
   centroid: Vec;
   anchorPresetId: string;
 }
@@ -764,8 +765,15 @@ async function shownSites(
 
 function typeBrief(id: string) {
   const t = repo().types.find((x) => x.id === id);
-  return { id, nameKo: t?.nameKo ?? id, descriptionKo: t?.descriptionKo ?? "" };
+  return {
+    id,
+    nameKo: t?.nameKo ?? id,
+    descriptionKo: t?.descriptionKo ?? "",
+    keywordsKo: (t?.keywordsKo ?? []).slice(0, RESULT_KEYWORDS),
+  };
 }
+/** 01장 1.5.2 ① 키워드 3개. */
+const RESULT_KEYWORDS = 3;
 
 export async function resultView(tx: Tx, id: string, anonId: string | null): Promise<ResultView> {
   const s = await ownedSession(tx, id, anonId);

@@ -2,7 +2,7 @@
 // 자산 경로는 manifest.lock = survey:build 산출과 같은 파일) + 닮은 사이트 픽스처 → next build → next start.
 // 비밀값은 실행마다 임의 생성(저장소에 쓰지 않음).
 import { spawn, spawnSync } from "node:child_process";
-import { createHash, randomBytes } from "node:crypto";
+import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { createDbPort, q } from "../packages/db/src/index.js";
@@ -58,6 +58,82 @@ if (existsSync(man)) {
         ]);
   });
 }
+// 결과 화면 픽스처(AC-01-16·57): 유형 8종 + 안내 5종. 세션·결과 행을 직접 넣고 쿠키·ID를 파일로 넘긴다
+const TYPES = (
+  JSON.parse(readFileSync(join(ROOT, "data/taxonomy/types.json"), "utf8")) as {
+    items: { id: string; centroid: number[] }[];
+  }
+).items;
+const AXES = ["expression", "temperature", "shape", "density", "depth"];
+const dist = (a: number[], b: number[]) =>
+  Math.sqrt(a.reduce((x, v, i) => x + (v - (b[i] ?? 0)) ** 2, 0));
+const fixtures: Record<
+  string,
+  { anonId: string; sessionId: string; typeId: string; notice: string | null }
+> = {};
+await db.withService(async (tx) => {
+  const tv = String(
+    (await q(tx, "select version from taxonomy_releases where status = 'active' limit 1")).rows[0]
+      ?.version,
+  );
+  const cases: [string, string, string | null][] = [
+    ...TYPES.map((t) => [`type-${t.id}`, t.id, null] as [string, string, null]),
+    ["notice-low_signal", "T1", "low_signal"],
+    ["notice-conflict", "T1", "conflict"],
+    ["notice-low_consistency", "T1", "low_consistency"],
+    ["notice-boundary", "T1", "boundary"],
+    ["notice-null", "T1", null],
+  ];
+  for (const [key, typeId, notice] of cases) {
+    const t = TYPES.find((x) => x.id === typeId)!;
+    const order = [...TYPES]
+      .sort((a, b) => dist(a.centroid, t.centroid) - dist(b.centroid, t.centroid))
+      .map((x) => x.id);
+    const anonId = randomUUID();
+    const sid = String(
+      (
+        await q(
+          tx,
+          `insert into diagnosis_sessions (anon_id, taxonomy_version, seed, status, entry, versions, completed_at)
+           values ($1, $2, 1, 'completed', 'direct', '{}', now()) returning id`,
+          [anonId, tv],
+        )
+      ).rows[0]?.id,
+    );
+    const sites = (
+      await q(tx, "select id from reference_sites where domain like $1 order by domain", [
+        `fixture-${typeId.toLowerCase()}-%`,
+      ])
+    ).rows.map((r) => String(r.id));
+    const profile = {
+      typeId,
+      secondTypeId: order[1],
+      adjacentTypeIds: order.slice(1, 3),
+      isBoundary: notice === "boundary",
+      confidence: notice ? "low" : "high",
+      flags: notice === "low_signal" ? ["low_signal"] : notice === "conflict" ? ["conflict"] : [],
+      notice,
+      kappa: 0.8,
+      mu: t.centroid,
+      var: t.centroid.map(() => 0.0025),
+      axes: AXES.map((k, i) => ({
+        key: k,
+        mu: t.centroid[i],
+        sigma: 0.05,
+        sigmaDisplay: 0.065,
+        state: "confirmed",
+      })),
+    };
+    await q(
+      tx,
+      `insert into diagnosis_results (session_id, taxonomy_version, type_id, type_id_second, is_boundary, profile, similar_site_ids)
+       values ($1, $2, $3, $4, $5, $6, $7)`,
+      [sid, tv, typeId, order[1], notice === "boundary", JSON.stringify(profile), sites],
+    );
+    fixtures[key] = { anonId, sessionId: sid, typeId, notice };
+  }
+});
+writeFileSync(join(ROOT, "e2e/.results.json"), JSON.stringify(fixtures, null, 2));
 await db.close();
 const web = join(ROOT, "apps/web");
 // 같은 소스면 빌드를 다시 하지 않는다(apps/web/src·packages/*/dist·next 설정의 내용 해시, .next/.e2e-src-hash)

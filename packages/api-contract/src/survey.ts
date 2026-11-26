@@ -83,7 +83,13 @@ export const SurveyItemsViewSchema = z.object({
   items: z.array(SurveyItemViewSchema),
 });
 
-const TypeBrief = z.object({ id: TypeId, nameKo: z.string(), descriptionKo: z.string() });
+const TypeBrief = z.object({
+  id: TypeId,
+  nameKo: z.string(),
+  descriptionKo: z.string(),
+  /** 01장 1.5.2 ① 키워드 3개(02장 유형 텍스트 keywordsKo). 06장 타입에 없는 필드(ASM-101). */
+  keywordsKo: z.array(z.string()).optional(),
+});
 export const ResultViewSchema = z.object({
   resultId: z.string().uuid(),
   surveyId: z.string().uuid(),

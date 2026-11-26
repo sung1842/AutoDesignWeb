@@ -34,15 +34,17 @@ test("AC-01-05 · AC-01-06 끝까지 16문항 이내, 진행률 막대 폭 단�
   await start(page);
   const widths: number[] = [];
   const fill = page.getByTestId("progress-fill");
+  // 막대 표시값 = 채움 비율(%). 헤더 글자 폭에 따라 트랙 길이가 달라지므로 px가 아니라 style 폭을 본다
+  const pct = async () => fill.evaluate((e) => parseFloat((e as HTMLElement).style.width));
   let n = 0;
   let undone = false;
   for (;;) {
-    widths.push((await fill.boundingBox())?.width ?? 0);
+    widths.push(await pct());
     if (n === 3 && !undone) {
       undone = true;
       await page.getByRole("button", { name: "← 이전 문항" }).click();
       await expect(page.getByTestId("question")).toHaveAttribute("data-seq", "3");
-      widths.push((await fill.boundingBox())?.width ?? 0);
+      widths.push(await pct());
       n--;
     }
     if ((await answerOne(page, n)) === "done") break;
@@ -79,7 +81,10 @@ test("AC-01-07 한 문항 이미지 표시 시작 시각 차이 ≤ 16ms", async
 test("AC-01-08 360px에서 1·2단계 카드 표시 폭 ≥ 328px", async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 760 });
   await start(page);
-  const widthNow = async () => (await page.locator(".svc-card").first().boundingBox())?.width ?? 0;
+  const widthNow = async () => {
+    await expect(page.locator(".svc-card").first()).toBeVisible();
+    return (await page.locator(".svc-card").first().boundingBox())?.width ?? 0;
+  };
   expect(await widthNow()).toBeGreaterThanOrEqual(328);
   let n = 0;
   while ((await page.getByTestId("question").getAttribute("data-kind")) !== "ab") {
@@ -170,16 +175,18 @@ test("AC-01-55 ② 768~1366: 카드 폭 ≥ 480·layoutMode = 1.4.3 표", async 
     const page = await ctx.newPage();
     await start(page);
     await expect(page.getByTestId("question")).toHaveAttribute("data-layout", c.stage1);
-    expect((await page.locator(".svc-card").first().boundingBox())!.width).toBeGreaterThanOrEqual(
-      480,
-    );
+    await expect(page.locator(".svc-card").first()).toBeVisible();
+    expect(
+      (await page.locator(".svc-card").first().boundingBox())?.width ?? 0,
+    ).toBeGreaterThanOrEqual(480);
     let n = 0;
     while ((await page.getByTestId("question").getAttribute("data-kind")) !== "ab")
       if ((await answerOne(page, n++)) === "done") break;
     await expect(page.getByTestId("question")).toHaveAttribute("data-layout", c.stage2);
-    expect((await page.locator(".svc-card").first().boundingBox())!.width).toBeGreaterThanOrEqual(
-      480,
-    );
+    await expect(page.locator(".svc-card").first()).toBeVisible();
+    expect(
+      (await page.locator(".svc-card").first().boundingBox())?.width ?? 0,
+    ).toBeGreaterThanOrEqual(480);
     await ctx.close();
   }
 });

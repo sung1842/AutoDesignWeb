@@ -203,3 +203,12 @@
 - 파급: `pnpm eval:golden:build-answers` 0/32(SURVEY_ITEMS_INSUFFICIENT stage 1, 9.4.6 ⑪), `sim:survey --gate`(④) 입력 부족. 계획 L1을 x로 둔 픽스처에서는 build-answers 32/32·M1a 24/24, β 8.5 변이 9/24로 검출(로직 확인)
 - 처리: fail로 두고 M5 이후 진행(9.4.6 ①). 사람 라벨 정규화기(05장 5.7) 확보 후 `pnpm survey:build` 재실행 → 2회차는 입력 해시가 바뀐 항목만 다시 렌더
 - 상태: open
+
+## BLK-023 · M4 · locked-conflict · 2026-11-26T21:30Z
+- 대상: 07장 7.12.1 AC 배정표(acMilestones M4 = AC-01-04~21) ↔ 09장 9.4.8 M6 범위(공유)·01장 1.5.2 공개 보기(`/r/[shareId]`, `GET /api/share/:shareId`)
+- 증상: AC-01-20(공개 모드에서 공감 평가·삭제·"이 취향으로 시안 만들기" 0건, "나도 진단하기"·"신고" 1건)은 공유 링크·ShareView·신고 모달(1.10.3, M7 신고 창구)이 있어야 검사할 수 있는데 공유는 M6 범위
+- 재현: pnpm -s qa:trace --upto M4 (AC-01-20 매핑 없음)
+- 시도: (1) 공유 API를 M4에 당겨 구현 → 09장 마일스톤 범위 위반·M6 의존(공유 생성 규칙·share_links RLS) (2) 소유자 화면으로 대체 → 공개 모드 검사가 아님
+- 처리: M6에서 공유 구현 후 tests/acceptance/m6에 AC-01-20 테스트를 두되 배정표가 M4라 qa:trace는 m4 디렉터리만 인정 → 배정표 수정 필요
+- 제안 수정안(사람): 07장 7.12.1 배정표에서 AC-01-20을 M6으로 옮기고 spec:extract 재생성·relock
+- 상태: open
