@@ -281,3 +281,63 @@ export async function seedSurveyFixture(
     }
   });
 }
+
+/** 닮은 사이트 후보 픽스처(02장 2.14 뷰 similar_site_candidates): 유형 중심마다 3곳(±0.03). 멱등. */
+export async function seedSimilarSites(db: DbPort): Promise<number> {
+  const root = join(import.meta.dirname, "../../../..");
+  const types = (
+    JSON.parse(readFileSync(join(root, "data/taxonomy/types.json"), "utf8")) as {
+      items: { id: string; centroid: number[] }[];
+    }
+  ).items;
+  const NV = "2026-S0.1";
+  let n = 0;
+  await db.withService(async (tx) => {
+    await q(
+      tx,
+      `insert into sources (source_id, kind, name, tier, url_pattern, access_method, status)
+       values ('direct', 'stats', '픽스처 직접 입력', 'AUX', 'https://*', 'manual', 'manual_only') on conflict do nothing`,
+    );
+    await q(
+      tx,
+      `insert into normalizers (version, status, body, corpus_hash, released_at)
+       values ($1, 'released', '{}', 'fixture', now()) on conflict do nothing`,
+      [NV],
+    );
+    for (const t of types)
+      for (const [k, d] of [
+        ["a", 0],
+        ["b", 0.03],
+        ["c", -0.03],
+      ] as const) {
+        const domain = `fixture-${t.id.toLowerCase()}-${k}.example`;
+        const ex = await q(tx, "select id from reference_sites where domain = $1", [domain]);
+        if (ex.rowCount) continue;
+        const rid = await id(
+          tx,
+          `insert into reference_sites (url, domain, title, title_ko, blurb_ko, type_primary, source_id, tier, use, lang, era, status, role, link_allowed)
+           values ($1, $2, $3, $4, $5, $6, 'direct', 'T3', 'saas', 'ko', 'current', 'active', 'seed', true)`,
+          [
+            `https://${domain}/`,
+            domain,
+            `Fixture ${t.id}-${k}`,
+            `픽스처 ${t.id}-${k}`,
+            "픽스처 설명",
+            t.id,
+          ],
+        );
+        const cid = await id(
+          tx,
+          `insert into reference_captures (reference_id, captured_at, extractor_version, status) values ($1, now(), 'fixture', 'ok')`,
+          [rid],
+        );
+        await q(
+          tx,
+          "insert into reference_l1 (capture_id, normalizer_version, vector) values ($1, $2, $3)",
+          [cid, NV, l1(t.centroid.map((v) => Math.min(1, Math.max(0, v + d))))],
+        );
+        n++;
+      }
+  });
+  return n;
+}

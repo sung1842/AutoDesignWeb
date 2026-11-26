@@ -6,7 +6,7 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { getThresholds } from "../../../packages/config/src/index.js";
 import { createDbPort, q, type DbPort } from "../../../packages/db/src/index.js";
-import { seedSurveyFixture } from "../../../packages/db/src/testing/fixtures.js";
+import { seedSimilarSites, seedSurveyFixture } from "../../../packages/db/src/testing/fixtures.js";
 import {
   SurveyViewSchema,
   ResultViewSchema,
@@ -97,6 +97,7 @@ beforeAll(async () => {
   expect(s.code, s.out).toBe(0);
   db = createDbPort(DB_URL);
   await seedSurveyFixture(db); // 카드 48·A/B 120쌍 전부 active, x = 계획 L1
+  await seedSimilarSites(db); // 2.14 후보 뷰(유형 중심마다 3곳)
 });
 afterAll(async () => {
   await db?.close();
@@ -266,6 +267,8 @@ describe("완료·결과 · AC-06-46 · 9.4.6 ⑤", () => {
     expect(TYPES).toContain(rv.type.id);
     expect(rv.adjacentTypes).toHaveLength(2);
     expect(rv.similarSites.length).toBeLessThanOrEqual(TH.diagnosis.similarSites.count);
+    expect(new Set(rv.similarSites.map((x) => x.domain)).size).toBe(rv.similarSites.length);
+    for (const x of rv.similarSites) expect(x.url).toMatch(/^https:\/\//);
   });
   it("AC-06-46 anchor-override: 2·3순위 밖 400, 허용 유형이면 override만 바뀌고 profile·type_id 바이트 동일", async () => {
     const r = ResultViewSchema.parse(

@@ -32,6 +32,7 @@ const D = getThresholds().diagnosis as unknown as {
   maxQuestions: number;
   stage1Questions: number;
   stage1: { epsilonExplore: number };
+  similarSites: { maxScore: number; tau: number; count: number };
 };
 
 interface TypeRow {
@@ -560,6 +561,44 @@ export async function submitAnswer(
   return view({ ...s, status }, eng, false, resultId);
 }
 
+interface SiteRow {
+  id: string;
+  domain: string;
+  url: string;
+  title_ko: string | null;
+  blurb_ko: string | null;
+  l1: Obj;
+}
+/** 02장 2.14 닮은 사이트: w_k = 1/(σ_display² + τ²) 정규화, s = sqrt(Σ w (r − μ)²), 도메인 중복 0, s ≤ maxScore, 최대 count개. */
+export async function similarSites(tx: Tx, mu: Vec, sigmaDisplay: Vec): Promise<SiteRow[]> {
+  const S = D.similarSites;
+  const raw = sigmaDisplay.map((sd) => 1 / (sd * sd + S.tau * S.tau));
+  const tot = raw.reduce((a, b) => a + b, 0);
+  const w = raw.map((x) => x / tot);
+  const rows = (
+    await q(tx, "select id, domain, url, title_ko, blurb_ko, l1 from similar_site_candidates")
+  ).rows as unknown as SiteRow[];
+  const scored = rows
+    .map((r) => {
+      const v = vec(r.l1);
+      return {
+        r,
+        s: Math.sqrt(v.reduce((acc, x, k) => acc + (w[k] ?? 0) * (x - (mu[k] ?? 0)) ** 2, 0)),
+      };
+    })
+    .filter((x) => x.s <= S.maxScore)
+    .sort((a, b) => a.s - b.s || (a.r.id < b.r.id ? -1 : 1));
+  const out: SiteRow[] = [];
+  const seen = new Set<string>();
+  for (const x of scored) {
+    if (out.length >= S.count) break;
+    if (seen.has(x.r.domain)) continue;
+    seen.add(x.r.domain);
+    out.push(x.r);
+  }
+  return out;
+}
+
 async function finalize(
   tx: Tx,
   s: Session,
@@ -569,10 +608,15 @@ async function finalize(
   const r = eng.result();
   const rows = eng.log();
   const id = randomUUID();
+  const sites = await similarSites(
+    tx,
+    r.mu,
+    r.axes.map((x) => x.sigmaDisplay),
+  );
   await q(
     tx,
-    `insert into diagnosis_results (id, session_id, taxonomy_version, type_id, type_id_second, is_boundary, profile)
-     values ($1, $2, $3, $4, $5, $6, $7)`,
+    `insert into diagnosis_results (id, session_id, taxonomy_version, type_id, type_id_second, is_boundary, profile, similar_site_ids)
+     values ($1, $2, $3, $4, $5, $6, $7, $8)`,
     [
       id,
       s.id,
@@ -581,6 +625,7 @@ async function finalize(
       r.secondTypeId || null,
       r.isBoundary,
       JSON.stringify(r),
+      sites.map((x) => x.id),
     ],
   );
   await serverEvent(tx, {
@@ -628,6 +673,25 @@ export async function undo(
   });
   void eng;
   return view(s, re.eng, true, null);
+}
+
+/** 표시 시점에 뷰에 남아 있는 것만(opt-out 즉시 반영, 2.14 저장 행). */
+async function shownSites(tx: Tx, ids: string[]): Promise<ResultView["similarSites"]> {
+  if (ids.length === 0) return [];
+  const rows = (
+    await q(
+      tx,
+      "select id, domain, url, title_ko, blurb_ko from similar_site_candidates where id = any($1)",
+      [ids],
+    )
+  ).rows as unknown as SiteRow[];
+  const by = new Map(rows.map((x) => [x.id, x]));
+  return ids.flatMap((id) => {
+    const x = by.get(id);
+    return x
+      ? [{ title: x.title_ko ?? x.domain, blurb: x.blurb_ko ?? "", url: x.url, domain: x.domain }]
+      : [];
+  });
 }
 
 function typeBrief(id: string) {
@@ -686,7 +750,7 @@ export async function resultView(tx: Tx, id: string, anonId: string | null): Pro
       paletteHex: repo().palettes.get(l2["color.palette_id"] ?? "") ?? [],
       radiusFamily: l2["shape.radius_family"] ?? "",
     },
-    similarSites: [],
+    similarSites: await shownSites(tx, (r.similar_site_ids as string[] | null) ?? []),
     taxonomyVersion: s.taxonomy_version,
     shareId: null,
   };

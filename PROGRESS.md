@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T18:46Z}
+- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T18:49Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
@@ -148,7 +148,7 @@
   - [ ] 04 survey:build(카드 렌더→x_card→게이트→WebP→local Storage→survey_items upsert, manifest.lock): [x] a surveyPage(ASM-092) [x] b 판정 순수 함수 stimuli.ts(judgeCard·judgePair·coverage·stage1Issues, 단위 5/5) [x] c StoragePort fs(멱등 put·서명 URL, 단위 3/3) [x] d 렌더·WebP·추출·manifest(--only, surveyShot·encodeWebp·dominantColors, ASM-094. C-SV01-hero x 오차 0.17~0.45 → draft) [x] e DB upsert·멱등·--check(survey-build.test ②·--check 5/5 녹색) [x] f 전체 실행·manifest 커밋(193장·361파일, 활성 카드 1/48 → BLK-022 survey-items) [x] g AC-02-09 domHash 차이 = shape-graphic·장식 시그니처 → ASM-098 수정, 재빌드 후 템플릿별 1종·쌍 DOM 차이 0(활성 카드 1, BLK-022) [ ] h 하드 게이트·린터 error 0(2.4.7 verified 조건)
   - [ ] 05 진단 API·익명 쿠키 세션(D-41)·재개·뒤로가기: [x] a api-contract zod·handle 라우터·survey 서비스·db 픽스처(api.test 13/13, ASM-099) [x] b Next route.ts 위임·/api/_storage/public fs 라우트(next build 확인은 E2E 단위)
   - [x] 06 POST /api/events·이벤트 레지스트리 zod·identity_links(events.test 7/7)
-  - [ ] 07 진단·결과 화면(01장, packages/ui 토큰)·닮은 사이트 3 링크·비제휴 고지
+  - [ ] 07 진단·결과 화면(01장, packages/ui 토큰)·닮은 사이트 3 링크·비제휴 고지: [x] a 닮은 사이트 2.14(서버 계산·저장·표시 시 재확인, seedSimilarSites 픽스처) [ ] b S02 진단 화면 [ ] c S03 결과 화면 [ ] d S01 시작 진입
   - [ ] 08 E2E(375·1280)·MBTI grep
   - [~] 09 eval:golden:build-answers·골든 자체 잠금: [x] buildGoldenAnswers·replayGolden·CLI(엔진 beta 덮어쓰기, 계획 L1 픽스처 32/32·M1a 24/24·β8.5 9/24) [ ] 실데이터 실행(BLK-022로 0/32) [ ] m4-done에서 data/golden 자체 잠금
   - [ ] 10 verify:m4 → m4-done
@@ -159,6 +159,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 03:49 | M4-07a 닮은 사이트 2.14 서버 계산·저장·재확인, api.test 13/13
 - 2026-11-27 03:46 | M4-09 build-answers 구현(픽스처 32/32, β8.5 변이 검출). 실데이터는 BLK-022로 0/32
 - 2026-11-27 03:45 | M4-05b Next route.ts 11개 위임. 재빌드 manifest: DOM 일치, survey-build.test 남은 실패 = BLK-022
 - 2026-11-27 03:44 | M4-06 events.test 7/7(레지스트리·배치 거부·서버 이벤트·identity_links)
