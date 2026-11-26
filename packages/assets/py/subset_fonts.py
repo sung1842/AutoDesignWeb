@@ -73,6 +73,17 @@ def build(face, chars, out_path):
     return how
 
 
+CJK_RANGES = ((0x1100, 0x11FF), (0x2E80, 0x9FFF), (0xA960, 0xA97F), (0xAC00, 0xD7FF), (0xF900, 0xFAFF), (0xFF00, 0xFFEF))
+
+
+def chars_for(face, chars):
+    """라틴 서체(script=latin)는 한글·CJK 글리프가 없다. temp 대체 원본(Noto CJK)에서 그 글자를 빼서
+    실제 라틴 서체처럼 한글은 다음 폰트(지정 한글 서체)로 넘어가게 한다(ASM-076)."""
+    if face.get("script") != "latin":
+        return chars
+    return "".join(c for c in chars if not any(lo <= ord(c) <= hi for lo, hi in CJK_RANGES))
+
+
 def main():
     req = json.load(sys.stdin)
     res = []
@@ -80,7 +91,7 @@ def main():
         out = os.path.join(req["outDir"], f["file"].lstrip("/"))
         how = "cached"
         if not os.path.exists(out):
-            how = build(f, req["chars"], out)
+            how = build(f, chars_for(f, req["chars"]), out)
         res.append({"file": f["file"], "bytes": os.path.getsize(out), "source": how})
     json.dump(res, sys.stdout)
 

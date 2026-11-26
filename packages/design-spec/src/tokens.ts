@@ -200,7 +200,11 @@ function fontGroup(pairing: PairingFull, headlineWeight: number, data: DesignDat
       $value: [latin.subsetFamily, generic(latin.classification)],
     };
   if (mono && mono.classification === "mono")
-    g.mono = { $type: "fontFamily", $value: [mono.subsetFamily, "ui-monospace", "monospace"] };
+    // 3.7.4 mono 스택에 body 한글 서체를 끼운다: mono 라벨(SIG-08 eyebrow 등)의 한글이 시스템 폰트로 빠지지 않게(AC-03-23, ASM-076)
+    g.mono = {
+      $type: "fontFamily",
+      $value: [mono.subsetFamily, body.subsetFamily, "ui-monospace", "monospace"],
+    };
   return g;
 }
 

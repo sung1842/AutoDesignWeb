@@ -247,10 +247,12 @@ export async function openHarness(): Promise<Harness> {
         const cdp = await s.page.context().newCDPSession(s.page);
         await cdp.send("DOM.enable");
         await cdp.send("CSS.enable");
-        const doc = await cdp.send("DOM.getDocument", { depth: -1 });
+        // 한글 글자만 판정한다(3.7: 라틴 글자·괄호·숫자는 headingLatin 서체가 맡을 수 있음).
+        // 한글 연속 구간을 클래스 없는 span으로 감싸 그 span의 플랫폼 폰트를 읽는다(상속 서체 그대로).
         const marked = await s.page.evaluate(() => {
           const out: string[] = [];
-          let k = 0;
+          const HANGUL = /[\u1100-\u11ff\u3130-\u318f\uac00-\ud7a3]+/g;
+          const targets: Text[] = [];
           const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
           for (let n = w.nextNode(); n; n = w.nextNode()) {
             const el = n.parentElement;
@@ -258,19 +260,36 @@ export async function openHarness(): Promise<Harness> {
             if (el.closest("[aria-hidden='true'],script,style")) continue;
             const r = el.getBoundingClientRect();
             if (r.width === 0 || r.height === 0) continue;
-            if (!el.hasAttribute("data-hfont")) {
-              el.setAttribute("data-hfont", String(k++));
-              out.push(
-                `${el.tagName.toLowerCase()}${el.className ? "." + String(el.className).split(" ")[0] : ""}`,
-              );
+            targets.push(n as Text);
+          }
+          for (const n of targets) {
+            const el = n.parentElement;
+            if (!el) continue;
+            const sel = `${el.tagName.toLowerCase()}${el.className ? "." + String(el.className).split(" ")[0] : ""}`;
+            const text = n.textContent ?? "";
+            const frag = document.createDocumentFragment();
+            let last = 0;
+            for (const m of text.matchAll(HANGUL)) {
+              const at = m.index ?? 0;
+              if (at > last) frag.append(text.slice(last, at));
+              const span = document.createElement("span");
+              span.setAttribute("data-hfont", String(out.length));
+              span.textContent = m[0];
+              frag.append(span);
+              out.push(sel);
+              last = at + m[0].length;
             }
+            if (last < text.length) frag.append(text.slice(last));
+            n.replaceWith(frag);
           }
           return out;
         });
+        // span 삽입 뒤 DOM을 다시 읽는다
+        const docNow = await cdp.send("DOM.getDocument", { depth: -1 });
         const res: { selector: string; family: string }[] = [];
         for (let i = 0; i < marked.length; i++) {
           const q = await cdp.send("DOM.querySelector", {
-            nodeId: doc.root.nodeId,
+            nodeId: docNow.root.nodeId,
             selector: `[data-hfont="${i}"]`,
           });
           if (!q.nodeId) continue;

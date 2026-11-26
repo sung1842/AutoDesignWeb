@@ -534,3 +534,10 @@
 - 남은 위험: 빈 폰트 캐시(새 컨테이너·CI)에서는 서브셋 생성(CJK 원본 로드) 비용으로 2코어 환경 180s 초과 가능 → 14d 후속(상주 서브셋 프로세스 검토)
 - 영향 범위: packages/renderer/src/css(base·components·blocks/chrome), apps/worker/src/render/harness.ts
 - 되돌리기 비용: 낮음
+
+## ASM-076 · M2 · conflict · 2026-11-26T05:25Z
+- 질문: AC-03-23(한글 텍스트 실제 폰트 = 지정 한글 서체, 시스템 폴백 0) 실패 원인 ① temp 서브셋은 라틴 서체도 Noto CJK 원본에서 만들어 한글 글리프를 담음 → heading 라틴 서체가 한글까지 렌더(3.7: 라틴 글자만) ② 3.7.4 mono 스택("tf-<mono>", ui-monospace, monospace)에 한글 서체가 없어 SIG-08 모노 라벨(eyebrow)의 한글이 시스템 폰트로 빠짐 ③ 하네스가 노드 전체 플랫폼 폰트를 읽어 라틴 글자(괄호·숫자)의 라틴 서체까지 셈
+- 근거 탐색: 03장 3.7.3(983·987행), 3.7.4, 411행 SIG-08, AC-03-23
+- 선택: ① subset_fonts.py: script=latin 서체는 한글·CJK 글자를 빼고 서브셋(실제 라틴 서체와 같은 동작) ② mono 스택 = [mono, body 한글, ui-monospace, monospace](3.7.4의 heading 라틴→한글 순서와 같은 원리) ③ 하네스 platformFontsForHangul: 한글 연속 구간을 클래스 없는 span으로 감싸 그 span만 판정. 시각 회귀 24장 그대로, AC-04-08 0.5625·AC-04-11 BLK-013 변화 없음
+- 영향 범위: packages/assets/py/subset_fonts.py, packages/design-spec/src/tokens.ts, apps/worker/src/render/harness.ts. 폰트 캐시(/tmp/tastefit-harness-fonts)는 비워야 함(이름 같고 내용 다름)
+- 되돌리기 비용: 낮음
