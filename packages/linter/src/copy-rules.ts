@@ -31,6 +31,8 @@ const ENDINGS: Record<string, RegExp> = {
 const SENTENCE_END = /(다|요|까|시오)[.!?…]*$/u;
 /** CP-06 기준 비율(≥ 90%, 표 원문). */
 const CP06 = { minRatio: 0.9 } as const;
+/** CP-02 입력 키워드 최소 글자 수. */
+const KEYWORD = { minChars: 2 } as const;
 /** CP-08: 라틴 단어 4개 이상 연속. */
 const LATIN_RUN = /(?:[A-Za-z][A-Za-z'’-]*\s+){3,}[A-Za-z][A-Za-z'’-]*/;
 /** CP-10 예시값 밖 연락처·사업자정보 패턴과 허용값(08장 8.7.5). */
@@ -65,7 +67,7 @@ function brandInput(brand: Obj | null): { name: string; texts: string[]; keys: s
         t
           .split(/[\s,.·]+/)
           .map((w) => w.replace(/[^\p{L}\p{N}]/gu, ""))
-          .filter((w) => w.length >= 2),
+          .filter((w) => w.length >= KEYWORD.minChars),
       ),
     ),
   ];

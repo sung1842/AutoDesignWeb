@@ -53,7 +53,7 @@ export interface EvaluateResult {
 }
 
 const oklab = (lch: unknown): [number, number, number] | null => {
-  if (!Array.isArray(lch) || lch.length < 3) return null;
+  if (!Array.isArray(lch) || lch[2] === undefined) return null; // [L, C, h]
   const [l, c, h] = lch as number[];
   const r = ((h ?? 0) * Math.PI) / 180;
   return [l ?? 0, (c ?? 0) * Math.cos(r), (c ?? 0) * Math.sin(r)];
