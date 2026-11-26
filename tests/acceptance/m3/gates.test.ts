@@ -65,8 +65,11 @@ describe("AC-04-19 게이트 G-01~G-13·조화 H1~H12 = 독립 순수 함수, �
   for (const id of GATE_IDS) {
     it(`${id} 픽스처`, () => {
       const fx = fixtures(id);
-      expect(fx.filter((f) => f.expect === "pass").length, `${id} 통과`).toBeGreaterThanOrEqual(2);
-      expect(fx.filter((f) => f.expect === "fail").length, `${id} 실패`).toBeGreaterThanOrEqual(2);
+      // 통과 ≥ 2·실패 ≥ 2 = pass-1·pass-2·fail-1·fail-2 파일 존재(수치 비교 대신 이름 규약, BLK-014)
+      for (const n of ["pass-1.json", "pass-2.json", "fail-1.json", "fail-2.json"])
+        expect(existsSync(join(FX_DIR, id, n)), `${id}/${n}`).toBe(true);
+      for (const f of fx)
+        expect(f.file.startsWith(`${f.expect}-`), `${id}/${f.file} 파일명`).toBe(true);
       for (const f of fx) {
         expect(f.id, f.file).toBe(id);
         const a = GATE_FNS[id](f.input);
@@ -82,8 +85,11 @@ describe("AC-04-19 게이트 G-01~G-13·조화 H1~H12 = 독립 순수 함수, �
   for (const id of H_IDS) {
     it(`${id} 픽스처(통과 = 만점, 실패 = 감점)`, () => {
       const fx = fixtures(id);
-      expect(fx.filter((f) => f.expect === "pass").length, `${id} 통과`).toBeGreaterThanOrEqual(2);
-      expect(fx.filter((f) => f.expect === "fail").length, `${id} 실패`).toBeGreaterThanOrEqual(2);
+      // 통과 ≥ 2·실패 ≥ 2 = pass-1·pass-2·fail-1·fail-2 파일 존재(수치 비교 대신 이름 규약, BLK-014)
+      for (const n of ["pass-1.json", "pass-2.json", "fail-1.json", "fail-2.json"])
+        expect(existsSync(join(FX_DIR, id, n)), `${id}/${n}`).toBe(true);
+      for (const f of fx)
+        expect(f.file.startsWith(`${f.expect}-`), `${id}/${f.file} 파일명`).toBe(true);
       for (const f of fx) {
         expect(f.id, f.file).toBe(id);
         const a = HARMONY_FNS[id](f.input);
@@ -196,7 +202,7 @@ describe("AC-08-11 · AC-04-21 ① 복제 픽스처 10종 → G2 100% 차단", (
       expect(rep.passed, `clone ${i}`).toBe(false);
       expect(rep.violated).toContain("G2");
       expect(rep.nearest_reference_id).toBe(r.reference_id);
-      expect(rep.g2_matches).toBeGreaterThanOrEqual(5);
+      expect(rep.g2_matches).toBe(7); // 7속성 전부 복제
       expect(rep.g2_matched_attrs.length).toBe(rep.g2_matches);
       expect(rep.config_version).toBe(cfg.version);
       for (const k of ["min_phash_distance", "min_phash_reference_id", "g5_max_run"])

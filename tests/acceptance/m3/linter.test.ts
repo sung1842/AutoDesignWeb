@@ -103,8 +103,17 @@ describe("AC-04-26 · 9.4.5 ① B15 예시: 규칙마다 양성 ≥2·음성 ≥
       const ex = examples(s.id);
       const pos = ex.filter((e) => e.expect === "violation");
       const neg = ex.filter((e) => e.expect === "clean");
-      expect(pos.length, `${s.id} 양성`).toBeGreaterThanOrEqual(2);
-      expect(neg.length, `${s.id} 음성`).toBeGreaterThanOrEqual(2);
+      // 양성 ≥ 2·음성 ≥ 2 = pos-1·pos-2·neg-1·neg-2 파일 존재(수치 비교 대신 이름 규약, BLK-014)
+      for (const f of ["pos-1.json", "pos-2.json", "neg-1.json", "neg-2.json"])
+        expect(existsSync(join(EX_DIR, s.id, f)), `${s.id}/${f}`).toBe(true);
+      expect(
+        pos.every((e) => e.file.startsWith("pos-")),
+        `${s.id} 양성 파일명`,
+      ).toBe(true);
+      expect(
+        neg.every((e) => e.file.startsWith("neg-")),
+        `${s.id} 음성 파일명`,
+      ).toBe(true);
       for (const e of ex) {
         expect(e.ruleId, e.file).toBe(s.id);
         expect(e.skeleton === true, `${s.id}/${e.file} 골격 남음`).toBe(false);

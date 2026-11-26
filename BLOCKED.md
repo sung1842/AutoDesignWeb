@@ -125,3 +125,12 @@
 - 처리: 기준선을 지키려고 pl1-00은 재생성에서 제외(scripts/data/fixtures-layouts.ts keep). 나머지 29개는 재생성, AC-04-11은 이 픽스처 LT-03 1건만 실패
 - 제안 수정안(사람): pl1-00 재생성(`pnpm fixtures:layouts`에서 keep 해제) → `pnpm exec playwright test e2e/m2 --update-snapshots` → 기준선 8장 relock 승인
 - 상태: open
+
+## BLK-014 · M3 · locked-conflict · 2026-11-26T10:40Z
+- 대상: 07장 7.12.2 리터럴 감사 ↔ 04장 AC-04-19·26 "픽스처 ≥ 2"(값 2 = generation.lint.warnPerMockupMax 등), 05장 AC-05-22 "색 ΔE2000 < 5"(값 5 = 다른 잎 값)
+- 증상: 두 비교 기준은 thresholds 키도 사양 상수 표(7.12.1) 행도 아닌데 값이 잎 값과 같아 수용 테스트에 비교 매처로 쓰면 qa:trace --audit FAIL(BLK-007과 같은 유형)
+- 재현: tests/acceptance/m3/linter.test.ts에 `expect(pos.length).toBeGreaterThanOrEqual(2)`를 넣고 pnpm -s qa:trace --audit
+- 시도: (1) 같은 뜻의 thresholds 키 탐색 → 없음 (2) spec-constants.ts → SC 행 없음 (3) 계산식으로 숨기기 → 감사 우회라 하지 않음
+- 처리: ≥ 2는 파일 이름 규약(pos-1·pos-2·neg-1·neg-2, pass-1·pass-2·fail-1·fail-2) 존재 검사로 본다(같은 조건, 수치 비교 아님). ΔE < 5는 `eval:extractor:selfcheck` 종료 코드와 packages/extractor 단위 테스트로 대조하고 수용 테스트는 필드 존재만 본다
+- 제안 수정안(사람): 7.12.1 사양 상수 표에 "규칙·게이트 픽스처 최소 수 2(04장 AC-04-19·26)", "자기검증 색 ΔE2000 < 5·radius ±1px(05장 5.9·AC-05-22)" 행 추가 → spec-constants.ts에 SC 상수 → 수용 테스트에 대조 추가 후 relock
+- 상태: open

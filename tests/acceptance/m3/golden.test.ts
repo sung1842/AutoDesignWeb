@@ -218,7 +218,7 @@ describe("AC-08-16 원본 유사도 보정 보고서(8.3.4)", () => {
     const labelers = /labelers:\s*(\d+)/.exec(md);
     const prov = /provenance:\s*(\w+)/.exec(md);
     expect(prov?.[1]).toBe("human");
-    expect(Number(labelers?.[1] ?? 0)).toBeGreaterThanOrEqual(2);
+    expect(Number(labelers?.[1] ?? 0)).toBe(2); // 8.3.4 ② 운영자 포함 2인
     expect(Number(yes?.[1] ?? -1)).toBe(0);
   });
 });
