@@ -32,7 +32,7 @@ export default defineConfig({
     ? {
         webServer: {
           command: "pnpm exec tsx e2e/serve.ts",
-          url: `http://localhost:${E2E_PORT}/api/health`,
+          url: `http://localhost:${E2E_PORT}/`,
           reuseExistingServer: false,
           // 서버 준비(DB 초기화·next build) 대기 상한. 테스트 타임아웃이 아니다
           timeout: 600_000,

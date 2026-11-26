@@ -39,7 +39,7 @@ export const typeDef = z.looseObject({
     .string()
     .min(1)
     .max(14)
-    .refine((s) => !/mbti/i.test(s), "MBTI 금지(D-01)"),
+    .refine((s) => !/mbti/i.test(s), "성격검사 상표 표기 금지(D-01)"),
   summaryKo: z.string().min(1).max(60),
   // 02장 2.11.2 고정 문안(154~190자)이 표기 범위 200~400자보다 짧다. 문안이 단일 원천(R-04)이라 하한은 두지 않는다(ASM-010).
   descriptionKo: z.string().min(1).max(400),

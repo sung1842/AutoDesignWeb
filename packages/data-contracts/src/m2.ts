@@ -1,13 +1,21 @@
 // M2 계약(ASM-023·024·025): DesignSpec zod·TokenSet·묶음 검증. M2-03에서 채운다.
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { z } from "zod";
 import { MiniValidator, type Schema } from "./json-schema.js";
 import { envelope, envelopeMeta } from "./envelope.js";
 import { BUNDLES } from "./registry.js";
 
-const repoFile = (rel: string): string =>
-  fileURLToPath(new URL(`../../../${rel}`, import.meta.url));
+/** 저장소 루트(pnpm-workspace.yaml)를 cwd부터 위로 찾는다. 번들러(Next Turbopack)는 import.meta.url 상대 경로를
+ * 원본 위치로 보존하지 않으므로 cwd 기준이 먼저고, 못 찾으면 모듈 위치 기준(패키지 단독 실행). */
+function repoRoot(): string {
+  for (let d = resolve(process.cwd()); ; d = dirname(d)) {
+    if (existsSync(join(d, "pnpm-workspace.yaml"))) return d;
+    if (dirname(d) === d) return resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
+  }
+}
+const repoFile = (rel: string): string => join(repoRoot(), rel);
 
 /** 03장 taxonomy.json에서 l2 zod를 단방향 생성(AC-03-06): 18키, 값은 enum. */
 function l2Schema() {

@@ -17,15 +17,16 @@ async function answerOne(page: Page, pick: number): Promise<"next" | "done"> {
   const seq = await q.getAttribute("data-seq");
   const kind = await q.getAttribute("data-kind");
   const layout = await q.getAttribute("data-layout");
+  const k = kind === "ab" ? pick % 2 : pick % 4;
   if (layout === "pager") {
-    await page.getByRole("button", { name: `카드 ${pick + 1} 보기` }).click();
+    await page.getByRole("button", { name: `카드 ${k + 1} 보기` }).click();
     await page.getByRole("button", { name: "이걸로 할게요" }).click();
   } else if (layout === "toggle") {
     await page.getByRole("button", { name: "B", exact: true }).click();
     await page.getByRole("button", { name: "A", exact: true }).click();
-    await page.getByRole("button", { name: pick % 2 === 0 ? "A로 할게요" : "B로 할게요" }).click();
+    await page.getByRole("button", { name: k === 0 ? "A로 할게요" : "B로 할게요" }).click();
   } else {
-    const label = kind === "ab" ? (pick % 2 === 0 ? "A" : "B") : `선택지 ${pick + 1}`;
+    const label = kind === "ab" ? (k === 0 ? "A" : "B") : `선택지 ${k + 1}`;
     await page.getByRole("button", { name: label, exact: true }).click();
   }
   await expect(async () => {
