@@ -3,13 +3,13 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T22:08Z, since: 2026-11-26T23:39Z}
+- lock: {owner: 2026-11-26T22:08Z, since: 2026-11-26T23:50Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-27 12:08  # 이 세션 시작(07:08 KST)+5h 추정
-- 마지막 갱신: 2026-11-27 08:39 KST (M5-07b 예산 배선 완료)
+- 마지막 갱신: 2026-11-27 08:50 KST (verify:m4 1차 fail(환경 3건), M5 화면 1차)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -20,6 +20,8 @@
 - 새 컨테이너: shallow clone이면 `git fetch --unshallow` 후 태그 복원(guard:lock·tuned 필요). `pnpm install` 뒤 `pnpm typecheck`(tsc -b)로 dist 빌드해야 vitest·guard:count가 동작(루트 build 스크립트 없음)
 - 하네스 폰트 캐시 `/tmp/tastefit-harness-fonts`: 빈 캐시면 AC-03-33·03-18이 2코어에서 180s 근처(페이지별 서브셋). 3차 verify 전 같은 컨테이너에서 한 번 돌려 데운다(캐시는 결과에 영향 없음)
 - 폰트 서브셋(M2-07b2~)은 python3 fontTools(기본 설치) + brotli 필요. 컨테이너마다 `pip install --break-system-packages brotli` 1회(AD-032).
+- 새 컨테이너: fs 저장소 기본 루트 `/tmp/tastefit-storage`가 비어 있어 설문 WebP가 없다 → verify:m4 전에 `pnpm survey:build`로 재생성(없으면 e2e/m4 quiz가 모든 카드 대체 텍스트로 실패)
+- verify는 작업 트리를 읽는다: 실행 중 커밋하면 결과가 오염된다 → `git worktree add /home/claude/tf-verify-mN <커밋>` 후 그 안에서 실행
 
 ## 배경
 - v1 기획서 → 1라운드 역할별 리뷰 8개(전원 FAIL, Blocker 약 52·Major 약 105) → 결정 레지스터 → v2 10개 장 작성 → 장 간 충돌 통합 결정 R-01~R-38 반영.
@@ -151,7 +153,7 @@
   - [ ] 07 진단·결과 화면(01장, packages/ui 토큰)·닮은 사이트 3 링크·비제휴 고지: [x] a 닮은 사이트 2.14(서버 계산·저장·표시 시 재확인, seedSimilarSites 픽스처) [x] b S02 진단 화면(1.4 R1~R7·레이아웃 5종·뒤로가기·전환) [x] c S03 결과 화면(①②④⑤⑥⑦⑨⑩) [x] d S01 시작·이어하기 [x] e E2E 녹색(e2e/m4 4/4, AD-035)
   - [x] 08 E2E(375·1280)·MBTI grep(e2e/m4 4/4)
   - [~] 09 eval:golden:build-answers·골든 자체 잠금: [x] buildGoldenAnswers·replayGolden·CLI(엔진 beta 덮어쓰기, 계획 L1 픽스처 32/32·M1a 24/24·β8.5 9/24) [ ] 실데이터 실행(BLK-022로 0/32) [ ] m4-done에서 data/golden 자체 잠금
-  - [ ] 10 verify:m4 → m4-done: [ ] 1차 실행(2026-11-26 19:51Z 시작, 컨테이너 교체로 결과 없음 → 재실행)
+  - [ ] 10 verify:m4 → m4-done: [x] 1차(592aa1f 워크트리, reports/verify-m4.json) fail — 비BLK 3건: AC-06-32 m0(verify 안에서만, 단독 통과·재발), AC-03-33(빈 폰트 캐시 + 동시 부하 180s), e2e/m4 quiz(빈 /tmp/tastefit-storage). [ ] 2차: survey:build·폰트 캐시 데운 뒤 조용한 상태에서 재실행
 - M5 계획(9.4.7, AC: 00-14~17, 01-01·02·22~34·51·58, 04-01·02·14~16·22~25·37·38·44·46·47, 06-07b·09·10·13·15~18·20~23·38~40·45·47·52·55·56·59~63, 07-02·13, 08-24~26·38~42, 09-07·13·18. 읽을 장은 CLAUDE.md 구현 규칙 3절):
   - [ ] 01 M5 수용 테스트(tests/acceptance/m5, AD-031): [x] a 인증·귀속(AuthPort local·매직링크·dev_mail_outbox·attach_anon, auth.test WIP, ASM-103) [x] b 브랜드 입력·BrandInput 검증·인젝션 방어(brief.test WIP, fixtures/brands 3파일, ASM-105) [x] c 생성 API·Idempotency·진행 잡 1개·폴링(generation-api.test 9/9, ASM-108) [x] d llm gateway·models.yaml·MockProvider 시나리오(llm.test WIP 20건, ASM-107) [x] e pipeline 3변형→후보 6→검증·수리→렌더→게이트→점수→노출·재생성·폴백(pipeline.test WIP 14건, ASM-109. 시간·비용 시나리오는 f) [x] f 비용·quota_ledger·킬 스위치·초대·환불(quota.test 12/12, ASM-110. 비용 시나리오 AC-06-21·61·07b는 워커 예산 배선 후 pipeline 테스트에 추가) [ ] g S04~S08 화면 E2E(01장) → traceability·자체 잠금
   - [x] 02 AuthPort local·세션 쿠키·매직링크·attach_anon·/api/me·/api/consents(auth.test 7/7, ASM-104. MeView quota 등은 07·08)
@@ -170,6 +172,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 08:50 | verify:m4 1차 fail: 비BLK 3건 모두 환경(간헐 env·폰트 캐시·빈 저장소). M5-09 화면 S04~S08 1차·next build 통과
 - 2026-11-27 08:39 | M5-07b 워커 예산 예약·정산(ok 원가 = C_base), A11은 alerts 테이블 부재로 warnings(ASM-111)
 - 2026-11-27 08:35 | M5-07a 한도·취소·킬 스위치·예산·레이트리밋·초대(quota.test 12/12)
 - 2026-11-27 08:27 | M5-06b 다양성·수정 루프(스텁: ok 13호출 유지, mixed 후보1 diversity·후보3 repair_schema). AC-06-32 verify 안에서 재발(단독 통과)

@@ -164,8 +164,15 @@ const p = spawn("pnpm", ["exec", "next", "start", "-p", String(E2E_PORT)], {
   env,
   stdio: "inherit",
 });
+// M5: 생성 잡 소비 워커(ASM-112). mock LLM 지연 0으로 E2E 시간을 줄인다(결과는 같다, 9.6.2)
+const w = spawn("pnpm", ["exec", "tsx", "src/main.ts"], {
+  cwd: join(ROOT, "apps/worker"),
+  env: { ...env, MOCK_LLM_LATENCY_MS: "0" },
+  stdio: "inherit",
+});
 const stop = (): void => {
   p.kill("SIGTERM");
+  w.kill("SIGTERM");
 };
 process.on("SIGTERM", stop);
 process.on("SIGINT", stop);
