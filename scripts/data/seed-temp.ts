@@ -1715,7 +1715,7 @@ function genTemplates(ctx: Ctx): Out[] {
 
 // ---------- B10 survey/card_plan.json (02장 2.4.2·2.4.6) ----------
 /** 2.4.6 축 서술 고정 사전(5축 × 표시 구간 L0~L4). 02장은 예시 1개만 있어 2.1.2 앵커 문구로 temp 작성(ASM-016). */
-const AXIS_PHRASES: Record<string, string[]> = {
+export const AXIS_PHRASES: Record<string, string[]> = {
   A1: [
     "장식 없이 무채색 위주인",
     "포인트 색 하나만 쓴",
@@ -1746,12 +1746,12 @@ const AXIS_PHRASES: Record<string, string[]> = {
     "반투명·오프셋 효과로 입체적인",
   ],
 };
-const TEMPLATE_DESC: Record<string, string> = {
+export const TEMPLATE_DESC: Record<string, string> = {
   "tpl-hero": "첫 화면 히어로 구성",
   "tpl-grid": "6칸 그리드 구성",
   "tpl-text": "인용문과 숫자 구성",
 };
-const level = (x: number): number => Math.min(4, Math.floor(x / 0.2));
+export const level = (x: number): number => Math.min(4, Math.floor(x / 0.2));
 
 export function standardVectors(root: string): { id: string; baseTypeId: string; l1: number[] }[] {
   const cents = specCentroids(root);

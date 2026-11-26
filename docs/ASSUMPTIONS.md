@@ -660,3 +660,10 @@
 - 선택: ① 경로는 06장(Storage 원천) `survey-assets` 버킷 `<tv>/{id}.{desktop|mobile}.{sha12}.webp` ② CLI `pnpm survey:build [--only id,…] [--manifest p] [--storage-root d] [--no-db] [--report p] [--check [--items p]]`. `--only`는 카드·이미지·쌍 ID(쌍은 두 이미지 포함) ③ manifest.lock = `{bundle:"survey-manifest", taxonomyVersion, normalizerVersion, extractorVersion, items[assetId 정렬]: {assetId, kind, status, target|null, x|null, inputHash, domHash, assets{desktop,mobile?}{path,sha256,w,h,bytes}, altText, dominantColors, focusRegion, reasons[]}}` ④ 멱등: inputHash(명세·트리·렌더러·정규화기 버전)가 같고 저장소에 같은 sha 파일이 있으면 렌더·업로드 생략, DB upsert는 값이 다를 때만 쓰고 바뀐 행 수를 report.dbChanged로 ⑤ temp 모드(approvals provenance temp) 자동 승인: verified → active(2.4.7), human이면 approved만 active ⑥ `--check`는 manifest(또는 --items 픽스처 `{items:[{assetId,status,x}]}`)로 2.4.2 커버리지와 2.6.1 (템플릿, 문항 순번 1~8)마다 (a)(b) 만족 4장 조합 ≥1을 검사, 부족하면 `INSUFFICIENT stage=1 template=<t> seq=<n>` 줄과 종료 1 ⑦ 앵커 참조 ANC-{A}-{level} 25장 = tpl-hero, 대상 축 수준·나머지 0.5 L1을 mapL1toL2(최근접 유형)로, desktop만
 - 영향 범위: scripts/survey, packages/storage(fs), packages/diagnosis(검사 함수), tests/acceptance/m4/survey-build.test.ts
 - 되돌리기 비용: 중간(자체 잠금 전까지 낮음)
+
+## ASM-094 · M4 · gap · 2026-11-26T18:35Z
+- 질문: 2.4.5 dominant_colors(면적 상위 3색)에서 병합 후 군집이 3개 미만인 단색 자극물, WebP 인코더 세부 설정, 앵커 참조 ID 수준 표기·대체 텍스트, DB에 넣는 axis·level(DDL은 A/B만)
+- 근거 탐색: 02장 2.3.6·2.4.5, 05장 5.5.1 군집, 06장 survey_items DDL
+- 선택: ① 군집은 05장 5.5.1 colorClusters(320px 축소) 결과를 HEX로 바꿔 중복 제거, 3개 미만이면 마지막 색 반복 ② sharp webp quality 80/78, effort 4, smartSubsample false ③ 앵커 ID = `ANC-{A}-{000|025|050|075|100}`, 대체 텍스트 "기준 이미지 {A}: {축 서술}"(사용자 비노출), DB axis·level은 null ④ ab_image level = 대상 축 수준, ab_pair level = null·axis = 대상 축 ⑤ 촬영 시 애니메이션 정지 CSS는 문서에 삽입(JS off에서 addStyleTag 대기 불가)
+- 영향 범위: apps/worker/src/render/survey.ts·harness.ts surveyShot, scripts/survey/build.ts
+- 되돌리기 비용: 낮음

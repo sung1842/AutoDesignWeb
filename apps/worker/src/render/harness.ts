@@ -36,6 +36,11 @@ export interface Harness {
   withPage<T>(html: string, vw: number, fn: (page: PageLike) => Promise<T>): Promise<T>;
   /** 전체 페이지 PNG + 막은 요청(06장 6.8.3 render_blocked_requests). ASM-058 계약 확장. */
   screenshot(html: string, vw: number): Promise<{ png: Buffer; blocked: string[] }>;
+  /** 02장 2.4.5 설문 자극물 뷰포트 촬영(fonts.ready + 500ms, reduced motion, 애니메이션 정지) + DOM 텍스트·img src(AC-02-09). */
+  surveyShot(
+    html: string,
+    view: { w: number; h: number; dpr: number },
+  ): Promise<{ png: Buffer; texts: string[]; srcs: string[]; blocked: string[]; failed: string[] }>;
   platformFontsForHangul(html: string, vw: number): Promise<{ selector: string; family: string }[]>;
   firstViewFontBytes(html: string, vw: number): Promise<number>;
   firstViewImageBytes(html: string, vw: number): Promise<number>;
@@ -58,6 +63,11 @@ export interface Harness {
 }
 
 export const HARNESS_ORIGIN = "http://tf.local";
+/** 02장 2.4.5 렌더 조건: document.fonts.ready + 500ms. */
+const SURVEY_SHOT = {
+  settleMs: 500,
+  stillCss: "*,*::before,*::after{animation:none!important;transition:none!important}",
+} as const;
 const ROOT = resolve(import.meta.dirname, "../../../..");
 const FONT_CACHE = join(tmpdir(), "tastefit-harness-fonts");
 /** 1280 첫 화면 높이(03장 3.7.5 1280×800, 375×812). */
@@ -131,11 +141,22 @@ interface Session {
   bytes: { url: string; type: string; size: number }[];
 }
 
-async function openPage(browser: Browser, html: string, vw: number): Promise<Session> {
+interface OpenOpts {
+  h?: number;
+  dpr?: number;
+  reducedMotion?: boolean;
+}
+async function openPage(
+  browser: Browser,
+  html: string,
+  vw: number,
+  o: OpenOpts = {},
+): Promise<Session> {
   const ctx = await browser.newContext({
-    viewport: { width: vw, height: viewH(vw) },
-    deviceScaleFactor: 1,
+    viewport: { width: vw, height: o.h ?? viewH(vw) },
+    deviceScaleFactor: o.dpr ?? 1,
     javaScriptEnabled: false, // 06장 6.8.2: 시안 HTML에는 스크립트가 없다(측정 evaluate는 동작)
+    ...(o.reducedMotion ? { reducedMotion: "reduce" as const } : {}),
   });
   const page = await ctx.newPage();
   const s: Session = { page, external: [], failed: [], consoleErrors: [], bytes: [] };
@@ -264,6 +285,30 @@ export async function openHarness(): Promise<Harness> {
       try {
         const png = await s.page.screenshot({ fullPage: true, type: "png" });
         return { png, blocked: [...s.external] };
+      } finally {
+        await closeS(s);
+      }
+    },
+    async surveyShot(html, view) {
+      // 애니메이션 정지 스타일은 문서에 넣는다(JS off라 addStyleTag의 onload 대기가 끝나지 않음)
+      const still = html.replace("</head>", `<style>${SURVEY_SHOT.stillCss}</style></head>`);
+      const s = await openPage(browser, still, view.w, {
+        h: view.h,
+        dpr: view.dpr,
+        reducedMotion: true,
+      });
+      try {
+        await s.page.waitForTimeout(SURVEY_SHOT.settleMs);
+        const dom = await s.page.evaluate(() => ({
+          texts: [...document.querySelectorAll("body *")]
+            .flatMap((e) => [...e.childNodes])
+            .filter((n) => n.nodeType === 3)
+            .map((n) => (n.textContent ?? "").replace(/\s+/g, " ").trim())
+            .filter((t) => t !== ""),
+          srcs: [...document.querySelectorAll("img")].map((i) => i.getAttribute("src") ?? ""),
+        }));
+        const png = await s.page.screenshot({ type: "png", fullPage: false });
+        return { png, ...dom, blocked: [...s.external], failed: [...s.failed] };
       } finally {
         await closeS(s);
       }
