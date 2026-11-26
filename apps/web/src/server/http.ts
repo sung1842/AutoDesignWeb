@@ -135,12 +135,17 @@ export function errorResponse(c: Ctx, e: unknown): Response {
     e instanceof ApiError ? e : new ApiError("INTERNAL", e instanceof Error ? e.message : "error");
   if (!(e instanceof ApiError))
     process.stderr.write(`[api] ${c.requestId} ${String((e as Error)?.stack ?? e)}\n`);
-  return json(c, ERROR_STATUS[err.code], {
+  // 6.4.1: 재시도 가능 오류는 retryAfterS(본문) + Retry-After(헤더)
+  const retry = typeof err.details?.retryAfterS === "number" ? err.details.retryAfterS : undefined;
+  const res = json(c, ERROR_STATUS[err.code], {
     error: {
       code: err.code,
       message: err.message,
       requestId: c.requestId,
+      ...(retry !== undefined ? { retryAfterS: retry } : {}),
       ...(err.details ? { details: err.details } : {}),
     },
   });
+  if (retry !== undefined) res.headers.set("retry-after", String(retry));
+  return res;
 }

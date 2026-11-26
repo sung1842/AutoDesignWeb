@@ -17,3 +17,4 @@ export {
 } from "./port.js";
 export type { DB } from "./types.gen.js";
 export { linkIdentity } from "./identity.js";
+export { flagValue } from "./flags.js";

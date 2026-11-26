@@ -36,3 +36,8 @@ export const MagicLinkReqSchema = z
   })
   .strict();
 export type MagicLinkReq = z.infer<typeof MagicLinkReqSchema>;
+
+/** POST /api/invites/redeem(00장 7.2). 코드는 대문자 정규화. */
+export const InviteRedeemReqSchema = z
+  .object({ code: z.string().trim().toUpperCase().max(32) })
+  .strict();

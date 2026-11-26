@@ -9,7 +9,10 @@ import { q, type Row, type Tx } from "@tastefit/db";
 import { LLM_ROLES, loadModels, parseMode, parseScenario } from "@tastefit/llm";
 import type { Deps } from "./api";
 import { requireConsent, requireUser } from "./auth";
-import { ApiError, finish, json, parsed, readJson, type Ctx } from "./http";
+import { serverEvent } from "./events";
+import { ApiError, ensureAnon, finish, json, parsed, readJson, type Ctx } from "./http";
+import { QUOTA_DEFAULTS, admitGeneration, quotaOf, rateLimit, rejected } from "./quota";
+import { currentSeason } from "./survey";
 
 const ROUTE = "POST /api/projects/:id/generations";
 /** ASM-108 ⑧ 폴링 간격. */
@@ -183,23 +186,21 @@ export async function createGeneration(c: Ctx, d: Deps, projectId: string): Prom
   if (!/^[0-9a-f-]{36}$/i.test(projectId)) throw new ApiError("NOT_FOUND", "no project");
   const reqSha = sha256(JSON.stringify([projectId, body.kind, scenario]));
   const owner = `u:${u.id}`;
-  const view = await d.db.withService(async (tx) => {
+  const now = d.now?.() ?? new Date();
+  const anon = ensureAnon(c);
+  const out = await d.db.withService(async (tx) => {
     const st = await q(tx, "select status from users where id = $1", [u.id]);
     if (st.rows[0]?.status !== "active")
       throw new ApiError("ACCOUNT_SUSPENDED", "account suspended");
-    if (process.env.BETA_INVITE_ONLY === "true") {
-      const inv = await q(tx, "select 1 from invite_redemptions where user_id = $1 limit 1", [
-        u.id,
-      ]);
-      if (inv.rowCount === 0) throw new ApiError("INVITE_REQUIRED", "invite required");
-    }
-    const p = await q(tx, "select id from projects where id = $1 and owner_id = $2", [
-      projectId,
-      u.id,
-    ]);
-    if (p.rowCount === 0) throw new ApiError("NOT_FOUND", "no project");
-    // 6.4.4 멱등: 같은 키 행을 잠그고 본문 해시 비교
-    await q(tx, "select pg_advisory_xact_lock(hashtext($1))", [`${owner}|${ROUTE}|${key}`]);
+    const p = await q(
+      tx,
+      "select id, purpose, result_id from projects where id = $1 and owner_id = $2",
+      [projectId, u.id],
+    );
+    const proj = p.rows[0];
+    if (!proj) throw new ApiError("NOT_FOUND", "no project");
+    // 6.3.4 create_generation_job ①: 사용자 잠금. 6.4.4 멱등: 같은 키는 저장 응답 재생(레이트리밋·한도에 세지 않음)
+    await q(tx, "select pg_advisory_xact_lock(hashtext($1))", [u.id]);
     const prev = await q(
       tx,
       "select request_sha256, status_code, response_body from idempotency_keys where owner_key = $1 and route = $2 and key = $3",
@@ -211,22 +212,34 @@ export async function createGeneration(c: Ctx, d: Deps, projectId: string): Prom
         throw new ApiError("IDEMPOTENCY_KEY_REUSED", "same key, different body");
       const jobId = String((hit.response_body as { jobId?: string } | null)?.jobId ?? "");
       const j = await q(tx, "select * from generation_jobs where id = $1", [jobId]);
-      if (j.rows[0]) return viewOf(tx, j.rows[0]);
+      if (j.rows[0]) return { view: await viewOf(tx, j.rows[0]) };
       throw new ApiError("JOB_IN_PROGRESS", "request in progress", { jobId });
     }
-    const active = await q(
-      tx,
-      "select id from generation_jobs where owner_id = $1 and status in ('queued','running') limit 1",
-      [u.id],
-    );
-    if (active.rows[0])
-      throw new ApiError("JOB_IN_PROGRESS", "job in progress", {
-        jobId: String(active.rows[0].id),
-      });
+    let qv;
+    try {
+      await rateLimit(tx, `gen:min:u:${u.id}`, 60, QUOTA_DEFAULTS.genMinPerUser, now);
+      qv = await admitGeneration(tx, u.id, now);
+      const active = await q(
+        tx,
+        "select id from generation_jobs where owner_id = $1 and status in ('queued','running') limit 1",
+        [u.id],
+      );
+      if (active.rows[0])
+        throw new ApiError("JOB_IN_PROGRESS", "job in progress", {
+          jobId: String(active.rows[0].id),
+        });
+    } catch (e) {
+      // 거부도 기록이 남아야 하므로(레이트리밋 카운터·generate_rejected) 커밋하고 트랜잭션 밖에서 던진다
+      if (e instanceof ApiError) {
+        await rejected(tx, anon, u.id, e.code);
+        return { err: e };
+      }
+      throw e;
+    }
     const job = await q(
       tx,
-      `insert into generation_jobs (project_id, owner_id, kind, job_seed, status, phase, idempotency_key, request_id, config_snapshot)
-       values ($1, $2, $3, $4, 'queued', 'queued', $5, $6, $7) returning *`,
+      `insert into generation_jobs (project_id, owner_id, kind, job_seed, status, phase, idempotency_key, request_id, config_snapshot, queued_at)
+       values ($1, $2, $3, $4, 'queued', 'queued', $5, $6, $7, $8) returning *`,
       [
         projectId,
         u.id,
@@ -235,10 +248,16 @@ export async function createGeneration(c: Ctx, d: Deps, projectId: string): Prom
         key,
         c.requestId,
         JSON.stringify(configSnapshot(scenario)),
+        now.toISOString(),
       ],
     );
     const row = job.rows[0];
     if (!row) throw new ApiError("INTERNAL", "job insert");
+    await q(
+      tx,
+      "insert into quota_ledger (user_id, job_id, kind, created_at) values ($1, $2, 'reserve', $3)",
+      [u.id, row.id, now.toISOString()],
+    );
     const v = await viewOf(tx, row);
     await q(
       tx,
@@ -246,8 +265,26 @@ export async function createGeneration(c: Ctx, d: Deps, projectId: string): Prom
        values ($1, $2, $3, $4, 202, $5)`,
       [owner, ROUTE, key, reqSha, JSON.stringify({ jobId: v.jobId })],
     );
-    return v;
+    if (proj.result_id)
+      await serverEvent(tx, {
+        name: "generate_request",
+        anonId: anon,
+        userId: u.id,
+        tv: await currentSeason(tx),
+        props: {
+          job_id: v.jobId,
+          project_id: projectId,
+          purpose: String(proj.purpose),
+          result_id: String(proj.result_id),
+          quota_remaining_day: Math.max(0, qv.dayLimit - qv.dayUsed - 1),
+          quota_remaining_month: Math.max(0, qv.monthLimit - qv.monthUsed - 1),
+          queue_position: v.queuePosition ?? 0,
+        },
+      });
+    return { view: v };
   });
+  if ("err" in out) throw out.err;
+  const view = out.view;
   return json(c, 202, view);
 }
 
@@ -268,4 +305,37 @@ export async function getGeneration(c: Ctx, d: Deps, jobId: string): Promise<Res
   const res = json(c, 200, v);
   res.headers.set("etag", etag);
   return res;
+}
+
+/** POST /api/generations/:jobId/cancel(6.2.3 취소 처리 규칙, T-20). */
+export async function cancelGeneration(c: Ctx, d: Deps, jobId: string): Promise<Response> {
+  const u = await requireUser(c, d);
+  if (!/^[0-9a-f-]{36}$/i.test(jobId)) throw new ApiError("NOT_FOUND", "no job");
+  const now = d.now?.() ?? new Date();
+  const refunded = await d.db.withService(async (tx) => {
+    await q(tx, "select pg_advisory_xact_lock(hashtext($1))", [u.id]);
+    const j = (
+      await q(tx, "select * from generation_jobs where id = $1 and owner_id = $2 for update", [
+        jobId,
+        u.id,
+      ])
+    ).rows[0];
+    if (!j) throw new ApiError("NOT_FOUND", "no job");
+    if (!ACTIVE.has(String(j.status)))
+      throw new ApiError("JOB_ALREADY_FINISHED", "job finished", { status: String(j.status) });
+    const left = (await quotaOf(tx, u.id, now)).refundableCancelsLeft;
+    await q(
+      tx,
+      "update generation_jobs set status = 'canceled', phase = 'done', finished_at = $2 where id = $1",
+      [jobId, now.toISOString()],
+    );
+    if (Number(j.n_real) >= 1 || left <= 0) return false;
+    await q(
+      tx,
+      "insert into quota_ledger (user_id, job_id, kind, created_at) values ($1, $2, 'refund', $3) on conflict (job_id, kind) do nothing",
+      [u.id, jobId, now.toISOString()],
+    );
+    return true;
+  });
+  return json(c, 202, { refunded });
 }

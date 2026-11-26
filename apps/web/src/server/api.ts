@@ -11,7 +11,8 @@ import type { DbPort } from "@tastefit/db";
 import { PUBLIC_BUCKETS, type StoragePort } from "@tastefit/storage";
 import { callback, me, saveConsents } from "./auth";
 import { createBriefDraft, getBriefDraft } from "./brief";
-import { createGeneration, getGeneration } from "./generations";
+import { cancelGeneration, createGeneration, getGeneration } from "./generations";
+import { redeemInvite } from "./invites";
 import { createProject } from "./projects";
 import { clientEvents } from "./events";
 import {
@@ -81,6 +82,19 @@ const R: [string, RegExp, Route][] = [
     (c, d, m) => createGeneration(c, d, m[1] ?? ""),
   ],
   ["GET", /^\/api\/generations\/([^/]+)$/, (c, d, m) => getGeneration(c, d, m[1] ?? "")],
+  [
+    "POST",
+    /^\/api\/generations\/([^/]+)\/cancel$/,
+    (c, d, m) => cancelGeneration(c, d, m[1] ?? ""),
+  ],
+  [
+    "POST",
+    /^\/api\/invites\/redeem$/,
+    async (c, d) => {
+      await redeemInvite(c, d, await readJson(c));
+      return noContent(c);
+    },
+  ],
   ["GET", /^\/api\/me$/, async (c, d) => json(c, 200, await me(c, d))],
   [
     "POST",

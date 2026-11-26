@@ -3,10 +3,11 @@
 import { createHmac, randomBytes, randomUUID } from "node:crypto";
 import { ConsentReqSchema, MagicLinkReqSchema, type MagicLinkReq } from "@tastefit/api-contract";
 import { isAuthError, SESSION_COOKIE, SESSION_TTL_S, type AuthUser } from "@tastefit/auth";
-import { q, type Tx } from "@tastefit/db";
+import { flagValue, q, type Tx } from "@tastefit/db";
 import type { Deps } from "./api";
 import { serverEvent } from "./events";
 import { anonCookie, ApiError, ensureAnon, parsed, readCookie, redirect, type Ctx } from "./http";
+import { quotaOf } from "./quota";
 import { currentSeason } from "./survey";
 
 /**
@@ -172,16 +173,18 @@ export async function me(c: Ctx, d: Deps): Promise<Record<string, unknown>> {
     if (r.rowCount === 0) throw new ApiError("UNAUTHORIZED", "no user");
     const missing = await missingConsents(tx, u.id);
     const inv =
-      process.env.BETA_INVITE_ONLY === "true"
+      (await flagValue(tx, "BETA_INVITE_ONLY", false)) === true
         ? (await q(tx, "select 1 from invite_redemptions where user_id = $1 limit 1", [u.id]))
             .rowCount > 0
         : true;
+    const quota = await quotaOf(tx, u.id, d.now?.() ?? new Date());
     return {
       id: u.id,
       email: u.email,
       role: String(r.rows[0]?.role ?? "user"),
       consentsOk: missing.length === 0,
       inviteOk: inv,
+      quota,
     };
   });
 }

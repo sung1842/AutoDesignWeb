@@ -270,7 +270,11 @@ importers:
         specifier: workspace:^
         version: link:../db
 
-  packages/pipeline: {}
+  packages/pipeline:
+    dependencies:
+      '@tastefit/config':
+        specifier: workspace:^
+        version: link:../config
 
   packages/renderer:
     dependencies:
