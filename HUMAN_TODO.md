@@ -40,3 +40,4 @@
 - [ ] (BLK-010) 이미지 슬롯이 블록당 1개라 gallery(5~9장)·hero.offset(2장)·zigzag·highlight.trio·menu.cards 항목 이미지를 못 그림. 04장 4.5.2 image 슬롯 배열화 또는 목록 항목 image 필드, cta·menu media 슬롯 추가 결정 후 relock
 - [ ] (BLK-011) 아이콘 패키지 3종(@phosphor-icons/core·@tabler/icons·iconoir, MIT) 허용 목록 추가 여부. 지금은 임시 자체 도형 40개
 - [ ] (BLK-012) 04장 4.3 스냅 변경 벌점(0.02, 앵커 기준)이 변형 3종을 같은 L2로 모아 AC-04-08 렌더 D 95% 불가(54/96). 벌점 기준을 l2_0로 바꾸거나 0.005로 낮추거나 enforce 대안 선택을 바꿀지 결정 후 relock(BLOCKED.md BLK-012)
+- [ ] (BLK-013) 시각 회귀 기준선 PL-1 8장이 LT-03(local_business ≥6섹션) 위반 5섹션 픽스처로 찍힘. pl1-00 재생성 후 기준선 갱신·relock 승인(BLOCKED.md BLK-013)

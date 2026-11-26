@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T03:07Z, since: 2026-11-26T03:40Z}
+- lock: 
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-26 15:08  # 이 세션 시작(10:08 KST)+5h 추정
-- 마지막 갱신: 2026-11-26 11:58 KST (세션 종료: BLK-012·M2-12 기준선·verify:m2 1차 정리, 다음 14b treeLint)
+- 마지막 갱신: 2026-11-26 12:55 KST (세션 종료: M2-14b treeLint·BLK-013, 다음 14c harmonyScore)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -130,6 +130,7 @@
     - [x] 14a SIG-11 hero G-05 회귀 수정·next peer @playwright/test 끊기(AD-033)·validateBundle 구현(AC-03-22·42 녹색, ASM-072)
     - [x] 14b treeLint 단계 T(G-01·LT-01~11·RH-01~02, ASM-073). patternRaw LT-03 하한 채우기·리듬 DFS·덱 index 분배, 픽스처 29 재생성. AC-04-11은 pl1-00(기준선 입력) LT-03 1건 → BLK-013
     - [ ] 14c harmonyScore(03장 조화 규칙, 표준 트리 H=100) — AC-03-20(packages/scoring/src/gates.ts 자리표시)
+      - 메모(다음 세션): 03장 3.14.3~5·04장 4.10.3, data/taxonomy/harmony.json(items H1~H12·constants). 테스트 시그니처 `harmonyScore(spec, tree).total`(렌더 없음) → 정적 판정: H1~H3 팔레트 토큰(primary·accent·bg·surface·surface-inverse, 상태·hover 제외), H4·H5 font 토큰+registry, H6·H8·H9 토큰 생성이라 만점(렌더 측정 입력은 선택 인자, M3), H7 type display/body, H10 design-spec `l2Conflicts`(snap.ts, CF-03·04 등)+CF-05·06·08~12, H11 decor.effects ≤ max, H12 트리 리듬. scoring 의존은 config뿐(09장 9.1.3 표) → 리듬 판정을 scoring 안에 둘지(중복) 확인 후 ASM
     - [ ] 14d 원인 미확인 실패 개별 재현(`npx vitest run tests/acceptance/m2/<f> -t <AC>`): AC-03-18 PS-T1~T8(180s 타임아웃 의심, 2코어), AC-03-33 터치 타깃, AC-03-23 한글 폰트, AC-03-26 헤드라인, AC-03-45 ②④
     - [ ] 14e verify:m2 재실행(약 60분, 백그라운드 nohup 후 reports/verify-m2.partial.json 확인). 남는 것: AC-03-19(BLK-009)·AC-04-08(BLK-012) blocked
 - M3 이월: (B18 재생성은 M2-09d3으로 당김), B15 골격을 실제 예시로 교체 후 자체 잠금(ASM-021)
@@ -139,6 +140,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-26 12:55 | 세션 종료(잠금 해제). 다음 M2-14c harmonyScore(메모는 P4 14c 아래)
 - 2026-11-26 12:40 | M2-14b treeLint 단계 T(ASM-073)·표준 트리 LT-03 하한·리듬 수정, BLK-013(PL-1 기준선 ↔ AC-04-11)
 - 2026-11-26 11:58 | verify:m2 1차 fail 17 → SIG-11 G-05 회귀·AC-09-09(AD-033)·validateBundle(ASM-072) 수정, 14b~e 계획
 - 2026-11-26 11:05 | M2-12 렌더러 시각 회귀 기준선 24장(지문 7303eb92a5bd)·스펙 자체 잠금, ASM-071
