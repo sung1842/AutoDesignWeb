@@ -36,6 +36,15 @@
     },
     {
       "path": "../../packages/linter"
+    },
+    {
+      "path": "../../packages/llm"
+    },
+    {
+      "path": "../../packages/layout-schema"
+    },
+    {
+      "path": "../../packages/compliance"
     }
   ]
 }

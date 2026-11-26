@@ -104,6 +104,9 @@ importers:
       '@tastefit/assets':
         specifier: workspace:^
         version: link:../../packages/assets
+      '@tastefit/compliance':
+        specifier: workspace:^
+        version: link:../../packages/compliance
       '@tastefit/config':
         specifier: workspace:^
         version: link:../../packages/config
@@ -116,9 +119,15 @@ importers:
       '@tastefit/extractor':
         specifier: workspace:^
         version: link:../../packages/extractor
+      '@tastefit/layout-schema':
+        specifier: workspace:^
+        version: link:../../packages/layout-schema
       '@tastefit/linter':
         specifier: workspace:^
         version: link:../../packages/linter
+      '@tastefit/llm':
+        specifier: workspace:^
+        version: link:../../packages/llm
       '@tastefit/renderer':
         specifier: workspace:^
         version: link:../../packages/renderer

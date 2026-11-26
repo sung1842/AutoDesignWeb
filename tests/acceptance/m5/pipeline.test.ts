@@ -145,8 +145,8 @@ async function job(
   const row =
     (await db.withService((tx) => q(tx, "select * from generation_jobs where id = $1", [jobId])))
       .rows[0] ?? {};
-  const view = (await call(u.jar, "GET", `/api/generations/${jobId}`)).body;
-  return { jobId, row, view, jar: u.jar };
+  const view = (await call(jar, "GET", `/api/generations/${jobId}`)).body;
+  return { jobId, row, view, jar, projectId };
 }
 const rows = async (sql: string, p: unknown[]) =>
   (await db.withService((tx) => q(tx, sql, p))).rows;
@@ -257,7 +257,11 @@ describe("ok 시나리오(AC-06-38·47·56, AC-04-01·02)", () => {
     expect(first.row.status).toBe("succeeded");
   });
   it("AC-04-01·02 2회차: 같은 job_seed·입력·config_snapshot → DesignSpec ×3·확정 트리 ×6·HTML/CSS ×6 SHA-256 동일", async () => {
-    const b = await job("ok", { seed: SEED });
+    // 같은 프로젝트(같은 taste·type·purpose·brand)에서 두 번째 잡
+    const b = await job("ok", {
+      seed: SEED,
+      reuse: { jar: first.jar, projectId: first.projectId },
+    });
     finished.push(b.row);
     expect(JSON.stringify(first.row.design_spec)).toBe(JSON.stringify(b.row.design_spec));
     const key = (r: Record<string, unknown>[]) =>
