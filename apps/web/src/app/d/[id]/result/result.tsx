@@ -104,7 +104,10 @@ export function Result({ id }: { id: string }) {
         <p className="svc-muted">{KO[`result.confidence.${r.confidence}`]}</p>
       ) : null}
       <p>
-        <button className="svc-btn svc-btn--primary" disabled>
+        <button
+          className="svc-btn svc-btn--primary"
+          onClick={() => router.push(`/brief?result=${encodeURIComponent(r.resultId)}`)}
+        >
           {KO["result.cta"]}
         </button>{" "}
         <button className="svc-btn svc-btn--text" onClick={() => router.push("/")}>
