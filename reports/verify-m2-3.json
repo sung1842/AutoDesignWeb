@@ -1,0 +1,87 @@
+{
+  "milestone": "M2",
+  "gitSha": "ddd0e863d4089538ab7f31dc854e779747e78ca1",
+  "startedAt": "2026-11-26T06:33:05.635Z",
+  "finishedAt": "2026-11-26T07:00:41.586Z",
+  "steps": [
+    {
+      "name": "guard",
+      "status": "blocked",
+      "details": "ok   guard:data\nok   guard:deps\nok   guard:count\nok   guard:tuned\nok   guard:qa-audit\n  [F01] NEEDS_CI lock-digest: QA_LOCK_DIGEST 없음(로컬) → CI에서 대조\n  [F12] BLOCKED BLK-001 guard:deps: @img/sharp-libvips-linux-x64: LGPL-3.0-or-later\n  [F12] BLOCKED BLK-001 guard:deps: @img/sharp-libvips-linuxmusl-x64: LGPL-3.0-or-later\n  [F12] BLOCKED BLK-001 guard:deps: @isaacs/nonrecursive-glob-match: BlueOak-1.0.0\n  [F12] BLOCKED BLK-001 guard:deps: minimatch: BlueOak-1.0.0\n  [F12] BLOCKED BLK-001 guard:deps: argparse: Python-2.0\n  [F12] BLOCKED BLK-001 guard:deps: caniuse-lite: CC-BY-4.0\n  [F12] BLOCKED BLK-001 guard:deps: tslib: 0BSD\n  [F12] BLOCKED BLK-001 guard:deps: type-fest: (MIT OR CC0-1.0)\n  [F04] BLOCKED BLK-003 guard:qa-audit: key-coverage 06_architecture.md:1988: \"≤ 0.00001\" thresholds 키·사양 상수 표 밖\n  [F04] BLOCKED BLK-003 guard:qa-audit: key-coverage 06_architecture.md:2091: \"< 96\" thresholds 키·사양 상수 표 밖\n  [F04] BLOCKED BLK-003 guard:qa-audit: key-coverage 07_quality.md:1311: \"< 96\" thresholds 키·사양 상수 표 밖\n  [F04] BLOCKED BLK-003 guard:qa-audit: key-coverage 09_implementation.md:439: \"≥19\" thresholds 키·사양 상수 표 밖\nguard: exit 3\n",
+      "blockedBy": [
+        "BLK-001",
+        "BLK-003"
+      ],
+      "durationMs": 19977
+    },
+    {
+      "name": "lint",
+      "status": "pass",
+      "details": "",
+      "durationMs": 3668
+    },
+    {
+      "name": "typecheck",
+      "status": "pass",
+      "details": "",
+      "durationMs": 390
+    },
+    {
+      "name": "unit",
+      "status": "pass",
+      "details": "170건 통과",
+      "durationMs": 263075
+    },
+    {
+      "name": "trace",
+      "status": "pass",
+      "details": "WARN AC-06-99: 배정표에 없음 → M8로 간주(다음 spec-lock 전에 표에 넣어야 함)\nqa:trace: AC 97/97 pass (≤M2), TC 판정 제외\n",
+      "durationMs": 1014
+    },
+    {
+      "name": "acceptance:m0",
+      "status": "fail",
+      "details": "실패 4건:\n[BLK-002] tests/acceptance/m0/guard.test.ts > M0 guard AC-07-25: DECISIONS_LOG append-only 예외 1개 AC-07-25: CLAUDE.md·07·09장의 DECISIONS_LOG 경로가 하나뿐이다\n[BLK-004] tests/acceptance/m0/qa-trace.test.ts > M0 qa:trace AC-00-01 / AC-00-07: 문서 검사(qa:trace --docs) 통과\n[BLK-005] tests/acceptance/m0/repo.test.ts > M0 저장소 정적 검사 AC-09-11: spec-lock 이후 모든 커밋이 Conventional Commits + Milestone 꼬리말\ntests/acceptance/m0/stack.test.ts > M0 env 검증 AC-06-32: 기본 env(.env.example + local)로는 web·worker env 검사 통과",
+      "durationMs": 523130
+    },
+    {
+      "name": "acceptance:m1",
+      "status": "blocked",
+      "details": "27/28 통과, blocked:\n[BLK-006] tests/acceptance/m1/db.test.ts > M1 마이그레이션 9.4.3 ⑨: verify:schema-parity — 06장 DDL과 information_schema 차이 0",
+      "blockedBy": [
+        "BLK-006"
+      ],
+      "durationMs": 24092
+    },
+    {
+      "name": "acceptance:m2",
+      "status": "blocked",
+      "details": "144/147 통과, blocked:\n[BLK-009] tests/acceptance/m2/blocks.test.ts > AC-03-19·21 슬롯·폴백 체인(정적) AC-03-19: 모든 슬롯 maxLength ≥ 덱 상한, 덱에 없는 키 참조 0\n[BLK-013] tests/acceptance/m2/render.test.ts > AC-04-11 용도 3 × 패턴 4 픽스처 트리 12개가 스키마·린트 T(error 0)·렌더 하드 게이트를 통과\n[BLK-012] tests/acceptance/m2/render.test.ts > AC-04-08 렌더 벡터 D(골든 θ*) 변형 쌍 추출 벡터 D ≥ renderDistMin 충족률 ≥ variantRenderDRatioMin",
+      "blockedBy": [
+        "BLK-009",
+        "BLK-013",
+        "BLK-012"
+      ],
+      "durationMs": 793687
+    },
+    {
+      "name": "e2e:m0",
+      "status": "pass",
+      "details": "e2e/m0 없음(이 마일스톤 E2E 없음, AC 매핑은 trace 단계가 검사)",
+      "durationMs": 0
+    },
+    {
+      "name": "e2e:m1",
+      "status": "pass",
+      "details": "e2e/m1 없음(이 마일스톤 E2E 없음, AC 매핑은 trace 단계가 검사)",
+      "durationMs": 0
+    },
+    {
+      "name": "e2e:m2",
+      "status": "pass",
+      "details": "\n  24 passed (25.4s)\n",
+      "durationMs": 26913
+    }
+  ],
+  "result": "fail"
+}

@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T06:08Z, since: 2026-11-26T06:29Z}
+- lock: {owner: 2026-11-26T06:08Z, since: 2026-11-26T07:14Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
@@ -134,6 +134,7 @@
       - 메모(다음 세션): 03장 3.14.3~5·04장 4.10.3, data/taxonomy/harmony.json(items H1~H12·constants). 테스트 시그니처 `harmonyScore(spec, tree).total`(렌더 없음) → 정적 판정: H1~H3 팔레트 토큰(primary·accent·bg·surface·surface-inverse, 상태·hover 제외), H4·H5 font 토큰+registry, H6·H8·H9 토큰 생성이라 만점(렌더 측정 입력은 선택 인자, M3), H7 type display/body, H10 design-spec `l2Conflicts`(snap.ts, CF-03·04 등)+CF-05·06·08~12, H11 decor.effects ≤ max, H12 트리 리듬. scoring 의존은 config뿐(09장 9.1.3 표) → 리듬 판정을 scoring 안에 둘지(중복) 확인 후 ASM
     - [ ] 14d 원인 미확인 실패 개별 재현(`npx vitest run tests/acceptance/m2/<f> -t <AC>`): [x] AC-03-33(터치 타깃 CSS·하네스 폰트 캐시, ASM-075; 빈 캐시는 180s 초과 위험) [x] AC-03-18 PS-T1~T8(녹색, 각 50~90s: ASM-075 하네스 캐시 효과) [x] AC-03-23(라틴 서브셋 한글 제외·mono 스택·하네스 한글 구간, ASM-076) [x] AC-03-26·AC-03-45 ②④(재현 안 됨, 녹색) [~] 빈 캐시 대비: 페이지당 python 1회로 묶음(ASM-075). 그래도 빈 캐시 AC-03-33 ≈ 400페이지 × 1.2s > 180s(2코어), 데운 캐시 52~132s. 남은 안: 상주 서브셋 프로세스(페이지당 ≈0.8s, 여전히 빠듯) 또는 빠른 환경 확인
     - [ ] 14e verify:m2 재실행. 2차(2026-11-26, reports/verify-m2-2.json) fail 17→4 비BLK: AC-03-33(전체 실행 중 180s 초과, 단독 통과), AC-06-32 m0(간헐, 단독 통과), AC-03-19·AC-04-08(BLK-009·012 재현 명령 줄이 없어 매핑 실패 → BLOCKED.md에 추가). 다음: 3차 실행(데운 폰트 캐시) → pass_blocked면 m2-done.(약 60분, 백그라운드 nohup 후 reports/verify-m2.partial.json 확인). 남는 것: AC-03-19(BLK-009)·AC-04-08(BLK-012) blocked
+      - 3차(2026-11-26, reports/verify-m2-3.json, 데운 캐시): acceptance:m2 blocked만(BLK-009·012·013, AC-03-33 통과). 남은 fail = AC-06-32 m0 "기본 env 통과" 1건(verify 안에서만 3회째, 단독·m0 전체 단독은 통과, 원인 미상). 4차는 NODE_OPTIONS 진단 훅(저장소 밖)으로 출력 수집
 - M3 이월: (B18 재생성은 M2-09d3으로 당김), B15 골격을 실제 예시로 교체 후 자체 잠금(ASM-021)
 - [x] M0 [x] M1 [ ] M2 [ ] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
 
@@ -141,6 +142,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-26 16:15 | verify:m2 3차 fail: 비BLK는 AC-06-32 m0(verify 안에서만 재현) 1건. 4차 진단 실행
 - 2026-11-26 15:55 | verify:m2 2차 fail(비BLK 4: 03-33 시간·06-32 간헐·BLK-009/012 재현 명령 누락→보완), 하네스 서체 묶음 생성
 - 2026-11-26 15:57 | 세션 종료(잠금 해제). 다음 M2-14e 3차 verify:m2
 - 2026-11-26 14:42 | M2-14d AC-03-18 PS-T1~T8 녹색(각 50~90s). 남은 14d = 빈 캐시 대비 검토
