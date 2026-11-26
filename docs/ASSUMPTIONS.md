@@ -653,3 +653,10 @@
 - 선택: ① surveyPage({presetId, templateId, l2Overrides}) = standardTree(프리셋 유형, portfolio, l2 = 프리셋 기본 + 덮어쓰기)의 명세 + 템플릿 고정 트리 → 같은 compilePage로 렌더 ② 슬롯 대응: hero = headline·sub·primaryCta·secondaryCta·media, value.numbered = "제목 / 본문" 3항목, gallery.grid = media 1장(BLK-010) + captions 6, cta.band headline = grid.desc, proof.quote-large = 인용 + 서명, story.text = body·media, stats.row = 값 3 + 라벨 ③ 고정 문구 deck_ref = "deck:survey.fixed#0", pattern_id = "PP-1"(스키마 enum, 설문 고정 구성 표시), 하단에 footer.minimal(워드마크·CP-10 예시값) ④ 헤드라인 줄바꿈 "\n"은 렌더러가 공백으로 합친다
 - 영향 범위: packages/design-spec/src/survey.ts, survey:build
 - 되돌리기 비용: 낮음
+
+## ASM-093 · M4 · gap · 2026-11-26T18:30Z
+- 질문: survey:build의 CLI 옵션·manifest.lock 스키마·저장 경로·멱등 판정·--check 출력이 장에 다 적혀 있지 않고, 경로 형식이 02장(`<tv>/<sha256>.webp`)과 06장(`<tv>/{id}.{device}.{sha12}.webp`)에서 다름
+- 근거 탐색: 02장 2.3.6·2.4.2~2.4.7·2.6.1, 05장 5.9, 06장 survey_items DDL·Storage 표·6.13.1 fs 드라이버, 09장 9.4.6 ①②③
+- 선택: ① 경로는 06장(Storage 원천) `survey-assets` 버킷 `<tv>/{id}.{desktop|mobile}.{sha12}.webp` ② CLI `pnpm survey:build [--only id,…] [--manifest p] [--storage-root d] [--no-db] [--report p] [--check [--items p]]`. `--only`는 카드·이미지·쌍 ID(쌍은 두 이미지 포함) ③ manifest.lock = `{bundle:"survey-manifest", taxonomyVersion, normalizerVersion, extractorVersion, items[assetId 정렬]: {assetId, kind, status, target|null, x|null, inputHash, domHash, assets{desktop,mobile?}{path,sha256,w,h,bytes}, altText, dominantColors, focusRegion, reasons[]}}` ④ 멱등: inputHash(명세·트리·렌더러·정규화기 버전)가 같고 저장소에 같은 sha 파일이 있으면 렌더·업로드 생략, DB upsert는 값이 다를 때만 쓰고 바뀐 행 수를 report.dbChanged로 ⑤ temp 모드(approvals provenance temp) 자동 승인: verified → active(2.4.7), human이면 approved만 active ⑥ `--check`는 manifest(또는 --items 픽스처 `{items:[{assetId,status,x}]}`)로 2.4.2 커버리지와 2.6.1 (템플릿, 문항 순번 1~8)마다 (a)(b) 만족 4장 조합 ≥1을 검사, 부족하면 `INSUFFICIENT stage=1 template=<t> seq=<n>` 줄과 종료 1 ⑦ 앵커 참조 ANC-{A}-{level} 25장 = tpl-hero, 대상 축 수준·나머지 0.5 L1을 mapL1toL2(최근접 유형)로, desktop만
+- 영향 범위: scripts/survey, packages/storage(fs), packages/diagnosis(검사 함수), tests/acceptance/m4/survey-build.test.ts
+- 되돌리기 비용: 중간(자체 잠금 전까지 낮음)
