@@ -51,6 +51,7 @@
 - 가설: 다중 scope 표기(쉼표)를 허용할지 규칙이 정해지지 않음. 이후 커밋은 단일 scope만 쓴다
 - 제안 수정안(사람): scope 정규식에 `,` 허용(`[\w.,/-]`) 또는 5fefdda를 예외 목록으로 두고 `pnpm guard:relock --human`
 - 추가(2026-11-19 M1): 같은 원인 커밋 207df53 `fix(config,db): …`(다중 scope)도 이미 푸시됨. 히스토리 재작성 금지라 그대로 둠
+- 추가(2026-11-26): 사람 웹 커밋 a0217bb `Update SHA256 hashes in locked-hashes.json`(형식·꼬리말 없음). 예외 목록에 함께 넣어야 함
 - 상태: open
 
 ## BLK-006 · M1 · locked-conflict · 2026-11-19T17:31Z
@@ -142,4 +143,4 @@
 - 원인: 잠그기 전 guard:patterns를 돌리지 않음(qa:trace --audit·eslint만 확인)
 - 수정안(준비됨): 브랜치 `wip/blocked-m3-timeouts`(origin)에 타임아웃을 빼고 긴 반복을 항목별 it로 나눈 5파일. 판정 기준·매핑·수치는 그대로. guard:patterns ok·qa:trace --audit 리터럴 0 확인
 - 사람 절차: 브랜치 diff 검토 → 5파일을 main에 반영 → `pnpm guard:relock --human tests/acceptance/m3` → 커밋 → PROGRESS status를 IN_PROGRESS로
-- 상태: open
+- 상태: resolved 2026-11-26 — 사람이 PR #1 squash(01c9596)·해시 갱신(a0217bb)·재개(1ecf213). 4파일(scoring 무변경). `guard:relock` 명령은 없음(locked-hashes.json 직접 수정). a0217bb 메시지가 AC-09-11 형식 위반 → BLK-005에 추가

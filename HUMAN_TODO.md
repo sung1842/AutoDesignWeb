@@ -41,5 +41,8 @@
 - [ ] (BLK-011) 아이콘 패키지 3종(@phosphor-icons/core·@tabler/icons·iconoir, MIT) 허용 목록 추가 여부. 지금은 임시 자체 도형 40개
 - [ ] (BLK-012) 04장 4.3 스냅 변경 벌점(0.02, 앵커 기준)이 변형 3종을 같은 L2로 모아 AC-04-08 렌더 D 95% 불가(54/96). 벌점 기준을 l2_0로 바꾸거나 0.005로 낮추거나 enforce 대안 선택을 바꿀지 결정 후 relock(BLOCKED.md BLK-012)
 - [ ] (BLK-013) 시각 회귀 기준선 PL-1 8장이 LT-03(local_business ≥6섹션) 위반 5섹션 픽스처로 찍힘. pl1-00 재생성 후 기준선 갱신·relock 승인(BLOCKED.md BLK-013)
-- [ ] **(HALT, BLK-015) M3 수용 테스트 relock 필요**: 잠긴 tests/acceptance/m3 5파일에 금지된 테스트별 타임아웃(F06) 14곳이 있어 guard가 계속 실패합니다. 브랜치 `wip/blocked-m3-timeouts`에 고친 5파일이 있습니다(타임아웃 제거·긴 반복을 항목별 it로 분할, 판정 기준 동일). 검토 후 main에 반영 → `pnpm guard:relock --human tests/acceptance/m3` → 커밋 → PROGRESS.md status를 IN_PROGRESS로 바꿔 주세요. 그 전까지 예약 세션은 진행하지 않습니다
+- [x] **(HALT, BLK-015, 2026-11-26 해결) M3 수용 테스트 relock 필요**: 잠긴 tests/acceptance/m3 5파일에 금지된 테스트별 타임아웃(F06) 14곳이 있어 guard가 계속 실패합니다. 브랜치 `wip/blocked-m3-timeouts`에 고친 5파일이 있습니다(타임아웃 제거·긴 반복을 항목별 it로 분할, 판정 기준 동일). 검토 후 main에 반영 → `pnpm guard:relock --human tests/acceptance/m3` → 커밋 → PROGRESS.md status를 IN_PROGRESS로 바꿔 주세요. 그 전까지 예약 세션은 진행하지 않습니다
 - [ ] (BLK-014) 사양 상수 표(07장 7.12.1)에 "규칙·게이트 픽스처 최소 수 2", "자기검증 색 ΔE2000 < 5·radius ±1px" 행 추가 여부를 결정해 주세요(BLOCKED.md BLK-014)
+
+- [ ] (BLK-005 추가) 사람 커밋 a0217bb `Update SHA256 hashes in locked-hashes.json`도 AC-09-11(Conventional+Milestone 꼬리말) 위반. force push 금지라 그대로 둠 → 예외 목록 처리 후 relock
+- [ ] (AD-034) 예약 작업 'AutoDesignWeb 자율 진행' 주기를 앱에서 `*/10 * * * *`(10분)로 바꿔 주세요(에이전트 변경은 권한 거부). 주간 한도 소진 시 초기화 시각을 PROGRESS `limit.weekly_block_until_kst`에 적으면 그때까지 세션이 바로 종료합니다

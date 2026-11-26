@@ -3,12 +3,13 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: 
+- lock: {owner: 2026-11-26T13:45Z, since: 2026-11-26T13:50Z}
+- limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
-- limit.next_reset_kst: 2026-11-26 22:07  # 이 세션 시작(17:07 KST)+5h 추정
-- 마지막 갱신: 2026-11-26 20:25 KST (HALT: BLK-015. M3-01 수용 테스트 잠금 후 guard F06 발견, 수정안 브랜치 wip/blocked-m3-timeouts)
+- limit.next_reset_kst: 2026-11-27 03:45  # 이 세션 시작(22:45 KST)+5h 추정
+- 마지막 갱신: 2026-11-26 22:50 KST (BLK-015 해결·재개, M3-02 착수)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -147,6 +148,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-26 22:50 | BLK-015 해결(사람 relock), 재개. 세션 운영 변경 AD-034(끊길 때까지 진행·주간 게이트)
 - 2026-11-26 20:25 | HALT(BLK-015): 잠근 M3 테스트에 per-test 타임아웃 → guard F06. 수정안 wip/blocked-m3-timeouts, 사람 relock 대기
 - 2026-11-26 20:05 | extractor dom.ts 리터럴 4건 → DOM_SPEC.groupMin·bg.length(감사 0건)
 - 2026-11-26 19:50 | M3-01 완료: test(acc) 09da0ab 자체 잠금 5파일(AD-031) → 다음: M3-02 linter 공개 API 자리표시·규칙
