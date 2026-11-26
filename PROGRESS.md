@@ -3,12 +3,12 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T01:08Z, since: 2026-11-26T02:20Z}
+- lock: 
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
-- limit.next_reset_kst: 2026-11-26 11:08  # 이 세션 시작(06:08 KST)+5h 추정
-- 마지막 갱신: 2026-11-26 09:23 KST (세션 종료: 09d4d1 렌더 수정 AC-04-08 0.5625, 다음 09d4d2 변형 L2 붕괴 확인)
+- limit.next_reset_kst: 2026-11-26 15:08  # 이 세션 시작(10:08 KST)+5h 추정
+- 마지막 갱신: 2026-11-26 11:58 KST (세션 종료: BLK-012·M2-12 기준선·verify:m2 1차 정리, 다음 14b treeLint)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -126,7 +126,12 @@
   - [x] 11 미리보기: 서명 URL·preview 헤더·iframe·compileForEdit CSP·parentProbe(⑧, ASM-059). Next 라우트 연결은 M5
   - [x] 12 시각 회귀 기준선 24장(⑤, 지문 7303eb92a5bd, e2e/m2 재실행 24/24, Docker 지문 needs_ci, ASM-071)
   - [x] 13 renderer 금지 의존성 검사(⑦) 확인(수용 테스트 통과)
-  - [ ] 14 verify:m2 → m2-done(tags 맵)
+  - [ ] 14 verify:m2 → m2-done(tags 맵). 1차(2026-11-26, reports/verify-m2-1.json) fail: acceptance:m2 17건. 정리:
+    - [x] 14a SIG-11 hero G-05 회귀 수정·next peer @playwright/test 끊기(AD-033)·validateBundle 구현(AC-03-22·42 녹색, ASM-072)
+    - [ ] 14b treeLint 단계 T(LT-01~08·RH-01~02·G-01, 04장 4.5.3·4.13) — AC-03-20·AC-04-11이 의존(packages/linter/src/m2.ts 자리표시)
+    - [ ] 14c harmonyScore(03장 조화 규칙, 표준 트리 H=100) — AC-03-20(packages/scoring/src/gates.ts 자리표시)
+    - [ ] 14d 원인 미확인 실패 개별 재현(`npx vitest run tests/acceptance/m2/<f> -t <AC>`): AC-03-18 PS-T1~T8(180s 타임아웃 의심, 2코어), AC-03-33 터치 타깃, AC-03-23 한글 폰트, AC-03-26 헤드라인, AC-03-45 ②④
+    - [ ] 14e verify:m2 재실행(약 60분, 백그라운드 nohup 후 reports/verify-m2.partial.json 확인). 남는 것: AC-03-19(BLK-009)·AC-04-08(BLK-012) blocked
 - M3 이월: (B18 재생성은 M2-09d3으로 당김), B15 골격을 실제 예시로 교체 후 자체 잠금(ASM-021)
 - [x] M0 [x] M1 [ ] M2 [ ] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
 
@@ -134,6 +139,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-26 11:58 | verify:m2 1차 fail 17 → SIG-11 G-05 회귀·AC-09-09(AD-033)·validateBundle(ASM-072) 수정, 14b~e 계획
 - 2026-11-26 11:05 | M2-12 렌더러 시각 회귀 기준선 24장(지문 7303eb92a5bd)·스펙 자체 잠금, ASM-071
 - 2026-11-26 10:45 | M2-09d4d2 스냅 진단: 벌점 0.02로 96쌍 중 69쌍 6키 동일(사양대로) → BLK-012, 09 종료
 - 2026-11-26 09:23 | M2-09d4d1 카드 그림자 단계·radius 역할(3.1.7·3.1.8) 렌더 수정, B18 재생성, AC-04-08 0.5625, ASM-070
@@ -148,6 +154,3 @@
 - 2026-11-26 03:52 | AC-03-26 헤드라인 줄 예산(덱 교체→단계 하향 role_overrides→warn, 24 중 8 하향), ASM-064
 - 2026-11-26 03:49 | AC-03-21 fallback 체인 끝 = remove(seed:temp), ASM-063
 - 2026-11-26 03:32 | AC-03-41 colorName(사전 42, 무채색·조건 색·수식어)·config/color-names.ko.json(temp), ASM-062; 블록 샘플 8×50 넘침·잘림·겹침 0
-- 2026-11-26 03:07 | M2-09f 블록 샘플·컴포넌트 갤러리(8프리셋 게이트 통과)·단계 프로브, ASM-061 → 다음: 샘플 50×8 결과 반영·09e G-12
-- 2026-11-26 02:42 | AC-06-24 이스케이프(= → &#61;)·⑦ 금지 의존성 확인, render 수용 19/22(남은 3 = treeLint·extractL1), ASM-060
-- 2026-11-26 02:28 | M2-11 미리보기 서명·헤더·iframe·편집 CSP·parentProbe, ASM-059 → 다음: 09e G-12 또는 13 금지 의존성

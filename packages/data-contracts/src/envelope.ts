@@ -30,6 +30,16 @@ export function envelope<T extends z.ZodType>(item: T) {
         path: ["preparedBy"],
         message: "temp 묶음의 preparedBy는 seed:temp@<gitsha>",
       });
+    // 라이선스 확인일(verified_at)은 temp만 비어도 된다(03장 AC-03-22, ASM-072)
+    if (e.provenance === "human")
+      e.items.forEach((it, i) => {
+        if (it && typeof it === "object" && "verified_at" in it && it.verified_at == null)
+          ctx.addIssue({
+            code: "custom",
+            path: ["items", i, "verified_at"],
+            message: "human 묶음은 verified_at을 채워야 한다",
+          });
+      });
   });
 }
 export type Bundle<T> = EnvelopeMeta & { items: T[] };

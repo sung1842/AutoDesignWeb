@@ -3,6 +3,8 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { z } from "zod";
 import { MiniValidator, type Schema } from "./json-schema.js";
+import { envelope, envelopeMeta } from "./envelope.js";
+import { BUNDLES } from "./registry.js";
 
 const repoFile = (rel: string): string =>
   fileURLToPath(new URL(`../../../${rel}`, import.meta.url));
@@ -155,10 +157,6 @@ export interface ValidationResult {
   ok: boolean;
   errors: string[];
 }
-const pending = (name: string): ValidationResult => ({
-  ok: false,
-  errors: [`${name}: M2-03에서 구현 예정`],
-});
 
 /** data/tokens/schema.json(tokens-1) 검증. */
 let tokenSchema: { v: MiniValidator; s: Schema } | null = null;
@@ -178,7 +176,29 @@ export function validateTokenSet(x: unknown): ValidationResult {
   return { ok: errors.length === 0, errors };
 }
 /** 묶음 파일 하나를 경로로 골라 zod 검증. */
-export function validateBundle(_path: string, _json: unknown): ValidationResult {
-  void [_path, _json];
-  return pending("validateBundle");
+export function validateBundle(path: string, json: unknown): ValidationResult {
+  const rel = path.replace(/^\.\//, "");
+  const def = BUNDLES.find((d) =>
+    d.paths.some(
+      (p) => rel === p || (d.layout !== "envelope" && rel.startsWith(`${p.replace(/\/$/, "")}/`)),
+    ),
+  );
+  if (!def) return { ok: false, errors: [`레지스트리에 없는 경로: ${path}`] };
+  if (def.layout === "text" || def.layout === "yaml")
+    return { ok: false, errors: [`${def.id}: JSON 묶음이 아니다(data:validate 규칙으로 검사)`] };
+  const schema =
+    def.layout === "itemDir"
+      ? def.item
+      : def.item
+        ? envelope(def.item)
+        : envelopeMeta.passthrough();
+  if (!schema) return { ok: true, errors: [] };
+  const r = schema.safeParse(json);
+  const errors = r.success
+    ? []
+    : r.error.issues.map((i) => `${def.id} ${i.path.join(".") || "(루트)"} ${i.message}`);
+  const j = json as { bundle?: unknown } | null;
+  if (def.layout !== "itemDir" && j && typeof j === "object" && j.bundle !== def.name)
+    errors.push(`${def.id} bundle 값 ${String(j.bundle)} ≠ ${def.name}`);
+  return { ok: errors.length === 0, errors };
 }

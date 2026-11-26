@@ -507,3 +507,8 @@
 - 질문: 9.4.4 ⑤ 렌더러 기준선 24장의 "대표 페이지 3"·캡처 범위·환경 지문 계산 방식
 - 근거 탐색: 09장 9.4.1 S-02(RENDER_ENV_ID), D-0910, 07장 7.1 시각 회귀(렌더러) 행(1280×800, 고정 레이아웃 트리 픽스처), test-policy visual.maxDiffPixelRatio
 - 선택: ① 대표 페이지 = 용도별 패턴 1 픽스처 `saas-ps1-00`·`local-business-pl1-00`·`portfolio-pp1-00`를 `fixturePage(…, {presetId})`로 프리셋 8에 적용 ② 1280×800 뷰포트, 전체 페이지 캡처, 애니메이션 끔(worker 하네스 가상 오리진으로 자산 로드) ③ RENDER_ENV_ID = sha256(chromium 실행 파일 리비전 + fc-list 폰트 파일 경로:내용 해시(정렬) + /etc/os-release ID-VERSION_ID) 앞 12자, `RENDER_ENV_ID` env로 덮어쓰기 가능 ④ maxDiffPixelRatio는 playwright.config.ts에서 test-policy를 읽는다 ⑤ 기준선 `chore(visual): baseline <id>` 단독 커밋 후 자체 잠금(spec 파일 포함). Docker 지문은 needs_ci(visual-docker-baseline)
+
+## ASM-072 · M2 · gap · 2026-11-26T02:55Z
+- 질문: `validateBundle(path, json)`(ASM-025 계약)의 경로 해석과 "verified_at은 temp만 비어도 됨"(AC-03-22)을 어디서 검사하나
+- 근거 탐색: 03장 AC-03-22, 09장 9.2.1 봉투, data-contracts 레지스트리(BUNDLES)
+- 선택: ① 경로 = 레지스트리 `paths` 정확 일치(디렉터리 배치는 접두사) → data:validate와 같은 스키마(envelope/itemDir) + bundle 이름 검사, text·yaml 묶음은 ok=false로 거절 ② 봉투 superRefine에 "provenance human이면 items[].verified_at null 금지"를 넣어 data:validate에도 같은 규칙 적용(registry·images manifest)
