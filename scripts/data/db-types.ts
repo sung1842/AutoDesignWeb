@@ -35,4 +35,8 @@ sh(
   ],
   merged,
 );
-sh(join(root, "node_modules/.bin/prettier"), ["--write", "--log-level", "warn", join(root, OUT)], merged);
+sh(
+  join(root, "node_modules/.bin/prettier"),
+  ["--write", "--log-level", "warn", join(root, OUT)],
+  merged,
+);

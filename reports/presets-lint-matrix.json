@@ -1,0 +1,53 @@
+{
+  "presets": [
+    {
+      "presetId": "PS-T1",
+      "combos": 22,
+      "errors": []
+    },
+    {
+      "presetId": "PS-T2",
+      "combos": 24,
+      "errors": []
+    },
+    {
+      "presetId": "PS-T3",
+      "combos": 21,
+      "errors": []
+    },
+    {
+      "presetId": "PS-T4",
+      "combos": 23,
+      "errors": []
+    },
+    {
+      "presetId": "PS-T5",
+      "combos": 16,
+      "errors": []
+    },
+    {
+      "presetId": "PS-T6",
+      "combos": 20,
+      "errors": []
+    },
+    {
+      "presetId": "PS-T7",
+      "combos": 26,
+      "errors": [
+        {
+          "key": "depth.style",
+          "value": "flat",
+          "rules": [
+            "AIL-09"
+          ],
+          "cf": null
+        }
+      ]
+    },
+    {
+      "presetId": "PS-T8",
+      "combos": 18,
+      "errors": []
+    }
+  ]
+}

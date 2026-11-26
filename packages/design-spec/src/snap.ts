@@ -1,4 +1,6 @@
 // 03장 3.3(용도 경로) + 04장 4.3 3단계 조화 스냅. 순수 함수. 해석은 ASSUMPTIONS ASM-029.
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { mapL1toL2, type L1, type L2 } from "@tastefit/taxonomy";
 import type { DesignData, JsonObj, Preset } from "./data.js";
 import { AXIS_KEYS, decorCount, predictL1Vec } from "./predict.js";
@@ -111,9 +113,38 @@ export function l2Conflicts(l2: L2, ctx: SnapContext, data: DesignData): string[
   return out;
 }
 
+/** harmony.json.conflicts 중 presets:lint-matrix 등록분(CF-13~: 프리셋 1값 조합, 03장 3.4.1 S-33). */
+export interface RegisteredConflict {
+  id: string;
+  preset: string;
+  key: string;
+  value: string;
+}
+const REG_CACHE = new Map<string, RegisteredConflict[]>();
+export function registeredConflicts(data: DesignData): RegisteredConflict[] {
+  const hit = REG_CACHE.get(data.root);
+  if (hit) return hit;
+  const p = join(data.root, "data/taxonomy/harmony.json");
+  const list = existsSync(p)
+    ? ((JSON.parse(readFileSync(p, "utf8")) as { conflicts?: Partial<RegisteredConflict>[] })
+        .conflicts ?? [])
+    : [];
+  const out = list.filter(
+    (c): c is RegisteredConflict =>
+      typeof c.id === "string" &&
+      typeof c.preset === "string" &&
+      typeof c.key === "string" &&
+      typeof c.value === "string",
+  );
+  REG_CACHE.set(data.root, out);
+  return out;
+}
+
 /** 4.3 3단계 실행 가능 집합 F 소속 여부. */
 export function inFeasible(l2: L2, ctx: SnapContext, data: DesignData): boolean {
   const preset = presetOfType(ctx.typeId, data);
+  if (registeredConflicts(data).some((c) => c.preset === preset.id && l2[c.key] === c.value))
+    return false;
   for (const key of Object.keys(preset.l2)) {
     const v = l2[key];
     if (v === undefined) return false;
@@ -129,6 +160,30 @@ export function inFeasible(l2: L2, ctx: SnapContext, data: DesignData): boolean 
   const sig = ctx.signatureId ?? preset.defaultSignatureId;
   if (l2["media.treatment"] === "duotone" && sig !== DUOTONE_SIGNATURE) return false;
   return l2Conflicts(l2, ctx, data).length === 0;
+}
+
+/** 04장 4.15 편집 선택지: 프리셋 허용 값별 disabled(F 밖 = 등록 상충·L2 상충·용도 금지 등, AC-03-43). */
+export function editChoices(
+  spec: { type_id: string; purpose: string | null; l2: L2 },
+  data: DesignData,
+): { key: string; value: string; disabled: boolean; current: boolean }[] {
+  const preset = presetOfType(spec.type_id, data);
+  const ctx: SnapContext = {
+    typeId: spec.type_id,
+    purpose: (spec.purpose ?? null) as Purpose | null,
+  };
+  const out: { key: string; value: string; disabled: boolean; current: boolean }[] = [];
+  for (const key of Object.keys(preset.allowed))
+    for (const value of allowedValues(key, spec.l2, preset, data)) {
+      const current = spec.l2[key] === value;
+      out.push({
+        key,
+        value,
+        current,
+        disabled: !current && !inFeasible({ ...spec.l2, [key]: value }, ctx, data),
+      });
+    }
+  return out;
 }
 
 /** 4.3 3단계 목적 함수 J. */

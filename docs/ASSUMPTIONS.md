@@ -618,3 +618,10 @@
 - 선택: ① assemblePrompt = SYSTEM(prompts/<role>@v1.md) + DESIGN_SPEC + BRAND_DATA(경계 id = 입력 해시 8자리, 잡 id를 받으면 그것). 레이아웃 = purpose·primary_action·key_points 개수, 카피 = BrandInput(brand_color 제외). CATALOG·FEWSHOT·PATTERN·COPY_KEYS·FORBIDDEN·OUTPUT_SCHEMA는 M5 파이프라인 단위에서 붙인다 ② `[임시]`·`[예시]`로 시작하는 입력은 브랜드 사실이 아니므로 BRAND_DATA에서 뺀다 ③ eTLD+1 = 국내·주요 2단계 공개 접미사 27개 최소 목록 + 마지막 2라벨(전체 PSL은 허용 목록 밖) ④ 저장소의 프리셋 파일은 모두 approved로 보고 data:validate에서 판정
 - 영향 범위: packages/llm(prompt·prompts), scripts/data/validate.ts
 - 되돌리기 비용: 낮음
+
+## ASM-088 · M3 · gap · 2026-11-26T14:32Z
+- 질문: presets:lint-matrix의 렌더 범위·용도, 등록 상충(CF-13~)의 저장 형태, 편집 선택지 disabled 판정이 장에 없음. harmony.json에 3.14.4가 말하는 `conflicts` 키가 없음(CF가 items 안에만 있음)
+- 근거 탐색: 03장 3.4.1 S-33·3.14.4·AC-03-43, 04장 4.3 F 집합·4.15, design-spec snap(allowedValues·inFeasible·l2Conflicts)
+- 선택: ① 조합 = 프리셋 기본 L2에서 키 1개를 allowedValues(페어링 제약 반영)의 다른 값으로 바꾼 것, standardTree(용도 saas) → compilePage → S·C·T 린트 + 375·1280 D·P 린트, AIL error가 있으면 error 조합 ② harmony.json에 top-level `conflicts` = CF-01~12(id·comboKo) + lint-matrix 등록분 {id, preset, key, value, rules, comboKo, source}. seed:temp의 LINT_MATRIX_CONFLICTS가 원천(현재 CF-13 = PS-T7 depth.style=flat → AIL-09) ③ 등록분은 inFeasible에서 제외(F 밖) ④ editChoices = 프리셋 allowed 키 × allowedValues, 현재 값이 아니면서 inFeasible이 아니면 disabled ⑤ AIL-16 기본 색 쌍은 03장 목록의 쌍(0.141 0.005 285.823 / 0.985 0 0)만 쓴다(앞서 넣은 shadcn v4 쌍 0.145/1은 T2·T6 팔레트와 우연히 같아 오탐이라 뺌)
+- 영향 범위: scripts/data(presets-lint-matrix·seed-temp), data/taxonomy/harmony.json, design-spec snap, linter defaults
+- 되돌리기 비용: 낮음

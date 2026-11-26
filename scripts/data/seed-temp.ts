@@ -879,13 +879,27 @@ function genHarmony(ctx: Ctx): Out[] {
     preventionKo: r[2] ?? "",
     ...((r[0] ?? "").includes("추가") ? { proposedByCh03: true } : {}),
   }));
-  return [
-    {
-      path: "data/taxonomy/harmony.json",
-      content: bundle(ctx, "harmony", [constants, ...hs, ...cfs]),
-    },
+  // 3.14.4 harmony.json.conflicts = CF-01~12 + presets:lint-matrix 등록분(CF-13~, 3.4.1 S-33)
+  const conflicts: Obj[] = [
+    ...cfs.map((c) => ({ id: c.id, comboKo: c.comboKo })),
+    ...LINT_MATRIX_CONFLICTS,
   ];
+  const body = JSON.parse(bundle(ctx, "harmony", [constants, ...hs, ...cfs])) as Obj;
+  return [{ path: "data/taxonomy/harmony.json", content: stable({ ...body, conflicts } as Json) }];
 }
+
+/** presets:lint-matrix에서 AIL error가 난 1값 변경 조합(3.4.1 S-33). F 집합·편집 선택지에서 제외된다(ASM-088). */
+const LINT_MATRIX_CONFLICTS: Obj[] = [
+  {
+    id: "CF-13",
+    preset: "PS-T7",
+    key: "depth.style",
+    value: "flat",
+    rules: ["AIL-09"],
+    comboKo: "PS-T7 glass 장식 시그니처 + depth.style flat(의미 없는 글래스)",
+    source: "presets:lint-matrix",
+  },
+];
 
 // ---------- C03 components.json (03장 3.5.1 목록 + 3.5.2 state 매트릭스) ----------
 /** 컴포넌트 텍스트 요소 → 3.1.5a 역할(AC-03-46 ①). 3.5.1 규칙 열·3.1.5a 비고에서 대응을 읽어 고정. */

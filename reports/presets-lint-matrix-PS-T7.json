@@ -1,0 +1,18 @@
+{
+  "presets": [
+    {
+      "presetId": "PS-T7",
+      "combos": 26,
+      "errors": [
+        {
+          "key": "depth.style",
+          "value": "flat",
+          "rules": [
+            "AIL-09"
+          ],
+          "cf": "CF-13"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "presets": [
+    {
+      "presetId": "PS-T6",
+      "combos": 20,
+      "errors": []
+    }
+  ]
+}

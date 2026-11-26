@@ -374,5 +374,66 @@
       "preventionKo": "04장 AIL-04와 동일 판정",
       "proposedByCh03": true
     }
+  ],
+  "conflicts": [
+    {
+      "id": "CF-01",
+      "comboKo": "glass + 뒤 배경이 단색"
+    },
+    {
+      "id": "CF-02",
+      "comboKo": "brutal-offset + subtle/layered 그림자 혼용"
+    },
+    {
+      "id": "CF-03",
+      "comboKo": "sharp family + pill 버튼"
+    },
+    {
+      "id": "CF-04",
+      "comboKo": "`contrastSerif` 페어링(FP02, FP06, FP20) + 기하 고딕 본문 + round/pill family"
+    },
+    {
+      "id": "CF-05",
+      "comboKo": "grain + glass"
+    },
+    {
+      "id": "CF-06",
+      "comboKo": "다크 bg + 순흑(L < 0.05) 그림자"
+    },
+    {
+      "id": "CF-07",
+      "comboKo": "보라→파랑 그라디언트"
+    },
+    {
+      "id": "CF-08",
+      "comboKo": "duotone + vivid 팔레트"
+    },
+    {
+      "id": "CF-09",
+      "comboKo": "장식 효과 3종 이상"
+    },
+    {
+      "id": "CF-10",
+      "comboKo": "다크 테마 + brutal-offset"
+    },
+    {
+      "id": "CF-11",
+      "comboKo": "SIG-06 마키 + `motion.level = none`"
+    },
+    {
+      "id": "CF-12",
+      "comboKo": "hero.centered + eyebrow Tag(\"New/신규/출시/✨/Introducing\" 포함)"
+    },
+    {
+      "id": "CF-13",
+      "preset": "PS-T7",
+      "key": "depth.style",
+      "value": "flat",
+      "rules": [
+        "AIL-09"
+      ],
+      "comboKo": "PS-T7 glass 장식 시그니처 + depth.style flat(의미 없는 글래스)",
+      "source": "presets:lint-matrix"
+    }
   ]
 }
