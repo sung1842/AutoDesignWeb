@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T08:07Z, since: 2026-11-26T08:07Z}
+- lock: {owner: 2026-11-26T08:07Z, since: 2026-11-26T08:10Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
@@ -136,7 +136,10 @@
     - [ ] 14e verify:m2 재실행. 2차(2026-11-26, reports/verify-m2-2.json) fail 17→4 비BLK: AC-03-33(전체 실행 중 180s 초과, 단독 통과), AC-06-32 m0(간헐, 단독 통과), AC-03-19·AC-04-08(BLK-009·012 재현 명령 줄이 없어 매핑 실패 → BLOCKED.md에 추가). 다음: 3차 실행(데운 폰트 캐시) → pass_blocked면 m2-done.(약 60분, 백그라운드 nohup 후 reports/verify-m2.partial.json 확인). 남는 것: AC-03-19(BLK-009)·AC-04-08(BLK-012) blocked
       - 3차(2026-11-26, reports/verify-m2-3.json, 데운 캐시): acceptance:m2 blocked만(BLK-009·012·013, AC-03-33 통과). 남은 fail = AC-06-32 m0 "기본 env 통과" 1건(verify 안에서만 3회째, 단독·m0 전체 단독은 통과, 원인 미상). 4차는 NODE_OPTIONS 진단 훅(저장소 밖)으로 출력 수집
       - 4차(reports/verify-m2-4.json, ae60108): pass_blocked(BLK-001~006·009·012·013) → m2-done. AC-06-32는 이번엔 통과(간헐, 재발 시 BLOCKED 등록)
-- M3 계획(9.4.5, AC는 07장 7.12.1 배정표 M3. 읽을 장은 CLAUDE.md 구현 규칙 3절): [ ] 01 M3 수용 테스트 작성·자체 잠금(다음 세션에서 하위 단위로 쪼갬)
+- M3 계획(9.4.5, AC: 03-39·43, 04-12·13·19~21·26·43·45, 05-12·14·15·22·24·25, 08-11~16. 읽을 장은 CLAUDE.md 구현 규칙 3절):
+  - [ ] 01 M3 수용 테스트(tests/acceptance/m3, AD-031 방식): [x] a linter.test(AC-04-12·26, ①, ASM-077) [ ] b gates.test(AC-04-19·21·13, AC-08-12, ②) [ ] c scoring.test(AC-04-20·43·45, ⑥) [ ] d extractor.test(AC-05-12·14·15·22·24·25, ③④⑤) [ ] e AC-03-39·43, AC-08-11~16 [ ] f traceability M3·qa:trace --audit·단일 test(acc)·자체 잠금
+  - [ ] 02 linter 규칙 24파일·RULES·lintAll·matchCliche(사전 어간 정규식) [ ] 03 하네스 lintSnapshot(D·P) [ ] 04 B15 예시 24×(2+2) 작성·자체 잠금
+  - [ ] 05 gates G-01~G-13·H1~H12 순수 함수 [ ] 06 scoring TM·S_free·노출 선택·QualityReport [ ] 07 extractor 왕복·앵커 거리·p95 [ ] 08 verify:m3
 - M3 이월: (B18 재생성은 M2-09d3으로 당김), B15 골격을 실제 예시로 교체 후 자체 잠금(ASM-021)
 - [x] M0 [x] M1 [x] M2 [ ] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
 
@@ -144,6 +147,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-26 17:35 | M3 계획 8단위, M3-01a linter.test(AC-04-12·26·①)·ASM-077
 - 2026-11-26 16:47 | 세션 종료(잠금 해제). 다음 M3-01 계획(9.4.5)·수용 테스트
 - 2026-11-26 16:45 | verify:m2 4차 pass_blocked → m2-done(ae60108, tags 맵). 다음 M3-01 계획·수용 테스트
 - 2026-11-26 16:15 | verify:m2 3차 fail: 비BLK는 AC-06-32 m0(verify 안에서만 재현) 1건. 4차 진단 실행

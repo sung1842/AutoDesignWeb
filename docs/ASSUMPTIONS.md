@@ -541,3 +541,10 @@
 - 선택: ① subset_fonts.py: script=latin 서체는 한글·CJK 글자를 빼고 서브셋(실제 라틴 서체와 같은 동작) ② mono 스택 = [mono, body 한글, ui-monospace, monospace](3.7.4의 heading 라틴→한글 순서와 같은 원리) ③ 하네스 platformFontsForHangul: 한글 연속 구간을 클래스 없는 span으로 감싸 그 span만 판정. 시각 회귀 24장 그대로, AC-04-08 0.5625·AC-04-11 BLK-013 변화 없음
 - 영향 범위: packages/assets/py/subset_fonts.py, packages/design-spec/src/tokens.ts, apps/worker/src/render/harness.ts. 폰트 캐시(/tmp/tastefit-harness-fonts)는 비워야 함(이름 같고 내용 다름)
 - 되돌리기 비용: 낮음
+
+## ASM-077 · M3 · gap · 2026-11-26T08:30Z
+- 질문: M3 린터 수용 테스트(AC-04-12·26, 9.4.5 ①)의 API·예시 형식이 장에 없음. "규칙 수 = 04장 규칙 수"의 규칙 범위도 불명(AIL만인지 LT·CP 포함인지)
+- 근거 탐색: 04장 4.6.4·4.13.1~2·AC-04-26(24개 규칙), 09장 9.4.5 ①·9.2 B15, 기존 linter m2.ts(staticLint·treeLint)·data/linter/examples 골격(ASM-021)
+- 선택: ① 규칙 = 4.13.2 AIL 24개(AC-04-26 "24개 규칙"). LT·RH·G·CP는 게이트·트리 검사로 각자 AC가 있음 ② `RULES: {id, stage[], severity[], appliesTo[], messageKo, fixHint}[]`, severity는 표 심각도 칸에 나오는 error·warn 집합 ③ `lintAll({spec?, tree?, copy?, brand?, snapshot?, ...}) → LintFinding[]`, 렌더 단계 D·P 입력은 하네스 `lintSnapshot(html, vw, {spec?})`(계약 확장)이 만든 스냅숏 ④ B15 예시 `data/linter/examples/AIL-xx/*.json` = `{ruleId, expect: violation|clean, severity?, stages[], provenance, input}`; input.html·vw가 있으면 렌더, 나머지는 lintAll에 그대로 ⑤ `matchCliche(text, {slot?: llm|user, userText?}) → {id, severity, lang}[]`, 기본 slot=llm(error), user 슬롯에서 userText와 같은 표현은 warn. 사전 패턴은 temp라 활용형 어간 정규식으로 seed:temp에서 다시 만든다
+- 영향 범위: tests/acceptance/m3/linter.test.ts, packages/linter, apps/worker harness, data/linter
+- 되돌리기 비용: 중간(자체 잠금 전까지 낮음)
