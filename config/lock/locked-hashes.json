@@ -1669,6 +1669,96 @@
       "lockedBy": "agent",
       "lockedAt": "2026-11-26T14:25:15Z",
       "commit": "68f6065"
+    },
+    "tests/acceptance/m4/api.test.ts": {
+      "sha256": "36ad8d332ff233ca1b2ef8e09ef8252024c7ea4ec2f92f183edddecbf65ffe68",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T19:50:10Z",
+      "commit": "f4dc6b6"
+    },
+    "tests/acceptance/m4/blocked.test.ts": {
+      "sha256": "59d92964e7251aaae02be5eddd0598cb24d86dd55452a8fcec3c90e36b4c0d92",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T19:50:10Z",
+      "commit": "f4dc6b6"
+    },
+    "tests/acceptance/m4/contract.test.ts": {
+      "sha256": "82a22442e3cbe4ec7e81f959ea3375eefaab4d65ce92ed6ddf401f560c596a82",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T19:50:10Z",
+      "commit": "f4dc6b6"
+    },
+    "tests/acceptance/m4/diagnosis.test.ts": {
+      "sha256": "b111dc8473db08398139e809f1f36d69ce918583f0261f665fdee0bcefe5e3c3",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T19:50:10Z",
+      "commit": "f4dc6b6"
+    },
+    "tests/acceptance/m4/events.test.ts": {
+      "sha256": "e44bf7786d7e885d26101d2c06e44a8221036280ad74665810f473fda7802568",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T19:50:10Z",
+      "commit": "f4dc6b6"
+    },
+    "tests/acceptance/m4/golden-answers.test.ts": {
+      "sha256": "4135a54cafe5a764c09f002cb1910c9c2556ccb427cf4513cf6cfa21bc83304d",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T19:50:10Z",
+      "commit": "f4dc6b6"
+    },
+    "tests/acceptance/m4/presets.test.ts": {
+      "sha256": "c2b43afc294e5dced18a2092a45f40e71cca9694eb88d216a31cf84709ac4bbe",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T19:50:10Z",
+      "commit": "f4dc6b6"
+    },
+    "tests/acceptance/m4/results.test.ts": {
+      "sha256": "f559bec757611fef54a3e816dc59d55c967e06a8acefc46251185a57ff13c20b",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T19:50:10Z",
+      "commit": "f4dc6b6"
+    },
+    "tests/acceptance/m4/sim.test.ts": {
+      "sha256": "0782178493d0c7ed6a68ea11a90e4c2905f5765d129b22210440e1aebb3bb410",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T19:50:10Z",
+      "commit": "f4dc6b6"
+    },
+    "tests/acceptance/m4/survey-build.test.ts": {
+      "sha256": "c9cf8cdf22b4e526338d9a8bb5f53f92df127c5b4b1e7aed0ae042aea5ac5586",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T19:50:10Z",
+      "commit": "f4dc6b6"
+    },
+    "tests/acceptance/m4/ui.test.ts": {
+      "sha256": "c43d748b2102b90ff06e81eea67fbc4558048943ac20096df18f199818d5b9b3",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T19:50:10Z",
+      "commit": "f4dc6b6"
+    },
+    "e2e/m4/helpers.ts": {
+      "sha256": "ded3b5c5d4b70ab6c2ecf6e8e60dd015f2fcbaa06d3bffd7d6ee18517ad8f8bc",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T19:50:10Z",
+      "commit": "f4dc6b6"
+    },
+    "e2e/m4/quiz.spec.ts": {
+      "sha256": "564c39312117e06e33df27dfc793fa9246bf505e4dd622371295debb6a4a2f71",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T19:50:10Z",
+      "commit": "f4dc6b6"
+    },
+    "e2e/m4/result.spec.ts": {
+      "sha256": "28363c2fc3f2acb6711e5389c0ae30fa11b0d5b4d47681fb801721aef70f19b1",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T19:50:10Z",
+      "commit": "f4dc6b6"
+    },
+    "e2e/m4/survey.spec.ts": {
+      "sha256": "d9bd95f365ccf876e4d8422dd2bbe036c65f66365aaf49012f722bc372d2561f",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T19:50:10Z",
+      "commit": "f4dc6b6"
     }
   }
 }
