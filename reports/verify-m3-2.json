@@ -1,0 +1,111 @@
+{
+  "milestone": "M3",
+  "gitSha": "25e1b0545df9c4b1004d5548647b2a3fb875afa0",
+  "startedAt": "2026-11-26T15:29:37.121Z",
+  "finishedAt": "2026-11-26T16:03:26.564Z",
+  "steps": [
+    {
+      "name": "guard",
+      "status": "blocked",
+      "details": "ok   guard:data\nok   guard:deps\nok   guard:count\nok   guard:tuned\nok   guard:qa-audit\n  [F01] NEEDS_CI lock-digest: QA_LOCK_DIGEST 없음(로컬) → CI에서 대조\n  [F12] BLOCKED BLK-001 guard:deps: @img/sharp-libvips-linux-x64: LGPL-3.0-or-later\n  [F12] BLOCKED BLK-001 guard:deps: @img/sharp-libvips-linuxmusl-x64: LGPL-3.0-or-later\n  [F12] BLOCKED BLK-001 guard:deps: @isaacs/nonrecursive-glob-match: BlueOak-1.0.0\n  [F12] BLOCKED BLK-001 guard:deps: minimatch: BlueOak-1.0.0\n  [F12] BLOCKED BLK-001 guard:deps: argparse: Python-2.0\n  [F12] BLOCKED BLK-001 guard:deps: caniuse-lite: CC-BY-4.0\n  [F12] BLOCKED BLK-001 guard:deps: tslib: 0BSD\n  [F12] BLOCKED BLK-001 guard:deps: type-fest: (MIT OR CC0-1.0)\n  [F04] BLOCKED BLK-003 guard:qa-audit: key-coverage 06_architecture.md:1988: \"≤ 0.00001\" thresholds 키·사양 상수 표 밖\n  [F04] BLOCKED BLK-003 guard:qa-audit: key-coverage 06_architecture.md:2091: \"< 96\" thresholds 키·사양 상수 표 밖\n  [F04] BLOCKED BLK-003 guard:qa-audit: key-coverage 07_quality.md:1311: \"< 96\" thresholds 키·사양 상수 표 밖\n  [F04] BLOCKED BLK-003 guard:qa-audit: key-coverage 09_implementation.md:439: \"≥19\" thresholds 키·사양 상수 표 밖\nguard: exit 3\n",
+      "blockedBy": [
+        "BLK-001",
+        "BLK-003"
+      ],
+      "durationMs": 22924
+    },
+    {
+      "name": "lint",
+      "status": "pass",
+      "details": "",
+      "durationMs": 3579
+    },
+    {
+      "name": "typecheck",
+      "status": "pass",
+      "details": "",
+      "durationMs": 382
+    },
+    {
+      "name": "unit",
+      "status": "pass",
+      "details": "170건 통과",
+      "durationMs": 275749
+    },
+    {
+      "name": "trace",
+      "status": "pass",
+      "details": "WARN AC-06-99: 배정표에 없음 → M8로 간주(다음 spec-lock 전에 표에 넣어야 함)\nqa:trace: AC 120/120 pass (≤M3), TC 판정 제외\n",
+      "durationMs": 993
+    },
+    {
+      "name": "acceptance:m0",
+      "status": "blocked",
+      "details": "55/58 통과, blocked:\n[BLK-002] tests/acceptance/m0/guard.test.ts > M0 guard AC-07-25: DECISIONS_LOG append-only 예외 1개 AC-07-25: CLAUDE.md·07·09장의 DECISIONS_LOG 경로가 하나뿐이다\n[BLK-004] tests/acceptance/m0/qa-trace.test.ts > M0 qa:trace AC-00-01 / AC-00-07: 문서 검사(qa:trace --docs) 통과\n[BLK-005] tests/acceptance/m0/repo.test.ts > M0 저장소 정적 검사 AC-09-11: spec-lock 이후 모든 커밋이 Conventional Commits + Milestone 꼬리말",
+      "blockedBy": [
+        "BLK-002",
+        "BLK-004",
+        "BLK-005"
+      ],
+      "durationMs": 631247
+    },
+    {
+      "name": "acceptance:m1",
+      "status": "blocked",
+      "details": "27/28 통과, blocked:\n[BLK-006] tests/acceptance/m1/db.test.ts > M1 마이그레이션 9.4.3 ⑨: verify:schema-parity — 06장 DDL과 information_schema 차이 0",
+      "blockedBy": [
+        "BLK-006"
+      ],
+      "durationMs": 25600
+    },
+    {
+      "name": "acceptance:m2",
+      "status": "blocked",
+      "details": "144/147 통과, blocked:\n[BLK-009] tests/acceptance/m2/blocks.test.ts > AC-03-19·21 슬롯·폴백 체인(정적) AC-03-19: 모든 슬롯 maxLength ≥ 덱 상한, 덱에 없는 키 참조 0\n[BLK-013] tests/acceptance/m2/render.test.ts > AC-04-11 용도 3 × 패턴 4 픽스처 트리 12개가 스키마·린트 T(error 0)·렌더 하드 게이트를 통과\n[BLK-012] tests/acceptance/m2/render.test.ts > AC-04-08 렌더 벡터 D(골든 θ*) 변형 쌍 추출 벡터 D ≥ renderDistMin 충족률 ≥ variantRenderDRatioMin",
+      "blockedBy": [
+        "BLK-009",
+        "BLK-013",
+        "BLK-012"
+      ],
+      "durationMs": 717050
+    },
+    {
+      "name": "acceptance:m3",
+      "status": "blocked",
+      "details": "167/196 통과, blocked:\n[BLK-018] tests/acceptance/m3/extractor.test.ts > 9.4.5 ③ · AC-05-22 프리셋 앵커 왕복, ④ · AC-05-24 앵커 분리 ③ 축별 |x̂−x| ≤ roundtripAbsMax. temp 정규화기는 초과 축 = reliable false, reliable 축 수 ≥ reliableAxesMin\n[BLK-018] tests/acceptance/m3/extractor.test.ts > 9.4.5 ③ · AC-05-22 프리셋 앵커 왕복, ④ · AC-05-24 앵커 분리 ④ 서로 다른 프리셋 앵커 렌더 간 추출 L1 거리 최소 ≥ anchorMinDist\n[BLK-017] tests/acceptance/m3/extractor.test.ts > AC-05-15 eval:extractor reports/extractor_eval.md 생성, ρ ≥ spearmanMin·MAE ≤ maeMax 축 ≥ reliableAxesMin, 미달 축 reliable=false\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T1/saas × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T1/local_business × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T1/portfolio × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T2/saas × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T2/local_business × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T2/portfolio × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T3/saas × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T3/local_business × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T3/portfolio × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T4/saas × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T4/local_business × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T4/portfolio × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T5/saas × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T5/local_business × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T5/portfolio × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T6/saas × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T6/local_business × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T6/portfolio × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T7/saas × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T7/local_business × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T7/portfolio × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T8/saas × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T8/local_business × 3변형\n[BLK-008] tests/acceptance/m3/golden.test.ts > 9.4.5 ② · AC-04-25 폴백 시안 72개: G-01~G-13 통과, H ≥ harmonyFloor(TM·S_free 면제) 폴백 T8/portfolio × 3변형\n[BLK-019] tests/acceptance/m3/golden.test.ts > AC-08-16 원본 유사도 보정 보고서(8.3.4) eval/originality/report-<version>.md 존재, 2인 라벨, '예' 0건\n[BLK-016] tests/acceptance/m3/linter.test.ts > AC-04-26 · 9.4.5 ① 규칙 메타 = 04장 4.13.2 규칙 수·ID·단계·심각도가 장 표와 같다",
+      "blockedBy": [
+        "BLK-018",
+        "BLK-017",
+        "BLK-008",
+        "BLK-019",
+        "BLK-016"
+      ],
+      "durationMs": 337062
+    },
+    {
+      "name": "e2e:m0",
+      "status": "pass",
+      "details": "e2e/m0 없음(이 마일스톤 E2E 없음, AC 매핑은 trace 단계가 검사)",
+      "durationMs": 0
+    },
+    {
+      "name": "e2e:m1",
+      "status": "pass",
+      "details": "e2e/m1 없음(이 마일스톤 E2E 없음, AC 매핑은 trace 단계가 검사)",
+      "durationMs": 0
+    },
+    {
+      "name": "e2e:m2",
+      "status": "pass",
+      "details": "\n  24 passed (13.4s)\n",
+      "durationMs": 14853
+    },
+    {
+      "name": "e2e:m3",
+      "status": "pass",
+      "details": "e2e/m3 없음(이 마일스톤 E2E 없음, AC 매핑은 trace 단계가 검사)",
+      "durationMs": 0
+    }
+  ],
+  "result": "pass_blocked"
+}
