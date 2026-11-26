@@ -16,7 +16,7 @@ import {
 } from "@tastefit/design-spec";
 import { findRepoRoot } from "@tastefit/config";
 import { maskText } from "@tastefit/compliance";
-import { q, type DbPort, type Row, type Tx } from "@tastefit/db";
+import { flagValue, q, type DbPort, type Row, type Tx } from "@tastefit/db";
 import { CopyDeckSchema, LayoutTreeRawSchema, type DeckPurpose } from "@tastefit/layout-schema";
 import {
   createMockProvider,
@@ -27,16 +27,27 @@ import {
   type LlmRole,
   type MockProvider,
   type MockResult,
+  type MockUsage,
 } from "@tastefit/llm";
 import { compilePage } from "@tastefit/renderer";
-import { diversityViolations, type SeqInfo } from "@tastefit/pipeline";
+import {
+  createJobBudget,
+  diversityViolations,
+  type JobBudget,
+  type SeqInfo,
+} from "@tastefit/pipeline";
 import { qualityColumns, selectVisible, type CandidateScore } from "@tastefit/scoring";
 import { evaluateCandidate, type EvaluateOptions } from "../quality/evaluate.js";
 import { openHarness, type Harness } from "../render/harness.js";
+import { finishGenerationJob } from "./finish.js";
 
 const VARIANTS = ["v_true", "v_fit", "v_bal"] as const;
 /** 4.11.2 사양 상수: 잡당 레이아웃 repair_quality 상한(AC-04-23). */
 const REPAIR = { maxCallsPerJob: 3 } as const;
+/** 6.9.4 ③ 사양 상수: 실측 입력 토큰 안전 계수. */
+const ESTIMATE = { inputSafety: 1.1 } as const;
+/** 6.10.4 JOB_COST_CAP_USD 기본값. */
+const JOB_CAP_DEFAULT = 0.3;
 type Variant = (typeof VARIANTS)[number];
 type Obj = Record<string, unknown>;
 const isObj = (x: unknown): x is Obj => typeof x === "object" && x !== null && !Array.isArray(x);
@@ -86,41 +97,52 @@ interface Ctx {
   project: Row;
   provider: MockProvider;
   snapshot: Obj;
+  budget: JobBudget;
+  /** 예산으로 호출을 생략한 적이 있으면 잡 오류 코드 COST_CAP(종료 상태와 별개, 6.4.2). */
+  costCapped: boolean;
+  /** usage_overrun A11(잡당 1회, 6.9.4 ⑥). */
+  overrunAlerted: boolean;
 }
 
-/** 호출 1회 + llm_calls 1행. */
-async function invoke(
+type CallSpec = {
+  role: LlmRole;
+  callKind: CallKind;
+  candidateIndex: number | null;
+  candidateId?: string | null;
+  input: unknown;
+  attempt?: number;
+  isFallback?: boolean;
+  cacheState?: CacheState;
+};
+/** 6.9.4 ③ 추정식: Σ블록(실측 토큰 × 1.1) × 블록 단가 + maxOutputTokens × 출력 단가 + 이미지 × per_image, 소수 5자리 half-up. */
+function estimateOf(role: LlmRole, pv: { usage: MockUsage; estimateMultiplier: number }): number {
+  const m = loadModels();
+  const p =
+    m.pricing[
+      role === "judge_vision" || role === "ref_tagger" ? "mock/mock-vision" : "mock/mock-page"
+    ];
+  if (!p) return 0;
+  const u = pv.usage;
+  const k = ESTIMATE.inputSafety;
+  const raw =
+    ((u.tokensIn * k * p.input_per_mtok +
+      u.cachedTokensIn * k * p.cached_input_per_mtok +
+      u.cacheWriteTokensIn * k * p.cache_write_per_mtok +
+      m.roles[role].primary.params.maxOutputTokens * p.output_per_mtok) /
+      1e6 +
+      u.images * p.per_image) *
+    pv.estimateMultiplier;
+  return Math.round(raw * 1e5 + Number.EPSILON) / 1e5;
+}
+/** llm_calls 1행. */
+async function recordCall(
   x: Ctx,
-  o: {
-    role: LlmRole;
-    callKind: CallKind;
-    candidateIndex: number | null;
-    candidateId?: string | null;
-    input: unknown;
-    attempt?: number;
-    isFallback?: boolean;
-    cacheState?: CacheState;
-  },
-): Promise<MockResult> {
-  const started = new Date();
-  const ac = new AbortController();
-  let r: MockResult;
-  let thrown: string | null = null;
-  try {
-    r = await x.provider.complete({
-      role: o.role,
-      callKind: o.callKind,
-      candidateIndex: o.candidateIndex,
-      attempt: o.attempt ?? 1,
-      input: o.input,
-      signal: ac.signal,
-      ...(o.cacheState ? { cacheState: o.cacheState } : {}),
-    });
-  } catch (e) {
-    // 공급자 예외는 호출 실패로 기록하고 잡은 계속(AC-04-22 처리되지 않은 예외 0)
-    thrown = (e as { code?: string }).code ?? "E_PROVIDER";
-    r = { kind: "provider_error", httpStatus: 0 };
-  }
+  o: CallSpec,
+  started: Date,
+  r: MockResult | { kind: "skipped" },
+  errorCode: string | null,
+  cost = 0,
+): Promise<void> {
   const roles = (x.snapshot.roles ?? {}) as Record<string, Obj>;
   const rs = roles[o.role] ?? {};
   const ok = r.kind === "ok" ? r : null;
@@ -150,16 +172,81 @@ async function invoke(
         ok?.usage.tokensOut ?? 0,
         ok?.usage.cachedTokensIn ?? 0,
         ok?.usage.cacheWriteTokensIn ?? 0,
-        ok ? costOf(o.role, ok) : 0,
+        cost,
         ok?.latencyMs ?? null,
         started.toISOString(),
         ok ? new Date().toISOString() : null,
-        STATUS_OF[r.kind],
-        r.kind === "ok" ? null : (thrown ?? r.kind),
+        r.kind === "skipped" ? "budget_skipped" : STATUS_OF[r.kind],
+        errorCode,
         requestHash(o.role, `${o.role}@v${Number(rs.promptVersion ?? 1)}`, o.input ?? null),
       ],
     ),
   );
+}
+
+/** 호출 1회(예약 → 호출 → 정산) + llm_calls 1행. */
+async function invoke(x: Ctx, o: CallSpec): Promise<MockResult> {
+  const started = new Date();
+  const ac = new AbortController();
+  // 6.9.4 ③ 추정 → 예약(spent + reserved + est ≤ capEff, ⑤ 단계 생략 기준)
+  const pv = x.provider.preview({
+    role: o.role,
+    callKind: o.callKind,
+    candidateIndex: o.candidateIndex,
+    attempt: o.attempt ?? 1,
+    ...(o.cacheState ? { cacheState: o.cacheState } : {}),
+  });
+  const est = estimateOf(o.role, pv);
+  const hold = await x.budget.reserve(est, { role: o.role, callKind: o.callKind });
+  if (!hold.ok) {
+    x.costCapped = true;
+    await recordCall(
+      x,
+      o,
+      started,
+      { kind: "skipped" },
+      hold.reason === "cost_cap" ? "COST_CAP" : hold.reason.toUpperCase(),
+    );
+    return { kind: "provider_error", httpStatus: 0 };
+  }
+  let r: MockResult;
+  let thrown: string | null = null;
+  try {
+    r = await x.provider.complete({
+      role: o.role,
+      callKind: o.callKind,
+      candidateIndex: o.candidateIndex,
+      attempt: o.attempt ?? 1,
+      input: o.input,
+      signal: ac.signal,
+      ...(o.cacheState ? { cacheState: o.cacheState } : {}),
+    });
+  } catch (e) {
+    // 공급자 예외는 호출 실패로 기록하고 잡은 계속(AC-04-22 처리되지 않은 예외 0)
+    thrown = (e as { code?: string }).code ?? "E_PROVIDER";
+    r = { kind: "provider_error", httpStatus: 0 };
+  }
+  const ok = r.kind === "ok" ? r : null;
+  const cost = ok ? costOf(o.role, ok) : 0;
+  // ④ settle(실비) | release(usage 없음)
+  if (ok) await x.budget.settle(hold.id, cost);
+  else x.budget.release(hold.id);
+  await recordCall(x, o, started, r, r.kind === "ok" ? null : (thrown ?? r.kind), cost);
+  // ⑥ 실제 청구가 상한을 넘으면 A11 1건(잡당 1회), 이후 예약은 판정식으로 전부 실패
+  if (x.budget.spent > x.budget.capEff && !x.overrunAlerted) {
+    x.overrunAlerted = true;
+    // alerts 테이블은 06장 6.3.3 DDL에 없다(ASM-111 ①): 잡 경고 A11 + 로그로 남기고 관측(M7)에서 알림으로 옮긴다
+    process.stderr.write(
+      `[alert] A11 job=${String(x.job.id)} spent=${x.budget.spent} capEff=${x.budget.capEff}\n`,
+    );
+    await x.d.db.withService((tx) =>
+      q(
+        tx,
+        "update generation_jobs set warnings = array_append(warnings, 'A11') where id = $1 and not ('A11' = any(warnings))",
+        [x.job.id],
+      ),
+    );
+  }
   return r;
 }
 const setJob = (db: DbPort, id: unknown, fields: Obj): Promise<unknown> => {
@@ -352,13 +439,10 @@ export async function runGenerationJob(
     return await runJob(d, jobId);
   } catch (e) {
     process.stderr.write(`[generation] ${jobId} ${String((e as Error).stack ?? e)}\n`);
-    await setJob(d.db, jobId, {
-      status: "failed",
-      phase: "done",
-      error_code: "RENDER_ERROR",
-      error_message: String((e as Error).message ?? e).slice(0, 500),
-      finished_at: (d.now?.() ?? new Date()).toISOString(),
-      progress_pct: 100,
+    await setJob(d.db, jobId, { error_message: String((e as Error).message ?? e).slice(0, 500) });
+    await finishGenerationJob(d.db, jobId, {
+      now: d.now?.() ?? new Date(),
+      errorCode: "RENDER_ERROR",
     });
     return { status: "failed" };
   }
@@ -380,7 +464,17 @@ async function runJob(d: GenerationDeps, jobId: string): Promise<{ status: strin
   const provider =
     d.provider ??
     createMockProvider({ scenario: (snapshot.mockScenario as string | undefined) ?? undefined });
-  const x: Ctx = { d, job, project, provider, snapshot };
+  const jobCap = await d.db.withService((tx) => flagValue(tx, "JOB_COST_CAP_USD", JOB_CAP_DEFAULT));
+  const x: Ctx = {
+    d,
+    job,
+    project,
+    provider,
+    snapshot,
+    budget: createJobBudget({ jobCapUsd: Number(jobCap) }),
+    costCapped: false,
+    overrunAlerted: false,
+  };
   const D = data();
   const purpose = String(project.purpose) as DeckPurpose;
   const brand = (project.brand ?? {}) as Obj;
@@ -421,13 +515,10 @@ async function runJob(d: GenerationDeps, jobId: string): Promise<{ status: strin
   // S2 카피
   const copy = await copyDeck(x, brand, purpose);
   if (copy === "refused") {
-    await setJob(d.db, jobId, {
-      status: "failed",
-      phase: "done",
-      error_code: "BLOCKED_BRAND",
-      error_message: "content_policy: 공급자 안전 거부",
-      finished_at: now(),
-      progress_pct: 100,
+    await setJob(d.db, jobId, { error_message: "content_policy: 공급자 안전 거부" });
+    await finishGenerationJob(d.db, jobId, {
+      now: d.now?.() ?? new Date(),
+      errorCode: "BLOCKED_BRAND",
     });
     return { status: "failed" };
   }
@@ -699,7 +790,6 @@ async function runJob(d: GenerationDeps, jobId: string): Promise<{ status: strin
     if (isFallback) nFallback++;
     else nReal++;
   }
-  const status = jobStatus(nReal, nFallback, copy.source === "template");
   const cost = await d.db.withService((tx) =>
     q(
       tx,
@@ -708,16 +798,16 @@ async function runJob(d: GenerationDeps, jobId: string): Promise<{ status: strin
     ),
   );
   await setJob(d.db, jobId, {
-    status,
-    phase: "done",
-    progress_pct: 100,
     n_real: nReal,
     n_fallback: nFallback,
     cost_usd: Number(cost.rows[0]?.c ?? 0),
     tokens_in: Number(cost.rows[0]?.i ?? 0),
     tokens_out: Number(cost.rows[0]?.o ?? 0),
-    finished_at: now(),
-    ...(status === "failed" ? { error_code: "NO_ELIGIBLE" } : {}),
+  });
+  // R-15 판정 + 환불(fallback·failed)은 finish 한 곳에서(6.3.4 finish_generation_job)
+  const { status } = await finishGenerationJob(d.db, jobId, {
+    now: d.now?.() ?? new Date(),
+    errorCode: nReal + nFallback === 0 ? "NO_ELIGIBLE" : x.costCapped ? "COST_CAP" : null,
   });
   return { status };
 }

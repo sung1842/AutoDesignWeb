@@ -52,6 +52,12 @@ export type MockResult =
 export interface MockProvider {
   readonly scenario: Scenario;
   complete(call: MockCall): Promise<MockResult>;
+  /** 호출 전 추정용: 실측 입력 토큰(블록별, 06장 6.9.4 ③)과 단가·추정 배율. 출력은 maxOutputTokens로 호출자가 더한다. */
+  preview(call: Omit<MockCall, "signal" | "input">): {
+    usage: MockUsage;
+    priceMultiplier: number;
+    estimateMultiplier: number;
+  };
 }
 export type Sleep = (ms: number, signal: AbortSignal) => Promise<void>;
 
@@ -468,8 +474,23 @@ export function createMockProvider(
     (scenario.scope.kind === "candidate" && c.candidateIndex === scenario.scope.index) ||
     (scenario.scope.kind === "role" && c.role === scenario.scope.role);
 
+  const multipliers = (
+    c: Pick<MockCall, "role" | "candidateIndex">,
+  ): { price: number; estimate: number } => {
+    const cost = inScope(c as MockCall) ? scenario.name : "ok";
+    const m = cost === "cost_spike" ? MOCK.spike : cost === "cost_ramp" ? MOCK.ramp : 1;
+    return { price: m, estimate: m };
+  };
   return {
     scenario,
+    preview(c) {
+      const m = multipliers(c);
+      return {
+        usage: usageOf({ ...c, input: null, signal: new AbortController().signal }, 1),
+        priceMultiplier: m.price,
+        estimateMultiplier: m.estimate,
+      };
+    },
     async complete(c) {
       const on = scenarioApplies(scenario, c);
       const s = on ? scenario : null;

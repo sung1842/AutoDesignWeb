@@ -780,3 +780,10 @@
 - 영향 범위: apps/web/src/server/generations.ts·auth.ts(me)·invites, apps/worker/src/jobs/finish.ts, packages/pipeline/src/budget.ts
 - 되돌리기 비용: 중간
 - 추가(ASM-110 ⑩, 2026-11-26T23:34Z): 초대 소진 409의 오류 코드는 6.4.2 카탈로그에 없어 `INVITE_EXHAUSTED`(409)를 api-contract에 더했다. 06장 확정 때 카탈로그 반영 필요
+
+## ASM-111 · M5 · gap · 2026-11-26T23:38Z
+- 질문: 6.9.4 ⑥ A11 알림 저장처(`alerts.dedupe_key`)가 06장 6.3.3 DDL에 없다. 워커 예산 배선의 기록 형식
+- 근거 탐색: 06장 6.3.3 DDL 전체(alerts 테이블 없음), 6.9.4 ③~⑥, 6.12.4, 6.4.2 잡 오류 코드
+- 선택: ① A11은 `generation_jobs.warnings`에 'A11'(잡당 1회) + 워커 로그 `[alert] A11`로 남긴다. alerts 저장·발송은 M7 관측 단위에서 테이블이 정해지면 옮긴다(06장 확정 필요 → HUMAN_TODO 아님, 06장 공백) ② 예산 생략 호출은 llm_calls 1행(status budget_skipped, error_code `COST_CAP`|`SKIP_VISION`|`SKIP_REPAIR`, cost 0), 한 번이라도 생략되면 잡 error_code `COST_CAP`(노출 0이면 NO_ELIGIBLE 우선) ③ 추정 = 6.9.4 ③ 식(mock은 mock-prompt-sizes 블록 토큰 × 1.1, 출력 = models.yaml maxOutputTokens) ④ 잡 종료·환불은 finishGenerationJob 한 곳(공급자 거부·예외 경로 포함) ⑤ 미구현: U-01 두 물결 예약(카피 + 후보 0 → t1 뒤 후보 1~5 동시 예약). 지금은 순차라 usage_overrun에서 후보 1~5 일부가 생략된다(TC-R-20 n_real 3 기대와 다름) → M5-07c
+- 영향 범위: apps/worker/src/jobs/generation.ts
+- 되돌리기 비용: 낮음
