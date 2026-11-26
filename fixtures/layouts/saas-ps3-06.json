@@ -103,6 +103,34 @@
         }
       },
       {
+        "id": "feature",
+        "block": "feature",
+        "variant": "feature.zigzag",
+        "bg": "surface",
+        "pad": 0,
+        "slots": {
+          "items": {
+            "list": [
+              {
+                "copy": "deck:feature.items#0"
+              },
+              {
+                "copy": "deck:feature.items#1"
+              },
+              {
+                "copy": "deck:feature.items#2"
+              }
+            ]
+          },
+          "media": {
+            "image": {
+              "tag": "saas.architecture",
+              "ratio": "3:2"
+            }
+          }
+        }
+      },
+      {
         "id": "cta",
         "block": "cta",
         "variant": "cta.big-type",

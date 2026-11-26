@@ -87,6 +87,28 @@
         }
       },
       {
+        "id": "highlight",
+        "block": "highlight",
+        "variant": "highlight.split",
+        "bg": "surface",
+        "pad": 0,
+        "slots": {
+          "items": {
+            "list": [
+              {
+                "copy": "deck:highlight.items#0"
+              },
+              {
+                "copy": "deck:highlight.items#1"
+              },
+              {
+                "copy": "deck:highlight.items#2"
+              }
+            ]
+          }
+        }
+      },
+      {
         "id": "location",
         "block": "location",
         "variant": "location.info-only",

@@ -32,6 +32,19 @@
       "alphaMax": 0.15,
       "warnTypes": ["T3", "T4", "T6"]
     },
-    { "id": "AIL-09", "stage": ["S", "P"] }
+    {
+      "id": "AIL-09",
+      "stage": ["S", "P"]
+    },
+    {
+      "id": "T",
+      "stage": ["T"],
+      "source": "04장 4.5.3 LT-11·03장 3.6.7 RH-01·02·LT-06(다크 inverse 0~1)",
+      "skeletonRunMax": 2,
+      "imageRunMax": 3,
+      "ctaMax": 2,
+      "darkInverse": [0, 1],
+      "strictAltMinSections": 6
+    }
   ]
 }

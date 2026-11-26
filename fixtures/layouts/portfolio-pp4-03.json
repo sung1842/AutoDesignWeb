@@ -71,9 +71,6 @@
           "captions": {
             "list": [
               {
-                "copy": "deck:work.items#0"
-              },
-              {
                 "copy": "deck:work.items#1"
               },
               {

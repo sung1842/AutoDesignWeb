@@ -69,13 +69,10 @@
           "items": {
             "list": [
               {
-                "copy": "deck:feature.items#0"
+                "copy": "deck:feature.items#3"
               },
               {
-                "copy": "deck:feature.items#1"
-              },
-              {
-                "copy": "deck:feature.items#2"
+                "copy": "deck:feature.items#4"
               }
             ]
           },
@@ -98,6 +95,28 @@
             "list": [
               {
                 "copy": "deck:proof.items#0"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "value",
+        "block": "value",
+        "variant": "value.icon-grid",
+        "bg": "surface",
+        "pad": 0,
+        "slots": {
+          "items": {
+            "list": [
+              {
+                "copy": "deck:value.items#0"
+              },
+              {
+                "copy": "deck:value.items#1"
+              },
+              {
+                "copy": "deck:value.items#2"
               }
             ]
           }

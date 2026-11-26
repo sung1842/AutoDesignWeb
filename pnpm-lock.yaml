@@ -178,7 +178,15 @@ importers:
         specifier: ^4.0.0
         version: 4.6.7
 
-  packages/linter: {}
+  packages/linter:
+    dependencies:
+      '@tastefit/layout-schema':
+        specifier: workspace:^
+        version: link:../layout-schema
+    devDependencies:
+      '@tastefit/design-spec':
+        specifier: workspace:^
+        version: link:../design-spec
 
   packages/llm: {}
 

@@ -221,6 +221,7 @@ function applyHeadlineBudget(
   raw: RawSection,
   data: DesignData,
   o: ResolveOpts,
+  taken: Set<string>,
 ): void {
   const b = o.budget;
   const step = headlineStep(sec.variant);
@@ -237,13 +238,33 @@ function applyHeadlineBudget(
   const lay = (b.tokens.layout as Record<string, { $value?: { value?: number } }> | undefined)
     ?.container;
   const containerPx = lay?.$value?.value ?? HEADLINE_SPEC.contentMax;
-  const r = fitHeadline(options, Number(m[2] ?? 0), step, b.tokens, cols, containerPx, b.sizeOf);
+  // LT-09: 다른 슬롯이 이미 쓰는 옵션(cta.headline = hero.headline#1 등)으로는 바꾸지 않는다(4.10 "LT-09 유지")
+  const exclude = new Set(
+    options
+      .map((_, i) => i)
+      .filter((i) => i !== Number(m[2] ?? 0) && taken.has(`deck:${key}#${i}`)),
+  );
+  const r = fitHeadline(
+    options,
+    Number(m[2] ?? 0),
+    step,
+    b.tokens,
+    cols,
+    containerPx,
+    b.sizeOf,
+    exclude,
+  );
+  taken.delete(slot.copy);
+  taken.add(`deck:${key}#${r.index}`);
   sec.slots.headline = { copy: resolveRef(`deck:${key}#${r.index}`, o.deck) };
   if (r.step) sec.role_overrides = { ...(sec.role_overrides ?? {}), headline: r.step };
 }
 
 export function resolveTree(raw: RawTree, data: DesignData, o: ResolveOpts): PageTree {
   const used = new Set<string>();
+  const taken = new Set<string>();
+  for (const s of raw.sections)
+    for (const v of Object.values(s.slots)) if ("copy" in v) taken.add(v.copy);
   const blocks = new Map(data.blocks.map((b) => [b.id as string, b]));
   const pickImage = (sec: string, slot: string, tag: string, ratio: string): PSlot => {
     const cands = data.images
@@ -278,7 +299,7 @@ export function resolveTree(raw: RawTree, data: DesignData, o: ResolveOpts): Pag
       pad: s.pad,
       slots,
     };
-    if (o.budget) applyHeadlineBudget(sec, s, data, o);
+    if (o.budget) applyHeadlineBudget(sec, s, data, o, taken);
     return sec;
   });
   const navItems = raw.sections
@@ -362,6 +383,7 @@ function listCount(variant: string, available: number): number {
 
 interface VariantMeta {
   id: string;
+  skeleton?: string;
   image: { ratios: string[] } | null;
   allowed_bg: string[];
 }
@@ -379,7 +401,27 @@ export interface SpecForTree {
     allowed_variants: Record<string, string[]>;
     hero_variants: string[];
     image_tags_allowed: string[];
+    /** LT-03 하한 채우기용(없으면 채우지 않음, ASM-073). */
+    section_count?: { min: number; max: number };
+    optional_blocks?: string[];
+    forbidden_blocks?: string[];
   };
+}
+
+/**
+ * 패턴 힌트(hero + 4)가 LT-03 하한보다 짧으면 용도 선택 블록(명세 순서) 중 아직 없고 허용된 것을
+ * 마지막 섹션 앞에 넣어 하한까지 채운다(4.8 "섹션 순서 힌트" + 4.5.3 LT-03, ASM-073).
+ */
+export function fillSectionMin(order: string[], lc: SpecForTree["layout_constraints"]): string[] {
+  const min = lc.section_count?.min ?? 0;
+  const out = [...order];
+  for (const b of lc.optional_blocks ?? []) {
+    if (out.length >= min) break;
+    if (out.includes(b) || (lc.forbidden_blocks ?? []).includes(b) || !(b in lc.allowed_variants))
+      continue;
+    out.splice(Math.max(1, out.length - 1), 0, b);
+  }
+  return out;
 }
 
 /** 패턴 + 명세 → 원시 트리(결정론). media.mode = type-led면 이미지 없는 variant를 먼저 고른다. */
@@ -402,26 +444,52 @@ export function patternRaw(
     lc.image_tags_allowed.find((t) => t.startsWith(`${spec.purpose}.`)) ??
     lc.image_tags_allowed[0] ??
     "common.texture-paper";
-  const chooseVariant = (block: string): VariantMeta => {
+  /** 블록별 variant 후보(선호 순). pick·hero는 1개로 고정. */
+  const candidates = (block: string): VariantMeta[] => {
     const meta = blocks.get(block);
     if (!meta) throw new Error(`블록 없음 ${block}`);
     const allowed = lc.allowed_variants[block] ?? meta.variants.map((v) => v.id);
     if (pick[block]) {
       const v = meta.variants.find((x) => x.id === pick[block]);
-      if (v) return v;
+      if (v) return [v];
     }
     if (block === "hero") {
       const hint = `hero.${pat.hero}`;
       const id = lc.hero_variants.includes(hint) ? hint : (lc.hero_variants[0] ?? hint);
-      return meta.variants.find((v) => v.id === id) ?? meta.variants[0]!;
+      return [meta.variants.find((v) => v.id === id) ?? meta.variants[0]!];
     }
     const vs = allowed
       .map((id) => meta.variants.find((v) => v.id === id))
       .filter((v): v is VariantMeta => !!v);
-    const noImg = vs.find((v) => !v.image);
-    return (typeLed && noImg ? noImg : vs[0]) ?? meta.variants[0]!;
+    const ranked = typeLed ? [...vs.filter((v) => !v.image), ...vs.filter((v) => v.image)] : vs;
+    return ranked.length > 0 ? ranked : [meta.variants[0]!];
   };
-  const order = opts.order ?? ["hero", ...pat.order];
+  /**
+   * 선호 순 깊이 우선 탐색으로 RH-01(같은 skeleton 3연속)·LT-05(인접 같은 variant)를 피하는 첫 조합.
+   * 없으면 각 블록 첫 후보(ASM-073). 후보 ≤ 3 × 섹션 ≤ 8이라 비용은 작다.
+   */
+  const assignVariants = (blocksInOrder: string[]): VariantMeta[] => {
+    const cands = blocksInOrder.map(candidates);
+    const ok = (seq: VariantMeta[], v: VariantMeta): boolean => {
+      const [a, b] = [seq.at(-2), seq.at(-1)];
+      if (b && b.id === v.id) return false;
+      return !(a && b && v.skeleton && a.skeleton === v.skeleton && b.skeleton === v.skeleton);
+    };
+    const dfs = (seq: VariantMeta[]): VariantMeta[] | null => {
+      if (seq.length === cands.length) return seq;
+      for (const v of cands[seq.length] ?? []) {
+        if (!ok(seq, v)) continue;
+        const r = dfs([...seq, v]);
+        if (r) return r;
+      }
+      return null;
+    };
+    return dfs([]) ?? cands.map((c) => c[0]!);
+  };
+  const order = opts.order ?? fillSectionMin(["hero", ...pat.order], lc);
+  const chosen = assignVariants(order);
+  /** LT-09: 같은 덱 키를 두 블록이 쓰면(feature·process = feature.items) 뒤 블록은 이어지는 index부터. */
+  const listUsed = new Map<string, number>();
   const ids = order.map((b) => b);
   const ctaTarget = ids.includes("cta")
     ? "#cta"
@@ -431,7 +499,7 @@ export function patternRaw(
   const BG_CYCLE: PSection["bg"][] = ["surface", "bg", "bg", "surface"];
   const sections: RawSection[] = order.map((block, i) => {
     const meta = blocks.get(block)!;
-    const v = chooseVariant(block);
+    const v = chosen[i]!;
     const slots: Record<string, RawSlot> = {};
     for (const sd of meta.slots) {
       const key0 = (sd.deckKeys ?? [])[0]?.replace(/\[\d\]$/, "") ?? "";
@@ -442,7 +510,10 @@ export function patternRaw(
       } else if (sd.kind === "copy") {
         const key = block === "location" || block === "contact" ? CONTACT_SLOT_KEY[sd.id] : key0;
         if (!key) continue;
-        const idx = block === "cta" && key === "hero.headline" ? 1 : 0;
+        // LT-09: 같은 키를 앞 슬롯이 썼으면 다음 index(showcase work.items#0 → gallery #1~)
+        const used = listUsed.get(key) ?? 0;
+        const idx = block === "cta" && key === "hero.headline" ? Math.max(1, used) : used;
+        listUsed.set(key, idx + 1);
         slots[sd.id] = { copy: `deck:${key}#${idx}` };
       } else if (sd.kind === "link") {
         if (sd.id === "secondaryCta") continue;
@@ -450,9 +521,12 @@ export function patternRaw(
       } else if (sd.kind === "list") {
         const avail = (deck[key0] ?? []).length;
         if (avail === 0) continue;
-        const n = listCount(v.id, avail);
+        const used = listUsed.get(key0) ?? 0;
+        const off = avail - used > 0 ? used : 0;
+        const n = listCount(v.id, avail - off);
+        listUsed.set(key0, off + n);
         slots[sd.id] = {
-          list: Array.from({ length: n }, (_, k) => ({ copy: `deck:${key0}#${k}` })),
+          list: Array.from({ length: n }, (_, k) => ({ copy: `deck:${key0}#${off + k}` })),
         };
       }
     }
@@ -553,8 +627,12 @@ export function fitHeadline(
   cols: { lg: number; base: number },
   containerPx: number,
   sizeOf: (tokens: Record<string, unknown>, step: string, vw: number) => number,
+  exclude: ReadonlySet<number> = new Set(),
 ): { index: number; step: string | null; warn: boolean } {
-  const order = [startIdx, ...options.map((_, i) => i).filter((i) => i !== startIdx)];
+  const order = [
+    startIdx,
+    ...options.map((_, i) => i).filter((i) => i !== startIdx && !exclude.has(i)),
+  ];
   for (const step of [baseStep, LOWER[baseStep]].filter((s): s is string => !!s)) {
     for (const i of order)
       if (headlineFits(options[i] ?? "", step, tokens, cols, containerPx, sizeOf))

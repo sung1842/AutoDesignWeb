@@ -91,6 +91,18 @@
         }
       },
       {
+        "id": "story",
+        "block": "story",
+        "variant": "story.text",
+        "bg": "surface",
+        "pad": 0,
+        "slots": {
+          "body": {
+            "copy": "deck:story.body#0"
+          }
+        }
+      },
+      {
         "id": "location",
         "block": "location",
         "variant": "location.info-map",

@@ -115,3 +115,11 @@
 - 처리: AC-04-08 렌더 D 1건 미충족(현재 54/96)으로 verify:m2에서 이 BLK로 보고. L2 ≥3키 조건은 enforce로 충족
 - 제안 수정안(사람, 택1): ① 벌점 기준을 "앵커 프리셋 값"에서 "l2_0(매핑 결과) 값"으로 바꾼다 ② 벌점을 0.005로 낮춘다 ③ enforceVariantL2Diff 대안 선택을 "J 증가 최소"에서 "J ≤ J_min + ε 안에서 예측 L1 거리 최대"로 바꾼다 → 04장 개정·relock 후 B18 재생성(`pnpm seed:temp --corpus`)
 - 상태: open
+
+## BLK-013 · M2 · locked-conflict · 2026-11-26T03:30Z
+- 대상: 시각 회귀 기준선 PL-1 8장(e2e/__screenshots__/7303eb92a5bd/…/PS-T*-local-business-pl1-00.png, 자체 잠금 ASM-071) ↔ AC-04-11(tests/acceptance/m2/render.test.ts, 픽스처 12개 린트 T error 0)
+- 증상: 기준선 입력 fixtures/layouts/local-business-pl1-00.json은 LT-03 구현 전 5섹션 트리(local_business 하한 6). ASM-073 ⑤로 재생성하면 6섹션이 되어 잠긴 기준선 8장과 달라지고, 그대로 두면 AC-04-11이 이 픽스처에서 LT-03 error
+- 재현: npx vitest run tests/acceptance/m2/render.test.ts -t "12개가 스키마"
+- 처리: 기준선을 지키려고 pl1-00은 재생성에서 제외(scripts/data/fixtures-layouts.ts keep). 나머지 29개는 재생성, AC-04-11은 이 픽스처 LT-03 1건만 실패
+- 제안 수정안(사람): pl1-00 재생성(`pnpm fixtures:layouts`에서 keep 해제) → `pnpm exec playwright test e2e/m2 --update-snapshots` → 기준선 8장 relock 승인
+- 상태: open

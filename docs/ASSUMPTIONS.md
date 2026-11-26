@@ -512,3 +512,10 @@
 - 질문: `validateBundle(path, json)`(ASM-025 계약)의 경로 해석과 "verified_at은 temp만 비어도 됨"(AC-03-22)을 어디서 검사하나
 - 근거 탐색: 03장 AC-03-22, 09장 9.2.1 봉투, data-contracts 레지스트리(BUNDLES)
 - 선택: ① 경로 = 레지스트리 `paths` 정확 일치(디렉터리 배치는 접두사) → data:validate와 같은 스키마(envelope/itemDir) + bundle 이름 검사, text·yaml 묶음은 ok=false로 거절 ② 봉투 superRefine에 "provenance human이면 items[].verified_at null 금지"를 넣어 data:validate에도 같은 규칙 적용(registry·images manifest)
+
+## ASM-073 · M2 · conflict · 2026-11-26T03:30Z
+- 질문: 린트 단계 T(LT-01~11·RH-01~02·G-01)의 판정 세부와, 4.8 패턴 힌트(hero + 4 = 5섹션)가 LT-03 하한(local_business 6, saas 6)보다 짧은 충돌
+- 근거 탐색: 04장 4.5.3·4.8·4.10(“LT-09 유지”), 03장 3.6.7(다크 inverse 0~1)·892행(섹션 수 nav·footer 제외), AC-03-20·AC-04-11
+- 선택: ① G-01 = PageSchema 파싱 실패, LT-01~04·09·10 error, LT-05 error(AIL-07 a), LT-06~08·11·RH-01·02 warn. 상수는 linter/data/rule-params.json "T"(skeleton 연속 ≤2, 이미지 유무 연속 ≤3, CTA ≤2, 다크 inverse [0,1]), 리듬 값은 spec.rhythm ② 엄격 교대 = 6섹션 이상이 전부 bg/surface이고 인접이 모두 다름 ③ LT-09는 목록 슬롯 안 같은 참조를 1회로 센다(menu 그룹 펼침), link 라벨 제외 ④ RH-02 이미지 섹션 = image 슬롯 있음 또는 bg=image ⑤ patternRaw: 하한보다 짧으면 용도 선택 블록(명세 순서) 중 없는 것을 마지막 섹션 앞에 넣는다(ASM-053 ②의 “footer 포함으로 셈”을 대체) ⑥ variant는 선호 순 깊이 우선 탐색으로 RH-01·LT-05를 피한다(pick 고정 블록은 그대로) ⑦ 같은 덱 키를 여러 슬롯이 쓰면 이어지는 index(feature·process, showcase·gallery), 헤드라인 줄 예산 교체는 다른 슬롯이 쓰는 옵션을 제외한다 ⑧ AIL-04·05·12·18(단계 T)은 M3 린터에서
+- 영향 범위: packages/linter(stage-t), packages/design-spec(standard.ts), fixtures/layouts(pl1-00 제외 재생성)
+- 되돌리기 비용: 낮음

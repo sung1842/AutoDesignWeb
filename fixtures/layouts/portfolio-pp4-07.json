@@ -65,9 +65,6 @@
           "captions": {
             "list": [
               {
-                "copy": "deck:work.items#0"
-              },
-              {
                 "copy": "deck:work.items#1"
               },
               {
@@ -78,6 +75,9 @@
               },
               {
                 "copy": "deck:work.items#4"
+              },
+              {
+                "copy": "deck:work.items#5"
               }
             ]
           }

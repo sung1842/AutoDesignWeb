@@ -22,7 +22,9 @@ const PURPOSES = [
 const PER_PURPOSE = 10;
 
 mkdirSync(OUT, { recursive: true });
-const keep = new Set(["saas-ps1.json"]);
+// local-business-pl1-00: 시각 회귀 기준선(자체 잠금, ASM-071)의 입력이라 재생성하지 않는다.
+// LT-03 하한 채우기(ASM-073) 전의 5섹션 트리 그대로 → BLK-013(locked-conflict)
+const keep = new Set(["saas-ps1.json", "local-business-pl1-00.json"]);
 let n = 0;
 for (const [purpose, pre] of PURPOSES) {
   const deck = templateDeck(purpose, ROOT);

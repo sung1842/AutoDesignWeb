@@ -95,6 +95,21 @@
         }
       },
       {
+        "id": "gallery",
+        "block": "gallery",
+        "variant": "gallery.masonry",
+        "bg": "surface",
+        "pad": 0,
+        "slots": {
+          "media": {
+            "image": {
+              "tag": "local_business.storefront",
+              "ratio": "1:1"
+            }
+          }
+        }
+      },
+      {
         "id": "location",
         "block": "location",
         "variant": "location.info-only",
