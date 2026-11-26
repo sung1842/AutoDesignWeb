@@ -111,7 +111,14 @@ export const ResultViewSchema = z.object({
     radiusFamily: z.string(),
   }),
   similarSites: z.array(
-    z.object({ title: z.string(), blurb: z.string(), url: z.string(), domain: z.string() }),
+    z.object({
+      title: z.string(),
+      blurb: z.string(),
+      url: z.string(),
+      domain: z.string(),
+      /** 02장 2.14 match_axes(2축, 01장 닮은 축 태그). 06장 타입에 없는 필드(ASM-101). */
+      matchAxes: z.array(z.enum(AXIS_KEYS)).length(2),
+    }),
   ),
   taxonomyVersion: z.string(),
   shareId: z.string().nullable(),

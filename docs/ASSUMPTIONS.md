@@ -709,3 +709,10 @@
 - 선택: ① playwright.config webServer = `e2e/serve.ts`(전용 DB tastefit_e2e reset·seed, 설문 픽스처 전부 active + 자산 경로 = manifest.lock, 닮은 사이트 픽스처, `next build` → `next start -p 3100`, 비밀값 실행마다 임의). e2e/m0~m3만 고른 실행에서는 띄우지 않는다. webServer 준비 대기 상한은 서버 기동용(테스트 타임아웃 아님) ② M4 결과 화면 경로 = `/d/[sessionId]/result`(소유자 보기). 공유 링크 `/r/[shareId]` 이동은 공유 API(M6)와 함께 ③ 식별자: 문항 컨테이너 `data-testid="question"`(`data-seq`·`data-kind` pick4|ab·`data-layout` grid2x2|list1|pair|toggle|pager·`data-items` 쉼표 결합), 카드 버튼 접근 이름 "선택지 n"·"A"·"B", 모바일 썸네일 "카드 n 보기", 축 표 `data-testid="axes-table"`, 닮은 사이트 목록 `data-testid="similar-sites"` ④ SC-04 "로컬 200요청"은 반복 횟수(측정 조건)라 비교 연산 없이 길이 200 배열로 돈다(spec-constants.ts는 잠긴 _support 디렉터리에 새 파일이라 guard 규칙 5에 걸려 만들지 않음)
 - 영향 범위: e2e/m4, e2e/serve.ts, playwright.config.ts, apps/web
 - 되돌리기 비용: 낮음
+
+## ASM-101 · M4 · gap · 2026-11-26T20:40Z
+- 질문: 닮은 사이트 match_axes를 06장 ResultView 타입에 어떻게 싣는지, A/B 품질 감시(2.4.4 노출 ≥ 30·cant_tell > 30%)의 갱신 시점·진행 중 세션 처리
+- 근거 탐색: 02장 2.4.4·2.14·2.15, 01장 1.5.2 ⑥·8.10.2(일치 축 태그), 06장 ResultView·survey_items.stats
+- 선택: ① `ResultView.similarSites[].matchAxes`(축 키 2개, 표시 시점 계산)를 추가 ② 품질 감시 = 세션 완료 시 `refreshPairStats`(같은 시즌 ab 응답 집계 → stats.exposures·cant_tell_rate, 조건 충족 시 flag=low_discrimination·flagged_at). 운영자 복원 flag=restored는 다시 표시하지 않음 ③ 제외는 flagged_at 이후 시작한 세션부터(진행 중 세션의 문항 풀을 바꾸면 응답 로그 재생이 달라짐)
+- 영향 범위: apps/web/src/server/survey.ts, packages/api-contract
+- 되돌리기 비용: 낮음

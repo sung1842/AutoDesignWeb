@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T19:11Z}
+- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T19:15Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
@@ -159,6 +159,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 04:15 | M4-07 matchAxes·품질 감시 refreshPairStats·replayProfile 추가(ASM-101)
 - 2026-11-27 04:11 | M4-01h traceability M4 33/71. 남은 38 AC 테스트 작성 필요
 - 2026-11-27 04:10 | M4-08 e2e/m4 4/4 녹색(375·1280 완료·재개·뒤로가기·MBTI 0). AD-035 Turbopack 경로
 - 2026-11-27 03:55 | M4-07b~d S01·S02·S03 화면 1차(01장 1.4·1.5.2). E2E 확인 전

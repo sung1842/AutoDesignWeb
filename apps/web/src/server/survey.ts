@@ -117,13 +117,22 @@ interface ItemRow {
   dominant_colors: string[] | null;
   focus_region: Obj | null;
 }
-export async function activeItems(tx: Tx, tv: string): Promise<ItemRow[]> {
+/** 활성 자극물. 품질 감시로 제외된 쌍(low_discrimination)은 빼되, 세션 시작(startedAt) 뒤에 제외된 쌍은 둔다
+ * (진행 중 세션의 문항 풀이 바뀌면 응답 로그 재생이 달라지므로, 2.15·AC-02-18). */
+export async function activeItems(
+  tx: Tx,
+  tv: string,
+  startedAt: Date | null = null,
+): Promise<ItemRow[]> {
   return (
     await q(
       tx,
       `select id, kind, stage, template_id, axis, level, pair_image_ids, x_card, assets, alt_text, dominant_colors, focus_region
-         from survey_items where taxonomy_version = $1 and status = 'active' order by id`,
-      [tv],
+         from survey_items where taxonomy_version = $1 and status = 'active'
+           and not (kind = 'ab_pair' and coalesce(stats->>'flag', '') = 'low_discrimination'
+                    and ($2::timestamptz is null or (stats->>'flagged_at')::timestamptz <= $2::timestamptz))
+         order by id`,
+      [tv, startedAt],
     )
   ).rows as unknown as ItemRow[];
 }
@@ -228,14 +237,6 @@ const optionIds = (qq: Question): string[] =>
 
 /** 세션 엔진: 활성 응답을 순서대로 재생한다. backed면 직전 문항으로 되돌린 상태(연속 뒤로가기 불가). */
 async function engineFor(tx: Tx, s: Session) {
-  const rows = await activeItems(tx, s.taxonomy_version);
-  const eng = createEngine({
-    items: engineItems(rows),
-    types: repo().types,
-    seed: String(s.seed),
-    purpose: s.purpose_hint,
-    versions: { types: s.taxonomy_version, items: s.taxonomy_version },
-  });
   const ans = (
     await q(
       tx,
@@ -244,6 +245,14 @@ async function engineFor(tx: Tx, s: Session) {
       [s.id],
     )
   ).rows as unknown as AnswerRow[];
+  const rows = await activeItems(tx, s.taxonomy_version, s.started_at);
+  const eng = createEngine({
+    items: engineItems(rows),
+    types: repo().types,
+    seed: String(s.seed),
+    purpose: s.purpose_hint,
+    versions: { types: s.taxonomy_version, items: s.taxonomy_version },
+  });
   for (const a of ans) {
     eng.next();
     eng.answer({
@@ -561,6 +570,38 @@ export async function submitAnswer(
   return view({ ...s, status }, eng, false, resultId);
 }
 
+/** 02장 2.4.4 품질 감시: 노출 ≥ 30이고 cant_tell 비율 > 30%면 flag = low_discrimination(선택 후보 제외).
+ * 운영자가 복원한 쌍(flag = restored, ADM-08)은 다시 표시하지 않는다. */
+export const PAIR_QUALITY = { minExposures: 30, cantTellMax: 0.3 } as const;
+export async function refreshPairStats(tx: Tx, tv: string): Promise<number> {
+  const r = await q(
+    tx,
+    `with a as (
+       select sa.item_id, count(*)::int as n, count(*) filter (where sa.answer = 'cant_tell')::int as c
+         from survey_answers sa join diagnosis_sessions s on s.id = sa.session_id
+        where s.taxonomy_version = $1 and sa.kind = 'ab' and not sa.superseded
+        group by sa.item_id)
+     update survey_items si
+        set stats = si.stats || jsonb_build_object('exposures', a.n, 'cant_tell_rate', round(a.c::numeric / a.n, 4))
+                  || case when a.n >= $2 and a.c::float8 / a.n > $3
+                               and coalesce(si.stats->>'flag', '') not in ('restored', 'low_discrimination')
+                          then jsonb_build_object('flag', 'low_discrimination', 'flagged_at', now()) else '{}'::jsonb end
+       from a
+      where si.taxonomy_version = $1 and si.id = a.item_id and si.kind = 'ab_pair'`,
+    [tv, PAIR_QUALITY.minExposures, PAIR_QUALITY.cantTellMax],
+  );
+  return r.rowCount ?? 0;
+}
+
+/** 02장 2.15·AC-02-18: 저장 응답 로그를 재생한 결과(완료 세션). */
+export async function replayProfile(tx: Tx, sessionId: string) {
+  const s = (await q(tx, "select * from diagnosis_sessions where id = $1", [sessionId]))
+    .rows[0] as unknown as Session | undefined;
+  if (!s) throw notFound();
+  const { eng } = await engineFor(tx, s);
+  return eng.result();
+}
+
 interface SiteRow {
   id: string;
   domain: string;
@@ -572,9 +613,7 @@ interface SiteRow {
 /** 02장 2.14 닮은 사이트: w_k = 1/(σ_display² + τ²) 정규화, s = sqrt(Σ w (r − μ)²), 도메인 중복 0, s ≤ maxScore, 최대 count개. */
 export async function similarSites(tx: Tx, mu: Vec, sigmaDisplay: Vec): Promise<SiteRow[]> {
   const S = D.similarSites;
-  const raw = sigmaDisplay.map((sd) => 1 / (sd * sd + S.tau * S.tau));
-  const tot = raw.reduce((a, b) => a + b, 0);
-  const w = raw.map((x) => x / tot);
+  const w = siteWeights(sigmaDisplay);
   const rows = (
     await q(tx, "select id, domain, url, title_ko, blurb_ko, l1 from similar_site_candidates")
   ).rows as unknown as SiteRow[];
@@ -628,6 +667,7 @@ async function finalize(
       sites.map((x) => x.id),
     ],
   );
+  await refreshPairStats(tx, s.taxonomy_version);
   await serverEvent(tx, {
     name: "survey_complete",
     anonId: s.anon_id,
@@ -675,21 +715,49 @@ export async function undo(
   return view(s, re.eng, true, null);
 }
 
+/** 2.14 가중치 w_k = 1/(σ_display² + τ²), 합 1. */
+function siteWeights(sigmaDisplay: Vec): Vec {
+  const raw = sigmaDisplay.map((sd) => 1 / (sd * sd + D.similarSites.tau * D.similarSites.tau));
+  const tot = raw.reduce((a, b) => a + b, 0);
+  return raw.map((x) => x / tot);
+}
+/** 2.14 match_axes: w_k·(r_k − μ_k)²가 가장 작은 2축(동률은 축 순서). */
+const MATCH_AXES = 2;
+function matchAxes(r: Vec, mu: Vec, w: Vec): (typeof AXIS_KEYS)[number][] {
+  return AXIS_KEYS.map((k, i) => ({ k, i, d: (w[i] ?? 0) * ((r[i] ?? 0) - (mu[i] ?? 0)) ** 2 }))
+    .sort((a, b) => a.d - b.d || a.i - b.i)
+    .slice(0, MATCH_AXES)
+    .map((x) => x.k);
+}
 /** 표시 시점에 뷰에 남아 있는 것만(opt-out 즉시 반영, 2.14 저장 행). */
-async function shownSites(tx: Tx, ids: string[]): Promise<ResultView["similarSites"]> {
+async function shownSites(
+  tx: Tx,
+  ids: string[],
+  mu: Vec,
+  sigmaDisplay: Vec,
+): Promise<ResultView["similarSites"]> {
   if (ids.length === 0) return [];
   const rows = (
     await q(
       tx,
-      "select id, domain, url, title_ko, blurb_ko from similar_site_candidates where id = any($1)",
+      "select id, domain, url, title_ko, blurb_ko, l1 from similar_site_candidates where id = any($1)",
       [ids],
     )
   ).rows as unknown as SiteRow[];
   const by = new Map(rows.map((x) => [x.id, x]));
+  const w = siteWeights(sigmaDisplay);
   return ids.flatMap((id) => {
     const x = by.get(id);
     return x
-      ? [{ title: x.title_ko ?? x.domain, blurb: x.blurb_ko ?? "", url: x.url, domain: x.domain }]
+      ? [
+          {
+            title: x.title_ko ?? x.domain,
+            blurb: x.blurb_ko ?? "",
+            url: x.url,
+            domain: x.domain,
+            matchAxes: matchAxes(vec(x.l1), mu, w),
+          },
+        ]
       : [];
   });
 }
@@ -750,7 +818,12 @@ export async function resultView(tx: Tx, id: string, anonId: string | null): Pro
       paletteHex: repo().palettes.get(l2["color.palette_id"] ?? "") ?? [],
       radiusFamily: l2["shape.radius_family"] ?? "",
     },
-    similarSites: await shownSites(tx, (r.similar_site_ids as string[] | null) ?? []),
+    similarSites: await shownSites(
+      tx,
+      (r.similar_site_ids as string[] | null) ?? [],
+      p.axes.map((x) => x.mu),
+      p.axes.map((x) => x.sigmaDisplay),
+    ),
     taxonomyVersion: s.taxonomy_version,
     shareId: null,
   };

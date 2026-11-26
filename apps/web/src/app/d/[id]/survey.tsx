@@ -156,6 +156,7 @@ export function Survey({ id }: { id: string }) {
           cardScale: Math.round((lay.width / (device === "mobile" ? 780 : 1280)) * 100) / 100,
           viewedOptionIds: [...seen].map((i) => q.items[i]).filter(Boolean),
           failedOptionIds: [...failed],
+          ...(chosenItemId ? { chosenPosition: q.items.indexOf(chosenItemId) } : {}),
           revised: backed,
         },
       };

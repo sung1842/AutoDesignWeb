@@ -25,7 +25,7 @@ interface ResultView {
   anchorOverrideTypeId: string | null;
   rating: number | null;
   guide: { pairingName: string; paletteHex: string[]; radiusFamily: string };
-  similarSites: { title: string; blurb: string; url: string; domain: string }[];
+  similarSites: { title: string; blurb: string; url: string; domain: string; matchAxes: string[] }[];
 }
 /** 02장 2.13.2 표시 구간 μ ± 1.645·σ_display, 1.5.2.1 표시값 round(μ×100). */
 const BAND_Z = 1.645;
@@ -186,7 +186,10 @@ export function Result({ id }: { id: string }) {
               <a href={s.url} target="_blank" rel="noopener noreferrer nofollow">
                 {s.title}
               </a>{" "}
-              <span className="svc-muted">· {s.domain}</span>
+              <span className="svc-muted">· {s.domain}</span>{" "}
+              <span className="svc-muted">
+                {s.matchAxes.map((k) => AXIS_POLES[k]?.[0] ?? k).join(" · ")} 비슷
+              </span>
             </li>
           ))}
         </ul>
