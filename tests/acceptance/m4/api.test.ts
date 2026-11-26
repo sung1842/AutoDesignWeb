@@ -14,7 +14,6 @@ import {
 } from "../../../packages/api-contract/src/index.js";
 import { handle } from "../../../apps/web/src/server/api.js";
 import { ROOT, run } from "../_support/sh.js";
-import { SC_04_LOCAL_REQUESTS } from "../_support/spec-constants.js";
 
 const DB_URL = "postgres://tastefit_app:tastefit_app@127.0.0.1:54322/tastefit_m4api";
 const ENV = { DATABASE_URL_DIRECT: DB_URL, DATABASE_URL_POOLED: DB_URL, STACK_PROFILE: "native" };
@@ -330,20 +329,29 @@ describe("9.4.6 ⑦ 응답 제출 p95(로컬 200요청)", () => {
   it("서버 처리 p95 ≤ perf.surveyServerP95Ms, 관측 p95 ≤ perf.surveyApiP95Ms", async () => {
     const server: number[] = [];
     const total: number[] = [];
-    while (total.length < SC_04_LOCAL_REQUESTS) {
-      const a = await call("POST", "/api/surveys", { body: { entry: "direct" } });
-      let v = view(a);
-      while (v.question && total.length < SC_04_LOCAL_REQUESTS) {
-        const t0 = performance.now();
-        const r = await call("POST", `/api/surveys/${v.id}/responses`, {
-          body: answerOf(v, 1),
-          cookie: a.cookie,
+    /** 07장 SC-04 측정 조건: 로컬 200요청(합격선 아님). 세션이 끝나면 새 세션으로 이어 간다. */
+    const REQUESTS = Array.from({ length: 200 }, (_, i) => i);
+    let cookie: string | null = null;
+    let v: View | null = null;
+    for (const i of REQUESTS) {
+      if (!v?.question) {
+        const a = await call("POST", "/api/surveys", {
+          body: { entry: "direct", restart: true },
+          cookie,
         });
-        total.push(performance.now() - t0);
-        server.push(Number(r.headers.get("server-timing")?.match(/dur=([\d.]+)/)?.[1] ?? NaN));
-        v = view(r);
+        cookie = a.cookie;
+        v = view(a);
       }
+      const t0 = performance.now();
+      const r = await call("POST", `/api/surveys/${v.id}/responses`, {
+        body: answerOf(v, i),
+        cookie,
+      });
+      total.push(performance.now() - t0);
+      server.push(Number(r.headers.get("server-timing")?.match(/dur=([\d.]+)/)?.[1] ?? NaN));
+      v = view(r);
     }
+    expect(total).toHaveLength(REQUESTS.length);
     const p95 = (xs: number[]) => [...xs].sort((x, y) => x - y)[Math.ceil(xs.length * 0.95) - 1]!;
     expect(p95(server)).toBeLessThanOrEqual(PERF.surveyServerP95Ms);
     expect(p95(total)).toBeLessThanOrEqual(PERF.surveyApiP95Ms);

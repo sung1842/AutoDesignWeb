@@ -702,3 +702,10 @@
 - 선택: ① 매 요청 활성 응답(superseded=false)을 seq 순 재생해 엔진 상태를 만든다(state 열은 캐시 + backed 표시) ② restart·시즌 변경 시 기존 미완료 세션은 status=completed·completed_at 기록·결과 행 없음·state.ended="restart"(열린 세션 유니크 인덱스 때문에 다른 값 불가) ③ 뒤로가기 = 직전 응답 superseded=true, `fromSeq`는 현재 문항 seq(= 마지막 응답 seq + 1)만 허용, 연속 불가·완료 후 불가(409 UNDO_NOT_ALLOWED). 다시 답하면 question_id attempt +1, survey_answer.revised=true ④ propensity: explore = ε, dopt = 1 − ε, ab_fisher·check = 1 ⑤ 엔진 kind four → pick4, 선택지 2개(ab·check) → ab. none_of_these는 pick4만, cant_tell은 ab만(그 밖은 400) ⑥ 결과 guide = 앵커(또는 override) 프리셋의 페어링 이름·팔레트 bg·surface·fg·primary·accent HEX·radius_family(formatGuide T-32 전 임시). similarSites는 M4-07
 - 영향 범위: apps/web/src/server/survey.ts
 - 되돌리기 비용: 낮음
+
+## ASM-100 · M4 · gap · 2026-11-26T20:00Z
+- 질문: M4 E2E(⑧⑨⑩)의 서버 기동·데이터 준비 방식, 결과 화면 경로(01장은 공유 링크 `/r/[shareId]`인데 공유 API는 M6 범위), 화면 요소의 테스트 식별자
+- 근거 탐색: 01장 1.4·1.5.1·1.5.2·1.15, 09장 9.4.6 ⑧⑨⑩, playwright.config(러너 설정 1곳, retries 0)
+- 선택: ① playwright.config webServer = `e2e/serve.ts`(전용 DB tastefit_e2e reset·seed, 설문 픽스처 전부 active + 자산 경로 = manifest.lock, 닮은 사이트 픽스처, `next build` → `next start -p 3100`, 비밀값 실행마다 임의). e2e/m0~m3만 고른 실행에서는 띄우지 않는다. webServer 준비 대기 상한은 서버 기동용(테스트 타임아웃 아님) ② M4 결과 화면 경로 = `/d/[sessionId]/result`(소유자 보기). 공유 링크 `/r/[shareId]` 이동은 공유 API(M6)와 함께 ③ 식별자: 문항 컨테이너 `data-testid="question"`(`data-seq`·`data-kind` pick4|ab·`data-layout` grid2x2|list1|pair|toggle|pager·`data-items` 쉼표 결합), 카드 버튼 접근 이름 "선택지 n"·"A"·"B", 모바일 썸네일 "카드 n 보기", 축 표 `data-testid="axes-table"`, 닮은 사이트 목록 `data-testid="similar-sites"` ④ SC-04 "로컬 200요청"은 반복 횟수(측정 조건)라 비교 연산 없이 길이 200 배열로 돈다(spec-constants.ts는 잠긴 _support 디렉터리에 새 파일이라 guard 규칙 5에 걸려 만들지 않음)
+- 영향 범위: e2e/m4, e2e/serve.ts, playwright.config.ts, apps/web
+- 되돌리기 비용: 낮음
