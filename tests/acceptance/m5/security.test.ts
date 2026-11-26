@@ -190,7 +190,7 @@ describe("08장 AC-08-41c 금지 업종", () => {
 });
 
 describe("08장 AC-08-42 컴파일러 산출물 정적 검사", () => {
-  it('AC-08-42 픽스처 트리 전부 컴파일 산출물에 type="password"·action=·javascript: 0건', () => {
+  it("AC-08-42 픽스처 트리 전부 컴파일 산출물에 password 입력·action 속성·javascript URL 0건", () => {
     const data = loadDesignData(ROOT);
     const dir = join(ROOT, "fixtures/layouts");
     const files = readdirSync(dir).filter((f) => f.endsWith(".json"));
