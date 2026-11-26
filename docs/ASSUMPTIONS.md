@@ -632,3 +632,10 @@
 - 선택: temp 템플릿(B20) hero.eyebrow 0번을 "{name}"으로 둔다(seed:temp 재생성). 헤드라인 예산 규칙은 바꾸지 않는다. 사람 템플릿 확정 때 확인(HUMAN_TODO)
 - 영향 범위: scripts/data/seed-config.ts, config/copy_templates.json(temp)
 - 되돌리기 비용: 낮음
+
+## ASM-090 · M4 · gap · 2026-11-26T16:11Z
+- 질문: 진단 엔진(02장 2.5~2.13)의 코드 API·자극물 입력 형태·결과 필드 이름이 장에 없음
+- 근거 탐색: 02장 2.3(스키마)·2.5~2.13·2.17, config/thresholds.json diagnosis, config/diagnosis-tuned.json, data/survey card_plan·ab_plan, types.json centroid
+- 선택: ① packages/diagnosis: `priorMu(purpose)`, `updateMNL({mu,var}, X, chosen, beta, lam)`, `nearestType(mu, sigma, types) → {typeId, secondTypeId, margin, isTie, isBoundary, order}`, `stage1Score({mu,var}, X, types)`(2.6.1 D-최적 + w_type 판별 항), `pickNotice({flags, kappa, isBoundary})`, `createEngine({items, types, seed, purpose, mobile?}) → {next, answer, back, canBack, state, result, log}` ② 자극물 `EngineItems = {cards[{id, sv, template, x, targetL1?, mobile}], pairs[{id, axis(A1~A5), typeId, levels, a{id,x}, b{id,x}}]}`, x = x_card(실측). 엔진은 targetL1을 읽지 않는다 ③ 문항 = `{seq, stage, kind: four|ab|check, axis?, options[{itemId, slot, x}], policy, debug{argmaxOpenAxis}}`, 응답 = `{seq, kind: option|none_of_these|cant_tell, chosen?, latencyMs}` ④ 결과 = `{typeId, secondTypeId, adjacentTypeIds, isBoundary, confidence, flags, notice, kappa, mu, var, axes[{key, mu, sigma, sigmaDisplay, state}], insensitiveAxes, endReason, seed, consistencyDetail, versions{engine, types, items, normalizer}}` ⑤ AC-02-06 ≤ 0.05·AC-02-24 20ms는 사양 상수 표 밖이라(BLK-014 유형) 수용 테스트는 값을 재고 대조는 packages/diagnosis 단위 테스트에서 한다
+- 영향 범위: tests/acceptance/m4/diagnosis.test.ts, packages/diagnosis
+- 되돌리기 비용: 중간(자체 잠금 전까지 낮음)
