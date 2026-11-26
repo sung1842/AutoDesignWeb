@@ -150,9 +150,11 @@ async function openPage(browser: Browser, html: string, vw: number): Promise<Ses
         decodeURIComponent(url.pathname.slice("/assets/images/".length)),
       );
     else if (url.pathname.startsWith("/fonts/")) {
-      const face = plan.faces.filter((f) => f.file === url.pathname);
-      if (face.length) materializeFonts({ faces: face, chars: plan.chars }, FONT_CACHE);
       file = join(FONT_CACHE, url.pathname);
+      // 같은 파일 이름 = 같은 글자 집합(subset_fonts.py). 이미 있으면 python 프로세스를 다시 띄우지 않는다.
+      const face = plan.faces.filter((f) => f.file === url.pathname);
+      if (face.length && !existsSync(file))
+        materializeFonts({ faces: face, chars: plan.chars }, FONT_CACHE);
     }
     if (!file || !existsSync(file)) {
       s.failed.push(url.pathname);

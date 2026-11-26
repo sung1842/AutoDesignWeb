@@ -526,3 +526,11 @@
 - 선택: ① 3번째 선택 인자 `{render, violations, conflicts}`. 없으면 정적 판정: H1~H3 팔레트 역할 토큰(primary·accent·bg·surface·surface-inverse, 상태·on-*·hover 제외), H4·H5·H7 font·type 토큰, H6·H8·H9 토큰 생성 값이라 만점, H12는 판정 보류(만점, measured "not_provided"; 파이프라인은 linter 위반을 넘긴다) ② 상충 = spec.forbidden.conflict_ids(CF-03·04·08 등 데이터 의존) ∪ 명세·트리 판정(CF-01 glass+이미지 섹션 없음, 05, 06, 09, 10, 11, 12 hero.centered+eyebrow 정규식) ∪ 인자 ③ bg 채도 상한은 theme 키(dark는 light 값 0.03) ④ 상수는 findRepoRoot()/data/taxonomy/harmony.json에서 읽음(scoring 새 의존 없음)
 - 영향 범위: packages/scoring(harmony.ts·harmony.test.ts)
 - 되돌리기 비용: 낮음
+
+## ASM-075 · M2 · gap · 2026-11-26T04:50Z
+- 질문: AC-03-33 터치 타깃 위반(블록 샘플마다 1~3건): 건너뛰기 링크 43px, wordmark 39×36, navbar 링크 28×27(@768), 닫힌 drawer 안 링크가 Chrome ::details-content 크기로 14×54로 잡힘. 또한 하네스가 폰트 요청마다 python을 띄워(이미 있는 서브셋도) 180s 초과
+- 근거 탐색: 03장 3.11(touchTargetPx 44), components.ts summary(44 = space-10 + space-1, ASM-041)
+- 선택: ① skip-link·a.tf-wordmark·navbar 링크·drawer 링크에 min-height(·min-width) = space-10 + space-1, inline-flex 가운데 정렬 ② 닫힌 drawer 패널 display:none(시각·포커스 동작 변화 없음) ③ navbar 안 wordmark min-width 0 → 44 ④ 하네스: 같은 이름 서브셋 파일이 있으면 materializeFonts 생략. 시각 회귀 24장 그대로 통과
+- 남은 위험: 빈 폰트 캐시(새 컨테이너·CI)에서는 서브셋 생성(CJK 원본 로드) 비용으로 2코어 환경 180s 초과 가능 → 14d 후속(상주 서브셋 프로세스 검토)
+- 영향 범위: packages/renderer/src/css(base·components·blocks/chrome), apps/worker/src/render/harness.ts
+- 되돌리기 비용: 낮음

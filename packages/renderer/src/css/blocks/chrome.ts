@@ -1,6 +1,6 @@
 // blocks/nav·footer.css(CM-02 3층): C08 variant 배치·C10 variant 배치. 컴포넌트 층(components/navbar·footer) 위에 얹는다. ASM-048.
 export const CHROME_CSS = `/* TasteFit blocks/nav·footer.css */
-.tf-navbar__inner > .tf-wordmark { min-width: 0; }
+.tf-navbar__inner > .tf-wordmark { min-width: calc(var(--tf-space-10) + var(--tf-space-1)); }
 @media (min-width: 48rem) {
   .tf-navbar--center .tf-navbar__inner { flex-direction: column; justify-content: center; gap: var(--tf-space-2); padding-block: var(--tf-space-3); }
 }

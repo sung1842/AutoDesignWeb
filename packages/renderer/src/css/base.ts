@@ -42,6 +42,9 @@ button { font: inherit; color: inherit; }
   top: var(--tf-space-4);
   z-index: var(--tf-z-overlay);
   padding: var(--tf-space-2) var(--tf-space-4);
+  display: inline-flex;
+  align-items: center;
+  min-height: calc(var(--tf-space-10) + var(--tf-space-1)); /* 터치 타깃 44(3.11, AC-03-33) */
   background: var(--tf-color-primary);
   color: var(--tf-color-on-primary);
   transform: translateY(calc(-1 * var(--tf-space-24)));
