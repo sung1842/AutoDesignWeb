@@ -30,7 +30,8 @@
       "radiusPx": [12, 16],
       "blurMinPx": 16,
       "alphaMax": 0.15,
-      "warnTypes": ["T3", "T4", "T6"]
+      "warnTypes": ["T3", "T4", "T6"],
+      "cardRatioMin": 0.8
     },
     {
       "id": "AIL-09",
@@ -69,7 +70,8 @@
       "stage": ["T"],
       "sameBgRun": 3,
       "strictAltMinSections": 6,
-      "centeredRatioMax": 0.4
+      "centeredRatioMax": 0.4,
+      "minSections": 2
     },
     {
       "id": "AIL-08",
@@ -104,7 +106,8 @@
     {
       "id": "AIL-14",
       "stage": ["C"],
-      "plainRatioMax": 0.6
+      "plainRatioMax": 0.6,
+      "keyMinChars": 2
     },
     {
       "id": "AIL-15",
@@ -160,7 +163,8 @@
         "375": 3,
         "1280": 2
       },
-      "orphanMaxChars": 2
+      "orphanMaxChars": 2,
+      "orphanMinLines": 2
     }
   ]
 }

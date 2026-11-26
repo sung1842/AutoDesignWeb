@@ -1,0 +1,48 @@
+{
+  "id": "H3",
+  "expect": "pass",
+  "input": {
+    "spec": {
+      "tokens": {
+        "color": {
+          "primary": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [
+                0.5,
+                0.12,
+                30
+              ],
+              "alpha": 1
+            }
+          },
+          "accent": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [
+                0.7,
+                0.14,
+                60
+              ],
+              "alpha": 1
+            }
+          },
+          "bg": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [
+                0.98,
+                0.01,
+                80
+              ],
+              "alpha": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}

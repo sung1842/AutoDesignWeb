@@ -1,0 +1,13 @@
+{
+  "id": "H5",
+  "expect": "pass",
+  "input": {
+    "render": {
+      "fontWeights": [
+        400,
+        500,
+        700
+      ]
+    }
+  }
+}

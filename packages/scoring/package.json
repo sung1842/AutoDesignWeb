@@ -16,6 +16,8 @@
     "typecheck": "tsc -b --pretty false"
   },
   "dependencies": {
-    "@tastefit/config": "workspace:^"
+    "@tastefit/compliance": "workspace:^",
+    "@tastefit/config": "workspace:^",
+    "@tastefit/linter": "workspace:^"
   }
 }

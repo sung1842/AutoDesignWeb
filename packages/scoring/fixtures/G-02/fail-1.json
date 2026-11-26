@@ -1,0 +1,15 @@
+{
+  "id": "G-02",
+  "expect": "fail",
+  "input": {
+    "vw": 1280,
+    "texts": [
+      {
+        "sel": "p",
+        "text": "흐린 본문",
+        "ratio": 3.2,
+        "large": false
+      }
+    ]
+  }
+}

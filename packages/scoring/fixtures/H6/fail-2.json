@@ -1,0 +1,9 @@
+{
+  "id": "H6",
+  "expect": "fail",
+  "input": {
+    "render": {
+      "typeScaleRatio": 0.5
+    }
+  }
+}

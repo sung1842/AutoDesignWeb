@@ -1,0 +1,9 @@
+{
+  "id": "G-04",
+  "expect": "pass",
+  "input": {
+    "vw": 1280,
+    "scrollWidth": 1280,
+    "innerWidth": 1280
+  }
+}

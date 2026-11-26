@@ -1,0 +1,8 @@
+{
+  "id": "G-05",
+  "expect": "pass",
+  "input": {
+    "vw": 1280,
+    "clipped": []
+  }
+}

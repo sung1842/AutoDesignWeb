@@ -1,0 +1,10 @@
+{
+  "id": "H7",
+  "expect": "fail",
+  "input": {
+    "render": {
+      "displayPx": 160,
+      "bodyPx": 18
+    }
+  }
+}

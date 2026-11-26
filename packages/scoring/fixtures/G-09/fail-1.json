@@ -1,0 +1,13 @@
+{
+  "id": "G-09",
+  "expect": "fail",
+  "input": {
+    "lint": [
+      {
+        "rule": "AIL-13",
+        "severity": "error",
+        "message": "금지 문구"
+      }
+    ]
+  }
+}

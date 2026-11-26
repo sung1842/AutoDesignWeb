@@ -1,0 +1,11 @@
+{
+  "id": "G-07",
+  "expect": "pass",
+  "input": {
+    "vw": 1280,
+    "brokenImages": [],
+    "fontErrors": [],
+    "consoleErrors": [],
+    "externalRequests": []
+  }
+}

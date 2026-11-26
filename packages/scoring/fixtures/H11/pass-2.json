@@ -1,0 +1,16 @@
+{
+  "id": "H11",
+  "expect": "pass",
+  "input": {
+    "spec": {
+      "tokens": {},
+      "decor": {
+        "max": 2,
+        "effects": [
+          "grain",
+          "rule-lines"
+        ]
+      }
+    }
+  }
+}

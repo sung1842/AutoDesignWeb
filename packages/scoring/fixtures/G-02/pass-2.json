@@ -1,0 +1,30 @@
+{
+  "id": "G-02",
+  "expect": "pass",
+  "input": {
+    "measures": [
+      {
+        "vw": 1280,
+        "texts": [
+          {
+            "sel": "p",
+            "text": "본문",
+            "ratio": 4.6,
+            "large": false
+          }
+        ]
+      },
+      {
+        "vw": 375,
+        "texts": [
+          {
+            "sel": "h2",
+            "text": "큰 글자",
+            "ratio": 3.1,
+            "large": true
+          }
+        ]
+      }
+    ]
+  }
+}

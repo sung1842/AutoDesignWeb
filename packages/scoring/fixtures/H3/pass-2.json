@@ -1,0 +1,37 @@
+{
+  "id": "H3",
+  "expect": "pass",
+  "input": {
+    "spec": {
+      "tokens": {
+        "color": {
+          "primary": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [
+                0.3,
+                0.01,
+                30
+              ],
+              "alpha": 1
+            }
+          },
+          "bg": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [
+                0.98,
+                0.02,
+                80
+              ],
+              "alpha": 1
+            }
+          }
+        }
+      },
+      "theme": "light"
+    }
+  }
+}

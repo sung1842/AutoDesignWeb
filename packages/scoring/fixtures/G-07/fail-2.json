@@ -1,0 +1,10 @@
+{
+  "id": "G-07",
+  "expect": "fail",
+  "input": {
+    "vw": 375,
+    "brokenImages": [
+      "/assets/images/missing.jpg"
+    ]
+  }
+}

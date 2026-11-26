@@ -5,6 +5,7 @@ import type { LintFinding, Rule } from "../src/types.js";
 interface P {
   maxLines: Record<string, number>;
   orphanMaxChars: number;
+  orphanMinLines: number;
 }
 export const rule: Rule = {
   id: "AIL-24",
@@ -22,7 +23,7 @@ export const rule: Rule = {
     for (const h of s.headlines.filter((x) => x.role === "hero.headline")) {
       if (max !== undefined && h.lines > max)
         out.push(finding("AIL-24", "warn", `${s.vw}px 헤드라인 ${h.lines}줄 > ${max}`));
-      if (h.lines >= 2 && h.lastLineChars <= p.orphanMaxChars)
+      if (h.lines >= p.orphanMinLines && h.lastLineChars <= p.orphanMaxChars)
         out.push(finding("AIL-24", "warn", `마지막 줄 ${h.lastLineChars}글자(고아)`));
     }
     return out;

@@ -1,0 +1,10 @@
+{
+  "id": "G-07",
+  "expect": "fail",
+  "input": {
+    "vw": 1280,
+    "externalRequests": [
+      "https://fonts.googleapis.com/css2"
+    ]
+  }
+}

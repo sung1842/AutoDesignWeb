@@ -1,0 +1,14 @@
+{
+  "id": "G-03",
+  "expect": "fail",
+  "input": {
+    "vw": 1280,
+    "ui": [
+      {
+        "sel": "input",
+        "kind": "border",
+        "ratio": 1.6
+      }
+    ]
+  }
+}

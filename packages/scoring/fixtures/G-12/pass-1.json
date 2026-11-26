@@ -1,0 +1,74 @@
+{
+  "id": "G-12",
+  "expect": "pass",
+  "input": {
+    "vw": 1280,
+    "styles": {
+      "fonts": [
+        {
+          "sel": "p",
+          "role": "body",
+          "px": 18
+        }
+      ],
+      "colors": [
+        {
+          "sel": "p",
+          "prop": "color",
+          "rgba": [
+            34,
+            34,
+            34,
+            1
+          ]
+        }
+      ],
+      "radii": [
+        {
+          "sel": "button",
+          "prop": "border-radius",
+          "px": 4
+        }
+      ],
+      "spaces": [
+        {
+          "sel": "section",
+          "prop": "padding-top",
+          "px": 16
+        }
+      ]
+    },
+    "integrity": {
+      "ref": {
+        "colors": [
+          {
+            "name": "fg",
+            "hex": "#222222",
+            "alpha": 1
+          },
+          {
+            "name": "bg",
+            "hex": "#FFFFFF",
+            "alpha": 1
+          }
+        ],
+        "radii": [
+          0,
+          4
+        ],
+        "spaces": [
+          0,
+          8,
+          16
+        ],
+        "fontSizes": {
+          "t-body": 18,
+          "t-1": 48
+        },
+        "tolerancePx": 0.5,
+        "deltaEOk": 0.01
+      },
+      "drift": []
+    }
+  }
+}

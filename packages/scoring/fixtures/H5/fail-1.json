@@ -1,0 +1,14 @@
+{
+  "id": "H5",
+  "expect": "fail",
+  "input": {
+    "render": {
+      "fontWeights": [
+        300,
+        400,
+        500,
+        700
+      ]
+    }
+  }
+}

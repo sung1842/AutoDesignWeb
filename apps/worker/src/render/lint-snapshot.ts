@@ -123,7 +123,7 @@ function collect(): Collected {
   };
   for (const p of all) {
     const kids = [...p.children];
-    if (kids.length < 2 || !kids.every(isIconCard)) continue;
+    if (!kids[1] || !kids.every(isIconCard)) continue; // 형제 2개 이상
     const ws = kids.map((k) => k.getBoundingClientRect().width);
     const max = Math.max(...ws);
     const sec = p.closest("section");

@@ -1,0 +1,14 @@
+{
+  "id": "G-03",
+  "expect": "fail",
+  "input": {
+    "vw": 375,
+    "ui": [
+      {
+        "sel": "a.btn",
+        "kind": "boundary",
+        "ratio": 2.9
+      }
+    ]
+  }
+}

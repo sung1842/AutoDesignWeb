@@ -1,0 +1,10 @@
+{
+  "id": "G-06",
+  "expect": "fail",
+  "input": {
+    "vw": 1280,
+    "overlaps": [
+      "p × p 6px²"
+    ]
+  }
+}

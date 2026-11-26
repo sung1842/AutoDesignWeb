@@ -1,0 +1,9 @@
+{
+  "id": "G-04",
+  "expect": "fail",
+  "input": {
+    "vw": 375,
+    "scrollWidth": 412,
+    "innerWidth": 375
+  }
+}

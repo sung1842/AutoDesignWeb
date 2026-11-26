@@ -1,0 +1,13 @@
+{
+  "id": "H4",
+  "expect": "fail",
+  "input": {
+    "render": {
+      "fontFamilies": [
+        "Nanum Myeongjo",
+        "Pretendard",
+        "Gowun Dodum"
+      ]
+    }
+  }
+}

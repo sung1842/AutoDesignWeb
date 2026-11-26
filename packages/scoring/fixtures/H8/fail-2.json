@@ -1,0 +1,9 @@
+{
+  "id": "H8",
+  "expect": "fail",
+  "input": {
+    "render": {
+      "spacingRatio": 0.7
+    }
+  }
+}

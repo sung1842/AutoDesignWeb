@@ -1,0 +1,12 @@
+{
+  "id": "H10",
+  "expect": "pass",
+  "input": {
+    "spec": {
+      "tokens": {},
+      "forbidden": {
+        "conflict_ids": []
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "G-06",
+  "expect": "pass",
+  "input": {
+    "vw": 375,
+    "overlaps": []
+  }
+}

@@ -61,7 +61,9 @@ export interface HarmonyData {
 let cached: HarmonyData | null = null;
 export function loadHarmony(root: string = findRepoRoot()): HarmonyData {
   if (cached) return cached;
-  cached = JSON.parse(readFileSync(join(root, "data/taxonomy/harmony.json"), "utf8")) as HarmonyData;
+  cached = JSON.parse(
+    readFileSync(join(root, "data/taxonomy/harmony.json"), "utf8"),
+  ) as HarmonyData;
   return cached;
 }
 
@@ -198,7 +200,9 @@ function specConflicts(spec: unknown, tree: unknown, shadowBlackL: number): stri
   if (theme === "dark") {
     const tokens = get(spec, "tokens");
     const scRaw = get(tokens, "shadow", "color", "$value", "components");
-    const sc: Lch | null = Array.isArray(scRaw) ? [num(scRaw[0]), num(scRaw[1]), num(scRaw[2])] : null;
+    const sc: Lch | null = Array.isArray(scRaw)
+      ? [num(scRaw[0]), num(scRaw[1]), num(scRaw[2])]
+      : null;
     const shadow = get(tokens, "shadow");
     const used =
       isObj(shadow) &&
@@ -217,8 +221,11 @@ function specConflicts(spec: unknown, tree: unknown, shadowBlackL: number): stri
   return out;
 }
 
-
-export function harmonyScore(spec: unknown, tree: unknown, opts: HarmonyOptions = {}): HarmonyResult {
+export function harmonyScore(
+  spec: unknown,
+  tree: unknown,
+  opts: HarmonyOptions = {},
+): HarmonyResult {
   const hd = opts.harmony ?? loadHarmony();
   const byId = new Map(hd.items.map((i) => [str(i.id), i]));
   const k = byId.get("constants") ?? {};
@@ -237,7 +244,9 @@ export function harmonyScore(spec: unknown, tree: unknown, opts: HarmonyOptions 
   const achroma = num(k.achromaticPrimaryExempt, 0.04);
 
   // H1 브랜드 색 수
-  const brands = r.brandColors ? mergeColors(r.brandColors, minC, mergeDE) : brandColors(tokens, minC, mergeDE);
+  const brands = r.brandColors
+    ? mergeColors(r.brandColors, minC, mergeDE)
+    : brandColors(tokens, minC, mergeDE);
   push("H1", tierPoints(tiers("H1"), brands.length), brands.length);
 
   // H2 색 관계
@@ -267,9 +276,9 @@ export function harmonyScore(spec: unknown, tree: unknown, opts: HarmonyOptions 
   push("H3", (c1 ? per : 0) + (c2 ? per : 0), { accentRatio: c1, bgChroma: c2 });
 
   // H4 폰트 패밀리(mono 제외)
-  const fams = r.fontFamilies ?? [familyOf(tokens, "heading"), familyOf(tokens, "body")].filter(
-    (x): x is string => x !== null,
-  );
+  const fams =
+    r.fontFamilies ??
+    [familyOf(tokens, "heading"), familyOf(tokens, "body")].filter((x): x is string => x !== null);
   const nonMono = new Set(fams.filter((f) => !/mono/i.test(f)));
   push("H4", tierPoints(tiers("H4"), nonMono.size), nonMono.size);
 
@@ -305,7 +314,10 @@ export function harmonyScore(spec: unknown, tree: unknown, opts: HarmonyOptions 
   const effects = r.decorEffects ?? (get(spec, "decor", "effects") as string[] | undefined) ?? [];
   const decorMax = num(get(spec, "decor", "max"), 2);
   const over = Math.max(0, new Set(effects).size - decorMax);
-  push("H11", num(rule("H11").base, 6) + over * num(rule("H11").perOver, -3), { count: effects.length, max: decorMax });
+  push("H11", num(rule("H11").base, 6) + over * num(rule("H11").perOver, -3), {
+    count: effects.length,
+    max: decorMax,
+  });
 
   // H12 리듬
   if (opts.violations) {

@@ -1,0 +1,20 @@
+{
+  "id": "G-11",
+  "expect": "pass",
+  "input": {
+    "originality": {
+      "config_version": "2027-S1.1",
+      "passed": true,
+      "violated": [],
+      "nearest_reference_id": "00000000-0000-4000-8000-000000000001",
+      "g2_matches": 2,
+      "g2_matched_attrs": [
+        "radius",
+        "depth"
+      ],
+      "min_phash_distance": 30,
+      "min_phash_reference_id": "00000000-0000-4000-8000-000000000001",
+      "g5_max_run": 3
+    }
+  }
+}

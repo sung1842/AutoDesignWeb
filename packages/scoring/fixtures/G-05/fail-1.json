@@ -1,0 +1,10 @@
+{
+  "id": "G-05",
+  "expect": "fail",
+  "input": {
+    "vw": 375,
+    "clipped": [
+      "[data-role='hero.headline']"
+    ]
+  }
+}

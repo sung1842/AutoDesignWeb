@@ -1,0 +1,14 @@
+{
+  "id": "H10",
+  "expect": "fail",
+  "input": {
+    "spec": {
+      "tokens": {},
+      "forbidden": {
+        "conflict_ids": [
+          "CF-03"
+        ]
+      }
+    }
+  }
+}

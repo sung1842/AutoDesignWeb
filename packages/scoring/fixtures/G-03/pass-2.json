@@ -1,0 +1,14 @@
+{
+  "id": "G-03",
+  "expect": "pass",
+  "input": {
+    "vw": 375,
+    "ui": [
+      {
+        "sel": "button",
+        "kind": "focus",
+        "ratio": 7
+      }
+    ]
+  }
+}

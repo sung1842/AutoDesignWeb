@@ -5,6 +5,7 @@ import { colorClusters, pixelFeatures, PIXEL_SPEC, type PixelFeatures } from "./
 export const PACKAGE_NAME = "@tastefit/extractor";
 export * from "./dom.js";
 export * from "./pixels.js";
+export * from "./phash.js";
 
 /** 추출기 버전(정규화기 extractor_version과 대조, 5.8). */
 export const EXTRACTOR_VERSION = "0.1.0";

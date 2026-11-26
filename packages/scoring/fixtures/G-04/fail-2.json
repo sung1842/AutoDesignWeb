@@ -1,0 +1,13 @@
+{
+  "id": "G-04",
+  "expect": "fail",
+  "input": {
+    "measures": [
+      {
+        "vw": 1920,
+        "scrollWidth": 1921,
+        "innerWidth": 1920
+      }
+    ]
+  }
+}

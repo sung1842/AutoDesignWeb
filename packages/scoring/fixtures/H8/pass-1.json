@@ -1,0 +1,9 @@
+{
+  "id": "H8",
+  "expect": "pass",
+  "input": {
+    "render": {
+      "spacingRatio": 1
+    }
+  }
+}

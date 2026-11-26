@@ -8,8 +8,8 @@ interface P {
   blurMinPx: number;
   alphaMax: number;
   warnTypes: string[];
+  cardRatioMin: number;
 }
-const RATIO_MIN = 0.8;
 
 export const rule: Rule = {
   id: "AIL-06",
@@ -36,7 +36,7 @@ export const rule: Rule = {
         sh.every((s) => (s.color?.alpha ?? 1) <= p.alphaMax)
       );
     });
-    if (soft.length / cards.length >= RATIO_MIN) {
+    if (soft.length / cards.length >= p.cardRatioMin) {
       const typeId = ctx.spec && typeof ctx.spec.type_id === "string" ? ctx.spec.type_id : "";
       const sev = p.warnTypes.includes(typeId) ? "warn" : "error";
       out.push(finding("AIL-06", sev, `카드 ${soft.length}/${cards.length} rounded+흐린 그림자`));

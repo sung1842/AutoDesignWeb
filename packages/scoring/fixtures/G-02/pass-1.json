@@ -1,0 +1,15 @@
+{
+  "id": "G-02",
+  "expect": "pass",
+  "input": {
+    "vw": 1280,
+    "texts": [
+      {
+        "sel": "h1",
+        "text": "원두",
+        "ratio": 12.1,
+        "large": true
+      }
+    ]
+  }
+}

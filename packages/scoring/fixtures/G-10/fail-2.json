@@ -1,0 +1,12 @@
+{
+  "id": "G-10",
+  "expect": "fail",
+  "input": {
+    "brandName": "한결로스터리",
+    "nav": [],
+    "hero": [
+      "한결로스터리"
+    ],
+    "footer": []
+  }
+}

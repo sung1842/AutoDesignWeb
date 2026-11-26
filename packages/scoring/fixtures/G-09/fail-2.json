@@ -1,0 +1,18 @@
+{
+  "id": "G-09",
+  "expect": "fail",
+  "input": {
+    "lint": [
+      {
+        "rule": "AIL-24",
+        "severity": "warn",
+        "message": "고아"
+      },
+      {
+        "rule": "AIL-01",
+        "severity": "error",
+        "message": "보라~파랑"
+      }
+    ]
+  }
+}

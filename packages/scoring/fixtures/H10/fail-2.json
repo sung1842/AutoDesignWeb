@@ -1,0 +1,12 @@
+{
+  "id": "H10",
+  "expect": "fail",
+  "input": {
+    "spec": {
+      "tokens": {}
+    },
+    "conflicts": [
+      "CF-07"
+    ]
+  }
+}

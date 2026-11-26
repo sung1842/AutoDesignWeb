@@ -1,0 +1,13 @@
+{
+  "version": "2027-S1.1",
+  "g1_min_domains": 3,
+  "g2_max_matches": 3,
+  "g2_delta_e_threshold": 3.0,
+  "g3_phash_max_distance": 8,
+  "g3_viewport": [1280, 800],
+  "g5_max_consecutive_words": 7,
+  "g4_enabled": false,
+  "g6_enabled": false,
+  "calibrated_at": "YYYY-MM-DD",
+  "calibration_set": "eval/originality/pairs-v1.json"
+}

@@ -6,6 +6,7 @@ interface P {
   sameBgRun: number;
   strictAltMinSections: number;
   centeredRatioMax: number;
+  minSections: number;
 }
 export const rule: Rule = {
   id: "AIL-07",
@@ -16,8 +17,8 @@ export const rule: Rule = {
   fixHint: "섹션 하나의 pad를 키우고 inverse 섹션을 넣어 리듬을 만드세요.",
   check(ctx) {
     const secs = sections(ctx.tree);
-    if (secs.length < 2) return [];
     const p = params<P>("AIL-07");
+    if (secs.length < p.minSections) return [];
     const out: LintFinding[] = [];
     for (let i = 1; i < secs.length; i++)
       if (secs[i]?.variant === secs[i - 1]?.variant)

@@ -1,0 +1,17 @@
+{
+  "id": "G-08",
+  "expect": "fail",
+  "input": {
+    "axe": [
+      {
+        "vw": 1280,
+        "violations": [
+          {
+            "id": "image-alt",
+            "impact": "serious"
+          }
+        ]
+      }
+    ]
+  }
+}

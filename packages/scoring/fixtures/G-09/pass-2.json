@@ -1,0 +1,13 @@
+{
+  "id": "G-09",
+  "expect": "pass",
+  "input": {
+    "lint": [
+      {
+        "rule": "AIL-15",
+        "severity": "warn",
+        "message": "상투 CTA 3회"
+      }
+    ]
+  }
+}

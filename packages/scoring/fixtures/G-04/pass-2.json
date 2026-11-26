@@ -1,0 +1,33 @@
+{
+  "id": "G-04",
+  "expect": "pass",
+  "input": {
+    "measures": [
+      {
+        "vw": 375,
+        "scrollWidth": 375,
+        "innerWidth": 375
+      },
+      {
+        "vw": 768,
+        "scrollWidth": 768,
+        "innerWidth": 768
+      },
+      {
+        "vw": 1024,
+        "scrollWidth": 1024,
+        "innerWidth": 1024
+      },
+      {
+        "vw": 1280,
+        "scrollWidth": 1280,
+        "innerWidth": 1280
+      },
+      {
+        "vw": 1920,
+        "scrollWidth": 1920,
+        "innerWidth": 1920
+      }
+    ]
+  }
+}

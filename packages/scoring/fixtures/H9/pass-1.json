@@ -1,0 +1,9 @@
+{
+  "id": "H9",
+  "expect": "pass",
+  "input": {
+    "render": {
+      "radiusRatio": 1
+    }
+  }
+}

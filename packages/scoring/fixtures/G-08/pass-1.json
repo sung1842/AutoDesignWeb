@@ -1,0 +1,16 @@
+{
+  "id": "G-08",
+  "expect": "pass",
+  "input": {
+    "axe": [
+      {
+        "vw": 1280,
+        "violations": []
+      },
+      {
+        "vw": 375,
+        "violations": []
+      }
+    ]
+  }
+}

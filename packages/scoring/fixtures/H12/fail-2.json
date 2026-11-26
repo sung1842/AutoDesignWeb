@@ -1,0 +1,23 @@
+{
+  "id": "H12",
+  "expect": "fail",
+  "input": {
+    "violations": [
+      {
+        "rule": "LT-06"
+      },
+      {
+        "rule": "LT-07"
+      },
+      {
+        "rule": "LT-08"
+      },
+      {
+        "rule": "LT-05"
+      },
+      {
+        "rule": "LT-06"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "id": "G-02",
+  "expect": "fail",
+  "input": {
+    "measures": [
+      {
+        "vw": 375,
+        "texts": [
+          {
+            "sel": "h2",
+            "text": "큰 글자",
+            "ratio": 2.4,
+            "large": true
+          }
+        ]
+      }
+    ]
+  }
+}

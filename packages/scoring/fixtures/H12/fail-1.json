@@ -1,0 +1,11 @@
+{
+  "id": "H12",
+  "expect": "fail",
+  "input": {
+    "violations": [
+      {
+        "rule": "LT-05"
+      }
+    ]
+  }
+}

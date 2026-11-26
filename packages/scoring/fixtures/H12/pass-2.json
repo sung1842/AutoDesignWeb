@@ -1,0 +1,14 @@
+{
+  "id": "H12",
+  "expect": "pass",
+  "input": {
+    "violations": [
+      {
+        "rule": "AIL-15"
+      },
+      {
+        "rule": "RH-01"
+      }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "id": "G-08",
+  "expect": "fail",
+  "input": {
+    "axe": [
+      {
+        "vw": 375,
+        "violations": [
+          {
+            "id": "button-name",
+            "impact": "critical"
+          }
+        ]
+      }
+    ]
+  }
+}

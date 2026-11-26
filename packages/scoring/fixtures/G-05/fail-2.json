@@ -1,0 +1,14 @@
+{
+  "id": "G-05",
+  "expect": "fail",
+  "input": {
+    "measures": [
+      {
+        "vw": 768,
+        "clipped": [
+          "p.tf-faq__a"
+        ]
+      }
+    ]
+  }
+}

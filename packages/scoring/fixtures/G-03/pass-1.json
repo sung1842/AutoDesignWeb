@@ -1,0 +1,14 @@
+{
+  "id": "G-03",
+  "expect": "pass",
+  "input": {
+    "vw": 1280,
+    "ui": [
+      {
+        "sel": "input",
+        "kind": "border",
+        "ratio": 3.4
+      }
+    ]
+  }
+}

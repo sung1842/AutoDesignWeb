@@ -1,0 +1,15 @@
+{
+  "id": "H9",
+  "expect": "pass",
+  "input": {
+    "spec": {
+      "tokens": {},
+      "l2": {
+        "shape.radius_family": "sharp"
+      }
+    },
+    "render": {
+      "radiusRatio": 1
+    }
+  }
+}

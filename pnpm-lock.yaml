@@ -124,7 +124,11 @@ importers:
 
   packages/auth: {}
 
-  packages/compliance: {}
+  packages/compliance:
+    dependencies:
+      '@tastefit/config':
+        specifier: workspace:^
+        version: link:../config
 
   packages/config:
     dependencies:
@@ -211,9 +215,15 @@ importers:
 
   packages/scoring:
     dependencies:
+      '@tastefit/compliance':
+        specifier: workspace:^
+        version: link:../compliance
       '@tastefit/config':
         specifier: workspace:^
         version: link:../config
+      '@tastefit/linter':
+        specifier: workspace:^
+        version: link:../linter
 
   packages/storage: {}
 

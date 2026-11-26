@@ -1,0 +1,14 @@
+{
+  "id": "H4",
+  "expect": "fail",
+  "input": {
+    "render": {
+      "fontFamilies": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    }
+  }
+}

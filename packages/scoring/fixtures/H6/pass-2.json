@@ -1,0 +1,9 @@
+{
+  "id": "H6",
+  "expect": "pass",
+  "input": {
+    "render": {
+      "typeScaleRatio": 0.96
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "id": "H4",
+  "expect": "pass",
+  "input": {
+    "render": {
+      "fontFamilies": [
+        "Nanum Myeongjo",
+        "Pretendard"
+      ]
+    }
+  }
+}

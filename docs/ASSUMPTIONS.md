@@ -590,3 +590,10 @@
 - 선택: ① 스냅숏 = 요소별 computed style(본문 하위 전 요소, svg 내부 제외) + 아이콘 카드 행(자식 전부가 ≤48px svg+제목+본문) + :root custom property 원문 + 헤드라인 줄(3.8.1과 같은 방법) + 글래스 뒤 휘도 표준편차(요소를 숨긴 스크린샷, 0–255) + spec.tokens 허용 집합(색 hex·radius·space px·스텝별 expectedSize) ② 카드 = data-card·article·클래스 card/__item/__cell, 버튼 = button·role=button·btn 클래스·cta 역할, 배지 = eyebrow·badge 역할·badge/pill/tag 클래스, 장식 = aria-hidden 또는 글자 없음, margin:auto = 좌우 여백 같고 0보다 큼 ③ B15 예시는 seed:temp가 scripts/data/linter-examples.ts 정의로 만든다(골격 교체, provenance temp). 손으로 쓴 최소 HTML·JSON이며 실제 렌더러 출력 검증은 골든·폴백 단위가 맡는다
 - 영향 범위: apps/worker/src/render/lint-snapshot.ts, scripts/data, data/linter/examples
 - 되돌리기 비용: 낮음
+
+## ASM-084 · M3 · gap · 2026-11-26T15:50Z
+- 질문: 게이트 순수 함수의 입력 형태(G-01·G-08~G-11·G-13), G-13이 쓸 abuse 판정 함수(08장 8.9.2 `packages/compliance/abuse.ts`)가 없음, ΔE2000을 OKLab 값에 어떻게 적용할지
+- 근거 탐색: 04장 4.10.2·4.10.6, 08장 8.3.2·8.3.3·8.9.2, 기존 scoring evaluateGates·harmonyScore, config/high_risk_brands.json·prohibited_categories.json
+- 선택: ① 측정 게이트(G-02~07·12) 입력 = PageMeasure 1개 또는 `{measures: []}`, G-01 = `{spec, tree}`(treeLint의 G-01·LT-01~04·09·10 error), G-08 = `{axe: [{vw, violations[{id, impact}]}]}`(serious·critical 차단), G-09 = `{lint}`(error 수 > generation.lint.errorMax), G-10 = `{brandName, nav[], hero[], footer[]}`(NFC 포함), G-11 = `{originality}`, G-13 = `{texts}` ② `judgeAbuse(texts)`: 8.9.2 정규화 후 canonical·alias(길이 ≥ 3) 포함·도메인 포함 = high_risk, 피싱 문구 11개 = phishing_term, 금지 업종 키워드 = prohibited_category. 편집 거리(c)는 브랜드명 단독 판정(브리프)에서 M5에 추가 ③ ΔE2000 = OKLab → 선형 sRGB → XYZ(D65) → CIELAB 후 CIEDE2000 ④ G3 비교 대상이 없으면 min_phash_distance = 64(비트 수), 참조 id null ⑤ H 항목 함수 입력 = `{spec, tree, render?, violations?, conflicts?}` → harmonyScore의 해당 항목 {score, max, measured} ⑥ 픽스처는 scripts/data/gen-scoring-fixtures.ts가 결정적으로 만들고 자체 잠금
+- 영향 범위: packages/scoring(gate-fns·originality·fixtures), packages/compliance, packages/extractor(phash), config/originality.json
+- 되돌리기 비용: 낮음

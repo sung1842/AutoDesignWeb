@@ -5,7 +5,9 @@ const col = (l: number, c: number, h: number): unknown => ({
   $type: "color",
   $value: { colorSpace: "oklch", components: [l, c, h], alpha: 1 },
 });
-const typ = (px: number, w: number): unknown => ({ $value: { fontSize: { value: px, unit: "px" }, fontWeight: w } });
+const typ = (px: number, w: number): unknown => ({
+  $value: { fontSize: { value: px, unit: "px" }, fontWeight: w },
+});
 
 function baseSpec(): Record<string, unknown> {
   return {
@@ -33,8 +35,13 @@ function baseSpec(): Record<string, unknown> {
     },
   };
 }
-const tree = { sections: [{ block: "hero", variant: "hero.split", slots: { eyebrow: { copy: { text: "소개" } } } }] };
-const pts = (r: ReturnType<typeof harmonyScore>, id: string): number => r.items.find((i) => i.id === id)?.points ?? -1;
+const tree = {
+  sections: [
+    { block: "hero", variant: "hero.split", slots: { eyebrow: { copy: { text: "소개" } } } },
+  ],
+};
+const pts = (r: ReturnType<typeof harmonyScore>, id: string): number =>
+  r.items.find((i) => i.id === id)?.points ?? -1;
 
 describe("harmonyScore(03장 3.14.3, ASM-074)", () => {
   it("harmony.json 배점 합 100, 기본 명세 H = 100", () => {
@@ -71,7 +78,12 @@ describe("harmonyScore(03장 3.14.3, ASM-074)", () => {
 
   it("H4·H5·H7: 렌더 측정 입력이 토큰보다 우선", () => {
     const r = harmonyScore(baseSpec(), tree, {
-      render: { fontFamilies: ["a", "b", "c", "mono-x"], fontWeights: [300, 400, 500, 700], displayPx: 40, bodyPx: 18 },
+      render: {
+        fontFamilies: ["a", "b", "c", "mono-x"],
+        fontWeights: [300, 400, 500, 700],
+        displayPx: 40,
+        bodyPx: 18,
+      },
     });
     expect(pts(r, "H4")).toBe(0);
     expect(pts(r, "H5")).toBe(2);
@@ -80,7 +92,12 @@ describe("harmonyScore(03장 3.14.3, ASM-074)", () => {
 
   it("H6·H8·H9 비율 구간, H11 초과 1개당 −3, H12 LT-05~08만 2점씩", () => {
     const r = harmonyScore(baseSpec(), tree, {
-      render: { typeScaleRatio: 0.92, spacingRatio: 0.5, radiusRatio: 0.96, decorEffects: ["a", "b", "c"] },
+      render: {
+        typeScaleRatio: 0.92,
+        spacingRatio: 0.5,
+        radiusRatio: 0.96,
+        decorEffects: ["a", "b", "c"],
+      },
       violations: [{ rule: "LT-05" }, { rule: "LT-07" }, { rule: "LT-01" }, { rule: "RH-01" }],
     });
     expect(pts(r, "H6")).toBe(5);
@@ -128,7 +145,13 @@ describe("harmonyScore(03장 3.14.3, ASM-074)", () => {
       expect(r.total, id).toBeLessThanOrEqual(79);
     }
     const t12 = {
-      sections: [{ block: "hero", variant: "hero.centered", slots: { eyebrow: { copy: { text: "✨ 신규 출시" } } } }],
+      sections: [
+        {
+          block: "hero",
+          variant: "hero.centered",
+          slots: { eyebrow: { copy: { text: "✨ 신규 출시" } } },
+        },
+      ],
     };
     const r = harmonyScore(baseSpec(), t12);
     expect(r.conflicts).toContain("CF-12");
