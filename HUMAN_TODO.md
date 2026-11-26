@@ -51,3 +51,6 @@
 - [ ] (BLK-018) temp 정규화기 2026-S0로는 프리셋 앵커 왕복(5축 모두 0.10 초과)·앵커 분리(0.129 < 0.25)를 통과할 수 없습니다. human 정규화기(사람 라벨 코퍼스) 또는 05장 5.9 앵커 실패 절차(블라인드 라벨)로 3.4.7 의도값·프리셋 조정이 필요합니다
 - [ ] (BLK-019) 원본 유사도 보정 보고서(08장 8.3.4, 2인 라벨 30쌍)를 작성해 eval/originality/report-2027-S1.1.md(provenance human, labelers 2, yes_count 0)로 넣어 주세요
 - [ ] (ASM-089) config/copy_templates.json(temp)의 hero.eyebrow 0번을 {name}으로 바꿨습니다(폴백 시안 G-10 브랜드명 hero 존재). 템플릿 문안 확정 때 함께 확인해 주세요
+
+## BLK-022 (M4 survey-items) · 2026-11-26
+- 설문 자극물 활성 1/48 카드·쌍 축별 0~1(temp 정규화기 탓 추정). 사람 라벨 정규화기(05장 5.7, G7a) 준비 후 `pnpm survey:build` 재실행. 재현 `pnpm survey:build --check`. 상세는 BLOCKED.md BLK-022
