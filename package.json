@@ -38,6 +38,7 @@
     "db:grants-snapshot": "tsx scripts/data/grants-snapshot.ts",
     "survey:build": "tsx scripts/survey/build.ts",
     "eval:golden": "tsx scripts/todo.ts eval:golden M7",
+    "eval:golden:build-answers": "tsx scripts/eval/golden-build-answers.ts",
     "release:check": "tsx scripts/todo.ts release:check M8",
     "fixtures:layouts": "tsx scripts/data/fixtures-layouts.ts",
     "eval:extractor:selfcheck": "tsx scripts/eval/extractor-selfcheck.ts",

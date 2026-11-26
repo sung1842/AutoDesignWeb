@@ -4,3 +4,4 @@ export * from "./engine.js";
 export * from "./sim.js";
 export * from "./tune.js";
 export * from "./stimuli.js";
+export * from "./golden.js";

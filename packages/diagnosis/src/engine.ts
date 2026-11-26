@@ -114,10 +114,14 @@ export interface EngineInput {
   tuned?: Tuned;
   /** 2.16.1 V-RAND: 1단계 explore만·2단계 축과 수준쌍 무작위(적응형 이득 비교용). */
   policy?: "adaptive" | "random";
+  /** β 덮어쓰기(AC-07-20 변이 재생 전용). */
+  beta?: number;
 }
 
 export function createEngine(input: EngineInput) {
   const D = diagConst();
+  /** 갱신·정보량의 β(기본 diagnosis.beta). 변이 테스트(AC-07-20)만 바꾼다. */
+  const BETA = input.beta ?? D.beta;
   const tu = input.tuned ?? tuned();
   const randomPolicy = input.policy === "random";
   const sig0 = Array.from({ length: AXIS_IDS.length }, () => D.sigma0);
@@ -167,8 +171,8 @@ export function createEngine(input: EngineInput) {
       if (q.kind === "check") d.checked = true;
       else if (a.kind === "option") {
         const c = q.options.findIndex((o) => o.itemId === a.chosen);
-        r.ell = choiceProbs(X, post.mu, D.beta, D.lambda)[c];
-        post = updateMNL(post, X, c, D.beta, D.lambda);
+        r.ell = choiceProbs(X, post.mu, BETA, D.lambda)[c];
+        post = updateMNL(post, X, c, BETA, D.lambda);
       } else if (a.kind === "none_of_these") {
         d.noneCount++;
         d.lastNoneMean =
@@ -324,7 +328,7 @@ export function createEngine(input: EngineInput) {
     if (randomPolicy) best = cands[Math.floor(r() * cands.length)] as PairItem;
     else
       for (const p of [...cands].sort((a, b) => lvl(a) - lvl(b))) {
-        const h = fisherDiag([p.a.x, p.b.x], d.post.mu, D.beta, D.lambda)[kStar] ?? 0;
+        const h = fisherDiag([p.a.x, p.b.x], d.post.mu, BETA, D.lambda)[kStar] ?? 0;
         if (h > bestH) {
           bestH = h;
           best = p;

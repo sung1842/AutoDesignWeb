@@ -200,5 +200,6 @@
 - 재현: pnpm survey:build --check
 - 원인 추정: 실측 L1을 만드는 정규화기가 B18 합성 부트스트랩(2026-S0, temp)이고 추출기 왕복이 맞지 않음(BLK-012·017·018과 같은 뿌리). 렌더러가 L2 차이를 충분히 드러내지 못하는 축(shape·depth, M2-09d4d)도 겹침
 - 시도: (1) 임계값·채택 기준 완화 → 금지 (2) 정규화기 재적합 → 09장 F19(홀드아웃 왕복 실패로 재적합 금지)
+- 파급: `pnpm eval:golden:build-answers` 0/32(SURVEY_ITEMS_INSUFFICIENT stage 1, 9.4.6 ⑪), `sim:survey --gate`(④) 입력 부족. 계획 L1을 x로 둔 픽스처에서는 build-answers 32/32·M1a 24/24, β 8.5 변이 9/24로 검출(로직 확인)
 - 처리: fail로 두고 M5 이후 진행(9.4.6 ①). 사람 라벨 정규화기(05장 5.7) 확보 후 `pnpm survey:build` 재실행 → 2회차는 입력 해시가 바뀐 항목만 다시 렌더
 - 상태: open

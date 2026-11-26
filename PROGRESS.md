@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T18:45Z}
+- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T18:46Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
@@ -150,7 +150,7 @@
   - [x] 06 POST /api/events·이벤트 레지스트리 zod·identity_links(events.test 7/7)
   - [ ] 07 진단·결과 화면(01장, packages/ui 토큰)·닮은 사이트 3 링크·비제휴 고지
   - [ ] 08 E2E(375·1280)·MBTI grep
-  - [ ] 09 eval:golden:build-answers·골든 자체 잠금
+  - [~] 09 eval:golden:build-answers·골든 자체 잠금: [x] buildGoldenAnswers·replayGolden·CLI(엔진 beta 덮어쓰기, 계획 L1 픽스처 32/32·M1a 24/24·β8.5 9/24) [ ] 실데이터 실행(BLK-022로 0/32) [ ] m4-done에서 data/golden 자체 잠금
   - [ ] 10 verify:m4 → m4-done
 - M3 이월: (B18 재생성은 M2-09d3으로 당김), B15 골격을 실제 예시로 교체 후 자체 잠금(ASM-021)
 - [x] M0 [x] M1 [x] M2 [x] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
@@ -159,6 +159,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 03:46 | M4-09 build-answers 구현(픽스처 32/32, β8.5 변이 검출). 실데이터는 BLK-022로 0/32
 - 2026-11-27 03:45 | M4-05b Next route.ts 11개 위임. 재빌드 manifest: DOM 일치, survey-build.test 남은 실패 = BLK-022
 - 2026-11-27 03:44 | M4-06 events.test 7/7(레지스트리·배치 거부·서버 이벤트·identity_links)
 - 2026-11-27 03:43 | M4-05a 진단 API in-process(api.test 13/13, p95 통과), 이벤트 수집 구현
