@@ -5,7 +5,7 @@
 - phase: P4
 - lock: {owner: 2026-11-26T06:08Z, since: 2026-11-26T07:14Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
-- tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
+- tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-26 20:08  # 이 세션 시작(15:08 KST)+5h 추정
 - 마지막 갱신: 2026-11-26 15:57 KST (세션 종료: M2-14c·14d, verify:m2 2차, 다음 14e 3차 실행)
@@ -74,8 +74,8 @@
 |---|---|---|---|---|---|---|---|
 | M0 | done | 2026-11-19T12:50Z | 2026-11-19T14:46Z | m0-done | pass_blocked | 5 | 7 |
 | M1 | done | 2026-11-19T14:47Z | 2026-11-19T17:53Z | m1-done | pass_blocked | 6 | 15 |
-| M2 | in_progress | 2026-11-19T17:54Z | – | – | – | – | – |
-| M3 | todo | – | – | – | – | – | – |
+| M2 | done | 2026-11-19T17:54Z | 2026-11-26T07:41Z | m2-done | pass_blocked | 13 | 54 |
+| M3 | in_progress | 2026-11-26T07:41Z | – | – | – | – | – |
 | M4 | todo | – | – | – | – | – | – |
 | M5 | todo | – | – | – | – | – | – |
 | M6 | todo | – | – | – | – | – | – |
@@ -127,7 +127,7 @@
   - [x] 11 미리보기: 서명 URL·preview 헤더·iframe·compileForEdit CSP·parentProbe(⑧, ASM-059). Next 라우트 연결은 M5
   - [x] 12 시각 회귀 기준선 24장(⑤, 지문 7303eb92a5bd, e2e/m2 재실행 24/24, Docker 지문 needs_ci, ASM-071)
   - [x] 13 renderer 금지 의존성 검사(⑦) 확인(수용 테스트 통과)
-  - [ ] 14 verify:m2 → m2-done(tags 맵). 1차(2026-11-26, reports/verify-m2-1.json) fail: acceptance:m2 17건. 정리:
+  - [x] 14 verify:m2 → m2-done(tags 맵). 1차(2026-11-26, reports/verify-m2-1.json) fail: acceptance:m2 17건. 정리:
     - [x] 14a SIG-11 hero G-05 회귀 수정·next peer @playwright/test 끊기(AD-033)·validateBundle 구현(AC-03-22·42 녹색, ASM-072)
     - [x] 14b treeLint 단계 T(G-01·LT-01~11·RH-01~02, ASM-073). patternRaw LT-03 하한 채우기·리듬 DFS·덱 index 분배, 픽스처 29 재생성. AC-04-11은 pl1-00(기준선 입력) LT-03 1건 → BLK-013
     - [x] 14c harmonyScore(packages/scoring/src/harmony.ts, AC-03-20 녹색, 단위 6, ASM-074)
@@ -135,13 +135,16 @@
     - [ ] 14d 원인 미확인 실패 개별 재현(`npx vitest run tests/acceptance/m2/<f> -t <AC>`): [x] AC-03-33(터치 타깃 CSS·하네스 폰트 캐시, ASM-075; 빈 캐시는 180s 초과 위험) [x] AC-03-18 PS-T1~T8(녹색, 각 50~90s: ASM-075 하네스 캐시 효과) [x] AC-03-23(라틴 서브셋 한글 제외·mono 스택·하네스 한글 구간, ASM-076) [x] AC-03-26·AC-03-45 ②④(재현 안 됨, 녹색) [~] 빈 캐시 대비: 페이지당 python 1회로 묶음(ASM-075). 그래도 빈 캐시 AC-03-33 ≈ 400페이지 × 1.2s > 180s(2코어), 데운 캐시 52~132s. 남은 안: 상주 서브셋 프로세스(페이지당 ≈0.8s, 여전히 빠듯) 또는 빠른 환경 확인
     - [ ] 14e verify:m2 재실행. 2차(2026-11-26, reports/verify-m2-2.json) fail 17→4 비BLK: AC-03-33(전체 실행 중 180s 초과, 단독 통과), AC-06-32 m0(간헐, 단독 통과), AC-03-19·AC-04-08(BLK-009·012 재현 명령 줄이 없어 매핑 실패 → BLOCKED.md에 추가). 다음: 3차 실행(데운 폰트 캐시) → pass_blocked면 m2-done.(약 60분, 백그라운드 nohup 후 reports/verify-m2.partial.json 확인). 남는 것: AC-03-19(BLK-009)·AC-04-08(BLK-012) blocked
       - 3차(2026-11-26, reports/verify-m2-3.json, 데운 캐시): acceptance:m2 blocked만(BLK-009·012·013, AC-03-33 통과). 남은 fail = AC-06-32 m0 "기본 env 통과" 1건(verify 안에서만 3회째, 단독·m0 전체 단독은 통과, 원인 미상). 4차는 NODE_OPTIONS 진단 훅(저장소 밖)으로 출력 수집
+      - 4차(reports/verify-m2-4.json, ae60108): pass_blocked(BLK-001~006·009·012·013) → m2-done. AC-06-32는 이번엔 통과(간헐, 재발 시 BLOCKED 등록)
+- M3 계획(9.4.5, AC는 07장 7.12.1 배정표 M3. 읽을 장은 CLAUDE.md 구현 규칙 3절): [ ] 01 M3 수용 테스트 작성·자체 잠금(다음 세션에서 하위 단위로 쪼갬)
 - M3 이월: (B18 재생성은 M2-09d3으로 당김), B15 골격을 실제 예시로 교체 후 자체 잠금(ASM-021)
-- [x] M0 [x] M1 [ ] M2 [ ] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
+- [x] M0 [x] M1 [x] M2 [ ] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
 
 ## P5. 완료
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-26 16:45 | verify:m2 4차 pass_blocked → m2-done(ae60108, tags 맵). 다음 M3-01 계획·수용 테스트
 - 2026-11-26 16:15 | verify:m2 3차 fail: 비BLK는 AC-06-32 m0(verify 안에서만 재현) 1건. 4차 진단 실행
 - 2026-11-26 15:55 | verify:m2 2차 fail(비BLK 4: 03-33 시간·06-32 간헐·BLK-009/012 재현 명령 누락→보완), 하네스 서체 묶음 생성
 - 2026-11-26 15:57 | 세션 종료(잠금 해제). 다음 M2-14e 3차 verify:m2

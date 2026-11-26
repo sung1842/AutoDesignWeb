@@ -1,8 +1,8 @@
 {
   "milestone": "M2",
-  "gitSha": "2ab7ebe62319660ef83cd2cca584f906d556d2f9",
-  "startedAt": "2026-11-26T05:03:41.410Z",
-  "finishedAt": "2026-11-26T05:30:40.975Z",
+  "gitSha": "ae60108645be231225d1eba2d35edfcf975290e6",
+  "startedAt": "2026-11-26T07:14:52.647Z",
+  "finishedAt": "2026-11-26T07:40:51.036Z",
   "steps": [
     {
       "name": "guard",
@@ -12,37 +12,42 @@
         "BLK-001",
         "BLK-003"
       ],
-      "durationMs": 17657
+      "durationMs": 18574
     },
     {
       "name": "lint",
       "status": "pass",
       "details": "",
-      "durationMs": 2889
+      "durationMs": 3258
     },
     {
       "name": "typecheck",
       "status": "pass",
       "details": "",
-      "durationMs": 357
+      "durationMs": 395
     },
     {
       "name": "unit",
       "status": "pass",
       "details": "170건 통과",
-      "durationMs": 228520
+      "durationMs": 240812
     },
     {
       "name": "trace",
       "status": "pass",
       "details": "WARN AC-06-99: 배정표에 없음 → M8로 간주(다음 spec-lock 전에 표에 넣어야 함)\nqa:trace: AC 97/97 pass (≤M2), TC 판정 제외\n",
-      "durationMs": 967
+      "durationMs": 1037
     },
     {
       "name": "acceptance:m0",
-      "status": "fail",
-      "details": "실패 4건:\n[BLK-002] tests/acceptance/m0/guard.test.ts > M0 guard AC-07-25: DECISIONS_LOG append-only 예외 1개 AC-07-25: CLAUDE.md·07·09장의 DECISIONS_LOG 경로가 하나뿐이다\n[BLK-004] tests/acceptance/m0/qa-trace.test.ts > M0 qa:trace AC-00-01 / AC-00-07: 문서 검사(qa:trace --docs) 통과\n[BLK-005] tests/acceptance/m0/repo.test.ts > M0 저장소 정적 검사 AC-09-11: spec-lock 이후 모든 커밋이 Conventional Commits + Milestone 꼬리말\ntests/acceptance/m0/stack.test.ts > M0 env 검증 AC-06-32: 기본 env(.env.example + local)로는 web·worker env 검사 통과",
-      "durationMs": 513091
+      "status": "blocked",
+      "details": "55/58 통과, blocked:\n[BLK-002] tests/acceptance/m0/guard.test.ts > M0 guard AC-07-25: DECISIONS_LOG append-only 예외 1개 AC-07-25: CLAUDE.md·07·09장의 DECISIONS_LOG 경로가 하나뿐이다\n[BLK-004] tests/acceptance/m0/qa-trace.test.ts > M0 qa:trace AC-00-01 / AC-00-07: 문서 검사(qa:trace --docs) 통과\n[BLK-005] tests/acceptance/m0/repo.test.ts > M0 저장소 정적 검사 AC-09-11: spec-lock 이후 모든 커밋이 Conventional Commits + Milestone 꼬리말",
+      "blockedBy": [
+        "BLK-002",
+        "BLK-004",
+        "BLK-005"
+      ],
+      "durationMs": 538887
     },
     {
       "name": "acceptance:m1",
@@ -51,13 +56,18 @@
       "blockedBy": [
         "BLK-006"
       ],
-      "durationMs": 24995
+      "durationMs": 24391
     },
     {
       "name": "acceptance:m2",
-      "status": "fail",
-      "details": "실패 4건:\ntests/acceptance/m2/assets.test.ts > AC-03-33·34 반응형 AC-03-33: 블록 variant × 프리셋 8 @375·768 터치 타깃 < touchTargetPx 0건\ntests/acceptance/m2/blocks.test.ts > AC-03-19·21 슬롯·폴백 체인(정적) AC-03-19: 모든 슬롯 maxLength ≥ 덱 상한, 덱에 없는 키 참조 0\n[BLK-013] tests/acceptance/m2/render.test.ts > AC-04-11 용도 3 × 패턴 4 픽스처 트리 12개가 스키마·린트 T(error 0)·렌더 하드 게이트를 통과\ntests/acceptance/m2/render.test.ts > AC-04-08 렌더 벡터 D(골든 θ*) 변형 쌍 추출 벡터 D ≥ renderDistMin 충족률 ≥ variantRenderDRatioMin",
-      "durationMs": 816507
+      "status": "blocked",
+      "details": "144/147 통과, blocked:\n[BLK-009] tests/acceptance/m2/blocks.test.ts > AC-03-19·21 슬롯·폴백 체인(정적) AC-03-19: 모든 슬롯 maxLength ≥ 덱 상한, 덱에 없는 키 참조 0\n[BLK-013] tests/acceptance/m2/render.test.ts > AC-04-11 용도 3 × 패턴 4 픽스처 트리 12개가 스키마·린트 T(error 0)·렌더 하드 게이트를 통과\n[BLK-012] tests/acceptance/m2/render.test.ts > AC-04-08 렌더 벡터 D(골든 θ*) 변형 쌍 추출 벡터 D ≥ renderDistMin 충족률 ≥ variantRenderDRatioMin",
+      "blockedBy": [
+        "BLK-009",
+        "BLK-013",
+        "BLK-012"
+      ],
+      "durationMs": 715761
     },
     {
       "name": "e2e:m0",
@@ -74,9 +84,9 @@
     {
       "name": "e2e:m2",
       "status": "pass",
-      "details": "\n  24 passed (13.5s)\n",
-      "durationMs": 14577
+      "details": "\n  24 passed (13.9s)\n",
+      "durationMs": 15269
     }
   ],
-  "result": "fail"
+  "result": "pass_blocked"
 }
