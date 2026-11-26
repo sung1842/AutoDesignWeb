@@ -548,3 +548,10 @@
 - 선택: ① 규칙 = 4.13.2 AIL 24개(AC-04-26 "24개 규칙"). LT·RH·G·CP는 게이트·트리 검사로 각자 AC가 있음 ② `RULES: {id, stage[], severity[], appliesTo[], messageKo, fixHint}[]`, severity는 표 심각도 칸에 나오는 error·warn 집합 ③ `lintAll({spec?, tree?, copy?, brand?, snapshot?, ...}) → LintFinding[]`, 렌더 단계 D·P 입력은 하네스 `lintSnapshot(html, vw, {spec?})`(계약 확장)이 만든 스냅숏 ④ B15 예시 `data/linter/examples/AIL-xx/*.json` = `{ruleId, expect: violation|clean, severity?, stages[], provenance, input}`; input.html·vw가 있으면 렌더, 나머지는 lintAll에 그대로 ⑤ `matchCliche(text, {slot?: llm|user, userText?}) → {id, severity, lang}[]`, 기본 slot=llm(error), user 슬롯에서 userText와 같은 표현은 warn. 사전 패턴은 temp라 활용형 어간 정규식으로 seed:temp에서 다시 만든다
 - 영향 범위: tests/acceptance/m3/linter.test.ts, packages/linter, apps/worker harness, data/linter
 - 되돌리기 비용: 중간(자체 잠금 전까지 낮음)
+
+## ASM-078 · M3 · gap · 2026-11-26T08:55Z
+- 질문: AC-04-19(게이트·조화 순수 함수, 픽스처 ≥2)·AC-04-21·AC-08-11·12·13a(G-11)의 API·픽스처 위치·"통과/실패"의 H 항목 뜻이 장에 없음. `config/originality.json`(08장 8.3.3)이 저장소에 없음
+- 근거 탐색: 04장 4.10.2·4.10.3·4.10.6·4.10.7, 08장 8.3.1~8.3.5, 기존 scoring gates.ts(evaluateGates)·harmony.ts(harmonyScore), 05장 레퍼런스 temp 시드(originality_sig 없음)
+- 선택: ① scoring `GATE_FNS: Record<G-01..G-13, (input) => {id, pass, violations[]}>`, `HARMONY_FNS: Record<H1..H12, (input) => {score, max, measured}>`(max 합 100). 픽스처 `packages/scoring/fixtures/<id>/*.json` = `{id, expect: pass|fail, input}`, H는 pass = 만점·fail = 감점 ② `checkOriginality({sig, phash, texts}, ReferenceSig[], cfg) → OriginalityReport`(8.3.3 필드 + g5_max_run), G-11 게이트 입력 `{originality}` ③ extractor `phash64(rgb, w, h, channels) → 16자리 hex`(그레이스케일 DCT 64비트), `hamming64(a, b)` ④ `config/originality.json`은 08장 8.3.3 블록을 그대로 옮긴 파일(구현 단위에서 생성·잠금 대상 등록), `loadOriginalityConfig(root)` ⑤ 레퍼런스 temp 시드에 서명이 없어 픽스처는 합성 서명 10개와 하네스 렌더 1장으로 만든다. 변형 이미지는 worker 의존성 sharp로 만든다
+- 영향 범위: tests/acceptance/m3/gates.test.ts, packages/scoring, packages/extractor, config/originality.json
+- 되돌리기 비용: 중간(자체 잠금 전까지 낮음)
