@@ -152,6 +152,17 @@
   - [x] 08 E2E(375·1280)·MBTI grep(e2e/m4 4/4)
   - [~] 09 eval:golden:build-answers·골든 자체 잠금: [x] buildGoldenAnswers·replayGolden·CLI(엔진 beta 덮어쓰기, 계획 L1 픽스처 32/32·M1a 24/24·β8.5 9/24) [ ] 실데이터 실행(BLK-022로 0/32) [ ] m4-done에서 data/golden 자체 잠금
   - [ ] 10 verify:m4 → m4-done: [ ] 1차 실행(2026-11-26 19:51Z 시작)
+- M5 계획(9.4.7, AC: 00-14~17, 01-01·02·22~34·51·58, 04-01·02·14~16·22~25·37·38·44·46·47, 06-07b·09·10·13·15~18·20~23·38~40·45·47·52·55·56·59~63, 07-02·13, 08-24~26·38~42, 09-07·13·18. 읽을 장은 CLAUDE.md 구현 규칙 3절):
+  - [ ] 01 M5 수용 테스트(tests/acceptance/m5, AD-031): [ ] a 인증·귀속(AuthPort local·매직링크·dev_mail_outbox·attach_anon, 06장 6.5) [ ] b 브랜드 입력·BrandInput 검증·인젝션 방어(04·08장, fixtures/brands) [ ] c 생성 API·Idempotency·진행 잡 1개·폴링(06장) [ ] d llm gateway·models.yaml·MockProvider 시나리오(9.6.2·TC-R) [ ] e pipeline 3변형→후보 6→검증·수리→렌더→게이트→점수→노출·재생성·폴백 [ ] f 비용·quota_ledger·킬 스위치·초대·환불(06장 6.9.4·6.10) [ ] g S04~S08 화면 E2E(01장) → traceability·자체 잠금
+  - [ ] 02 AuthPort local·세션 쿠키·매직링크·attach_anon
+  - [ ] 03 동의(S05)·초대 코드
+  - [ ] 04 BrandInput zod·정규화·인젝션 방어·brief_drafts
+  - [ ] 05 packages/llm models.yaml·프롬프트 파일·MockProvider·비용식
+  - [ ] 06 pipeline(변형·후보·수리·렌더·게이트·점수·노출·재생성·폴백)
+  - [ ] 07 worker generation 잡·SLO 타이머·취소 환불·quota_ledger
+  - [ ] 08 생성 API·폴링·이벤트
+  - [ ] 09 S04 로그인·S05 동의·S06 브리프·S07 대기·S08 비교 화면
+  - [ ] 10 verify:m5 → m5-done
 - M3 이월: (B18 재생성은 M2-09d3으로 당김), B15 골격을 실제 예시로 교체 후 자체 잠금(ASM-021)
 - [x] M0 [x] M1 [x] M2 [x] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
 
@@ -159,6 +170,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 04:51 | M5 계획 10단위 초안(verify:m4 진행 중)
 - 2026-11-27 04:51 | verify:m4 1차 시작(백그라운드). M4-03 튜닝·04h 게이트는 BLK-022로 보류
 - 2026-11-27 04:50 | M4-01 완료: test(acc) f4dc6b6, 자체 잠금 15파일. 다음: verify:m4
 - 2026-11-27 04:50 | e2e quiz 폭 측정 안정화(2회 11/11)
