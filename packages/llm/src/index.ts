@@ -15,3 +15,4 @@ export {
   type LlmResponse,
   type LlmRole,
 } from "./gateway.js";
+export { assemblePrompt, type AssembledPrompt, type PromptInput } from "./prompt.js";

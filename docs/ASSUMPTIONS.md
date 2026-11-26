@@ -611,3 +611,10 @@
 - 선택: ① CP-03·04·05·07·09·12 = AIL-21·21·13·19·22·23 error(단계 C) ② CP-01 = 워드마크 슬롯 텍스트 = NFC 브랜드명 ③ CP-02 = hero.headline·sub에 브랜드명 또는 입력 문장(description·key_points·audience, 자리표시 제외)의 2자 이상 어절 ④ CP-06 = 종결 어미(다·요·까·시오)로 끝나는 문장 중 tone.ending 패턴 비율 ≥ 90%(자리표시·사용자 원문·브랜드명 제외) ⑤ CP-08 = 브랜드명 제외 라틴 4단어 연속 ⑥ CP-10 = 전화·이메일·사업자번호 패턴이 8.7.5 예시값과 다르면 위반 ⑦ CP-11 = 고위험 브랜드 사전(judgeAbuse high_risk)에서 브랜드 입력에 없는 상표 ⑧ brand_color가 없거나 빈 값이면 브랜드 색 단계를 건너뛴다(팔레트 그대로) ⑨ buildFallback = fallbackMockup 명세 + 브랜드 치환 템플릿 트리
 - 영향 범위: packages/linter(copy-rules·tree-copy), packages/design-spec(compile·stubs)
 - 되돌리기 비용: 낮음
+
+## ASM-087 · M3 · gap · 2026-11-26T18:00Z
+- 질문: 프롬프트 조립 함수의 블록 구성과 BRAND_DATA에 자리표시 입력을 넣을지, AC-08-14 eTLD+1 계산(공개 접미사 목록)을 어떻게 할지
+- 근거 탐색: 04장 4.7.2, 08장 8.3.2 G1·AC-08-14, dependency-allowlist(PSL 패키지 없음)
+- 선택: ① assemblePrompt = SYSTEM(prompts/<role>@v1.md) + DESIGN_SPEC + BRAND_DATA(경계 id = 입력 해시 8자리, 잡 id를 받으면 그것). 레이아웃 = purpose·primary_action·key_points 개수, 카피 = BrandInput(brand_color 제외). CATALOG·FEWSHOT·PATTERN·COPY_KEYS·FORBIDDEN·OUTPUT_SCHEMA는 M5 파이프라인 단위에서 붙인다 ② `[임시]`·`[예시]`로 시작하는 입력은 브랜드 사실이 아니므로 BRAND_DATA에서 뺀다 ③ eTLD+1 = 국내·주요 2단계 공개 접미사 27개 최소 목록 + 마지막 2라벨(전체 PSL은 허용 목록 밖) ④ 저장소의 프리셋 파일은 모두 approved로 보고 data:validate에서 판정
+- 영향 범위: packages/llm(prompt·prompts), scripts/data/validate.ts
+- 되돌리기 비용: 낮음

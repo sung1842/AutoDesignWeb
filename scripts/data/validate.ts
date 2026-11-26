@@ -2,7 +2,7 @@
 //   봉투·키 스키마(zod) → 중복 id·temp 접두사 → 교차 참조(고아 0) → 수량(9.2.2) → 파일 sha256 → CSV 열.
 //   종료 코드: 0 = 전부 유효, 1 = 오류 1건 이상(오류마다 묶음 이름·경로 출력).
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { parse as parseYaml } from "yaml";
 import {
@@ -307,6 +307,77 @@ function checkCsv(root: string, out: Issue[]): void {
   }
 }
 
+// ---------- 08장 8.3.2 G1·AC-08-14: cluster_median 프리셋의 서로 다른 eTLD+1 ≥ g1_min_domains ----------
+/** 공개 접미사(2단계) 최소 목록. 전체 PSL은 의존성 허용 목록 밖이라 국내·주요 접미사만 둔다(ASM-087). */
+const PUBLIC_SUFFIX_2 = new Set([
+  "co.kr",
+  "or.kr",
+  "go.kr",
+  "ac.kr",
+  "ne.kr",
+  "re.kr",
+  "pe.kr",
+  "ms.kr",
+  "hs.kr",
+  "es.kr",
+  "sc.kr",
+  "kg.kr",
+  "mil.kr",
+  "seoul.kr",
+  "co.jp",
+  "or.jp",
+  "ne.jp",
+  "ac.jp",
+  "co.uk",
+  "org.uk",
+  "ac.uk",
+  "com.au",
+  "net.au",
+  "com.cn",
+  "com.tw",
+  "com.hk",
+  "co.nz",
+]);
+export function etldPlusOne(host: string): string {
+  const h =
+    host
+      .toLowerCase()
+      .replace(/^https?:\/\//, "")
+      .split("/")[0]
+      ?.replace(/\.$/, "") ?? "";
+  const parts = h.split(".").filter(Boolean);
+  const tail2 = parts.slice(-2).join(".");
+  const n = PUBLIC_SUFFIX_2.has(tail2) ? 3 : 2;
+  return parts.slice(-n).join(".");
+}
+function checkPresetProvenance(root: string, out: Issue[]): void {
+  const cfgPath = join(root, "config/originality.json");
+  if (!existsSync(cfgPath)) return;
+  const min = (JSON.parse(readFileSync(cfgPath, "utf8")) as { g1_min_domains: number })
+    .g1_min_domains;
+  const dir = join(root, "data/taxonomy/presets");
+  if (!existsSync(dir)) return;
+  for (const f of readdirSync(dir).filter((x) => x.endsWith(".json"))) {
+    const items =
+      (
+        JSON.parse(readFileSync(join(dir, f), "utf8")) as {
+          items?: { id?: string; provenance?: { method?: string; domains?: string[] } }[];
+        }
+      ).items ?? [];
+    for (const it of items) {
+      const pv = it.provenance;
+      if (pv?.method !== "cluster_median") continue;
+      const n = new Set((pv.domains ?? []).map(etldPlusOne)).size;
+      if (n < min)
+        out.push({
+          bundle: "B5 presets",
+          path: `data/taxonomy/presets/${f}`,
+          message: `${it.id ?? "?"}: cluster_median eTLD+1 ${n}개 < g1_min_domains ${min}(08장 8.3.2 G1)`,
+        });
+    }
+  }
+}
+
 export function validate(root: string): Issue[] {
   const out: Issue[] = [];
   for (const def of BUNDLES) {
@@ -316,6 +387,7 @@ export function validate(root: string): Issue[] {
   checkCrossRefs(root, out);
   checkCounts(root, out);
   checkCsv(root, out);
+  checkPresetProvenance(root, out);
   return out;
 }
 
