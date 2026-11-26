@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T01:08Z, since: 2026-11-26T01:45Z}
+- lock: {owner: 2026-11-26T01:08Z, since: 2026-11-26T02:05Z}
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
@@ -124,7 +124,7 @@
   - [x] 09 하네스·게이트(AC-04-08 렌더 D는 BLK-012): [x] a 하네스 코어(가상 오리진·자산 서빙·measure·폰트 바이트·플랫폼 폰트)·G-02·04·05·06·07(폴백 72×2 위반 0, ASM-055) [x] b headlineLines·compileInBrowser(브라우저 = Node SHA 동일, AC-04-18a) [x] c G-03 비텍스트 대비(입력·버튼 경계·포커스, 폴백 72×2 G-02~07 위반 0) [x] f 검사용 렌더: renderBlockSample·renderComponentGallery(93케이스)·renderStepProbe(ASM-061) [x] e G-12 명세 무결성·AIL-17(D)(AC-03-45 ①~④ 녹색, ASM-065) [ ] d extractL1(05장 추출기): [x] d1 원시 특징 F01~F30(DOM·픽셀 k-means, harness.features, ASM-066) [x] d2 정규화기 → L1(5.5.4)·harness.extractL1(ASM-067; AC-04-08 0.406, 자리표시 분위 탓) [x] d3 B18 재생성(`seed:temp --corpus`, 200 렌더, ASM-068) [ ] d4 AC-04-08(현재 0.365 < 0.95). 진단(골든 6건): 변형 쌍 토큰 차이 1~2키뿐이고 4.4 ≥3키는 hero·signature extras로 채움, 그런데 renderer에 시그니처 층(4.14 SIG-01~12)이 없어 렌더 차이가 안 남. F22 항상 0, F01 중앙값 0 → [x] d4a renderer 시그니처 층(4.14·3.2.4, signature.apply_to, ASM-069) [x] d4b 폴백 트리 hero variant 반영 확인(standard.ts lc.hero_variants) [x] d4c `pnpm typecheck && pnpm seed:temp --corpus` 재생성 → AC-04-08 0.542 [ ] d4d 진단(골든 32, 축별): ① shape 축이 radius_family sharp↔soft에도 0.37 고정(F01 = SB 중앙값, 큰 surface 섹션 radius 0이 지배, F01 차이 8/96) ② depth 축 0.25 고정(depth.shadow_level 0↔1이 렌더에 안 남: 카드는 항상 --tf-shadow-level-1) ③ 변형 L2 차이 1~2키(팔레트·페어링·density). [x] d4d1 렌더 누락 수정: 카드 그림자 = shadow_level(+1 강조·hover)·카드 radius md·미디어 lg(3.1.7·3.1.8, ASM-070), B18 재생성 → 54/96(0.5625). 남은 원인: 실패 42쌍 대부분 shape·depth L2 동일(골든 depth 대부분 flat·sharp), shape-graphic 직사각형(radius 0 Sf)이 F01 중앙값 지배(사양대로) [x] d4d2(구현은 사양 일치, 4.3 변경 벌점 0.02가 변형을 앵커로 모음 → BLK-012 locked-conflict) 4.4 variantTargets L1 거리 → snapToFeasible 뒤 L2가 붕괴하는지 확인(골든 32 변형별 L1 목표 vs 스냅 L2 비교) → 구현 오류면 수정, 사양상 불가면 BLOCKED(locked-conflict)
   - [x] 10 worker render 잡(뷰포트 5 PNG·차단 카운터, JS off, 글꼴 /fonts/, ASM-058)
   - [x] 11 미리보기: 서명 URL·preview 헤더·iframe·compileForEdit CSP·parentProbe(⑧, ASM-059). Next 라우트 연결은 M5
-  - [ ] 12 시각 회귀 기준선 24장(⑤, 로컬 chromium 가능분만, 나머지 needs_ci)
+  - [x] 12 시각 회귀 기준선 24장(⑤, 지문 7303eb92a5bd, e2e/m2 재실행 24/24, Docker 지문 needs_ci, ASM-071)
   - [x] 13 renderer 금지 의존성 검사(⑦) 확인(수용 테스트 통과)
   - [ ] 14 verify:m2 → m2-done(tags 맵)
 - M3 이월: (B18 재생성은 M2-09d3으로 당김), B15 골격을 실제 예시로 교체 후 자체 잠금(ASM-021)
@@ -134,6 +134,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-26 11:05 | M2-12 렌더러 시각 회귀 기준선 24장(지문 7303eb92a5bd)·스펙 자체 잠금, ASM-071
 - 2026-11-26 10:45 | M2-09d4d2 스냅 진단: 벌점 0.02로 96쌍 중 69쌍 6키 동일(사양대로) → BLK-012, 09 종료
 - 2026-11-26 09:23 | M2-09d4d1 카드 그림자 단계·radius 역할(3.1.7·3.1.8) 렌더 수정, B18 재생성, AC-04-08 0.5625, ASM-070
 - 2026-11-26 08:10 | 09d4d 진단: shape·depth 축 고정(F01 SB 중앙값, shadow_level 미반영), 세션 종료(잠금 해제)

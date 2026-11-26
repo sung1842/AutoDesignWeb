@@ -241,6 +241,150 @@
       "lockedBy": "agent",
       "lockedAt": "2026-11-26T01:16:12Z",
       "commit": "d4fff93"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T1-local-business-pl1-00.png": {
+      "sha256": "4c3a6b7a158f83eac7b66427cb42c838fdc6b9a996bc6ba65012010646634a13",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T1-portfolio-pp1-00.png": {
+      "sha256": "db6f26e2f748dc03183be1f5560833a4a353d558b9794dd93730903a6eab0f2c",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T1-saas-ps1-00.png": {
+      "sha256": "8417a3070e156bf41eaf6f479e30817b7ee5c8ea6d9580f03e3bb05203452a0c",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T2-local-business-pl1-00.png": {
+      "sha256": "5c2b487b0f304a6fa6ae38dd5714ff50ccb3198571da0b565d47442ac1e70050",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T2-portfolio-pp1-00.png": {
+      "sha256": "f051b3cff2e06214fb56567ba79b403885cea92d152ac7be74312326a827c9f5",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T2-saas-ps1-00.png": {
+      "sha256": "3439a16ed43241d87d06a68669420bddd0bdd83e7abfeec4170d3ec238b079a5",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T3-local-business-pl1-00.png": {
+      "sha256": "829c6e05eb9420bbe3e625927270ff2da112959993ff151f1f5c8e029cb069ed",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T3-portfolio-pp1-00.png": {
+      "sha256": "7e08ea050d42a9e7124168595b5dc68390190f0259506dba1cf8a6d2409866dd",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T3-saas-ps1-00.png": {
+      "sha256": "0ed4db81bf33195ae31feccd93932463c23158bb888e33f114f840d318bb9c25",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T4-local-business-pl1-00.png": {
+      "sha256": "f0e6d51e57ba5a6807c873873ee1a81c0f6999e9d2e6abe900baf7fd25b725de",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T4-portfolio-pp1-00.png": {
+      "sha256": "b3cc126190cef186bd351400ed57fc465701313fa12df6bd95f218e9a5ac945f",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T4-saas-ps1-00.png": {
+      "sha256": "6cd4081575a3e1515a8c1ddc2545467f566ae8bc17a16c9755b5453ac6245a0c",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T5-local-business-pl1-00.png": {
+      "sha256": "3185c26505a339378835ef7a74fff7ef6c153784a40571ef59a6ca89d67e26b0",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T5-portfolio-pp1-00.png": {
+      "sha256": "6065c3cb702d93fa2bc1089b3183b2683b48861d352327969b5ec0fd86fb8b34",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T5-saas-ps1-00.png": {
+      "sha256": "320ba9603bfc4c613c6bb83c5ef3930df486df665ee8f6fffe09ebbb7118b649",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T6-local-business-pl1-00.png": {
+      "sha256": "640d6767c089d37c7e6a1d78829af524c8179e40da45403c8e16fd7a85f54993",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T6-portfolio-pp1-00.png": {
+      "sha256": "60643d128dce718ef9805a0e4b46635949c6da9b129d0c5781b52cc3b68198be",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T6-saas-ps1-00.png": {
+      "sha256": "d1984e3b3fbb73500eae972581f6302e93673a14a28f364119d2b0b73ca07991",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T7-local-business-pl1-00.png": {
+      "sha256": "0e308ab30c228603522b54b0a927196509b7451b8d95cc123d8003f0949867ca",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T7-portfolio-pp1-00.png": {
+      "sha256": "9399783843bf011fc9850c4a9acc2309cd8e12d31a0cf0c0c1f7ad967df2c4f3",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T7-saas-ps1-00.png": {
+      "sha256": "6817f0780f1d6139487b5c0937c48d3d802aed5afb650680639488340738b864",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T8-local-business-pl1-00.png": {
+      "sha256": "5657e1c6d1cfb482d6defe080f463747fa25c428ccc0c40ac2d2d81406baec07",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T8-portfolio-pp1-00.png": {
+      "sha256": "fe44d062115658b3e0e51bf92c09b1d49e1823f52d8f872e4c40db0b35c030a7",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
+    },
+    "e2e/__screenshots__/7303eb92a5bd/renderer-visual.spec.ts/PS-T8-saas-ps1-00.png": {
+      "sha256": "57707d8a9bdfb62ccb106dd5b23e3078f9a1659a8b1af7a0fec7ad5af0b90363",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T01:16:23Z",
+      "commit": "e7ff402"
     }
   }
 }
