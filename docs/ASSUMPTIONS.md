@@ -688,3 +688,10 @@
 - 선택: ① 자극물 = data/survey/manifest.lock.json의 active 항목 x_card(2.4.1 S-05, 진단 런타임과 같은 입력). 활성 자극물이 부족해 엔진이 SURVEY_ITEMS_INSUFFICIENT면 build-answers 실패(종료 1)·BLOCKED ② CLI `pnpm eval:golden:build-answers [--out <dir>]`(기본 data/golden 제자리 갱신) ③ answers 행 = `{seq, stage, kind, item_id, shown:[{option_id, slot}], answer, chosen_option_id}`(survey_answers 컬럼 이름, 시각·latency 없음) ④ `replayGolden(case, {beta?}) → {mu, typeId}`(packages/diagnosis, 엔진 seed = 케이스 번호, purpose = case.purpose) ⑤ 시뮬레이터 응답 = persona.simulator(beta 16, argmax) θ* 기준 최대 효용 선택지
 - 영향 범위: packages/diagnosis, scripts/eval, tests/acceptance/m4/golden-answers.test.ts
 - 되돌리기 비용: 낮음
+
+## ASM-098 · M4 · conflict · 2026-11-26T19:15Z
+- 질문: 02장 2.4.1 S-02(한 문항 이미지는 같은 텍스트·같은 이미지 파일, 다른 것은 토큰 L2뿐)·AC-02-09(DOM 텍스트·img src 집합 동일)와 프리셋 L2 `media.mode=shape-graphic`(사진 → 색면), 장식 시그니처(SIG-06 마키·SIG-11 아웃라인 텍스트)가 충돌
+- 근거 탐색: 02장 2.4.1·2.4.3, 03장 3.10.5·4.14 시그니처(aria-hidden 장식), 전체 survey:build의 템플릿별 domHash 3~4종
+- 선택: ① 설문 페이지에서는 `media.mode=shape-graphic`을 `photo-led`로 바꿔 템플릿 사진을 쓴다(S-02 우선) ② AC-02-09의 DOM 텍스트 비교는 `aria-hidden="true"` 안의 장식 텍스트를 뺀다(시그니처는 L2 토큰이 정하는 장식, 보조기술에 노출되지 않음)
+- 영향 범위: packages/design-spec/src/survey.ts, apps/worker harness surveyShot, survey:build manifest
+- 되돌리기 비용: 낮음(survey:build 재실행)

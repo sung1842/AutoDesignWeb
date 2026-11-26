@@ -38,6 +38,8 @@ function templates(root: string): SurveyTemplates {
 
 /** 고정 문구(덱이 아님): deck_ref는 설문 템플릿 표지로 둔다. */
 const REF = "deck:survey.fixed#0";
+/** 02장 2.4.1 S-02 콘텐츠 고정(ASM-098). */
+const SURVEY_MEDIA = { key: "media.mode", from: "shape-graphic", to: "photo-led" } as const;
 const text = (t: string): Obj => ({ copy: { text: t, placeholder: false, deck_ref: REF } });
 const item = (t: string, sub?: string): Obj => ({
   copy: { text: t, ...(sub ? { sub } : {}), placeholder: false, deck_ref: REF },
@@ -60,9 +62,10 @@ export function surveyPage(
   const st = templates(data.root);
   const tpl = st.templates.find((t) => t.id === plan.templateId);
   if (!tpl) throw new Error(`템플릿 없음 ${plan.templateId}`);
-  const { spec } = standardTree(preset.typeId, "portfolio", data, {
-    l2: { ...preset.l2, ...(plan.l2Overrides ?? {}) } as never,
-  });
+  const l2: Record<string, string> = { ...preset.l2, ...(plan.l2Overrides ?? {}) };
+  // S-02: 한 문항의 이미지는 같은 사진 파일을 쓴다 → 사진을 색면으로 바꾸는 shape-graphic은 photo-led로(ASM-098)
+  if (l2[SURVEY_MEDIA.key] === SURVEY_MEDIA.from) l2[SURVEY_MEDIA.key] = SURVEY_MEDIA.to;
+  const { spec } = standardTree(preset.typeId, "portfolio", data, { l2: l2 as never });
   const c = st.demoBrand.copy;
   const img = (i: number): Obj => {
     const id = tpl.imageIds[i] ?? tpl.imageIds[0] ?? "";

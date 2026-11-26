@@ -47,6 +47,8 @@ const OUT: Record<SurveyDevice, { w: number; h: number }> = {
 /** 2.1.2 앵커 수준(축 5 × 5), 나머지 축 = 0.5. 05장 5.9 앵커 행: 인접 수준 차 ≥ 0.10, 단조 증가. */
 const ANCHOR = { levels: [0, 0.25, 0.5, 0.75, 1], rest: 0.5, minStep: 0.1 } as const;
 const FULL_FOCUS = { x: 0, y: 0, w: 1, h: 1 };
+/** 촬영·DOM 수집 규칙 버전(바뀌면 전부 다시 렌더). 2 = 장식 aria-hidden 텍스트 제외(ASM-098). */
+const SHOT_VERSION = 2;
 
 export interface Asset {
   path: string;
@@ -245,7 +247,14 @@ async function buildImage(c: Ctx, p: ImagePlan, prev: ManItem | undefined): Prom
   const { html } = compilePage(spec, tree, c.data) as { html: string };
   const devices: SurveyDevice[] = p.kind === "anchor_ref" ? ["desktop"] : ["desktop", "mobile"];
   const inputHash = sha(
-    JSON.stringify({ html, nv: c.nv, ev: EXTRACTOR_VERSION, r: SURVEY_RENDER, devices }),
+    JSON.stringify({
+      html,
+      nv: c.nv,
+      ev: EXTRACTOR_VERSION,
+      r: SURVEY_RENDER,
+      devices,
+      shot: SHOT_VERSION,
+    }),
   );
   if (prev && prev.inputHash === inputHash && prev.assets) {
     let same = true;

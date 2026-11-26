@@ -302,7 +302,8 @@ export async function openHarness(): Promise<Harness> {
         const dom = await s.page.evaluate(() => ({
           texts: [...document.querySelectorAll("body *")]
             .flatMap((e) => [...e.childNodes])
-            .filter((n) => n.nodeType === 3)
+            // 장식 시그니처(aria-hidden, 토큰 L2가 결정)는 콘텐츠 비교에서 뺀다(ASM-098)
+            .filter((n) => n.nodeType === 3 && !n.parentElement?.closest('[aria-hidden="true"]'))
             .map((n) => (n.textContent ?? "").replace(/\s+/g, " ").trim())
             .filter((t) => t !== ""),
           srcs: [...document.querySelectorAll("img")].map((i) => i.getAttribute("src") ?? ""),
