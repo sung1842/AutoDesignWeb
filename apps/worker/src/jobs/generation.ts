@@ -35,6 +35,8 @@ import { evaluateCandidate, type EvaluateOptions } from "../quality/evaluate.js"
 import { openHarness, type Harness } from "../render/harness.js";
 
 const VARIANTS = ["v_true", "v_fit", "v_bal"] as const;
+/** 4.11.2 사양 상수: 잡당 레이아웃 repair_quality 상한(AC-04-23). */
+const REPAIR = { maxCallsPerJob: 3 } as const;
 type Variant = (typeof VARIANTS)[number];
 type Obj = Record<string, unknown>;
 const isObj = (x: unknown): x is Obj => typeof x === "object" && x !== null && !Array.isArray(x);
@@ -191,6 +193,18 @@ const parseJson = (t: string): unknown => {
     return undefined;
   }
 };
+
+/** S3 병합 전 검사: 모든 덱 참조(deck:key#i)가 덱 범위 안(범위 밖은 스키마 수리 대상, 9.6.2 mixed 3). */
+function deckRefsOk(raw: unknown, deck: Obj): boolean {
+  const refs = JSON.stringify(raw).match(/deck:[a-z_.]+#\d/g) ?? [];
+  return refs.every((ref) => {
+    const m = /^deck:([a-z_.]+)#(\d)$/.exec(ref);
+    const list = m ? deck[m[1] ?? ""] : undefined;
+    // contact.*는 LLM이 만들지 않고 컴파일러가 예시값을 넣는다(4.6.2). 그 밖에 덱에 없는 키는 범위 밖
+    if (list === undefined) return (m?.[1] ?? "").startsWith("contact.");
+    return Array.isArray(list) && Number(m?.[2]) < list.length;
+  });
+}
 
 /** S2 카피: initial → repair_schema 1회 → fallback 모델 1회(잡 경과 ≤ 60s) → 템플릿 덱(4.7.1·S-12). refused면 null. */
 async function copyDeck(
@@ -446,7 +460,7 @@ async function runJob(d: GenerationDeps, jobId: string): Promise<{ status: strin
       });
       if (r.kind !== "ok") return null;
       const p = LayoutTreeRawSchema.safeParse(parseJson(r.text));
-      if (p.success) return p.data as unknown as RawTree;
+      if (p.success && deckRefsOk(p.data, copy.deck)) return p.data as unknown as RawTree;
     }
     return null;
   };
@@ -518,6 +532,89 @@ async function runJob(d: GenerationDeps, jobId: string): Promise<{ status: strin
     }
   }
   await setJob(d.db, jobId, { phase: "scoring", progress_pct: 70 });
+
+  // 4.11.2 수정 루프: 후보당 최대 1회(round 1, origin repair), 잡당 repair_quality ≤ 3.
+  // 대상 = 노출 불가 후보 중 수정 가능한 사유. 우선순위: eligible 0개 변형 → 1개 변형, 같은 순위는 H+TM 큰 순
+  const REPAIRABLE_GATES = new Set([
+    "G-01",
+    "G-04",
+    "G-05",
+    "G-06",
+    "G-08",
+    "G-09",
+    "G-10",
+    "G-11",
+  ]);
+  const eligibleIn = (v: Variant): number =>
+    cands.filter((c) => c.variant === v && c.cols?.eligible).length;
+  const targets = cands
+    .map((c, i) => ({ c, i }))
+    .filter(({ c, i }) => {
+      const r = c.cols?.quality_report;
+      if (!c.valid || !r || c.cols?.eligible || divFail.has(i)) return false;
+      const gateFail = r.hard.filter((g) => g.status === "fail").map((g) => g.id);
+      if (gateFail.some((g) => !REPAIRABLE_GATES.has(g))) return false;
+      return true;
+    })
+    .sort(
+      (a, b) =>
+        eligibleIn(a.c.variant) - eligibleIn(b.c.variant) ||
+        (b.c.cols?.harmony_score ?? 0) +
+          (b.c.cols?.taste_score ?? 0) -
+          ((a.c.cols?.harmony_score ?? 0) + (a.c.cols?.taste_score ?? 0)) ||
+        a.i - b.i,
+    )
+    .slice(0, REPAIR.maxCallsPerJob);
+  if (targets.length) await setJob(d.db, jobId, { phase: "repairing", repair_rounds: 1 });
+  for (const { c: old, i } of targets) {
+    const r = old.cols?.quality_report;
+    if (!r) continue;
+    const violations = [
+      ...r.hard
+        .filter((g) => g.status === "fail")
+        .map((g) => ({
+          rule: g.id,
+          where: "sections[*]",
+          message: JSON.stringify(g.measured).slice(0, 200),
+          fix_hint: "",
+        })),
+      ...[...r.lint.error, ...r.lint.warn].map((rule) => ({
+        rule,
+        where: "sections[*]",
+        message: rule,
+        fix_hint: "",
+      })),
+    ];
+    const id = await insertCandidate(x, {
+      slot: i,
+      variant: old.variant,
+      spec: old.spec,
+      origin: "repair",
+      round: 1,
+    });
+    const c: Cand = { ...old, id, valid: false, tree: null, html: "", cols: null };
+    const rr = await invoke(x, {
+      role: "gen_layout",
+      callKind: "repair_quality",
+      candidateIndex: i,
+      candidateId: id,
+      input: {
+        spec: c.spec,
+        purpose,
+        brand,
+        deck: copy.deck,
+        violations,
+        axis_gaps: [],
+        keep: ["footer"],
+      },
+      cacheState: "cached",
+    });
+    const p = rr.kind === "ok" ? LayoutTreeRawSchema.safeParse(parseJson(rr.text)) : null;
+    if (!p?.success) continue;
+    await evaluate(x, c, p.data as unknown as RawTree, copy.deck, brand);
+    // 수리 결과가 더 낫거나 노출 가능하면 그 후보로 바꾼다
+    if (c.cols?.eligible || (c.cols?.rank_score ?? -1) > (old.cols?.rank_score ?? -1)) cands[i] = c;
+  }
 
   // S7 비전 채점(기록 전용, 변형 내 쌍 × 위치 교환 2회)
   for (const v of VARIANTS) {
