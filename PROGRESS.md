@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T19:35Z}
+- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T19:40Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
@@ -159,6 +159,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 04:40 | results.test 결정화(AC-02-28 단일 쌍), 응답 후 다음 문항 부족 503
 - 2026-11-27 04:35 | M4-01h traceability 187/191(e2e 20/20, ui.test 3/3). BLK-023 AC-01-20 공유=M6
 - 2026-11-27 04:24 | M4-01h e2e/m4 quiz 11/11(+survey 4/4), 빌드 캐시로 재실행 5s
 - 2026-11-27 04:19 | M4-07 S01 1.5.1 구성 보강(고지 문구 08장 원문)

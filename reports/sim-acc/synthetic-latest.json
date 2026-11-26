@@ -1,0 +1,376 @@
+{
+  "mode": "dev",
+  "seeds": [
+    20261116,
+    20261122,
+    20261123
+  ],
+  "stimulus": {
+    "source": "synthetic",
+    "normalizer_version": "2026-S0",
+    "normalizer_provenance": "temp"
+  },
+  "conditions": [
+    {
+      "id": "PU-b16",
+      "population": "P-U",
+      "beta": 16,
+      "variant": "none",
+      "blocking": true,
+      "rmse": 0.11116946969351911,
+      "top1": 0.78,
+      "top2": 0.9233333333333333,
+      "coverage": 0.9040000000000001,
+      "kappaMean": 0.8996505566666669,
+      "maxQuestions": 16,
+      "errors": 0
+    },
+    {
+      "id": "PU-b8",
+      "population": "P-U",
+      "beta": 8,
+      "variant": "none",
+      "blocking": true,
+      "rmse": 0.12612528451121968,
+      "top1": 0.6733333333333333,
+      "top2": 0.9,
+      "coverage": 0.8533333333333334,
+      "kappaMean": 0.7495584699999999,
+      "maxQuestions": 16,
+      "errors": 0
+    },
+    {
+      "id": "PU-b4",
+      "population": "P-U",
+      "beta": 4,
+      "variant": "none",
+      "blocking": true,
+      "rmse": 0.16064073928765749,
+      "top1": 0.5666666666666667,
+      "top2": 0.8033333333333333,
+      "coverage": 0.726,
+      "kappaMean": 0.36611778999999994,
+      "maxQuestions": 16,
+      "errors": 0
+    },
+    {
+      "id": "PU-b2",
+      "population": "P-U",
+      "beta": 2,
+      "variant": "none",
+      "blocking": true,
+      "rmse": 0.19924241346038424,
+      "top1": 0.45,
+      "top2": 0.68,
+      "coverage": 0.576,
+      "kappaMean": 0.17235269666666672,
+      "maxQuestions": 16,
+      "errors": 0
+    },
+    {
+      "id": "PC-b8",
+      "population": "P-C",
+      "beta": 8,
+      "variant": "none",
+      "blocking": true,
+      "rmse": 0.14010250448151804,
+      "top1": 0.9233333333333333,
+      "top2": 0.98,
+      "coverage": 0.8226666666666667,
+      "kappaMean": 0.8057333299999999,
+      "maxQuestions": 16,
+      "errors": 0
+    },
+    {
+      "id": "PC-b4",
+      "population": "P-C",
+      "beta": 4,
+      "variant": "none",
+      "blocking": true,
+      "rmse": 0.1760371012861505,
+      "top1": 0.7866666666666666,
+      "top2": 0.9133333333333333,
+      "coverage": 0.682,
+      "kappaMean": 0.5136785466666668,
+      "maxQuestions": 16,
+      "errors": 0
+    },
+    {
+      "id": "PA-b8",
+      "population": "P-A",
+      "beta": 8,
+      "variant": "none",
+      "blocking": true,
+      "rmse": 0.13661487886783052,
+      "top1": 0.9433333333333334,
+      "top2": 0.9866666666666667,
+      "coverage": 0.84,
+      "kappaMean": 0.8678578000000001,
+      "maxQuestions": 16,
+      "errors": 0
+    },
+    {
+      "id": "PU-b8-rand",
+      "population": "P-U",
+      "beta": 8,
+      "variant": "V-RAND",
+      "blocking": true,
+      "rmse": 0.13117052658541895,
+      "top1": 0.66,
+      "top2": 0.8333333333333334,
+      "coverage": 0.906,
+      "kappaMean": 0.6796794266666666,
+      "maxQuestions": 16,
+      "errors": 0
+    },
+    {
+      "id": "PU-b8-prior",
+      "population": "P-U",
+      "beta": 8,
+      "variant": "V-PRIOR",
+      "blocking": true,
+      "rmse": 0.12667624353731624,
+      "top1": 0.7366666666666667,
+      "top2": 0.9,
+      "coverage": 0.85,
+      "kappaMean": 0.7355648866666668,
+      "maxQuestions": 16,
+      "errors": 0,
+      "priorTypeChange": 0.06060606060606061
+    },
+    {
+      "id": "PU-b8-none",
+      "population": "P-U",
+      "beta": 8,
+      "variant": "V-NONE",
+      "blocking": true,
+      "rmse": 0.129416106080128,
+      "top1": 0.69,
+      "top2": 0.8933333333333333,
+      "coverage": 0.8633333333333333,
+      "kappaMean": 0.7226967033333335,
+      "maxQuestions": 16,
+      "errors": 0
+    },
+    {
+      "id": "PU-b8-meas",
+      "population": "P-U",
+      "beta": 8,
+      "variant": "V-MEAS",
+      "blocking": false,
+      "rmse": 0.1296887708911997,
+      "top1": 0.7066666666666667,
+      "top2": 0.88,
+      "coverage": 0.8406666666666667,
+      "kappaMean": 0.7405173733333336,
+      "maxQuestions": 16,
+      "errors": 0
+    },
+    {
+      "id": "PU-b8-lambda",
+      "population": "P-U",
+      "beta": 8,
+      "variant": "V-LAMBDA",
+      "blocking": false,
+      "rmse": 0.1343204365574637,
+      "top1": 0.6733333333333333,
+      "top2": 0.8433333333333334,
+      "coverage": 0.8353333333333334,
+      "kappaMean": 0.72551282,
+      "maxQuestions": 16,
+      "errors": 0
+    },
+    {
+      "id": "PU-b8-pos",
+      "population": "P-U",
+      "beta": 8,
+      "variant": "V-POS",
+      "blocking": false,
+      "rmse": 0.13438279248688634,
+      "top1": 0.68,
+      "top2": 0.8533333333333334,
+      "coverage": 0.8246666666666667,
+      "kappaMean": 0.6715505066666668,
+      "maxQuestions": 16,
+      "errors": 0
+    },
+    {
+      "id": "PU-b8-mix",
+      "population": "P-U",
+      "beta": 8,
+      "variant": "V-MIX",
+      "blocking": false,
+      "rmse": 0.15548810888853504,
+      "top1": 0.6133333333333333,
+      "top2": 0.8266666666666667,
+      "coverage": 0.758,
+      "kappaMean": 0.5533735733333334,
+      "maxQuestions": 16,
+      "errors": 0
+    }
+  ],
+  "rmseCurve": [
+    0.20858933486629297,
+    0.1849619341128367,
+    0.1708825362166258,
+    0.15986060246295783,
+    0.15204895060189177,
+    0.14632772946583497,
+    0.14036071199561423,
+    0.13557018181289276,
+    0.1337063950567956,
+    0.13222168417995928,
+    0.13222168417995928,
+    0.13129972601230566,
+    0.13024406792485974,
+    0.12824926061584158,
+    0.12674495149697027,
+    0.12523572023604876
+  ],
+  "checks": [
+    {
+      "key": "rmseBeta8Max",
+      "value": 0.12612528451121968,
+      "limit": 0.12,
+      "kind": "max",
+      "pass": false,
+      "ci": [
+        0.12173111329035319,
+        0.13071741570305367
+      ],
+      "marginWarning": false
+    },
+    {
+      "key": "rmseBeta4Max",
+      "value": 0.16064073928765749,
+      "limit": 0.18,
+      "kind": "max",
+      "pass": true
+    },
+    {
+      "key": "typeAccPCBeta8Min",
+      "value": 0.9233333333333333,
+      "limit": 0.85,
+      "kind": "min",
+      "pass": true,
+      "ci": [
+        0.8966666666666666,
+        0.95
+      ],
+      "marginWarning": false
+    },
+    {
+      "key": "typeAccPCBeta4Min",
+      "value": 0.7866666666666666,
+      "limit": 0.7,
+      "kind": "min",
+      "pass": true
+    },
+    {
+      "key": "top1PUMin",
+      "value": 0.6733333333333333,
+      "limit": 0.62,
+      "kind": "min",
+      "pass": true
+    },
+    {
+      "key": "top2PUMin",
+      "value": 0.9,
+      "limit": 0.85,
+      "kind": "min",
+      "pass": true
+    },
+    {
+      "key": "anchorAccPABeta8Min",
+      "value": 0.9433333333333334,
+      "limit": 0.95,
+      "kind": "min",
+      "pass": false,
+      "ci": [
+        0.9166666666666666,
+        0.9766666666666667
+      ],
+      "marginWarning": true
+    },
+    {
+      "key": "coverage90",
+      "value": 0.8533333333333334,
+      "limit": [
+        0.85,
+        0.95
+      ],
+      "kind": "range",
+      "pass": true
+    },
+    {
+      "key": "consistencyBeta16Min",
+      "value": 0.8996505566666669,
+      "limit": 0.5,
+      "kind": "min",
+      "pass": true
+    },
+    {
+      "key": "consistencyBeta2Max",
+      "value": 0.17235269666666672,
+      "limit": 0.25,
+      "kind": "max",
+      "pass": true
+    },
+    {
+      "key": "adaptiveRmseGainMin",
+      "value": 0.03846322954961818,
+      "limit": 0.05,
+      "kind": "min",
+      "pass": false,
+      "ci": [
+        0.0021241976507944834,
+        0.07786217797307808
+      ],
+      "marginWarning": true
+    },
+    {
+      "key": "adaptiveTop1GainMinPp",
+      "value": 1.3333333333333308,
+      "limit": 3,
+      "kind": "min",
+      "pass": false
+    },
+    {
+      "key": "priorTypeChangeMax",
+      "value": 0.06060606060606061,
+      "limit": 0.06,
+      "kind": "max",
+      "pass": false
+    },
+    {
+      "key": "robustNoneRmseMax",
+      "value": 0.129416106080128,
+      "limit": 0.13,
+      "kind": "max",
+      "pass": true
+    },
+    {
+      "key": "diagnosis.maxQuestions",
+      "value": 16,
+      "limit": 16,
+      "kind": "max",
+      "pass": true
+    },
+    {
+      "key": "diagnosis.stage1Questions",
+      "value": 1,
+      "limit": 1,
+      "kind": "min",
+      "pass": true
+    },
+    {
+      "key": "errors",
+      "value": 0,
+      "limit": 0,
+      "kind": "max",
+      "pass": true
+    }
+  ],
+  "margin_warning": true,
+  "verdict": "n/a"
+}

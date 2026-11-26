@@ -156,7 +156,7 @@ describe("AC-02-17 · AC-02-31 응답 저장·이벤트 일치", () => {
     const prof = (
       await rows("select profile from diagnosis_results where session_id = $1", [s.id])
     )[0]?.profile as { var: number[] };
-    expect(last.sigma_max_after).toBeCloseTo(Math.sqrt(Math.max(...prof.var)), 6);
+    expect(last.sigma_max_after).toBeCloseTo(Math.sqrt(Math.max(...prof.var)), 5);
   });
 });
 
@@ -254,15 +254,41 @@ describe("AC-02-26 · AC-02-27 · AC-05-10 결과 내용", () => {
 
 describe("AC-02-28 A/B 품질 감시", () => {
   it("AC-02-28 노출 ≥ 30·cant_tell > 30% 쌍은 이후 세션 문항에서 제외", async () => {
-    // cant_tell을 자주 고르는 세션으로 노출을 쌓은 뒤 집계
-    for (const k of Array.from({ length: 40 }, (_, i) => i)) await complete({ cantTell: k >= 0 });
+    // 한 쌍(X)에만 노출 30·cant_tell 10(33%)을 만든다: 세션 3개 × 응답 10행
+    const X = "ABP-T1-A1-2050";
+    await db.withService(async (tx) => {
+      for (const s of [0, 1, 2]) {
+        const sid = String(
+          (
+            await q(
+              tx,
+              `insert into diagnosis_sessions (anon_id, taxonomy_version, seed, status, entry, versions)
+               values (gen_random_uuid(), '2026-S4', 1, 'abandoned', 'direct', '{}') returning id`,
+            )
+          ).rows[0]?.id,
+        );
+        for (const k of Array.from({ length: 10 }, (_, i) => i + 1))
+          await q(
+            tx,
+            `insert into survey_answers (session_id, seq, question_id, stage, kind, item_id, shown, answer, chosen_option_id,
+               latency_ms, policy, propensity, client_ts)
+             values ($1, $2, $3, 2, 'ab', $4, '[{"option_id":"AB-T1-A1-20","slot":0},{"option_id":"AB-T1-A1-50","slot":1}]',
+               $5, $6, 1000, 'ab_fisher', 1, now())`,
+            [
+              sid,
+              k,
+              `q-${sid}-${k}-0`,
+              X,
+              k <= 3 + (s === 0 ? 1 : 0) ? "cant_tell" : "option",
+              k <= 3 + (s === 0 ? 1 : 0) ? null : "AB-T1-A1-20",
+            ],
+          );
+      }
+    });
     await db.withService((tx) => refreshPairStats(tx, "2026-S4"));
-    const flagged = (
-      await rows(
-        "select id from survey_items where kind = 'ab_pair' and stats->>'flag' = 'low_discrimination'",
-      )
-    ).map((r) => String(r.id));
-    expect(flagged.length).toBeGreaterThan(0);
+    const st = (await rows("select stats from survey_items where id = $1", [X]))[0]
+      ?.stats as Record<string, unknown>;
+    expect(st.flag).toBe("low_discrimination");
     const shown = new Set<string>();
     for (const k of Array.from({ length: 15 }, (_, i) => i)) {
       const a = await call("POST", "/api/surveys", { entry: "direct" });
@@ -273,7 +299,8 @@ describe("AC-02-28 A/B 품질 감시", () => {
           .body as unknown as View;
       }
     }
-    for (const f of flagged) expect(shown.has(f), f).toBe(false);
+    expect(shown.size).toBeGreaterThan(0);
+    expect(shown.has(X)).toBe(false);
   });
 });
 

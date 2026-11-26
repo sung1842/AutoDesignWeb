@@ -557,7 +557,12 @@ export async function submitAnswer(
   });
   let status = s.status;
   let resultId: string | null = null;
-  const next = eng.next();
+  let next: Question | null;
+  try {
+    next = eng.next();
+  } catch (e) {
+    insufficient(e);
+  }
   if (!next) {
     status = "completed";
     resultId = await finalize(tx, s, eng, ans.length + 1);
