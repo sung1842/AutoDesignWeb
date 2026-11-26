@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T13:45Z, since: 2026-11-26T16:07Z}
+- lock: {owner: 2026-11-26T13:45Z, since: 2026-11-26T16:08Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
@@ -77,7 +77,7 @@
 | M1 | done | 2026-11-19T14:47Z | 2026-11-19T17:53Z | m1-done | pass_blocked | 6 | 15 |
 | M2 | done | 2026-11-19T17:54Z | 2026-11-26T07:41Z | m2-done | pass_blocked | 13 | 54 |
 | M3 | done | 2026-11-26T07:41Z | 2026-11-26T16:07Z | m3-done | pass_blocked | 9 | 13 |
-| M4 | todo | – | – | – | – | – | – |
+| M4 | in_progress | 2026-11-26T16:08Z | – | – | – | – | – |
 | M5 | todo | – | – | – | – | – | – |
 | M6 | todo | – | – | – | – | – | – |
 | M7 | todo | – | – | – | – | – | – |
@@ -141,6 +141,17 @@
   - [x] 01 M3 수용 테스트(tests/acceptance/m3, AD-031 방식, test(acc) 09da0ab 자체 잠금): [x] a linter.test(AC-04-12·26, ①, ASM-077) [x] b gates.test(AC-04-19·21, AC-08-11·12·13a, ASM-078) [x] c scoring.test(AC-04-20·43·45, ⑥, ASM-079) [x] d extractor.test(AC-05-12·14·15·22·24·25, ③④⑤, ASM-080) [x] e golden.test(②, AC-04-13, AC-08-13~16, AC-03-39·43, ASM-081) [x] f traceability M3·qa:trace --audit·단일 test(acc)·자체 잠금
   - [x] 02 linter 규칙 24파일·RULES·lintAll·matchCliche(사전 어간 정규식, AC-04-12 녹색, ASM-082·BLK-016) [x] 03 하네스 lintSnapshot(D·P, ASM-083) [x] 04 B15 예시 24×(2+2) 작성·자체 잠금(70f0f82, linter.test 30/31 — 남은 1 = BLK-016)
   - [x] 05 gates G-01~G-13·H1~H12 순수 함수·checkOriginality·phash64·judgeAbuse(gates.test 35/35, ASM-084) [x] 06 scoring TM·S_free·노출 선택·QualityReport(scoring.test 17/17) [x] 07 extractor 왕복·앵커 거리·p95(extractL2·l1Distance·evaluateCandidate·selfcheck·eval·normalizer 트리거. extractor.test 36/39, 남은 3 = BLK-017·018) [x] 08a CP-01~12 copyRules·buildFallback(AC-04-13 녹색, ASM-086) [ ] 08b [x] CF 픽스처 [x] assemblePrompt [x] eTLD+1 [x] lint-matrix·editChoices·harmony.conflicts(AC-03-43 녹색, ASM-088) [x] AC-08-16 BLK-019 [x] 08c verify:m3 2차 pass_blocked(BLK-002·004·005·006·008·009·012·013·016~019) → m3-done(25e1b05)(주의: qa:trace --audit가 packages/extractor/src/dom.ts 리터럴 4건 FAIL — M2부터 있던 것, M3-07에서 정리)
+- M4 계획(9.4.6, AC: 00-02·03·11·12, 01-04~21·55·57, 02-02~11·13~31·33~37, 03-12~14, 05-10·23, 06-08·11·12·46, 07-08·20, 09-17. 읽을 장은 CLAUDE.md 구현 규칙 3절):
+  - [ ] 01 M4 수용 테스트(tests/acceptance/m4, AD-031 방식): [ ] a diagnosis 엔진(02장 2.5~2.7·2.12, ③⑤⑥) [ ] b sim:survey 게이트·튜닝 규칙(④, 2.16) [ ] c survey:build 산출·멱등·x_card(①②③) [ ] d 진단 API·익명 세션·p95(⑦, 06장) [ ] e 이벤트 API·레지스트리·identity_links(⑫, 00장 8.3) [ ] f 진단·결과 화면 E2E(⑧⑨⑩, 01장) [ ] g build-answers·골든 잠금(⑪) → qa:trace --audit·guard:patterns·단일 test(acc)·자체 잠금
+  - [ ] 02 packages/diagnosis 사후분포·1-step 갱신·문항 선택·브리지·종료·유형 판정
+  - [ ] 03 sim:survey(1,000명, 공통 난수 쌍체·부트스트랩)·튜닝 절차(seeds.dev, diagnosis-tuned.json)
+  - [ ] 04 survey:build(카드 렌더→x_card→게이트→WebP→local Storage→survey_items upsert, manifest.lock)
+  - [ ] 05 진단 API·익명 쿠키 세션(D-41)·재개·뒤로가기
+  - [ ] 06 POST /api/events·이벤트 레지스트리 zod·identity_links
+  - [ ] 07 진단·결과 화면(01장, packages/ui 토큰)·닮은 사이트 3 링크·비제휴 고지
+  - [ ] 08 E2E(375·1280)·MBTI grep
+  - [ ] 09 eval:golden:build-answers·골든 자체 잠금
+  - [ ] 10 verify:m4 → m4-done
 - M3 이월: (B18 재생성은 M2-09d3으로 당김), B15 골격을 실제 예시로 교체 후 자체 잠금(ASM-021)
 - [x] M0 [x] M1 [x] M2 [x] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
 
@@ -148,6 +159,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 01:08 | M4 계획 10단위(9.4.6)
 - 2026-11-27 01:07 | verify:m3 2차 pass_blocked → m3-done(25e1b05, 원격 태그 푸시 불가 → tags 맵). 다음 M4 계획
 - 2026-11-27 00:29 | verify:m3 1차 fail: 비BLK = m0 AC-06-32(verify 안 간헐)·m2 AC-03-33(단독 90s 통과, 시간). BLK-008 M3 재현 추가, 017~019 locked-conflict
 - 2026-11-26 23:32 | M3-08b presets:lint-matrix·editChoices·CF-13 등록(AC-03-43 9/9)
