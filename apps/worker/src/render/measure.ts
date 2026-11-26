@@ -196,7 +196,8 @@ async function collectInPage(page: Page): Promise<
       const cs = getComputedStyle(el);
       if (!/(hidden|clip)/.test(cs.overflowX + cs.overflowY)) continue;
       if (!(el.textContent ?? "").trim() || !visible(el)) continue;
-      if (el.closest(".tf-visually-hidden,.tf-skip-link")) continue;
+      // aria-hidden 장식(SIG-11 아웃라인 등)은 읽는 텍스트가 아니다(04장 4.14 SIG-11)
+      if (el.closest(".tf-visually-hidden,.tf-skip-link,[aria-hidden='true']")) continue;
       if (
         el.scrollHeight > el.clientHeight + G.clipTolPx ||
         el.scrollWidth > el.clientWidth + G.clipTolPx

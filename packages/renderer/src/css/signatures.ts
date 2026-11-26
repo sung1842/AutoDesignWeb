@@ -113,12 +113,17 @@ export const SIGNATURE_CSS = `/* signatures.css (03장 3.2.4 · 04장 4.14) */
 }
 
 /* SIG-11 아웃라인 디스플레이(장식 텍스트, aria-hidden. 본 제목은 별도 실텍스트) */
-[data-signature="SIG-11"] [data-sig] { position: relative; overflow: hidden; }
+/* 잘라내기는 장식 요소 자신이 한다(섹션은 overflow 그대로 → 실텍스트 잘림 판정 G-05와 분리) */
+[data-signature="SIG-11"] [data-sig] { position: relative; }
 [data-signature="SIG-11"] [data-sig] > .tf-container { position: relative; }
 .tf-sig-outline {
   position: absolute;
-  inset-inline-end: var(--tf-space-4);
-  inset-block-end: 0;
+  inset: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding-inline-end: var(--tf-space-4);
   margin: 0;
   white-space: nowrap;
   pointer-events: none;
