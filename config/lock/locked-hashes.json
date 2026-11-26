@@ -415,6 +415,582 @@
       "lockedBy": "agent",
       "lockedAt": "2026-11-26T08:23:18Z",
       "commit": "09da0ab"
+    },
+    "data/linter/examples/AIL-01/neg-1.json": {
+      "sha256": "2918b044af44c3480fce4e345088f4933393b3de33a8eba9f9ff331e043d171a",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-01/neg-2.json": {
+      "sha256": "3d5046d0be8492a981a0409ca44e5457e0bf4ff7d0c8c65736d2a6a1594910ca",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-01/pos-1.json": {
+      "sha256": "59d403f94287044cb3dded5f1719f096180bc1a8eb552ac35606cb871220d1db",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-01/pos-2.json": {
+      "sha256": "f9ae76390acc4f3534c82d2ca184b0f7e9b6ddef0020029980b39bb8bc43cd96",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-02/neg-1.json": {
+      "sha256": "2f1254c53aee2104049362a6e91a1fe20b5d3af76d3742a4b1d829e162537e02",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-02/neg-2.json": {
+      "sha256": "1c1692cbf25037ce005fe529abdbd8163bdd33b3b2d493201bdcc76b1f9e4b8b",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-02/pos-1.json": {
+      "sha256": "899aa4006ab5ea4c665103ec773a2d50824f20103865fb4952d0db8e5f074791",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-02/pos-2.json": {
+      "sha256": "f49f14e85bbaa04d07d269a6f241b7f2bcce20be42734800e90d2ee61f64a6ef",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-03/neg-1.json": {
+      "sha256": "3b2ee95d538e7d6b3848c1199052d69af69ab7b3998d31c5b71f30629f933426",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-03/neg-2.json": {
+      "sha256": "b527db749f10ff03fdec852c40848384ac2dfa8db40c51f256574740cf6b58ee",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-03/pos-1.json": {
+      "sha256": "5e2e8ec963f7ded2d3b1e6493461bccb6bf9e69e1c5b32238a74381178fa4ef9",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-03/pos-2.json": {
+      "sha256": "9bdb62edf42176754384bedb8b42b9e51db1e5126386205ef5275d311315eb65",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-04/neg-1.json": {
+      "sha256": "c805026c32501c6bbaa270fbc9322a9996e04cf0c3370daffedb6d5d81aee164",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-04/neg-2.json": {
+      "sha256": "1fbdd2f9b3a7652643536dd9c690d680b326f8e6e49841637e69732b3e4dba3a",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-04/pos-1.json": {
+      "sha256": "e46d6ebf8ea55d90d49a85239ca49032b8b2e96af4107d3427847a2aef0e7644",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-04/pos-2.json": {
+      "sha256": "fc6b1f8c20536f188d803bf72ec806cf3e9d44ea3e09dfbef898a056e049c7d5",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-05/neg-1.json": {
+      "sha256": "33855708bad282c5e95888d13e0cd115df2e9be1378fb4d33429c811355bf25a",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-05/neg-2.json": {
+      "sha256": "5fb3fa2cc7a61ca14998c2835cad640aafaff0a8aa7054c00784563c145663db",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-05/pos-1.json": {
+      "sha256": "6c7396dba7cbdce3d61808a6b5e5d9cd3339bbf40da8b8f1b171ad9b9f621bb4",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-05/pos-2.json": {
+      "sha256": "53eb58c39e8d18cc48df85b36bdbd7809446fa3964fc141bd29f5df8ba98bbc8",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-06/neg-1.json": {
+      "sha256": "1c546b6a4c273e8a7a70b8434a075a7856ddb8d5e9a8946606046952d6b3b0fe",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-06/neg-2.json": {
+      "sha256": "a9e6a599ec3959cd07ef6ba447d50580b69de88efa6a13b7bfa2d015e3152274",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-06/pos-1.json": {
+      "sha256": "1c7910d587cd3cc9e2b0b1469d84703b0966a70463843860f686e9d6ecc8fe1b",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-06/pos-2.json": {
+      "sha256": "3cb8aff1ebabec495b809fa9c91c9b770180b39698044d6e7fdf09842a9aa7bc",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-07/neg-1.json": {
+      "sha256": "4487454ff451f75b66800e6353b6ec74de344b01a60d3b85425787985d2c83ef",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-07/neg-2.json": {
+      "sha256": "bbcd2c57eaa08c5755a6dab710d31b4469979f6599dfb100446d1b9b518d1fe6",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-07/pos-1.json": {
+      "sha256": "ace0a3916116e018f70d990a1ed2124e960672fa4c5e8558c071c20fc0bf3ac9",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-07/pos-2.json": {
+      "sha256": "c4b41fc9144577ef0632b44e8b489d45f68ca928938366110fae72e01ea07624",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-08/neg-1.json": {
+      "sha256": "2b716f902697eff61fecb5d418b2c2ac3b696a48ad36b9b9fdb496e45ce330c1",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-08/neg-2.json": {
+      "sha256": "34a106ce63669ec40fc13f0dc786f6561a01c11f8494e532354390aa14fb13d9",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-08/pos-1.json": {
+      "sha256": "026ced607baa0d61ae6bf22910f8704e373472e0c5dcb2828fddcc29290ec085",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-08/pos-2.json": {
+      "sha256": "9f5b0552555c3685776ff6eda67628b76b3c13a37d79137da21511dcb3bb4982",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-09/neg-1.json": {
+      "sha256": "674082fd7951665566c5c6c10f371c1714cbdeca5aa380bbec3667fdf9cf3d70",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-09/neg-2.json": {
+      "sha256": "04bc3c40e0d202ad4b60d4fce4969df314fb34b0cc4f9125e16ebd0b996866d1",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-09/pos-1.json": {
+      "sha256": "6e711f1cfd6c708d6b04e6bdee6d97cf2aad928ea4bdd8af814d55336286223e",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-09/pos-2.json": {
+      "sha256": "47ce5cb2d7c7812ab48529f9213c5267000d329180a690edcbfcdf13c39e5ce8",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-10/neg-1.json": {
+      "sha256": "bbf042d085ac11ebc7539d66dfcb0301ee06887abe6cbe1ae626ed0fb9efeb0d",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-10/neg-2.json": {
+      "sha256": "5381493d33ce94059f062e29109697150332eb8b4ea494588c6aa25fa161ae29",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-10/pos-1.json": {
+      "sha256": "c317068c595db8059eb87711d80776b0b36882134055714d2de10c4318c47de7",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-10/pos-2.json": {
+      "sha256": "09e3e7b797df5838f3a12f0b774e9b7b44cdb74ba136fba18f99c9b5aeb3eb6c",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-11/neg-1.json": {
+      "sha256": "dbfa3a6c4854d00e499a25fa0ca1b8234c5fb308ab7922c4254ee98182426c98",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-11/neg-2.json": {
+      "sha256": "69839e586b337c5eb4f32e2440cfa4882c9aaead7e5ab7235ed6ca8db7af19b6",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-11/pos-1.json": {
+      "sha256": "cb171a59647b9235e103697719e1c859dfab9ec67f4c4efce32271276f6ed41b",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-11/pos-2.json": {
+      "sha256": "1a5bf87d60cdecf90cefad01503a7076fb48110672eec2a82f55699a0399c0b9",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-12/neg-1.json": {
+      "sha256": "1e45337e242081f1af408902b236452692d51c5d43df3e85bd56bd736b68e962",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-12/neg-2.json": {
+      "sha256": "4af4d3c2b0fc60abe18ce4aed29cab75b3eef2244d125f2ccb99b70c3f318b30",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-12/pos-1.json": {
+      "sha256": "220590a0574235814e18ead2333f44d89e7313fbdbb16347748b24a1b352f423",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-12/pos-2.json": {
+      "sha256": "d5d06a9f38198d24bedb53ad17c9dd740e6d9ec11b21a4535bdb4589b6cc5922",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-13/neg-1.json": {
+      "sha256": "ad84b2e96dabadc95d89ca7a428bc018ff24ee9951e700ecd43b6a54eba4ea74",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-13/neg-2.json": {
+      "sha256": "d7fdc2167d7539f5b23aec46eda6327043e1547b629f346c974f92fb97339c8e",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-13/pos-1.json": {
+      "sha256": "712f39f2594e06200e72159cfb6cb0f4ddb25213fc7b4302fc4e259a85bd6132",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-13/pos-2.json": {
+      "sha256": "7e04eb613128653f911b4621830989ab506a7e6c940575953f775ff249b0691d",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-14/neg-1.json": {
+      "sha256": "fad9f44f17f52527b7a5e08e14851454517c49dda18fea31096544cc73910d79",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-14/neg-2.json": {
+      "sha256": "a6320a8f05152fbd5d2ce39e83b587d562b94f78e0385d4c66834c7c3ade8aed",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-14/pos-1.json": {
+      "sha256": "6c49b9f636895a379f64b9e3b92a77e133adbe920adb8c7e241b3480a8aea123",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-14/pos-2.json": {
+      "sha256": "ac86e0e39e94b321b70c2bb83f1ae8ffe78e6cb84df81af4612525b7f2cd0598",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-15/neg-1.json": {
+      "sha256": "64feff3337f8d1e57d7daf102a9632375f3dce1df0d8b998732ae496952cac49",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-15/neg-2.json": {
+      "sha256": "a20d0a0489c24ece17212af8e60ac6cc00468e3a84bb97f0b17184347a5eb5f8",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-15/pos-1.json": {
+      "sha256": "b02ea38e87e1d89b9729b321d511431ff37c0bc78476af8f1624b0a8fe2fc403",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-15/pos-2.json": {
+      "sha256": "5cf4278e74bd69a1fd31f0ed77b084a3d1db4d0e5fdb447792feed0d45dadecb",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-16/neg-1.json": {
+      "sha256": "e9e057667541a9aafd43e1551c483610c8f241604729bb509943f2ba71ff58e7",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-16/neg-2.json": {
+      "sha256": "730e2e40217cbeafdb00ca948b9bb9792310d706d4fe23c0605916aa6a52998b",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-16/pos-1.json": {
+      "sha256": "b6c59c143071accd6159127cd6974f0961787dc323a127f365e2a13591fad694",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-16/pos-2.json": {
+      "sha256": "6f8199fabe3bfb386fcde011d31f906bbc78c7eecd8d5808e8f4c4ed6d05e79d",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-17/neg-1.json": {
+      "sha256": "c673aaedf9eee87cd93a473df38608bb99b99aaea9c43ddb6632ad9b1a231a42",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-17/neg-2.json": {
+      "sha256": "c8b386a65be3ecb1f556fd6dec83384eab7a666aa367bff0fb88a853eba57bcd",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-17/pos-1.json": {
+      "sha256": "93cddffdc8d4cb4d7324981bf8d2707238b2d449ec6acccbcba5250931fa1fc2",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-17/pos-2.json": {
+      "sha256": "1af5cd91e685dae9f639a6467f4e4e7b238ee98b700ad184e25cc3d6679f4561",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-18/neg-1.json": {
+      "sha256": "6e493daab1e40b4b33223abd87aa728739e5bdc87e64f17e953bd2999eca2b2a",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-18/neg-2.json": {
+      "sha256": "26b3d45e159fd53e836a8cc3af114b59a714b56c738af26c9530fa8d820ebb35",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-18/pos-1.json": {
+      "sha256": "b2f7d52843e43e25881edd6f19fb1cd276a6b8885e3770b6f1733ec6d06c0008",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-18/pos-2.json": {
+      "sha256": "f51befc5b78eda5da49493551d6f194e00e7f44f41a7671e60f5f322f92a6361",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-19/neg-1.json": {
+      "sha256": "bb12d56ea6b146c1ce4bf365758930ebdae883e93a722ed7f812052436b4530e",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-19/neg-2.json": {
+      "sha256": "6a05f7e7b1769fb00260b813f54566cb7198fc12b827255a87e00c7948a46390",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-19/pos-1.json": {
+      "sha256": "dd0e3b29f22cd61133e149f722405e8e2f3672be51aef3af842a4be48606db55",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-19/pos-2.json": {
+      "sha256": "dbd8b60af9b42299fb9022e9042dba56edf2ee7ec13d8e3823c18b0cc141a448",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-20/neg-1.json": {
+      "sha256": "f3d1e231f0c224592e0e33fa57156f4efb70da9fe24916002de0f95755cd8cf7",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-20/neg-2.json": {
+      "sha256": "1de7fa2751be9e0fc3606b81232936333f0920bf27b207f36295346e790680da",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-20/pos-1.json": {
+      "sha256": "acdfc61a085cb29bbbd401673533919689a1fc8ad6094c8f9b2c6a7bbf4b71fb",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-20/pos-2.json": {
+      "sha256": "0238b055807ceb80f7c1c37aa771557687d18c19a158c9c2c755c6ac427ce910",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-21/neg-1.json": {
+      "sha256": "142faa28de222d42e16bd6403dcd203de65a0ba0b5bb16e96c39b9fc128572e2",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-21/neg-2.json": {
+      "sha256": "3335cb49f0dc4aeea51bc0968853791eb8120c6c609c6c066a95c69621b5aeb7",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-21/pos-1.json": {
+      "sha256": "07cc28c44b7fc3fe8d9f551b472f0597f517f148a741eef3bcc7da64bdd50ae2",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-21/pos-2.json": {
+      "sha256": "bba2038f1db462eb764bb58b143eaed30a600ca6a469fd2714f281cfe5a04aa1",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-22/neg-1.json": {
+      "sha256": "5b50be6d87561c9005302f527a2e5e7d53ddc82ba82b1b934fc7ca81a75a54d1",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-22/neg-2.json": {
+      "sha256": "e3d424f51d026699651973943fb347e0e9dc77989c01b10b76d3c4e2d94a1754",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-22/pos-1.json": {
+      "sha256": "f037e849d43e5817618942b95a20c82b773bae3fe454e56236f3ed56169d2442",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-22/pos-2.json": {
+      "sha256": "f28bef732018cd73dbe3d93aec2145d488b52ecb002eeb8e1c99bb46afcf8100",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-23/neg-1.json": {
+      "sha256": "91fba25677e4b34bb1449638163278b8a0d00ffd49440876197c13f498c558d8",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-23/neg-2.json": {
+      "sha256": "249784735d4e2971f52844fc67cf1f3f983405e57b9253b1ad02eb450c058222",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-23/pos-1.json": {
+      "sha256": "3ab289b1c74524c25700b203fe85262be2f1cd3e5605a4c5b2bf6f3d74f1c7f1",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-23/pos-2.json": {
+      "sha256": "265abb7c870b65b1e87ec2ff8a3576f3c2a8ebc7b5db695b2173219377897623",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-24/neg-1.json": {
+      "sha256": "1ce12d3c1bde7d4f9098ac663ade85e5e5099cb86ac0a4b15eb09664765e8ec0",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-24/neg-2.json": {
+      "sha256": "a6d6c40a295bb9d51a3f65eab91911b74507aed19609f83ecd3d4487860bfdca",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-24/pos-1.json": {
+      "sha256": "bf414314be1e863be46aa39bb7bfdefb88f3b967571baca05574e14d678bb141",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
+    },
+    "data/linter/examples/AIL-24/pos-2.json": {
+      "sha256": "a39431d27602083105e5e2c1a29468c650d7c2e6cbe98d0bc8ec352c2c39158f",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T14:03:16Z",
+      "commit": "70f0f82"
     }
   }
 }

@@ -139,7 +139,7 @@
       - 4차(reports/verify-m2-4.json, ae60108): pass_blocked(BLK-001~006·009·012·013) → m2-done. AC-06-32는 이번엔 통과(간헐, 재발 시 BLOCKED 등록)
 - M3 계획(9.4.5, AC: 03-39·43, 04-12·13·19~21·26·43·45, 05-12·14·15·22·24·25, 08-11~16. 읽을 장은 CLAUDE.md 구현 규칙 3절):
   - [x] 01 M3 수용 테스트(tests/acceptance/m3, AD-031 방식, test(acc) 09da0ab 자체 잠금): [x] a linter.test(AC-04-12·26, ①, ASM-077) [x] b gates.test(AC-04-19·21, AC-08-11·12·13a, ASM-078) [x] c scoring.test(AC-04-20·43·45, ⑥, ASM-079) [x] d extractor.test(AC-05-12·14·15·22·24·25, ③④⑤, ASM-080) [x] e golden.test(②, AC-04-13, AC-08-13~16, AC-03-39·43, ASM-081) [x] f traceability M3·qa:trace --audit·단일 test(acc)·자체 잠금
-  - [x] 02 linter 규칙 24파일·RULES·lintAll·matchCliche(사전 어간 정규식, AC-04-12 녹색, ASM-082·BLK-016) [x] 03 하네스 lintSnapshot(D·P, ASM-083) [ ] 04 B15 예시 24×(2+2) 작성·자체 잠금
+  - [x] 02 linter 규칙 24파일·RULES·lintAll·matchCliche(사전 어간 정규식, AC-04-12 녹색, ASM-082·BLK-016) [x] 03 하네스 lintSnapshot(D·P, ASM-083) [x] 04 B15 예시 24×(2+2) 작성·자체 잠금(70f0f82, linter.test 30/31 — 남은 1 = BLK-016)
   - [ ] 05 gates G-01~G-13·H1~H12 순수 함수 [ ] 06 scoring TM·S_free·노출 선택·QualityReport [ ] 07 extractor 왕복·앵커 거리·p95 [ ] 08 verify:m3(주의: qa:trace --audit가 packages/extractor/src/dom.ts 리터럴 4건 FAIL — M2부터 있던 것, M3-07에서 정리)
 - M3 이월: (B18 재생성은 M2-09d3으로 당김), B15 골격을 실제 예시로 교체 후 자체 잠금(ASM-021)
 - [x] M0 [x] M1 [x] M2 [ ] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
@@ -148,6 +148,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 00:10 | M3-03 lintSnapshot·M3-04 B15 예시 96 자체 잠금. linter.test 30/31(BLK-016)
 - 2026-11-26 23:40 | M3-02 linter 24규칙·lintAll·matchCliche(AC-04-12 녹색). 메타 테스트 칸 분리 버그 BLK-016
 - 2026-11-26 22:50 | BLK-015 해결(사람 relock), 재개. 세션 운영 변경 AD-034(끊길 때까지 진행·주간 게이트)
 - 2026-11-26 20:25 | HALT(BLK-015): 잠근 M3 테스트에 per-test 타임아웃 → guard F06. 수정안 wip/blocked-m3-timeouts, 사람 relock 대기
