@@ -1,0 +1,127 @@
+{
+  "fixture": "brands/prohibited",
+  "provenance": "temp",
+  "source": "08장 8.9.2 금지 업종(S-24)·AC-08-41c: 범주 6 × 양성 5(활용형·띄어쓰기 변형). 브랜드명은 '새 가게'로 고정",
+  "items": [
+    {
+      "category": "gambling",
+      "description": "온라인 카지노 게임을 소개하는 사이트입니다"
+    },
+    {
+      "category": "gambling",
+      "description": "도 박 정보를 매일 모아 드리는 커뮤니티"
+    },
+    {
+      "category": "gambling",
+      "description": "바카라하는 법을 알려 주는 강의 페이지"
+    },
+    {
+      "category": "gambling",
+      "description": "스포츠 토토 분석을 공유하는 블로그 소개"
+    },
+    {
+      "category": "gambling",
+      "description": "카 지 노 후기를 모아 둔 리뷰 사이트"
+    },
+    {
+      "category": "adult",
+      "description": "성인용품을 판매하는 온라인 쇼핑몰 소개"
+    },
+    {
+      "category": "adult",
+      "description": "성인 방송 하이라이트를 모아 보는 채널"
+    },
+    {
+      "category": "adult",
+      "description": "조건 만남을 연결해 드리는 서비스 안내"
+    },
+    {
+      "category": "adult",
+      "description": "유흥업소 위치를 알려 주는 지도 서비스"
+    },
+    {
+      "category": "adult",
+      "description": "성인용품점 신상품을 소개하는 페이지"
+    },
+    {
+      "category": "illegal_loan",
+      "description": "대포통장 거래를 중개해 드리는 안내"
+    },
+    {
+      "category": "illegal_loan",
+      "description": "작업 대출 상담을 빠르게 해 드려요"
+    },
+    {
+      "category": "illegal_loan",
+      "description": "급전대출이 필요한 분을 위한 상담 창구"
+    },
+    {
+      "category": "illegal_loan",
+      "description": "무직자 대출도 바로 가능한 상담소"
+    },
+    {
+      "category": "illegal_loan",
+      "description": "대포 통장 매입 문의를 받는 페이지"
+    },
+    {
+      "category": "drugs",
+      "description": "마약 구하는 방법을 알려 주는 채널"
+    },
+    {
+      "category": "drugs",
+      "description": "대마초 재배 방법을 공유하는 커뮤니티"
+    },
+    {
+      "category": "drugs",
+      "description": "필로폰 판매 정보를 모아 둔 게시판"
+    },
+    {
+      "category": "drugs",
+      "description": "엑스터시 파티 정보를 알려 드려요"
+    },
+    {
+      "category": "drugs",
+      "description": "마 약 거래 후기를 모은 사이트"
+    },
+    {
+      "category": "weapons",
+      "description": "총기판매 매장을 안내하는 페이지입니다"
+    },
+    {
+      "category": "weapons",
+      "description": "실탄 구매 방법을 알려 주는 커뮤니티"
+    },
+    {
+      "category": "weapons",
+      "description": "사제총 만드는 법을 공유하는 블로그"
+    },
+    {
+      "category": "weapons",
+      "description": "폭발물 제조 정보를 모은 자료실 소개"
+    },
+    {
+      "category": "weapons",
+      "description": "총기 판매 사이트를 모아 둔 링크 모음"
+    },
+    {
+      "category": "counterfeit",
+      "description": "짝퉁 명품 가방을 저렴하게 판매해요"
+    },
+    {
+      "category": "counterfeit",
+      "description": "레플리카 시계 전문 쇼핑몰을 소개합니다"
+    },
+    {
+      "category": "counterfeit",
+      "description": "이미테이션 주얼리를 파는 온라인 상점"
+    },
+    {
+      "category": "counterfeit",
+      "description": "가품 운동화를 정품처럼 파는 가게"
+    },
+    {
+      "category": "counterfeit",
+      "description": "명품 짝 퉁 직구 대행 서비스 안내"
+    }
+  ]
+}

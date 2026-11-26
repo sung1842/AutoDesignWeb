@@ -794,3 +794,10 @@
 - 선택: ① 큐 원천 = generation_jobs(status='queued') 행. web은 행 INSERT만 하고(pg-boss import 없음), worker가 1초 폴링으로 `claimNext`(전역 잠금 + GEN_MAX_CONCURRENT_JOBS + FOR UPDATE SKIP LOCKED) 후 `runGenerationJob(..., {claimedBy})` ② 워커 프로세스당 동시 1잡(Chromium 하네스 1개). 머신당 컨텍스트 3(R-16)은 프로세스 수로 맞춘다 ③ pg-boss는 기동 마이그레이션·향후 스케줄 잡(retention·alerts, M7)과 WORKER_LOST 재투입에 쓴다(heartbeat 만료 재투입은 M5-07c)
 - 영향 범위: apps/worker/src/main.ts, apps/worker/src/jobs/queue.ts
 - 되돌리기 비용: 중간
+
+## ASM-113 · M5 · gap · 2026-11-26T23:58Z
+- 질문: M5 화면·보안 AC의 판정 범위(E2E 화면 식별자, 기동 가드 위치, 약관 렌더, 마이그레이션 문자열 검사 범위)
+- 근거 탐색: 01장 1.5.3~1.7, 06장 6.5.4 AC-06-60·AC-06-52, 08장 8.5.1·AC-08-26·AC-08-42, 09장 9.6.1·AC-09-13, 07장 AC-07-13
+- 선택: ① AC-06-60 ①의 "마이그레이션 SQL 전체"는 실행되는 SQL로 본다(주석 제외). 생성 마이그레이션은 06장 6.3.3 DDL 원문을 옮긴 것이라 주석에 키 이름 설명(HMAC 키 출처)이 있고, 잠긴 원문을 고칠 수 없다. 의도(키를 DB에 두지 않음, GUC 미사용)는 실행문 검사로 확인된다 ② AC-09-13은 기동 검사(`loadEnvOrExit` = web check-env·worker main)에서만 적용한다. 런타임 loadEnv에 넣으면 next start(NODE_ENV=production)로 도는 로컬 E2E(mock)가 깨진다 ③ /terms = legal/terms.md(temp)를 제목·단락만 렌더(HTML 해석 없음). 8.5.1 조항 초안을 그대로 넣었다(원문 확인 대상) ④ AC-08-42는 fixtures/layouts 31종 × 변형 3의 폴백 경로 컴파일 산출물로 검사(생성 잡 노출 시안 검사는 pipeline 테스트가 BLK-008 해소 후) ⑤ 화면 식별자(e2e/m5): S06 필드 라벨 = 1.5.5 문구, 카드 `article[data-variant][data-ready]`, AI 배지 aria-label "AI로 생성된 시안", 진행 `data-testid=steps`, 실패 `data-testid=failed`, 매직링크 전송 `data-testid=sent`
+- 영향 범위: tests/acceptance/m5/security.test.ts, e2e/m5, apps/web/src/app/{login,onboarding,brief,g,terms}, packages/config/src/env.ts
+- 되돌리기 비용: 낮음

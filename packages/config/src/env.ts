@@ -182,8 +182,19 @@ export function loadEnv(service: Service, raw: RawEnv = process.env): AppEnv {
 }
 
 /** 기동 진입점용: 실패하면 stderr에 변수명을 출력하고 종료 코드 1로 끝낸다. */
+/** 기동 전용 검사(09장 9.6.1, AC-09-13): NODE_ENV=production에서 LLM_MODE가 live가 아니면 거부(mock·replay·record).
+ * 런타임 loadEnv에는 넣지 않는다(next start는 NODE_ENV=production으로 돌고, 로컬 E2E는 기동 검사 없이 mock을 쓴다, ASM-113). */
+export function bootIssues(raw: RawEnv): EnvIssue[] {
+  const mode = raw.LLM_MODE ?? "mock";
+  return raw.NODE_ENV === "production" && mode !== "live"
+    ? [{ name: "LLM_MODE", message: "NODE_ENV=production에서는 live만 허용" }]
+    : [];
+}
+
 export function loadEnvOrExit(service: Service, raw: RawEnv = process.env): AppEnv {
   try {
+    const boot = bootIssues(raw);
+    if (boot.length > 0) throw new EnvError(service, boot);
     return loadEnv(service, raw);
   } catch (e) {
     if (e instanceof EnvError) {
