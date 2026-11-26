@@ -434,9 +434,10 @@ export function jobStatus(nReal: number, nFallback: number, template: boolean): 
 export async function runGenerationJob(
   d: GenerationDeps,
   jobId: string,
+  o: { claimedBy?: string } = {},
 ): Promise<{ status: string }> {
   try {
-    return await runJob(d, jobId);
+    return await runJob(d, jobId, o);
   } catch (e) {
     process.stderr.write(`[generation] ${jobId} ${String((e as Error).stack ?? e)}\n`);
     await setJob(d.db, jobId, { error_message: String((e as Error).message ?? e).slice(0, 500) });
@@ -448,14 +449,21 @@ export async function runGenerationJob(
   }
 }
 
-async function runJob(d: GenerationDeps, jobId: string): Promise<{ status: string }> {
+async function runJob(
+  d: GenerationDeps,
+  jobId: string,
+  o: { claimedBy?: string },
+): Promise<{ status: string }> {
   const now = (): string => (d.now?.() ?? new Date()).toISOString();
   const jr = await d.db.withService((tx) =>
     q(tx, "select * from generation_jobs where id = $1", [jobId]),
   );
   const job = jr.rows[0];
   if (!job) throw new Error(`job 없음 ${jobId}`);
-  if (job.status !== "queued") return { status: String(job.status) };
+  // queued(직접 실행) 또는 claimNext가 이 워커에 넘긴 running 잡만 실행
+  const claimed =
+    job.status === "running" && o.claimedBy !== undefined && job.worker_id === o.claimedBy;
+  if (job.status !== "queued" && !claimed) return { status: String(job.status) };
   const pr = await d.db.withService((tx) =>
     q(tx, "select * from projects where id = $1", [job.project_id]),
   );

@@ -787,3 +787,10 @@
 - 선택: ① A11은 `generation_jobs.warnings`에 'A11'(잡당 1회) + 워커 로그 `[alert] A11`로 남긴다. alerts 저장·발송은 M7 관측 단위에서 테이블이 정해지면 옮긴다(06장 확정 필요 → HUMAN_TODO 아님, 06장 공백) ② 예산 생략 호출은 llm_calls 1행(status budget_skipped, error_code `COST_CAP`|`SKIP_VISION`|`SKIP_REPAIR`, cost 0), 한 번이라도 생략되면 잡 error_code `COST_CAP`(노출 0이면 NO_ELIGIBLE 우선) ③ 추정 = 6.9.4 ③ 식(mock은 mock-prompt-sizes 블록 토큰 × 1.1, 출력 = models.yaml maxOutputTokens) ④ 잡 종료·환불은 finishGenerationJob 한 곳(공급자 거부·예외 경로 포함) ⑤ 미구현: U-01 두 물결 예약(카피 + 후보 0 → t1 뒤 후보 1~5 동시 예약). 지금은 순차라 usage_overrun에서 후보 1~5 일부가 생략된다(TC-R-20 n_real 3 기대와 다름) → M5-07c
 - 영향 범위: apps/worker/src/jobs/generation.ts
 - 되돌리기 비용: 낮음
+
+## ASM-112 · M5 · gap · 2026-11-26T23:40Z
+- 질문: 생성 잡 큐 투입·소비 방식(04장 S0 "apps/web → pg-boss", 9.1.3 pg-boss 사용처 = worker·db만, web은 pg-boss 금지)
+- 근거 탐색: 04장 4.1 S0, 06장 6.2.3 시퀀스·6.3.4 claim_generation_job, 09장 9.1.3 의존 표
+- 선택: ① 큐 원천 = generation_jobs(status='queued') 행. web은 행 INSERT만 하고(pg-boss import 없음), worker가 1초 폴링으로 `claimNext`(전역 잠금 + GEN_MAX_CONCURRENT_JOBS + FOR UPDATE SKIP LOCKED) 후 `runGenerationJob(..., {claimedBy})` ② 워커 프로세스당 동시 1잡(Chromium 하네스 1개). 머신당 컨텍스트 3(R-16)은 프로세스 수로 맞춘다 ③ pg-boss는 기동 마이그레이션·향후 스케줄 잡(retention·alerts, M7)과 WORKER_LOST 재투입에 쓴다(heartbeat 만료 재투입은 M5-07c)
+- 영향 범위: apps/worker/src/main.ts, apps/worker/src/jobs/queue.ts
+- 되돌리기 비용: 중간
