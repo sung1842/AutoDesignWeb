@@ -4,13 +4,19 @@
     "rootDir": ".",
     "outDir": "dist"
   },
-  "include": ["src", "rules"],
+  "include": [
+    "src",
+    "rules"
+  ],
   "references": [
     {
       "path": "../layout-schema"
     },
     {
       "path": "../design-spec"
+    },
+    {
+      "path": "../compliance"
     }
   ]
 }

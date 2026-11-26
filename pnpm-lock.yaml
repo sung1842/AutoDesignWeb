@@ -187,6 +187,9 @@ importers:
 
   packages/linter:
     dependencies:
+      '@tastefit/compliance':
+        specifier: workspace:^
+        version: link:../compliance
       '@tastefit/layout-schema':
         specifier: workspace:^
         version: link:../layout-schema

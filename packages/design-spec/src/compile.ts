@@ -92,9 +92,11 @@ export function compileSpecsImpl(
     const l2 = l2s[v];
     const paletteId = l2["color.palette_id"] ?? "";
     // 5·6단계: 브랜드 색 → 토큰
-    const br = brand
-      ? applyBrandColorImpl({ presetId: preset.id, paletteId, hex: brand.brand_color }, data)
-      : null;
+    // 브랜드 색은 선택 입력(3.13): 없거나 빈 값이면 팔레트 그대로
+    const br =
+      brand && typeof brand.brand_color === "string" && brand.brand_color !== ""
+        ? applyBrandColorImpl({ presetId: preset.id, paletteId, hex: brand.brand_color }, data)
+        : null;
     const tokens = deriveTokensImpl(
       { presetId: preset.id, l2, overrides: br?.overrides },
       data,

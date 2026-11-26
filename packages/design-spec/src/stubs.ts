@@ -81,6 +81,8 @@ export interface TreeOptions {
   pairingId?: string;
   paletteId?: string;
   brandName?: string;
+  /** 브랜드 입력(4.12 템플릿 카피 치환: name·description·key_points). brandName보다 우선. */
+  brand?: Partial<Brand>;
   copyOverride?: string;
   /** L2 전체 덮어쓰기(9.2.4 B18 코퍼스 렌더, ASM-068). 트리 제약은 앵커 명세 그대로. */
   l2?: L2;
@@ -104,7 +106,13 @@ function treeFor(
   data: DesignData,
   opts: TreeOptions = {},
 ): LayoutTreeLike {
-  const brand: Brand = { ...DEFAULT_BRAND, ...(opts.brandName ? { name: opts.brandName } : {}) };
+  const brand: Brand = {
+    ...DEFAULT_BRAND,
+    ...(opts.brandName ? { name: opts.brandName } : {}),
+    ...Object.fromEntries(
+      Object.entries(opts.brand ?? {}).filter(([, v]) => v !== undefined && v !== ""),
+    ),
+  };
   const deck = templateDeck(purpose, data.root, brand);
   if (opts.copyOverride !== undefined) deck["hero.headline"] = [opts.copyOverride];
   const raw = patternRaw(spec, STANDARD_PATTERN[purpose] ?? "PS-1", deck, data);
@@ -172,5 +180,35 @@ export function fallbackMockup(
       data,
     )[variant];
   return { spec, tree: treeFor(spec, purpose, data) };
+}
+/** 브랜드 입력(BrandInput, 06장 brief) → 템플릿 치환용 Brand. */
+function brandOf(b: unknown): Partial<Brand> {
+  if (typeof b !== "object" || b === null) return {};
+  const o = b as Record<string, unknown>;
+  const kp = Array.isArray(o.key_points)
+    ? o.key_points
+    : Array.isArray(o.keyPoints)
+      ? o.keyPoints
+      : [];
+  return {
+    ...(typeof o.name === "string" ? { name: o.name.normalize("NFC") } : {}),
+    ...(typeof o.description === "string" ? { description: o.description } : {}),
+    key_points: kp.filter((x): x is string => typeof x === "string"),
+  };
+}
+
+/** 04장 4.12 buildFallback(v): 해당 변형 명세(토큰 그대로) + 표준 트리 + 브랜드 템플릿 카피. LLM 0회(ASM-081 ①). */
+export function buildFallback(
+  input: { typeId: string; purpose: string; variant: Variant; spec?: DesignSpec; brand?: unknown },
+  data: DesignData,
+): { spec: DesignSpec; tree: LayoutTreeLike } {
+  const { spec } = fallbackMockup(
+    input.typeId,
+    input.purpose,
+    input.variant,
+    data,
+    input.spec ? { spec: input.spec } : {},
+  );
+  return { spec, tree: treeFor(spec, input.purpose, data, { brand: brandOf(input.brand) }) };
 }
 export type { L1 };

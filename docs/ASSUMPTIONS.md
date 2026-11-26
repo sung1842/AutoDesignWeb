@@ -604,3 +604,10 @@
 - 선택: ① 측정 = generation.renderViewports 5개 measure, L1 = 1280 features→toL1, 린트 = S·C·T(spec·트리 카피·brand) + D·P(375·1280 스냅숏) ② 트리 카피 role = `블록.슬롯`(목록 항목 `.item`, 링크 라벨 = button) ③ G-08은 axe 실행기를 받을 때만 판정하고 없으면 fail "axe 미실행(BLK-008)" ④ G-10 브랜드명 = opts.brand.name, 없으면 nav 워드마크 텍스트 ⑤ 원본 유사도 비교 집합 기본 = 빈 집합(temp 레퍼런스에 originality_sig 없음), phash는 비교 대상이 있을 때만 계산 ⑥ TM reliable = 정규화기 reliable ∧ 측정 가능, σ = spec.calibration_trace.sigma ⑦ 자기검증 radius = 요소별 computed radius(원형·pill 상한 제외)와 토큰 radius 집합의 최대 차, 주 배경 = body·html·첫 자식 중 처음 불투명한 배경, accent = 페이지 computed 색 중 최소 ΔE2000(accent 토큰이 없는 단색 팔레트는 0, accentToken false)
 - 영향 범위: apps/worker/src/quality/evaluate.ts, scripts/eval
 - 되돌리기 비용: 낮음
+
+## ASM-086 · M3 · gap · 2026-11-26T17:20Z
+- 질문: CP-01~12를 확정 트리에서 어떻게 판정할지(표의 검사 칸이 AIL 규칙이 아닌 CP-01·02·06·08·10·11), 브랜드 입력에 brand_color가 없을 때 compileSpecs 동작
+- 근거 탐색: 04장 4.6.3·4.6.4·4.13.2, 08장 8.7.5·8.9.2, 골든 32 brand(brand_color 없음), 3.13(브랜드 색 선택 입력)
+- 선택: ① CP-03·04·05·07·09·12 = AIL-21·21·13·19·22·23 error(단계 C) ② CP-01 = 워드마크 슬롯 텍스트 = NFC 브랜드명 ③ CP-02 = hero.headline·sub에 브랜드명 또는 입력 문장(description·key_points·audience, 자리표시 제외)의 2자 이상 어절 ④ CP-06 = 종결 어미(다·요·까·시오)로 끝나는 문장 중 tone.ending 패턴 비율 ≥ 90%(자리표시·사용자 원문·브랜드명 제외) ⑤ CP-08 = 브랜드명 제외 라틴 4단어 연속 ⑥ CP-10 = 전화·이메일·사업자번호 패턴이 8.7.5 예시값과 다르면 위반 ⑦ CP-11 = 고위험 브랜드 사전(judgeAbuse high_risk)에서 브랜드 입력에 없는 상표 ⑧ brand_color가 없거나 빈 값이면 브랜드 색 단계를 건너뛴다(팔레트 그대로) ⑨ buildFallback = fallbackMockup 명세 + 브랜드 치환 템플릿 트리
+- 영향 범위: packages/linter(copy-rules·tree-copy), packages/design-spec(compile·stubs)
+- 되돌리기 비용: 낮음
