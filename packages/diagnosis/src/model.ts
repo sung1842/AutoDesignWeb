@@ -40,6 +40,8 @@ export interface DiagConst {
   };
   positionBias: { sameSlotRatio: number; minAnswers: number };
   fastAnswerMs: number;
+  /** 05장 5.9 설문 자극물 카드×축 채택 상한(09장 D-0904). */
+  surveyAssetL1AbsMax: number;
 }
 export interface Tuned {
   typeDiscWeight: number;

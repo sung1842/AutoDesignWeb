@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T18:52Z}
+- lock: {owner: 2026-11-26T18:08Z, since: 2026-11-26T18:17Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
@@ -145,7 +145,7 @@
   - [ ] 01 M4 수용 테스트(tests/acceptance/m4, AD-031 방식): [x] a diagnosis 엔진(02장 2.5~2.7·2.12, ③⑤⑥, ASM-090) [x] b sim:survey 게이트·튜닝 규칙(④, 2.16, ASM-091) [x] c survey:build 산출·멱등·x_card·--check(①②③, AC-02-07~10·37, survey-build.test, ASM-093) [ ] d 진단 API·익명 세션·p95(⑦, 06장) [ ] e 이벤트 API·레지스트리·identity_links(⑫, 00장 8.3) [ ] f 진단·결과 화면 E2E(⑧⑨⑩, 01장) [ ] g build-answers·골든 잠금(⑪) → qa:trace --audit·guard:patterns·단일 test(acc)·자체 잠금
   - [x] 02 packages/diagnosis 사후분포·1-step 갱신·문항 선택·종료·유형 판정·κ·pickNotice(diagnosis.test 24/24, AC-02-06 BLK-020)
   - [ ] 03 sim:survey(1,000명, 공통 난수 쌍체·부트스트랩)·튜닝 절차: [x] 시뮬레이터·판정·튜너·CLI(합성 dev: RMSE 0.1215·앵커 0.930만 미달, ASM-091) [ ] x_card gate·튜닝 실행(04 뒤)
-  - [ ] 04 survey:build(카드 렌더→x_card→게이트→WebP→local Storage→survey_items upsert, manifest.lock)
+  - [ ] 04 survey:build(카드 렌더→x_card→게이트→WebP→local Storage→survey_items upsert, manifest.lock): [x] a surveyPage(ASM-092) [x] b 판정 순수 함수 stimuli.ts(judgeCard·judgePair·coverage·stage1Issues, 단위 5/5) [ ] c StoragePort fs [ ] d 렌더·WebP·추출·manifest(--only) [ ] e DB upsert·멱등·--check [ ] f 전체 실행·manifest 커밋
   - [ ] 05 진단 API·익명 쿠키 세션(D-41)·재개·뒤로가기
   - [ ] 06 POST /api/events·이벤트 레지스트리 zod·identity_links
   - [ ] 07 진단·결과 화면(01장, packages/ui 토큰)·닮은 사이트 3 링크·비제휴 고지
@@ -159,6 +159,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 03:17 | M4-04b stimuli 판정 함수(5.9·2.4.2·2.6.1), 계획 target 48장 커버리지 통과
 - 2026-11-27 03:52 | M4-01c 감사 리터럴 정리(perf 키·--check 위임), BLK-021 locked-conflict
 - 2026-11-27 03:35 | M4-01c survey-build.test WIP(manifest 수량·규격·DOM·멱등·--check, ASM-093)
 - 2026-11-27 03:09 | 세션 시작, 잠금 획득(이전 잠금 16:24Z 90분 초과). M4-04a surveyPage 커밋 확인
