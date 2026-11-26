@@ -19,7 +19,8 @@ export const rule: Rule = {
   fixHint: "같은 hue 계열 2-stop 그라디언트나 단색 면으로 바꾸세요.",
   check(ctx) {
     const out: LintFinding[] = [];
-    if (ctx.spec && ctx.stages.has("S")) out.push(...staticLintImpl(ctx.spec).filter((f) => f.rule === "AIL-01"));
+    if (ctx.spec && ctx.stages.has("S"))
+      out.push(...staticLintImpl(ctx.spec).filter((f) => f.rule === "AIL-01"));
     if (ctx.snapshot) {
       const p = params<P>("AIL-01");
       for (const el of ctx.snapshot.elements)

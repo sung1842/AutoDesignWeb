@@ -95,6 +95,9 @@ importers:
       '@tastefit/extractor':
         specifier: workspace:^
         version: link:../../packages/extractor
+      '@tastefit/linter':
+        specifier: workspace:^
+        version: link:../../packages/linter
       '@tastefit/renderer':
         specifier: workspace:^
         version: link:../../packages/renderer

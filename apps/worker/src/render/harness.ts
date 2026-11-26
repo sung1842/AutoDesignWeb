@@ -17,6 +17,8 @@ import {
 } from "@tastefit/extractor";
 import sharp from "sharp";
 import { collectMeasure, type RawMeasure } from "./measure.js";
+import type { Snapshot } from "@tastefit/linter";
+import { lintSnapshotOf } from "./lint-snapshot.js";
 
 export interface PageLike {
   evaluate<R, A = undefined>(fn: (arg: A) => R, arg?: A): Promise<R>;
@@ -45,6 +47,8 @@ export interface Harness {
   /** 05장 5.5.3 원시 특징(M2-09d1, ASM-066). 5.4.2: 1280×800·애니메이션 정착 후 측정. */
   features(html: string, vw: number): Promise<Features>;
   parentProbe(html: string): Promise<{ xss: boolean; contentDocumentNull: boolean }>;
+  /** 04장 4.13.1 린터 단계 D·P 입력(ASM-077 ③ 계약 확장). spec이 있으면 AIL-17 토큰 집합을 붙인다. */
+  lintSnapshot(html: string, vw: number, opts?: { spec?: unknown }): Promise<Snapshot>;
   close(): Promise<void>;
 }
 
@@ -468,6 +472,22 @@ export async function openHarness(): Promise<Harness> {
         }, html);
       } finally {
         await ctx.close();
+      }
+    },
+    async lintSnapshot(html, vw, opts) {
+      const s = await openPage(browser, html, vw);
+      try {
+        await s.page.evaluate(() => {
+          for (const a of document.getAnimations())
+            try {
+              a.finish();
+            } catch {
+              a.pause();
+            }
+        });
+        return await lintSnapshotOf(s.page, vw, opts?.spec);
+      } finally {
+        await closeS(s);
       }
     },
     async close() {

@@ -33,6 +33,9 @@
     },
     {
       "path": "../../packages/extractor"
+    },
+    {
+      "path": "../../packages/linter"
     }
   ]
 }

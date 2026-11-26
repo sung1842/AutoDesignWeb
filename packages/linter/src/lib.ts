@@ -228,8 +228,7 @@ export function copyItems(ctx: RuleCtx): CopyItem[] {
   return [];
 }
 export const HEADING_ROLES = /(headline|heading|title|button|cta|badge|eyebrow|label)/;
-export const isHeadingRole = (role: string): boolean =>
-  HEADING_ROLES.test(role) && role !== "body";
+export const isHeadingRole = (role: string): boolean => HEADING_ROLES.test(role) && role !== "body";
 export const EMOJI = /\p{Extended_Pictographic}/gu;
 export const emojiCount = (s: string): number =>
   [...s.matchAll(/\p{Emoji_Presentation}|\p{Extended_Pictographic}️/gu)].length;

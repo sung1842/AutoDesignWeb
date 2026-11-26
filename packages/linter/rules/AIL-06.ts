@@ -20,7 +20,8 @@ export const rule: Rule = {
   fixHint: "radius를 줄이고 그림자 대신 hairline 테두리나 면 대비로 구분하세요.",
   check(ctx) {
     const out: LintFinding[] = [];
-    if (ctx.spec && ctx.stages.has("S")) out.push(...staticLintImpl(ctx.spec).filter((f) => f.rule === "AIL-06"));
+    if (ctx.spec && ctx.stages.has("S"))
+      out.push(...staticLintImpl(ctx.spec).filter((f) => f.rule === "AIL-06"));
     if (!ctx.snapshot) return out;
     const p = params<P>("AIL-06");
     const cards = ctx.snapshot.elements.filter((e) => e.card);

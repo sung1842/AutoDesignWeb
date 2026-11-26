@@ -583,3 +583,10 @@
 - 선택: ① 카피 = `CopyItem{role, text, source?: llm|user, style?}[]`(role 예 hero.headline·hero.eyebrow·button·proof.quote·proof.author) ② AIL-04 pill = eyebrow style "pill" 또는 spec `shape.radius_family=pill`(태그 999) ③ AIL-12 항목 유형 = 숫자 포함→number, 인용부호 시작→quote, 그 밖→text, 섹션 image 슬롯→image 1칸 ④ AIL-14 키워드 = brand keywords·keyPoints·tags·properNouns·location, 고유명사 = 대문자 시작 라틴 단어 ⑤ AIL-16 목록은 harmony.json에 키가 없어 `packages/linter/data/defaults.json`(03장 목록 + 표 예시)에 둔다. 서체(Inter 등)는 AIL-03이 맡는다 ⑥ AIL-13 사용자 원문 슬롯의 사용자 표현은 4.6.4대로 warn(메타 심각도는 표대로 error) ⑦ D 탐지 상수는 rule-params.json에 추가 ⑧ 규칙이 받는 입력은 그 규칙 단계의 입력뿐(spec은 톤·프리셋 문맥으로 항상 전달)
 - 영향 범위: packages/linter(rules·data), apps/worker harness(lintSnapshot)
 - 되돌리기 비용: 낮음
+
+## ASM-083 · M3 · gap · 2026-11-26T15:10Z
+- 질문: 하네스 lintSnapshot의 스냅숏 필드와 카드·버튼·배지 판정 기준, B15 예시를 어떻게 만들지(seed:temp 골격과의 관계)가 장에 없음
+- 근거 탐색: 04장 4.13.1·4.13.2, 03장 3.8.1(헤드라인 줄), 기존 하네스 headlineLines·features, seed-config genLinterExamples 골격(ASM-021)
+- 선택: ① 스냅숏 = 요소별 computed style(본문 하위 전 요소, svg 내부 제외) + 아이콘 카드 행(자식 전부가 ≤48px svg+제목+본문) + :root custom property 원문 + 헤드라인 줄(3.8.1과 같은 방법) + 글래스 뒤 휘도 표준편차(요소를 숨긴 스크린샷, 0–255) + spec.tokens 허용 집합(색 hex·radius·space px·스텝별 expectedSize) ② 카드 = data-card·article·클래스 card/__item/__cell, 버튼 = button·role=button·btn 클래스·cta 역할, 배지 = eyebrow·badge 역할·badge/pill/tag 클래스, 장식 = aria-hidden 또는 글자 없음, margin:auto = 좌우 여백 같고 0보다 큼 ③ B15 예시는 seed:temp가 scripts/data/linter-examples.ts 정의로 만든다(골격 교체, provenance temp). 손으로 쓴 최소 HTML·JSON이며 실제 렌더러 출력 검증은 골든·폴백 단위가 맡는다
+- 영향 범위: apps/worker/src/render/lint-snapshot.ts, scripts/data, data/linter/examples
+- 되돌리기 비용: 낮음

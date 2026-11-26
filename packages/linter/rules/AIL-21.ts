@@ -23,7 +23,8 @@ export const rule: Rule = {
       if (EXAMPLE_PREFIX.test(c.text)) continue;
       for (const m of norm(c.text).matchAll(re)) {
         const v = (m[0] ?? "").replace(/\s/g, "");
-        if (!known.includes(v)) out.push(finding("AIL-21", "error", `${c.role}: "${m[0]}" 입력에 없음`));
+        if (!known.includes(v))
+          out.push(finding("AIL-21", "error", `${c.role}: "${m[0]}" 입력에 없음`));
       }
     }
     return out;

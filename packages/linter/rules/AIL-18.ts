@@ -36,7 +36,13 @@ export const rule: Rule = {
         return ic.stroke === p.lucideStroke && Math.round(ic.size) === p.lucideSize;
       });
       if (bad.length > 0)
-        out.push(finding("AIL-18", "error", `기본 아이콘 ${bad.length}개(${bad[0]?.icon?.set ?? "stroke 2·24px"})`));
+        out.push(
+          finding(
+            "AIL-18",
+            "error",
+            `기본 아이콘 ${bad.length}개(${bad[0]?.icon?.set ?? "stroke 2·24px"})`,
+          ),
+        );
       const per = new Map<number, number>();
       for (const e of icons) per.set(e.section, (per.get(e.section) ?? 0) + 1);
       for (const [sec, n] of per)

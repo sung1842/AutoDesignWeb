@@ -12,7 +12,8 @@ export const rule: Rule = {
   fixHint: "글래스는 사진·패턴 위 내비처럼 뒤가 보일 때만 쓰고, 아니면 불투명 면으로 바꾸세요.",
   check(ctx) {
     const out: LintFinding[] = [];
-    if (ctx.spec && ctx.stages.has("S")) out.push(...staticLintImpl(ctx.spec).filter((f) => f.rule === "AIL-09"));
+    if (ctx.spec && ctx.stages.has("S"))
+      out.push(...staticLintImpl(ctx.spec).filter((f) => f.rule === "AIL-09"));
     if (ctx.snapshot) {
       const max = params<{ lumStdMax: number }>("AIL-09P").lumStdMax;
       for (const g of ctx.snapshot.glass)

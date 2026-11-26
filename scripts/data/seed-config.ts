@@ -1,4 +1,5 @@
 // seed:temp — config/ 묶음 B20·B21·B22·B24(09장 9.2.4). 결정적(난수 미사용), provenance temp.
+import { linterExampleFiles } from "./linter-examples.js";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { COLOR_NAMES } from "../../packages/taxonomy/src/color-name.js";
@@ -554,32 +555,14 @@ export function genNormalizer(ctx: Ctx): Out[] {
   return [{ path: "data/normalizers/2026-S0.json", content: `${JSON.stringify(body, null, 2)}\n` }];
 }
 
-// ---------- B15 data/linter/examples/<ruleId>/{pos,neg}-1.json 골격(09장 9.2.4 B15) ----------
-// 실제 page·tokens는 PageSchema·렌더러가 생기는 M3 시작 단위에서 04장 4.13 규칙 정의로 작성하고 자체 잠금한다(9.5.6).
-// M1에는 규칙 목록만 옮긴 골격(skeleton: true, page·tokens null)을 둔다(ASM-021).
+// ---------- B15 data/linter/examples/<ruleId>/{pos,neg}-{1,2}.json(09장 9.2.4 B15) ----------
+// M1 골격(ASM-021)을 M3-04에서 04장 4.13.2 규칙 정의대로 쓴 실제 예시로 교체했다(ASM-083). 정의는 linter-examples.ts.
 export function genLinterExamples(ctx: Ctx): Out[] {
   const sec = section(chapter(ctx.root, "04_generation.md"), "## 4.13");
-  const rows = sec
-    .split("\n")
-    .filter((l) => /^\| AIL-\d{2} \|/.test(l))
-    .map((l) => l.split("|").map((c) => c.trim()));
-  if (rows.length !== 24) throw new Error(`4.13 AIL 규칙 수 ${rows.length} ≠ 24`);
-  const out: Out[] = [];
-  for (const r of rows) {
-    const ruleId = r[1] ?? "";
-    const stages = (r[3] ?? "").split(",").map((s) => s.trim());
-    for (const [file, expect] of [
-      ["pos-1", "violation"],
-      ["neg-1", "clean"],
-    ] as const)
-      out.push({
-        path: `data/linter/examples/${ruleId}/${file}.json`,
-        content: `${JSON.stringify(
-          { ruleId, expect, stages, page: null, tokens: null, skeleton: true, provenance: "temp" },
-          null,
-          2,
-        )}\n`,
-      });
-  }
-  return out;
+  const ids = [...sec.matchAll(/^\| (AIL-\d{2}) \|/gm)].map((m) => m[1]);
+  const files = linterExampleFiles();
+  const have = new Set(files.map((f) => f.path.split("/")[3]));
+  if (ids.length !== 24 || ids.some((id) => !have.has(id)))
+    throw new Error(`4.13 AIL 규칙 ${ids.length}개와 예시 규칙 ${have.size}개 불일치`);
+  return files;
 }

@@ -5,26 +5,14 @@
   "items": [
     {
       "id": "AIL-01",
-      "stage": [
-        "S",
-        "D"
-      ],
-      "hueA": [
-        260,
-        320
-      ],
-      "hueB": [
-        200,
-        260
-      ],
+      "stage": ["S", "D"],
+      "hueA": [260, 320],
+      "hueB": [200, 260],
       "chromaMin": 0.08
     },
     {
       "id": "AIL-03",
-      "stage": [
-        "S",
-        "D"
-      ],
+      "stage": ["S", "D"],
       "singleFamilyBanned": [
         "Inter",
         "Roboto",
@@ -34,75 +22,43 @@
         "Pretendard",
         "Noto Sans KR"
       ],
-      "headingFirstBanned": [
-        "Inter",
-        "Geist",
-        "Roboto",
-        "Arial",
-        "system-ui"
-      ]
+      "headingFirstBanned": ["Inter", "Geist", "Roboto", "Arial", "system-ui"]
     },
     {
       "id": "AIL-06",
-      "stage": [
-        "S",
-        "D"
-      ],
-      "radiusPx": [
-        12,
-        16
-      ],
+      "stage": ["S", "D"],
+      "radiusPx": [12, 16],
       "blurMinPx": 16,
       "alphaMax": 0.15,
-      "warnTypes": [
-        "T3",
-        "T4",
-        "T6"
-      ]
+      "warnTypes": ["T3", "T4", "T6"]
     },
     {
       "id": "AIL-09",
-      "stage": [
-        "S",
-        "P"
-      ]
+      "stage": ["S", "P"]
     },
     {
       "id": "T",
-      "stage": [
-        "T"
-      ],
+      "stage": ["T"],
       "source": "04장 4.5.3 LT-11·03장 3.6.7 RH-01·02·LT-06(다크 inverse 0~1)",
       "skeletonRunMax": 2,
       "imageRunMax": 3,
       "ctaMax": 2,
-      "darkInverse": [
-        0,
-        1
-      ],
+      "darkInverse": [0, 1],
       "strictAltMinSections": 6
     },
     {
       "id": "AIL-02",
-      "stage": [
-        "D"
-      ]
+      "stage": ["D"]
     },
     {
       "id": "AIL-04",
-      "stage": [
-        "T",
-        "C"
-      ],
+      "stage": ["T", "C"],
       "textPattern": "new|beta|introducing|✨|🚀|신규|출시|NEW",
       "flags": "iu"
     },
     {
       "id": "AIL-05",
-      "stage": [
-        "T",
-        "D"
-      ],
+      "stage": ["T", "D"],
       "cards": 3,
       "widthSpreadMax": 0.02,
       "iconMaxPx": 48,
@@ -110,141 +66,96 @@
     },
     {
       "id": "AIL-07",
-      "stage": [
-        "T"
-      ],
+      "stage": ["T"],
       "sameBgRun": 3,
       "strictAltMinSections": 6,
       "centeredRatioMax": 0.4
     },
     {
       "id": "AIL-08",
-      "stage": [
-        "D"
-      ],
+      "stage": ["D"],
       "blurMinPx": 40,
       "areaRatioMin": 0.05
     },
     {
       "id": "AIL-09P",
-      "stage": [
-        "P"
-      ],
+      "stage": ["P"],
       "lumStdMax": 4
     },
     {
       "id": "AIL-10",
-      "stage": [
-        "C",
-        "D"
-      ],
+      "stage": ["C", "D"],
       "headingMin": 1,
       "bodyWarnMin": 2
     },
     {
       "id": "AIL-11",
-      "stage": [
-        "D"
-      ],
+      "stage": ["D"],
       "blurMinPx": 12,
       "chromaMin": 0.15
     },
     {
       "id": "AIL-12",
-      "stage": [
-        "T"
-      ],
+      "stage": ["T"],
       "itemsMin": 4,
       "kindsMin": 3,
       "plainRatioMax": 0.5
     },
     {
       "id": "AIL-14",
-      "stage": [
-        "C"
-      ],
+      "stage": ["C"],
       "plainRatioMax": 0.6
     },
     {
       "id": "AIL-15",
-      "stage": [
-        "C"
-      ],
-      "phrases": [
-        "지금 시작하기",
-        "자세히 보기",
-        "더 알아보기",
-        "Get started",
-        "Learn more"
-      ],
+      "stage": ["C"],
+      "phrases": ["지금 시작하기", "자세히 보기", "더 알아보기", "Get started", "Learn more"],
       "min": 3
     },
     {
       "id": "AIL-17",
-      "stage": [
-        "D"
-      ],
+      "stage": ["D"],
       "deltaEOk": 0.01,
       "pxTol": 0.5
     },
     {
       "id": "AIL-18",
-      "stage": [
-        "T",
-        "D"
-      ],
-      "allowedSets": [
-        "phosphor",
-        "tabler",
-        "iconoir"
-      ],
+      "stage": ["T", "D"],
+      "allowedSets": ["phosphor", "tabler", "iconoir"],
       "lucideStroke": 2,
       "lucideSize": 24,
       "perSectionMax": 4
     },
     {
       "id": "AIL-19",
-      "stage": [
-        "C"
-      ],
+      "stage": ["C"],
       "min": 3
     },
     {
       "id": "AIL-20",
-      "stage": [
-        "C"
-      ],
+      "stage": ["C"],
       "exemptTone": "T-PLAYFUL"
     },
     {
       "id": "AIL-21",
-      "stage": [
-        "C"
-      ],
+      "stage": ["C"],
       "claimPattern": "\\d[\\d,.]*\\s*(?:명|%|건|년\\s*연속|위)|최고|최초|1위|유일|100%|보장|수상|평점|별점|고객\\s*수",
       "flags": "u"
     },
     {
       "id": "AIL-22",
-      "stage": [
-        "C"
-      ],
+      "stage": ["C"],
       "namePattern": "^[가-힣]○○$"
     },
     {
       "id": "AIL-23",
-      "stage": [
-        "C",
-        "D"
-      ],
+      "stage": ["C", "D"],
       "pattern": "lorem ipsum|your company|텍스트를 입력|placeholder",
       "flags": "iu"
     },
     {
       "id": "AIL-24",
-      "stage": [
-        "D"
-      ],
+      "stage": ["D"],
       "maxLines": {
         "375": 3,
         "1280": 2

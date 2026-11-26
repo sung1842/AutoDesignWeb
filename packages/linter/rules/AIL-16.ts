@@ -33,7 +33,8 @@ export const rule: Rule = {
         out.push(finding("AIL-16", "error", `${k}: ${v}`));
     }
     const used = new Set<string>();
-    for (const e of s.elements) for (const c of [e.color, e.bgColor, e.borderColor]) used.add(sp(c));
+    for (const e of s.elements)
+      for (const c of [e.color, e.bgColor, e.borderColor]) used.add(sp(c));
     for (const v of Object.values(s.rootVars)) used.add(sp(v));
     for (const [a, b] of d.colorPairs)
       if (used.has(a) && used.has(b)) out.push(finding("AIL-16", "error", `기본 색 쌍 ${a}·${b}`));

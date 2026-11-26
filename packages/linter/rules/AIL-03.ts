@@ -46,7 +46,8 @@ export const rule: Rule = {
   fixHint: "헤드라인에 성격 있는 서체(명조·디스플레이)를 쓰고 본문과 짝을 맞추세요.",
   check(ctx) {
     const out: LintFinding[] = [];
-    if (ctx.spec && ctx.stages.has("S")) out.push(...staticLintImpl(ctx.spec).filter((f) => f.rule === "AIL-03"));
+    if (ctx.spec && ctx.stages.has("S"))
+      out.push(...staticLintImpl(ctx.spec).filter((f) => f.rule === "AIL-03"));
     if (!ctx.snapshot) return out;
     const p = params<P>("AIL-03");
     const texty = ctx.snapshot.elements.filter((e) => e.text.length > 0);
