@@ -152,3 +152,18 @@
 - 시도: (1) 규칙 메타를 `[]`로 → 장 표와 다른 거짓 메타라 하지 않음 (2) 테스트 수정 → 자체 잠금 entry 변경 금지
 - 제안 수정안(사람): 칸 분리를 백틱 구간 안의 `|`를 무시하도록 고친다(예: 줄에서 `` `[^`]*` `` 구간을 먼저 자리표시로 바꾼 뒤 split) 후 relock
 - 상태: open
+
+## BLK-017 · M3 · needs_human_data · 2026-11-26T16:50Z
+- 대상: AC-05-15 `eval:extractor`(05장 5.7.4) ↔ 사람 라벨 없음(B18·레퍼런스 라벨 전부 temp)
+- 증상: ρ·MAE를 잴 사람 라벨(`data/references/labels.json`, provenance human)이 없어 평가 불가. 스크립트는 보고서에 사실을 적고 종료 코드 1(temp 라벨로 합격 처리하지 않음, ASM-080 ⑦)
+- 재현: pnpm -s exec vitest run tests/acceptance/m3/extractor.test.ts -t "eval:extractor"
+- 제안(사람): 5.7 방식 블라인드 라벨 세트 작성 → labels.json(human) → 평가 구현 확정
+- 상태: open
+
+## BLK-018 · M3 · needs_human_data · 2026-11-26T16:50Z
+- 대상: 9.4.5 ③④·AC-05-22·24 앵커 왕복·분리 ↔ temp 정규화기 2026-S0(B18 합성 부트스트랩)
+- 증상: 앵커 8개 측정 L1이 3.4.7 의도값과 5축 모두 0.10 초과(reliable 0축 < reliableAxesMin 3), 앵커 간 최소 거리 0.129 < anchorMinDist 0.25. depth 축이 전 프리셋 0.25로 고정(b1 0.385로 압축), shape가 0.37 근처에 몰림. 토큰 수준 자기검증(radius·배경·accent·본문 서체)은 8/8 통과라 렌더·추출은 토큰을 맞게 읽음 → 정규화기(분위·b0·b1) 문제
+- 재현: pnpm -s exec vitest run tests/acceptance/m3/extractor.test.ts -t "앵커"
+- 시도: 5.9 temp 분기 규칙상 앵커 실패를 이유로 정규화기를 재적합하지 않는다(09장 F19) → 수정하지 않음
+- 제안(사람): human 정규화기(사람 라벨 코퍼스, 5.8) 마련, 또는 5.9 앵커 실패 절차 1~4(블라인드 라벨)로 3.4.7 의도값·프리셋 토큰 조정
+- 상태: open

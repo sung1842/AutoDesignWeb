@@ -9,8 +9,9 @@ import { materializeFonts, type FaceIn } from "@tastefit/assets/fonts-node";
 import type { Browser, Page, Route } from "playwright";
 import {
   AXES,
-  extractFeatures,
+  extractL2,
   toL1,
+  type ExtractOptions,
   type ExtractPage,
   type Features,
   type Normalizer,
@@ -46,6 +47,10 @@ export interface Harness {
   extractL1(html: string, vw: number): Promise<number[]>;
   /** 05장 5.5.3 원시 특징(M2-09d1, ASM-066). 5.4.2: 1280×800·애니메이션 정착 후 측정. */
   features(html: string, vw: number): Promise<Features>;
+  /** extractL2 옵션(레지스트리 서체 분류 + sharp 축소, ASM-080 ② 계약 확장). */
+  extractOptions(): ExtractOptions;
+  /** 현재 정규화기(data/normalizers 최신). */
+  normalizer(): Normalizer;
   parentProbe(html: string): Promise<{ xss: boolean; contentDocumentNull: boolean }>;
   /** 04장 4.13.1 린터 단계 D·P 입력(ASM-077 ③ 계약 확장). spec이 있으면 AIL-17 토큰 집합을 붙인다. */
   lintSnapshot(html: string, vw: number, opts?: { spec?: unknown }): Promise<Snapshot>;
@@ -210,6 +215,20 @@ function fontClasses(): Record<string, string> {
   return Object.fromEntries(
     [...registry().values()].map((f) => [f.subsetFamily.toLowerCase(), f.classification]),
   );
+}
+
+function extractOptions(): ExtractOptions {
+  return {
+    fontClasses: fontClasses(),
+    decode: async (png, width) => {
+      const { data, info } = await sharp(png)
+        .resize({ width, kernel: "nearest" })
+        .removeAlpha()
+        .raw()
+        .toBuffer({ resolveWithObject: true });
+      return { data, channels: info.channels };
+    },
+  };
 }
 
 export async function openHarness(): Promise<Harness> {
@@ -419,25 +438,7 @@ export async function openHarness(): Promise<Harness> {
     async features(html, vw) {
       const s = await openPage(browser, html, vw);
       try {
-        await s.page.evaluate(() => {
-          for (const a of document.getAnimations())
-            try {
-              a.finish();
-            } catch {
-              a.pause();
-            }
-        });
-        return await extractFeatures(s.page as unknown as ExtractPage, {
-          fontClasses: fontClasses(),
-          decode: async (png, width) => {
-            const { data, info } = await sharp(png)
-              .resize({ width, kernel: "nearest" })
-              .removeAlpha()
-              .raw()
-              .toBuffer({ resolveWithObject: true });
-            return { data, channels: info.channels };
-          },
-        });
+        return await extractL2(s.page as unknown as ExtractPage, extractOptions());
       } finally {
         await closeS(s);
       }
@@ -474,6 +475,8 @@ export async function openHarness(): Promise<Harness> {
         await ctx.close();
       }
     },
+    extractOptions,
+    normalizer,
     async lintSnapshot(html, vw, opts) {
       const s = await openPage(browser, html, vw);
       try {

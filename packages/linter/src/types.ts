@@ -89,6 +89,8 @@ export interface Snapshot {
   /** 단계 P: backdrop-filter 요소 뒤 영역 휘도 표준편차(0–255). */
   glass: { lumStd: number }[];
   tokens: TokenSet | null;
+  /** 영역별 텍스트(G-10 브랜드명 존재): nav·첫 섹션(hero)·footer, nav 워드마크. */
+  regions?: { nav: string; hero: string; footer: string; wordmark: string };
 }
 
 export interface LintInput {

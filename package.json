@@ -39,7 +39,9 @@
     "survey:build": "tsx scripts/todo.ts survey:build M4",
     "eval:golden": "tsx scripts/todo.ts eval:golden M7",
     "release:check": "tsx scripts/todo.ts release:check M8",
-    "fixtures:layouts": "tsx scripts/data/fixtures-layouts.ts"
+    "fixtures:layouts": "tsx scripts/data/fixtures-layouts.ts",
+    "eval:extractor:selfcheck": "tsx scripts/eval/extractor-selfcheck.ts",
+    "eval:extractor": "tsx scripts/eval/extractor-eval.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

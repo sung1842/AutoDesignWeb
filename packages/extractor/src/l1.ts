@@ -74,3 +74,14 @@ export function toL1(
   }
   return out;
 }
+
+/** 05장 5.8: 정규화기 버전이 같은 L1끼리만 거리를 잰다(다르면 예외, AC-05-25). */
+export function l1Distance(
+  a: { version: string; vector: readonly number[] },
+  b: { version: string; vector: readonly number[] },
+): number {
+  if (a.version !== b.version)
+    throw new Error(`l1Distance: 정규화기 버전 불일치 ${a.version} ≠ ${b.version}`);
+  if (a.vector.length !== b.vector.length) throw new Error("l1Distance: 차원 불일치");
+  return Math.sqrt(a.vector.reduce((s, x, i) => s + (x - (b.vector[i] ?? 0)) ** 2, 0));
+}

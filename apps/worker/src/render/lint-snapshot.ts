@@ -183,9 +183,18 @@ function collect(): Collected {
       lastLineChars: last === undefined ? 0 : (perLine.get(last) ?? 0),
     });
   }
+  const txt = (sel: string): string =>
+    (document.querySelector(sel)?.textContent ?? "").replace(/\s+/g, " ").trim();
+  const regions = {
+    nav: txt("nav, header"),
+    hero: txt("section"),
+    footer: txt("footer"),
+    wordmark: txt("[data-role='nav.wordmark'], nav .tf-wordmark, header .tf-wordmark"),
+  };
   return {
     vw: innerWidth,
     vh: innerHeight,
+    regions,
     rootVars,
     elements,
     iconCardRows,

@@ -597,3 +597,10 @@
 - 선택: ① 측정 게이트(G-02~07·12) 입력 = PageMeasure 1개 또는 `{measures: []}`, G-01 = `{spec, tree}`(treeLint의 G-01·LT-01~04·09·10 error), G-08 = `{axe: [{vw, violations[{id, impact}]}]}`(serious·critical 차단), G-09 = `{lint}`(error 수 > generation.lint.errorMax), G-10 = `{brandName, nav[], hero[], footer[]}`(NFC 포함), G-11 = `{originality}`, G-13 = `{texts}` ② `judgeAbuse(texts)`: 8.9.2 정규화 후 canonical·alias(길이 ≥ 3) 포함·도메인 포함 = high_risk, 피싱 문구 11개 = phishing_term, 금지 업종 키워드 = prohibited_category. 편집 거리(c)는 브랜드명 단독 판정(브리프)에서 M5에 추가 ③ ΔE2000 = OKLab → 선형 sRGB → XYZ(D65) → CIELAB 후 CIEDE2000 ④ G3 비교 대상이 없으면 min_phash_distance = 64(비트 수), 참조 id null ⑤ H 항목 함수 입력 = `{spec, tree, render?, violations?, conflicts?}` → harmonyScore의 해당 항목 {score, max, measured} ⑥ 픽스처는 scripts/data/gen-scoring-fixtures.ts가 결정적으로 만들고 자체 잠금
 - 영향 범위: packages/scoring(gate-fns·originality·fixtures), packages/compliance, packages/extractor(phash), config/originality.json
 - 되돌리기 비용: 낮음
+
+## ASM-085 · M3 · gap · 2026-11-26T16:50Z
+- 질문: evaluateCandidate의 구성(뷰포트별 측정·린트 입력·G-08 미실행 처리·G-10 브랜드명 출처·원본 유사도 비교 집합)과 자기검증 토큰 수준 판정 방법이 장에 없음
+- 근거 탐색: 04장 4.10.1~4.10.7·4.13, 05장 5.9, 08장 8.3.1, 하네스 measure·features·lintSnapshot
+- 선택: ① 측정 = generation.renderViewports 5개 measure, L1 = 1280 features→toL1, 린트 = S·C·T(spec·트리 카피·brand) + D·P(375·1280 스냅숏) ② 트리 카피 role = `블록.슬롯`(목록 항목 `.item`, 링크 라벨 = button) ③ G-08은 axe 실행기를 받을 때만 판정하고 없으면 fail "axe 미실행(BLK-008)" ④ G-10 브랜드명 = opts.brand.name, 없으면 nav 워드마크 텍스트 ⑤ 원본 유사도 비교 집합 기본 = 빈 집합(temp 레퍼런스에 originality_sig 없음), phash는 비교 대상이 있을 때만 계산 ⑥ TM reliable = 정규화기 reliable ∧ 측정 가능, σ = spec.calibration_trace.sigma ⑦ 자기검증 radius = 요소별 computed radius(원형·pill 상한 제외)와 토큰 radius 집합의 최대 차, 주 배경 = body·html·첫 자식 중 처음 불투명한 배경, accent = 페이지 computed 색 중 최소 ΔE2000(accent 토큰이 없는 단색 팔레트는 0, accentToken false)
+- 영향 범위: apps/worker/src/quality/evaluate.ts, scripts/eval
+- 되돌리기 비용: 낮음

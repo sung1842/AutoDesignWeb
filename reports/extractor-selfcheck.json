@@ -1,0 +1,188 @@
+{
+  "presets": [
+    {
+      "typeId": "T1",
+      "intended": [
+        0.26,
+        0.81,
+        0.12,
+        0,
+        0
+      ],
+      "measured": [
+        0.6679915930401299,
+        0.7544100851440765,
+        0.367895125,
+        0.3985130200296005,
+        0.25214064
+      ],
+      "radiusErrPx": 0,
+      "bgDeltaE": 0,
+      "accentDeltaE": 0,
+      "accentToken": true,
+      "bodyFontMatch": true,
+      "ok": true
+    },
+    {
+      "typeId": "T2",
+      "intended": [
+        0.3,
+        0.23,
+        0.12,
+        0.62,
+        0
+      ],
+      "measured": [
+        0.2453808992527779,
+        0.5326149270992324,
+        0.367895125,
+        0.5531268206022211,
+        0.25214064
+      ],
+      "radiusErrPx": 0,
+      "bgDeltaE": 0,
+      "accentDeltaE": 0,
+      "accentToken": false,
+      "bodyFontMatch": true,
+      "ok": true
+    },
+    {
+      "typeId": "T3",
+      "intended": [
+        0.16,
+        0.31,
+        0.72,
+        0.12,
+        0.34
+      ],
+      "measured": [
+        0.25292199105053015,
+        0.3016711973262486,
+        0.742965387264151,
+        0.5064162731940893,
+        0.35736375
+      ],
+      "radiusErrPx": 0,
+      "bgDeltaE": 0,
+      "accentDeltaE": 0,
+      "accentToken": false,
+      "bodyFontMatch": true,
+      "ok": true
+    },
+    {
+      "typeId": "T4",
+      "intended": [
+        0.4,
+        0.96,
+        0.72,
+        0.5,
+        0.34
+      ],
+      "measured": [
+        0.503232095357388,
+        0.9519573789479626,
+        0.367895125,
+        0.6605031018304779,
+        0.25214064
+      ],
+      "radiusErrPx": 0,
+      "bgDeltaE": 0,
+      "accentDeltaE": 0,
+      "accentToken": true,
+      "bodyFontMatch": true,
+      "ok": true
+    },
+    {
+      "typeId": "T5",
+      "intended": [
+        1,
+        0.57,
+        0,
+        1,
+        0.56
+      ],
+      "measured": [
+        0.8208116962786028,
+        0.4711052660366788,
+        0.22682211249999995,
+        0.4100561485674306,
+        0.25214064
+      ],
+      "radiusErrPx": 0,
+      "bgDeltaE": 0,
+      "accentDeltaE": 0,
+      "accentToken": true,
+      "bodyFontMatch": true,
+      "ok": true
+    },
+    {
+      "typeId": "T6",
+      "intended": [
+        0.79,
+        0.7,
+        1,
+        0.62,
+        0.66
+      ],
+      "measured": [
+        0.5900864169086686,
+        0.7783756583404962,
+        0.8145797724999999,
+        0.5766916587453627,
+        0.25214064
+      ],
+      "radiusErrPx": 0,
+      "bgDeltaE": 0,
+      "accentDeltaE": 0,
+      "accentToken": true,
+      "bodyFontMatch": true,
+      "ok": true
+    },
+    {
+      "typeId": "T7",
+      "intended": [
+        0.54,
+        0.23,
+        0.32,
+        0.62,
+        0.7
+      ],
+      "measured": [
+        0.4846784798861956,
+        0.28739286073674536,
+        0.367895125,
+        0.4663355913879149,
+        0.25214064
+      ],
+      "radiusErrPx": 0,
+      "bgDeltaE": 0,
+      "accentDeltaE": 0,
+      "accentToken": false,
+      "bodyFontMatch": true,
+      "ok": true
+    },
+    {
+      "typeId": "T8",
+      "intended": [
+        0.7,
+        0.65,
+        0.25,
+        0.25,
+        0
+      ],
+      "measured": [
+        0.5919884742067638,
+        0.6737037212739982,
+        0.367895125,
+        0.46461845241177774,
+        0.25214064
+      ],
+      "radiusErrPx": 0,
+      "bgDeltaE": 0,
+      "accentDeltaE": 0,
+      "accentToken": true,
+      "bodyFontMatch": true,
+      "ok": true
+    }
+  ]
+}

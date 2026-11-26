@@ -34,6 +34,15 @@ export interface ExtractOptions {
 
 /** 5.5.3 원시 특징 F01~F30(측정 불가 = null). 뷰포트는 호출자가 1280×800으로 연다(5.4.2). */
 export async function extractFeatures(page: ExtractPage, o: ExtractOptions): Promise<Features> {
+  // 5.4.2: 애니메이션 정착 후 측정(어느 경로로 불러도 같은 값, ASM-080 ②)
+  await page.evaluate(() => {
+    for (const a of document.getAnimations())
+      try {
+        a.finish();
+      } catch {
+        a.pause();
+      }
+  }, undefined);
   const dom = await page.evaluate(collectDomFeatures, {
     spec: DOM_SPEC,
     fontClasses: o.fontClasses,
@@ -57,3 +66,8 @@ export async function extractFeatures(page: ExtractPage, o: ExtractOptions): Pro
   };
 }
 export * from "./l1.js";
+
+/** 05장 5.5.3 원시 특징 = L2 측정(extractFeatures의 공개 이름, ASM-080 ②). L1 = toL1(extractL2(page), normalizer). */
+export function extractL2(page: ExtractPage, o: ExtractOptions): Promise<Features> {
+  return extractFeatures(page, o);
+}
