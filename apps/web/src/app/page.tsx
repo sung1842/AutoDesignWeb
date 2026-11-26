@@ -12,6 +12,13 @@ export default function Home() {
       <p>{KO["landing.sub"]}</p>
       <p className="svc-muted">{KO["landing.meta"]}</p>
       <StartButton />
+      <ol className="svc-section">
+        <li>{KO["landing.step1"]}</li>
+        <li>{KO["landing.step2"]}</li>
+        <li>{KO["landing.step3"]}</li>
+      </ol>
+      <p className="svc-muted">{KO["landing.scope"]}</p>
+      <p className="svc-muted">{KO["landing.aiNotice"]}</p>
     </main>
   );
 }

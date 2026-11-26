@@ -9,10 +9,10 @@ interface Current {
   answered: number;
 }
 const PURPOSES: [string | null, string][] = [
-  ["saas", "서비스·앱 소개"],
-  ["portfolio", "포트폴리오"],
-  ["local_business", "가게·지역 업체"],
-  [null, "아직 모르겠어요"],
+  ["saas", KO["landing.purpose.saas"]],
+  ["portfolio", KO["landing.purpose.portfolio"]],
+  ["local_business", KO["landing.purpose.local"]],
+  [null, KO["landing.purpose.unknown"]],
 ];
 
 export function StartButton() {
@@ -57,7 +57,7 @@ export function StartButton() {
         </div>
       ) : null}
       <fieldset style={{ border: 0, padding: 0 }}>
-        <legend className="svc-muted">어떤 사이트를 생각하고 있나요? (선택)</legend>
+        <legend className="svc-muted">{KO["landing.purpose.q"]}</legend>
         {PURPOSES.map(([v, label]) => (
           <button
             key={label}
@@ -79,7 +79,9 @@ export function StartButton() {
           {KO["landing.cta"]}
         </button>
       </p>
-      <p className="svc-muted">{KO["quiz.meta"]}</p>
+      <p className="svc-muted">
+        {KO["landing.consent"]} <a href="/privacy">개인정보처리방침</a>
+      </p>
     </div>
   );
 }

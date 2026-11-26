@@ -25,7 +25,13 @@ interface ResultView {
   anchorOverrideTypeId: string | null;
   rating: number | null;
   guide: { pairingName: string; paletteHex: string[]; radiusFamily: string };
-  similarSites: { title: string; blurb: string; url: string; domain: string; matchAxes: string[] }[];
+  similarSites: {
+    title: string;
+    blurb: string;
+    url: string;
+    domain: string;
+    matchAxes: string[];
+  }[];
 }
 /** 02장 2.13.2 표시 구간 μ ± 1.645·σ_display, 1.5.2.1 표시값 round(μ×100). */
 const BAND_Z = 1.645;
