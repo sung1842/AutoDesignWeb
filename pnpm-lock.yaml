@@ -128,6 +128,9 @@ importers:
       '@tastefit/llm':
         specifier: workspace:^
         version: link:../../packages/llm
+      '@tastefit/pipeline':
+        specifier: workspace:^
+        version: link:../../packages/pipeline
       '@tastefit/renderer':
         specifier: workspace:^
         version: link:../../packages/renderer

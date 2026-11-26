@@ -45,6 +45,9 @@
     },
     {
       "path": "../../packages/compliance"
+    },
+    {
+      "path": "../../packages/pipeline"
     }
   ]
 }

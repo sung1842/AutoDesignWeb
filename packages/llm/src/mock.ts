@@ -65,6 +65,8 @@ const MOCK = {
   spike: 10,
   ramp: 1.2,
   charsPerToken: 3,
+  /** 회전·다음 값 교체가 의미 있는 최소 개수(가운데 섹션 2개 이상, 허용 variant 2개 이상). */
+  minChoices: 2,
 } as const;
 
 /** 공통 시드 = SHA-256(designSpec.hash, candidateIndex, role, callKind, attempt) 하위 32비트(T-18). */
@@ -313,18 +315,62 @@ function layoutText(c: MockCall, s: Scenario | null): string {
   // 덱에 없는 목록 키를 쓰는 블록은 고르지 않는다(stats.items가 비면 stats 블록 미사용, 4.6.2)
   const listKey: Record<string, string> = { stats: "stats.items", proof: "proof.items" };
   const usable = (b: string): boolean => !listKey[b] || (deck[listKey[b]]?.length ?? 0) > 0;
-  const order = pat
+  const base = pat
     ? fillSectionMin(["hero", ...pat.order.filter(usable)], spec.layout_constraints)
     : undefined;
+  // 다양화(실모델처럼 후보마다 다르게, 9.6.2 ok 보장): 가운데 섹션(hero·마지막 제외)을 variantIndex만큼 회전해
+  // 다른 변형이 같은 패턴을 써도 block 시퀀스가 겹치지 않게 한다. 다양성 재호출(시퀀스 위반)이면 1칸 더 돈다
+  const viol = Array.isArray(i.violations) ? (i.violations as Obj[]) : [];
+  const seqFix = c.callKind !== "initial" && viol.some((v) => str(v.where) === "sections[*]");
+  let order = base;
+  if (base && base.length - 2 >= MOCK.minChoices) {
+    const mid = base.slice(1, -1);
+    const r = (Math.floor(idx / 2) + (seqFix ? 1 : 0)) % mid.length;
+    order = [base[0] ?? "hero", ...mid.slice(r), ...mid.slice(0, r), base[base.length - 1] ?? ""];
+  }
+  // 같은 변형 두 후보의 hero는 달라야 한다(4.8): 슬롯 1이 슬롯 0과 같은 hero를 받으면 허용 목록의 다음 값
+  const lc0 = spec.layout_constraints as unknown as { hero_variants: string[] };
+  const heroFor = (pid: string): string => {
+    const p = Object.values(PATTERNS)
+      .flat()
+      .find((x) => x.id === pid);
+    const hint = `hero.${p?.hero ?? ""}`;
+    return lc0.hero_variants.includes(hint) ? hint : (lc0.hero_variants[0] ?? hint);
+  };
+  const pick: Record<string, string> = {};
+  if (slot === 1 && lc0.hero_variants.length > 1) {
+    const h0 = heroFor(spec.layout_constraints.pattern_slots[0] ?? "");
+    const h1 = heroFor(patternId);
+    if (h0 === h1)
+      pick.hero =
+        lc0.hero_variants[(lc0.hero_variants.indexOf(h1) + 1) % lc0.hero_variants.length] ?? h1;
+  }
   const tree = patternRaw(
     spec,
     patternId,
     deck,
     data(),
-    {},
+    pick,
     order ? { order } : {},
   ) as unknown as Obj;
   const sections = tree.sections as Obj[];
+  // 수리 규칙(T-18): repair_quality·diversity는 violations[].where 섹션의 variant를 허용 목록의 다음 값으로 바꾼다
+  if (c.callKind !== "initial" && Array.isArray(i.violations)) {
+    const lc = spec.layout_constraints as unknown as {
+      allowed_variants: Record<string, string[]>;
+      hero_variants: string[];
+    };
+    for (const v of i.violations as Obj[]) {
+      const m = /^sections\[(\d+)\]/.exec(str(v.where));
+      const sec = m ? sections[Number(m[1])] : undefined;
+      if (!sec) continue;
+      const block = str(sec.block);
+      const allowed = block === "hero" ? lc.hero_variants : (lc.allowed_variants[block] ?? []);
+      if (allowed.length < MOCK.minChoices) continue;
+      const at = allowed.indexOf(str(sec.variant));
+      sec.variant = allowed[(at + 1) % allowed.length];
+    }
+  }
   switch (s?.name) {
     case "invalid_json":
       return '```json\n{"schemaVersion":';

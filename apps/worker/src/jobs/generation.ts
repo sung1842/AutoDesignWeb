@@ -29,6 +29,7 @@ import {
   type MockResult,
 } from "@tastefit/llm";
 import { compilePage } from "@tastefit/renderer";
+import { diversityViolations, type SeqInfo } from "@tastefit/pipeline";
 import { qualityColumns, selectVisible, type CandidateScore } from "@tastefit/scoring";
 import { evaluateCandidate, type EvaluateOptions } from "../quality/evaluate.js";
 import { openHarness, type Harness } from "../render/harness.js";
@@ -426,31 +427,95 @@ async function runJob(d: GenerationDeps, jobId: string): Promise<{ status: strin
 
   // S2 레이아웃 6 + 스키마 수리
   const cands: Cand[] = [];
+  const raws: (RawTree | null)[] = [];
+  const layoutCall = async (
+    i: number,
+    c: Cand,
+    callKind: CallKind,
+    extra: Obj = {},
+  ): Promise<RawTree | null> => {
+    const input = { spec: c.spec, purpose, brand, deck: copy.deck, ...extra };
+    for (const kind of [callKind, "repair_schema"] as const) {
+      const r = await invoke(x, {
+        role: "gen_layout",
+        callKind: kind,
+        candidateIndex: i,
+        candidateId: c.id,
+        input,
+        cacheState: i === 0 && callKind === "initial" ? "cache_write" : "cached",
+      });
+      if (r.kind !== "ok") return null;
+      const p = LayoutTreeRawSchema.safeParse(parseJson(r.text));
+      if (p.success) return p.data as unknown as RawTree;
+    }
+    return null;
+  };
   for (let i = 0; i < VARIANTS.length * 2; i++) {
     const variant = VARIANTS[Math.floor(i / 2)] ?? "v_true";
     const spec = specs[variant];
     const id = await insertCandidate(x, { slot: i, variant, spec, origin: "llm", round: 0 });
     const c: Cand = { id, slot: i, variant, spec, valid: false, tree: null, html: "", cols: null };
-    const input = { spec, purpose, brand, deck: copy.deck };
-    let raw: RawTree | null = null;
-    for (const callKind of ["initial", "repair_schema"] as const) {
-      const r = await invoke(x, {
-        role: "gen_layout",
-        callKind,
-        candidateIndex: i,
-        candidateId: id,
-        input,
-        cacheState: i === 0 ? "cache_write" : "cached",
-      });
-      if (r.kind !== "ok") break;
-      const p = LayoutTreeRawSchema.safeParse(parseJson(r.text));
-      if (p.success) {
-        raw = p.data as unknown as RawTree;
-        break;
-      }
-    }
     cands.push(c);
-    if (raw) await evaluate(x, c, raw, copy.deck, brand);
+    raws.push(await layoutCall(i, c, "initial"));
+  }
+
+  // 4.8 다양성: 위반 후보만 재호출 1회(origin diversity, round 1). 재호출도 위반이면 eligible=false(DIVERSITY)
+  const info = (i: number, r: RawTree | null): SeqInfo | null =>
+    r
+      ? {
+          index: i,
+          hero: r.sections.find((s) => s.block === "hero")?.variant ?? "",
+          blocks: r.sections.map((s) => s.block),
+        }
+      : null;
+  const heroAllowed = new Set(VARIANTS.flatMap((v) => specs[v].layout_constraints.hero_variants))
+    .size;
+  const divFail = new Set<number>();
+  const first = diversityViolations(
+    raws.map((r, i) => info(i, r)),
+    heroAllowed,
+  );
+  for (const [i, violations] of [...first].sort((a, b) => a[0] - b[0])) {
+    const old = cands[i];
+    if (!old) continue;
+    await x.d.db.withService((tx) =>
+      q(tx, "update candidates set schema_valid = true where id = $1", [old.id]),
+    );
+    const id = await insertCandidate(x, {
+      slot: i,
+      variant: old.variant,
+      spec: old.spec,
+      origin: "diversity",
+      round: 1,
+    });
+    const c: Cand = { ...old, id, valid: false, tree: null, html: "", cols: null };
+    cands[i] = c;
+    raws[i] = await layoutCall(i, c, "diversity", { violations, keep: ["footer"] });
+    const again = diversityViolations(
+      raws.map((r, k) => info(k, r)),
+      heroAllowed,
+    );
+    if (again.has(i)) divFail.add(i);
+  }
+  for (const [i, c] of cands.entries()) {
+    const raw = raws[i] ?? null;
+    if (!raw) continue;
+    await evaluate(x, c, raw, copy.deck, brand);
+    if (divFail.has(i) && c.cols) {
+      c.cols = {
+        ...c.cols,
+        eligible: false,
+        rank_score: null,
+        quality_report: { ...c.cols.quality_report, hide_reason: "DIVERSITY", visible: false },
+      };
+      await x.d.db.withService((tx) =>
+        q(
+          tx,
+          "update candidates set eligible = false, rank_score = null, quality_report = $2 where id = $1",
+          [c.id, JSON.stringify(c.cols?.quality_report)],
+        ),
+      );
+    }
   }
   await setJob(d.db, jobId, { phase: "scoring", progress_pct: 70 });
 
