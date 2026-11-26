@@ -1,0 +1,74 @@
+# 06장 6.9.2 models.yaml. provenance: temp — 운영 모델 ID·단가·L1~L5는 사람이 공급자 원문 확인 후 기입(7.2.8 승격, 08장 8.8.1).
+# family = 공급자 계열(04장 4.10.5: judge_vision 계열 ≠ gen_layout·gen_copy 계열). compliance = 08장 8.8.1 L1~L5(ASM-107 ④).
+revision: 1
+processors_file: ../../legal/processors.yaml
+roles:
+  gen_layout:
+    primary:
+      processor_id: llm-primary
+      family: family-primary
+      model: tbd-primary-page
+      params: { temperature: 0.7, maxOutputTokens: 1200 }
+      timeout_ms: 40000
+      compliance: { L1: false, L2: false, L3: false, L4: false, L5: false, checked_at: null }
+    fallbacks:
+      - processor_id: llm-secondary
+        family: family-secondary
+        model: tbd-secondary-page
+        params: { temperature: 0.7, maxOutputTokens: 1200 }
+        timeout_ms: 40000
+        compliance: { L1: false, L2: false, L3: false, L4: false, L5: false, checked_at: null }
+    prompt: { id: gen_layout, version: 1 }
+    max_input_tokens: 9000
+  gen_copy:
+    primary:
+      processor_id: llm-primary
+      family: family-primary
+      model: tbd-primary-page
+      params: { temperature: 0.8, maxOutputTokens: 3000 }
+      timeout_ms: 40000
+      compliance: { L1: false, L2: false, L3: false, L4: false, L5: false, checked_at: null }
+    fallbacks:
+      - processor_id: llm-secondary
+        family: family-secondary
+        model: tbd-secondary-page
+        params: { temperature: 0.8, maxOutputTokens: 3000 }
+        timeout_ms: 40000
+        compliance: { L1: false, L2: false, L3: false, L4: false, L5: false, checked_at: null }
+    prompt: { id: gen_copy, version: 1 }
+    max_input_tokens: 6000
+  judge_vision:
+    primary:
+      processor_id: llm-judge
+      family: family-judge
+      model: tbd-judge-vision
+      params: { temperature: 0, maxOutputTokens: 300 }
+      timeout_ms: 30000
+      compliance: { L1: false, L2: false, L3: false, L4: false, L5: false, checked_at: null }
+    fallbacks: []
+    prompt: { id: judge_vision, version: 1 }
+    max_input_tokens: 4000
+    max_images: 2
+  ref_tagger:
+    primary:
+      processor_id: llm-primary
+      family: family-primary
+      model: tbd-primary-page
+      params: { temperature: 0, maxOutputTokens: 400 }
+      timeout_ms: 30000
+      compliance: { L1: false, L2: false, L3: false, L4: false, L5: false, checked_at: null }
+    fallbacks: []
+    prompt: { id: ref_tagger, version: 1 }
+    max_input_tokens: 3000
+    max_images: 1
+pricing:
+  "llm-primary/tbd-primary-page": { input_per_mtok: 0, output_per_mtok: 0, cached_input_per_mtok: 0, cache_write_per_mtok: 0, per_image: 0, source_url: "", checked_at: null }
+  "llm-secondary/tbd-secondary-page": { input_per_mtok: 0, output_per_mtok: 0, cached_input_per_mtok: 0, cache_write_per_mtok: 0, per_image: 0, source_url: "", checked_at: null }
+  "llm-judge/tbd-judge-vision": { input_per_mtok: 0, output_per_mtok: 0, cached_input_per_mtok: 0, cache_write_per_mtok: 0, per_image: 0, source_url: "", checked_at: null }
+  "mock/mock-page": { input_per_mtok: 3, output_per_mtok: 15, cached_input_per_mtok: 0.30, cache_write_per_mtok: 3.75, per_image: 0, source_url: "fixed-mock", checked_at: "2026-11-19" }
+  "mock/mock-vision": { input_per_mtok: 1, output_per_mtok: 5, cached_input_per_mtok: 0.10, cache_write_per_mtok: 1.25, per_image: 0, source_url: "fixed-mock", checked_at: "2026-11-19" }
+retry:
+  network_or_5xx: { max: 1, backoff_ms: 2000 }
+  rate_limited: { max: 1, respect_retry_after_max_ms: 10000 }
+  switch_to_fallback_after_consecutive_failures: 2
+circuit_breaker: { window_s: 120, min_calls: 5, failure_ratio: 0.5, open_s: 300 }

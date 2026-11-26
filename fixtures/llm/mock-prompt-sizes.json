@@ -1,0 +1,11 @@
+{
+  "fixture": "llm/mock-prompt-sizes",
+  "provenance": "temp",
+  "source": "06장 6.9.4 ② 기본 경로 표의 블록별 토큰 × 3(문자 수). usage = ceil(문자 / 3)(09장 9.6.2, ASM-107 ⑥)",
+  "roles": {
+    "gen_copy": { "static": 0, "dynamic": 7500, "output": 7500 },
+    "gen_layout": { "static": 13500, "dynamic": 7500, "output": 3000, "repair_dynamic": 9000 },
+    "judge_vision": { "static": 0, "dynamic": 10500, "output": 900, "images": 2 },
+    "ref_tagger": { "static": 0, "dynamic": 3000, "output": 1200, "images": 1 }
+  }
+}

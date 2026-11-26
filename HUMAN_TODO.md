@@ -60,3 +60,6 @@
 - BLK-024: scripts/verify에 survey-items-count(blockable) 단계·survey-items/sim-limit BLK 매핑 추가, AC-09-19 메타 테스트
 - BLK-025: guard:tuned에 tuned ⇔ golden muRef 동반 변경 검사, data/golden 잠금 절차
 - BLK-026: tests/acceptance/m4/contract.test.ts 사례 목록을 별도 등록부로 분리 후 relock(M5 라우트 추가 시 ② 실패)
+
+## BLK-027 (M5 needs-human) · 2026-11-26
+- LLM 공급자 확정 후 `packages/llm/models.yaml` 각 항목의 `model`·`compliance.L1~L5`(08장 8.8.1 원문 확인, `checked_at`)·`pricing`(source_url·checked_at)을 채우고, `legal/processors.yaml`의 llm-primary·llm-secondary·llm-judge에 `approved: true`·`effective_from`·`trains_on_api_data: false`를 기입해 주세요. 확인 명령 `pnpm vitest run tests/acceptance/m5/llm.test.ts -t "AC-08-39"`

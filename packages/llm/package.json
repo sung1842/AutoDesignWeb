@@ -14,5 +14,11 @@
   "scripts": {
     "build": "tsc -b",
     "typecheck": "tsc -b --pretty false"
+  },
+  "dependencies": {
+    "@tastefit/config": "workspace:^",
+    "@tastefit/design-spec": "workspace:^",
+    "yaml": "^2.9.0",
+    "zod": "^4.0.0"
   }
 }

@@ -247,3 +247,11 @@
 - 재현 확인: 2026-11-26T22:30Z 8248a66(M5-02)부터 ② 실패(`/auth/callback`·`/api/me`·`/api/consents` 사례 없음)
 - 제안 수정안(사람): contract.test.ts의 cases()를 `tests/contract/cases.ts`(마일스톤별 사례 등록부, 잠금 대상)로 옮기고 테스트는 그 등록부를 읽게 바꾼 뒤 relock
 - 상태: open
+
+## BLK-027 · M5 · needs-human · 2026-11-26T22:55Z
+- 대상: AC-08-39(models.yaml 운영 항목 L1~L5 충족·승인 공급자), 08장 8.8.1·8.8.2, packages/llm/models.yaml·legal/processors.yaml
+- 증상: models.yaml(temp)의 운영 항목 6개(llm-primary·llm-secondary·llm-judge)가 compliance L1~L5 false, processors.yaml approved:false·effective_from 없음, pricing 원문 미확인 → `checkModelsCompliance` 42건
+- 재현: pnpm vitest run tests/acceptance/m5/llm.test.ts -t "AC-08-39"
+- 시도: (1) 에이전트가 true로 채우기 → 금지(공급자 약관 원문 확인은 사람 일, approved는 사람만) (2) 테스트 완화 → 금지
+- 처리: 사람 확인 전까지 blocked. mock·replay 모드는 승인 검사를 건너뛰므로 M5 이후 진행에 지장 없음
+- 상태: open

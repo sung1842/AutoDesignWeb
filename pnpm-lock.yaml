@@ -234,7 +234,20 @@ importers:
         specifier: workspace:^
         version: link:../design-spec
 
-  packages/llm: {}
+  packages/llm:
+    dependencies:
+      '@tastefit/config':
+        specifier: workspace:^
+        version: link:../config
+      '@tastefit/design-spec':
+        specifier: workspace:^
+        version: link:../design-spec
+      yaml:
+        specifier: ^2.9.0
+        version: 2.9.1
+      zod:
+        specifier: ^4.0.0
+        version: 4.6.7
 
   packages/mail:
     dependencies:

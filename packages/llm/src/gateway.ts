@@ -18,7 +18,9 @@ export type LlmErrorCode =
   | "E_MOCK_UNAVAILABLE"
   | "E_LIVE_DISABLED"
   | "E_LLM_ROLE"
-  | "E_LLM_MODE";
+  | "E_LLM_MODE"
+  | "E_MOCK_SCENARIO"
+  | "E_MODELS_INVALID";
 
 export class LlmError extends Error {
   constructor(

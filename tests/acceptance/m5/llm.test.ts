@@ -383,7 +383,7 @@ describe("AC-04-15 장애 주입(9.6.2 표, Mock 동작만)", () => {
     ac.abort();
     expect((await pending).kind).toBe("aborted");
   });
-  it("slow → 호출당 25초 지연(가짜 sleep), 기본 지연 = MOCK_LLM_LATENCY_MS(기본 200)", async () => {
+  it("slow → 호출당 25초 지연(가짜 sleep), 기본 지연 = MOCK_LLM_LATENCY_MS(기본 200) + gen_copy 1ms", async () => {
     const s = fakeSleep();
     const p = createMockProvider({ scenario: "slow", sleep: s.sleep });
     await p.complete(
@@ -394,7 +394,8 @@ describe("AC-04-15 장애 주입(9.6.2 표, Mock 동작만)", () => {
     await createMockProvider({ scenario: "ok", sleep: d.sleep }).complete(
       call({ role: "gen_copy", candidateIndex: null, input: { brand: BRAND, purpose: "saas" } }),
     );
-    expect(d.waits).toContain(200);
+    // gen_copy 지연 = 후보 0 gen_layout 지연(기본 200) + 1ms(9.6.2, U-01)
+    expect(d.waits).toContain(201);
   });
   it("장애 범위: 기본은 initial에만, ! 는 재호출에도, @candidateIndex는 그 후보만", async () => {
     const valid = (r: Awaited<ReturnType<typeof layout>>) =>
