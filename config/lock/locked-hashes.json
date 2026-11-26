@@ -385,6 +385,36 @@
       "lockedBy": "agent",
       "lockedAt": "2026-11-26T01:16:23Z",
       "commit": "e7ff402"
+    },
+    "tests/acceptance/m3/extractor.test.ts": {
+      "sha256": "e9d06f3986bfba0305c81d18b1864cad0dfceb01f57594ce90ea0da6512b8aef",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T08:23:18Z",
+      "commit": "09da0ab"
+    },
+    "tests/acceptance/m3/gates.test.ts": {
+      "sha256": "9ccd11f93c4238d37b9a06b51e449d3678788bed144a358b63c5f3537cb8ed9c",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T08:23:18Z",
+      "commit": "09da0ab"
+    },
+    "tests/acceptance/m3/golden.test.ts": {
+      "sha256": "97971a11b21bced06343f6d43fec81414ba995742edf9b02c23fa4d5a6e96f02",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T08:23:18Z",
+      "commit": "09da0ab"
+    },
+    "tests/acceptance/m3/linter.test.ts": {
+      "sha256": "2bd47d52cd44add33bb59e75a1566ec9b45ebeb56e3b683444a346e7d241bce1",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T08:23:18Z",
+      "commit": "09da0ab"
+    },
+    "tests/acceptance/m3/scoring.test.ts": {
+      "sha256": "f6e7e40c4cee1ada60ce502d52121b153c6147abe38131ad37052761b8bd563d",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-26T08:23:18Z",
+      "commit": "09da0ab"
     }
   }
 }
