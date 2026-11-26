@@ -723,3 +723,10 @@
 - 선택: ① `@tastefit/api-contract` ROUTES = 6.4.3 표 51개 키 전부(구현 라우트는 req·res 스키마, 미구현은 담당 마일스톤만) ② 빌드된 라우트 = `apps/web/.next/server/app-paths-manifest.json`(없으면 app/api의 route.ts, 같은 원천)에서 수집 × route.ts가 내보내는 메서드, `/api/_storage`(local 전용) 제외 ③ 빌드된 라우트마다 스키마와 정상·오류 사례가 없으면 FAIL → 이후 마일스톤에서 라우트를 추가하면 같은 테스트가 계약을 요구한다 ④ health는 route 모듈 GET 직접 호출(200 또는 503 둘 다 계약 응답), 오류 사례 = 다른 메서드 미노출(Next가 405)
 - 영향 범위: packages/api-contract/src/routes.ts, tests/acceptance/m4/contract.test.ts
 - 되돌리기 비용: 낮음
+
+## ASM-103 · M5 · gap · 2026-11-26T20:35Z
+- 질문: 매직링크 요청·로그아웃의 경로(6.4.3 표에 없음, 6.1.1은 "/auth/*"), local 드라이버의 1회용 토큰·세션 폐기 저장, 세션 쿠키 이름, 콜백 파라미터
+- 근거 탐색: 06장 6.1.1·6.4.3 인증 표·6.5.1~6.5.4·6.13.1 AuthPort local, 01장 1.5.3·1.5.4, 08장 8.7.4
+- 선택: ① 매직링크 요청·로그아웃은 route.ts가 아니라 서버 함수(`apps/web/src/server/auth.ts`의 `requestMagicLink(deps, {email, next, turnstileToken})`·`logout(deps, req) → Headers`)를 S04·헤더의 서버 액션이 호출(6.4.3 라우트 목록·AC-06-08 레지스트리를 바꾸지 않음) ② 콜백 `GET /auth/callback?token=&next=`(local: 서명 토큰, supabase: `code`) ③ local 토큰 = HS256(LOCAL_JWT_SECRET) `{email, jti, exp(1h)}`, 사용한 jti는 shim `auth.audit_log_entries`(payload.action='magiclink_used')에 기록해 재사용 거부 → `/login?error=CLIENT_LINK_EXPIRED` ④ 세션 = HS256 JWT `{sub, role, aal, sid}` 쿠키 `tf_session`(HttpOnly·Secure·SameSite=Lax·Path=/), sid는 shim `auth.sessions` 행. signOut·adminSignOutAll = 그 행 not_after = now() ⑤ 메일 = `dev_mail_outbox` subject `[magic_link] …`, 본문에 링크 1개. 테스트는 `latestMagicLink(db, email)`(packages/db testing)로 읽는다
+- 영향 범위: packages/auth, apps/web/src/server, packages/db/src/testing
+- 되돌리기 비용: 중간
