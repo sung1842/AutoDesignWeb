@@ -18,6 +18,7 @@
   "dependencies": {
     "@tastefit/compliance": "workspace:^",
     "@tastefit/config": "workspace:^",
-    "@tastefit/linter": "workspace:^"
+    "@tastefit/linter": "workspace:^",
+    "zod": "^4.0.0"
   }
 }

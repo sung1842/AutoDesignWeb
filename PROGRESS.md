@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-26T13:45Z, since: 2026-11-26T15:55Z}
+- lock: {owner: 2026-11-26T13:45Z, since: 2026-11-26T16:10Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
@@ -140,7 +140,7 @@
 - M3 계획(9.4.5, AC: 03-39·43, 04-12·13·19~21·26·43·45, 05-12·14·15·22·24·25, 08-11~16. 읽을 장은 CLAUDE.md 구현 규칙 3절):
   - [x] 01 M3 수용 테스트(tests/acceptance/m3, AD-031 방식, test(acc) 09da0ab 자체 잠금): [x] a linter.test(AC-04-12·26, ①, ASM-077) [x] b gates.test(AC-04-19·21, AC-08-11·12·13a, ASM-078) [x] c scoring.test(AC-04-20·43·45, ⑥, ASM-079) [x] d extractor.test(AC-05-12·14·15·22·24·25, ③④⑤, ASM-080) [x] e golden.test(②, AC-04-13, AC-08-13~16, AC-03-39·43, ASM-081) [x] f traceability M3·qa:trace --audit·단일 test(acc)·자체 잠금
   - [x] 02 linter 규칙 24파일·RULES·lintAll·matchCliche(사전 어간 정규식, AC-04-12 녹색, ASM-082·BLK-016) [x] 03 하네스 lintSnapshot(D·P, ASM-083) [x] 04 B15 예시 24×(2+2) 작성·자체 잠금(70f0f82, linter.test 30/31 — 남은 1 = BLK-016)
-  - [x] 05 gates G-01~G-13·H1~H12 순수 함수·checkOriginality·phash64·judgeAbuse(gates.test 35/35, ASM-084) [ ] 06 scoring TM·S_free·노출 선택·QualityReport [ ] 07 extractor 왕복·앵커 거리·p95 [ ] 08 verify:m3(주의: qa:trace --audit가 packages/extractor/src/dom.ts 리터럴 4건 FAIL — M2부터 있던 것, M3-07에서 정리)
+  - [x] 05 gates G-01~G-13·H1~H12 순수 함수·checkOriginality·phash64·judgeAbuse(gates.test 35/35, ASM-084) [x] 06 scoring TM·S_free·노출 선택·QualityReport(scoring.test 17/17) [ ] 07 extractor 왕복·앵커 거리·p95 [ ] 08 verify:m3(주의: qa:trace --audit가 packages/extractor/src/dom.ts 리터럴 4건 FAIL — M2부터 있던 것, M3-07에서 정리)
 - M3 이월: (B18 재생성은 M2-09d3으로 당김), B15 골격을 실제 예시로 교체 후 자체 잠금(ASM-021)
 - [x] M0 [x] M1 [x] M2 [ ] M3 [ ] M4 [ ] M5 [ ] M6 [ ] M7 [ ] M8
 
@@ -148,6 +148,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 01:10 | M3-06 tasteMatch·eligibility·rankScore·selectVisible·QualityReportSchema. scoring.test 17/17
 - 2026-11-27 00:55 | M3-05 게이트·조화 순수 함수, 원본 유사도 G2·G3·G5, phash64, abuse 판정. gates.test 35/35
 - 2026-11-27 00:10 | M3-03 lintSnapshot·M3-04 B15 예시 96 자체 잠금. linter.test 30/31(BLK-016)
 - 2026-11-26 23:40 | M3-02 linter 24규칙·lintAll·matchCliche(AC-04-12 녹색). 메타 테스트 칸 분리 버그 BLK-016
