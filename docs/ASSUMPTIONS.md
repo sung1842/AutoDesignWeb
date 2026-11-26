@@ -646,3 +646,10 @@
 - 선택: ① 시뮬레이터·튜너는 packages/diagnosis/src/sim.ts·tune.ts(tsconfig rootDir src), CLI scripts/sim/survey.ts(`pnpm sim:survey`) ② 응답 난수 = seed·사용자 번호로 고정(공통 난수 쌍체: V-RAND와 같은 θ*·같은 응답 난수열) ③ 부트스트랩 = 사용자 재표집 200회 2.5·97.5 분위, 상한·하한형 합격선이 구간 안이면 margin_warning ④ 리포트 = sim/reports/<mode>-latest.{json,md} {mode, seeds, stimulus{source, normalizer_version, normalizer_provenance}, conditions[{…, blocking}], rmseCurve, checks[{key, value, limit, kind, pass, ci?, marginWarning?}], margin_warning, verdict} ⑤ 튜너: 바퀴마다 시작점 dev(캐시) → ①~⑥ 비현재 값 dev → 사전식 목적함수(미달 수, 부족분 합, 엄격 개선만 채택 = 같으면 현재 유지, 새 미달 유발 값 거부) → 바퀴 끝 gate 1회(gateRuns++, PASS면 종료). dev 시도가 maxTrials에 닿으면 남은 좌표 고정 후 gate. gateRuns ≤ maxGateRuns. 같은 구성 dev는 캐시(cached=true, 세지 않음) ⑥ x_card 원천 = data/survey/manifest.lock.json(survey:build 산출) {items[{assetId, sha256, x, status}]}
 - 영향 범위: packages/diagnosis(sim·tune), scripts/sim, sim/reports
 - 되돌리기 비용: 낮음
+
+## ASM-092 · M4 · gap · 2026-11-26T16:26Z
+- 질문: 설문 자극물 페이지를 어떻게 렌더할지(templates.json 슬롯 이름이 blocks.json 슬롯과 다름, 갤러리 이미지 3장·제목 슬롯 없음)
+- 근거 탐색: 02장 2.4.3·2.4.5, data/survey/templates.json(B9), 03장 blocks.json 슬롯, BLK-010(블록당 이미지 1장)
+- 선택: ① surveyPage({presetId, templateId, l2Overrides}) = standardTree(프리셋 유형, portfolio, l2 = 프리셋 기본 + 덮어쓰기)의 명세 + 템플릿 고정 트리 → 같은 compilePage로 렌더 ② 슬롯 대응: hero = headline·sub·primaryCta·secondaryCta·media, value.numbered = "제목 / 본문" 3항목, gallery.grid = media 1장(BLK-010) + captions 6, cta.band headline = grid.desc, proof.quote-large = 인용 + 서명, story.text = body·media, stats.row = 값 3 + 라벨 ③ 고정 문구 deck_ref = "deck:survey.fixed#0", pattern_id = "PP-1"(스키마 enum, 설문 고정 구성 표시), 하단에 footer.minimal(워드마크·CP-10 예시값) ④ 헤드라인 줄바꿈 "\n"은 렌더러가 공백으로 합친다
+- 영향 범위: packages/design-spec/src/survey.ts, survey:build
+- 되돌리기 비용: 낮음
