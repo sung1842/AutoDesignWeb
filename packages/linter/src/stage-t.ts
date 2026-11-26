@@ -1,15 +1,12 @@
 // 04장 4.13 단계 T(확정 트리 + 블록 메타, 렌더 없음): G-01 스키마·LT-01~11(4.5.3)·RH-01~02(03장 3.6.7).
 // 탐지 상수는 data/rule-params.json "T", 리듬 값은 spec.layout_constraints.rhythm(4.2.1). AIL-04·05·12·18(T)은 M3(ASM-073).
 import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { pkgFile, repoFile } from "./lib.js";
 import { PageSchema } from "@tastefit/layout-schema";
 import type { LintFinding } from "./stage-s.js";
 
 type Obj = { [k: string]: unknown };
 const isObj = (x: unknown): x is Obj => typeof x === "object" && x !== null && !Array.isArray(x);
-const repoFile = (rel: string): string =>
-  fileURLToPath(new URL(`../../../${rel}`, import.meta.url));
-const pkgFile = (rel: string): string => fileURLToPath(new URL(`../${rel}`, import.meta.url));
 
 interface VariantMeta {
   align: string;

@@ -9,169 +9,169 @@
     {
       "id": "en-01",
       "text": "unlock",
-      "pattern": "unlock",
+      "pattern": "\\bunlock",
       "flags": "iu"
     },
     {
       "id": "en-02",
       "text": "unleash",
-      "pattern": "unleash",
+      "pattern": "\\bunleash",
       "flags": "iu"
     },
     {
       "id": "en-03",
       "text": "elevate",
-      "pattern": "elevate",
+      "pattern": "\\belevat(?:e|es|ed|ing)\\b",
       "flags": "iu"
     },
     {
       "id": "en-04",
       "text": "empower",
-      "pattern": "empower",
+      "pattern": "\\bempower",
       "flags": "iu"
     },
     {
       "id": "en-05",
       "text": "seamless(ly)",
-      "pattern": "seamless(ly)?",
+      "pattern": "\\bseamless(?:ly)?",
       "flags": "iu"
     },
     {
       "id": "en-06",
       "text": "revolutionize",
-      "pattern": "revolutionize",
+      "pattern": "\\brevolutioniz(?:e|es|ed|ing)\\b",
       "flags": "iu"
     },
     {
       "id": "en-07",
       "text": "revolutionary",
-      "pattern": "revolutionary",
+      "pattern": "\\brevolutionary",
       "flags": "iu"
     },
     {
       "id": "en-08",
       "text": "cutting-edge",
-      "pattern": "cutting-edge",
+      "pattern": "\\bcutting-edge",
       "flags": "iu"
     },
     {
       "id": "en-09",
       "text": "next-gen(eration)",
-      "pattern": "next-gen(eration)?",
+      "pattern": "\\bnext-gen(?:eration)?",
       "flags": "iu"
     },
     {
       "id": "en-10",
       "text": "game-chang(er|ing)",
-      "pattern": "game-chang(er|ing)",
+      "pattern": "\\bgame-chang(?:er|ing)",
       "flags": "iu"
     },
     {
       "id": "en-11",
       "text": "supercharge",
-      "pattern": "supercharge",
+      "pattern": "\\bsupercharg(?:e|es|ed|ing)\\b",
       "flags": "iu"
     },
     {
       "id": "en-12",
       "text": "transform your",
-      "pattern": "transform your",
+      "pattern": "\\btransform\\s+your",
       "flags": "iu"
     },
     {
       "id": "en-13",
       "text": "to the next level",
-      "pattern": "to the next level",
+      "pattern": "\\bto\\s+the\\s+next\\s+level",
       "flags": "iu"
     },
     {
       "id": "en-14",
       "text": "all-in-one",
-      "pattern": "all-in-one",
+      "pattern": "\\ball-in-one",
       "flags": "iu"
     },
     {
       "id": "en-15",
       "text": "effortless(ly)",
-      "pattern": "effortless(ly)?",
+      "pattern": "\\beffortless(?:ly)?",
       "flags": "iu"
     },
     {
       "id": "en-16",
       "text": "harness the power",
-      "pattern": "harness the power",
+      "pattern": "\\bharness\\s+the\\s+power",
       "flags": "iu"
     },
     {
       "id": "en-17",
       "text": "built for the future",
-      "pattern": "built for the future",
+      "pattern": "\\bbuilt\\s+for\\s+the\\s+future",
       "flags": "iu"
     },
     {
       "id": "en-18",
       "text": "reimagine",
-      "pattern": "reimagine",
+      "pattern": "\\breimagin(?:e|es|ed|ing)\\b",
       "flags": "iu"
     },
     {
       "id": "en-19",
       "text": "redefine",
-      "pattern": "redefine",
+      "pattern": "\\bredefin(?:e|es|ed|ing)\\b",
       "flags": "iu"
     },
     {
       "id": "en-20",
       "text": "world-class",
-      "pattern": "world-class",
+      "pattern": "\\bworld-class",
       "flags": "iu"
     },
     {
       "id": "en-21",
       "text": "best-in-class",
-      "pattern": "best-in-class",
+      "pattern": "\\bbest-in-class",
       "flags": "iu"
     },
     {
       "id": "en-22",
       "text": "state-of-the-art",
-      "pattern": "state-of-the-art",
+      "pattern": "\\bstate-of-the-art",
       "flags": "iu"
     },
     {
       "id": "en-23",
       "text": "innovative solution",
-      "pattern": "innovative solution",
+      "pattern": "\\binnovative\\s+solution",
       "flags": "iu"
     },
     {
       "id": "en-24",
       "text": "streamline",
-      "pattern": "streamline",
+      "pattern": "\\bstreamlin(?:e|es|ed|ing)\\b",
       "flags": "iu"
     },
     {
       "id": "en-25",
       "text": "leverage",
-      "pattern": "leverage",
+      "pattern": "\\bleverag(?:e|es|ed|ing)\\b",
       "flags": "iu"
     },
     {
       "id": "en-26",
       "text": "the future of",
-      "pattern": "the future of",
+      "pattern": "\\bthe\\s+future\\s+of",
       "flags": "iu"
     },
     {
       "id": "en-27",
       "text": "say goodbye to",
-      "pattern": "say goodbye to",
+      "pattern": "\\bsay\\s+goodbye\\s+to",
       "flags": "iu"
     },
     {
       "id": "en-28",
       "text": "look no further",
-      "pattern": "look no further",
+      "pattern": "\\blook\\s+no\\s+further",
       "flags": "iu"
     }
   ]

@@ -1,6 +1,6 @@
 // 04장 4.13 단계 S(DesignSpec만 보고 판정, 렌더 없음). 탐지 상수는 data/rule-params.json(ASM-038).
 import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { pkgFile, repoFile } from "./lib.js";
 
 export interface LintFinding {
   rule: string;
@@ -9,9 +9,6 @@ export interface LintFinding {
 }
 type Obj = { [k: string]: unknown };
 const isObj = (x: unknown): x is Obj => typeof x === "object" && x !== null && !Array.isArray(x);
-const repoFile = (rel: string): string =>
-  fileURLToPath(new URL(`../../../${rel}`, import.meta.url));
-const pkgFile = (rel: string): string => fileURLToPath(new URL(`../${rel}`, import.meta.url));
 
 interface Params {
   "AIL-01": { hueA: [number, number]; hueB: [number, number]; chromaMin: number };

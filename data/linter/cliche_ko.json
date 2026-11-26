@@ -9,13 +9,13 @@
     {
       "id": "ko-01",
       "text": "혁신적인",
-      "pattern": "혁신적인",
+      "pattern": "혁신적(?:인|으로|이)",
       "flags": "iu"
     },
     {
       "id": "ko-02",
       "text": "혁신을 선도",
-      "pattern": "혁신을 선도",
+      "pattern": "혁신을\\s*선도",
       "flags": "iu"
     },
     {
@@ -27,271 +27,271 @@
     {
       "id": "ko-04",
       "text": "새로운 차원",
-      "pattern": "새로운 차원",
+      "pattern": "새로운\\s*차원",
       "flags": "iu"
     },
     {
       "id": "ko-05",
       "text": "한 단계 업그레이드",
-      "pattern": "한 단계 업그레이드",
+      "pattern": "한\\s*단계\\s*업그레이드",
       "flags": "iu"
     },
     {
       "id": "ko-06",
       "text": "한 차원 높은",
-      "pattern": "한 차원 높은",
+      "pattern": "한 차원 높(?:은|아|여|이|게)",
       "flags": "iu"
     },
     {
       "id": "ko-07",
       "text": "모든 것을 한 곳에",
-      "pattern": "모든 것을 한 곳에",
+      "pattern": "모든\\s*것을\\s*한\\s*곳에",
       "flags": "iu"
     },
     {
       "id": "ko-08",
       "text": "올인원 솔루션",
-      "pattern": "올인원 솔루션",
+      "pattern": "올인원\\s*솔루션",
       "flags": "iu"
     },
     {
       "id": "ko-09",
       "text": "최고의 솔루션",
-      "pattern": "최고의 솔루션",
+      "pattern": "최고의\\s*솔루션",
       "flags": "iu"
     },
     {
       "id": "ko-10",
       "text": "완벽한 솔루션",
-      "pattern": "완벽한 솔루션",
+      "pattern": "완벽한\\s*솔루션",
       "flags": "iu"
     },
     {
       "id": "ko-11",
       "text": "원활한",
-      "pattern": "원활한",
+      "pattern": "원활(?:한|하|히|합)",
       "flags": "iu"
     },
     {
       "id": "ko-12",
       "text": "손쉽게",
-      "pattern": "손쉽게",
+      "pattern": "손(?:쉽|쉬[운웠워웁])",
       "flags": "iu"
     },
     {
       "id": "ko-13",
       "text": "간편하게 한 번에",
-      "pattern": "간편하게 한 번에",
+      "pattern": "간편하게\\s*한\\s*번에",
       "flags": "iu"
     },
     {
       "id": "ko-14",
       "text": "획기적인",
-      "pattern": "획기적인",
+      "pattern": "획기적(?:인|으로|이)",
       "flags": "iu"
     },
     {
       "id": "ko-15",
       "text": "게임 체인저",
-      "pattern": "게임 체인저",
+      "pattern": "게임\\s*체인저",
       "flags": "iu"
     },
     {
       "id": "ko-16",
       "text": "판도를 바꾸",
-      "pattern": "판도를 바꾸",
+      "pattern": "판도를 바(?:꾸|꿉|꿔|꾼|꿨|꿀)",
       "flags": "iu"
     },
     {
       "id": "ko-17",
       "text": "미래를 여는",
-      "pattern": "미래를 여는",
+      "pattern": "미래를 (?:여는|열|엽|여)",
       "flags": "iu"
     },
     {
       "id": "ko-18",
       "text": "~의 미래",
-      "pattern": "의 미래",
+      "pattern": "[가-힣A-Za-z]+의 미래",
       "flags": "iu"
     },
     {
       "id": "ko-19",
       "text": "비즈니스를 한 단계",
-      "pattern": "비즈니스를 한 단계",
+      "pattern": "비즈니스를\\s*한\\s*단계",
       "flags": "iu"
     },
     {
       "id": "ko-20",
       "text": "비즈니스를 성장시키",
-      "pattern": "비즈니스를 성장시키",
+      "pattern": "비즈니스를 성장시(?:키|켜|킵|킨|켰|킬)",
       "flags": "iu"
     },
     {
       "id": "ko-21",
       "text": "잠재력을 깨우",
-      "pattern": "잠재력을 깨우",
+      "pattern": "잠재력을 깨(?:우|워|웁|운|웠|울)",
       "flags": "iu"
     },
     {
       "id": "ko-22",
       "text": "잠재력을 극대화",
-      "pattern": "잠재력을 극대화",
+      "pattern": "잠재력을\\s*극대화",
       "flags": "iu"
     },
     {
       "id": "ko-23",
       "text": "무한한 가능성",
-      "pattern": "무한한 가능성",
+      "pattern": "무한한\\s*가능성",
       "flags": "iu"
     },
     {
       "id": "ko-24",
       "text": "가능성을 현실로",
-      "pattern": "가능성을 현실로",
+      "pattern": "가능성을\\s*현실로",
       "flags": "iu"
     },
     {
       "id": "ko-25",
       "text": "경험을 재정의",
-      "pattern": "경험을 재정의",
+      "pattern": "경험을\\s*재정의",
       "flags": "iu"
     },
     {
       "id": "ko-26",
       "text": "새롭게 정의",
-      "pattern": "새롭게 정의",
+      "pattern": "새롭게\\s*정의",
       "flags": "iu"
     },
     {
       "id": "ko-27",
       "text": "스마트한 선택",
-      "pattern": "스마트한 선택",
+      "pattern": "스마트한\\s*선택",
       "flags": "iu"
     },
     {
       "id": "ko-28",
       "text": "똑똑한 선택",
-      "pattern": "똑똑한 선택",
+      "pattern": "똑똑한\\s*선택",
       "flags": "iu"
     },
     {
       "id": "ko-29",
       "text": "최적의 경험",
-      "pattern": "최적의 경험",
+      "pattern": "최적의\\s*경험",
       "flags": "iu"
     },
     {
       "id": "ko-30",
       "text": "최상의 경험",
-      "pattern": "최상의 경험",
+      "pattern": "최상의\\s*경험",
       "flags": "iu"
     },
     {
       "id": "ko-31",
       "text": "특별한 경험을 선사",
-      "pattern": "특별한 경험을 선사",
+      "pattern": "특별한\\s*경험을\\s*선사",
       "flags": "iu"
     },
     {
       "id": "ko-32",
       "text": "감동을 선사",
-      "pattern": "감동을 선사",
+      "pattern": "감동을\\s*선사",
       "flags": "iu"
     },
     {
       "id": "ko-33",
       "text": "여정을 함께",
-      "pattern": "여정을 함께",
+      "pattern": "여정을\\s*함께",
       "flags": "iu"
     },
     {
       "id": "ko-34",
       "text": "함께 만들어가는",
-      "pattern": "함께 만들어가는",
+      "pattern": "함께 만들어(?:가|갑|갈|간|갔)",
       "flags": "iu"
     },
     {
       "id": "ko-35",
       "text": "지금 바로 경험해 보세요",
-      "pattern": "지금 바로 경험해 보세요",
+      "pattern": "지금 바로 경험해\\s*보세요",
       "flags": "iu"
     },
     {
       "id": "ko-36",
       "text": "더 나은 내일",
-      "pattern": "더 나은 내일",
+      "pattern": "더\\s*나은\\s*내일",
       "flags": "iu"
     },
     {
       "id": "ko-37",
       "text": "끊김 없는",
-      "pattern": "끊김 없는",
+      "pattern": "끊김 없(?:는|이|어|고)",
       "flags": "iu"
     },
     {
       "id": "ko-38",
       "text": "강력한 기능",
-      "pattern": "강력한 기능",
+      "pattern": "강력한\\s*기능",
       "flags": "iu"
     },
     {
       "id": "ko-39",
       "text": "직관적인 인터페이스",
-      "pattern": "직관적인 인터페이스",
+      "pattern": "직관적인\\s*인터페이스",
       "flags": "iu"
     },
     {
       "id": "ko-40",
       "text": "놀라운",
-      "pattern": "놀라운",
+      "pattern": "놀(?:라운|랍|라워|라웠)",
       "flags": "iu"
     },
     {
       "id": "ko-41",
       "text": "압도적인",
-      "pattern": "압도적인",
+      "pattern": "압도적(?:인|으로|이)",
       "flags": "iu"
     },
     {
       "id": "ko-42",
       "text": "차별화된 가치",
-      "pattern": "차별화된 가치",
+      "pattern": "차별화된\\s*가치",
       "flags": "iu"
     },
     {
       "id": "ko-43",
       "text": "고객 중심의",
-      "pattern": "고객 중심의",
+      "pattern": "고객\\s*중심의",
       "flags": "iu"
     },
     {
       "id": "ko-44",
       "text": "신뢰할 수 있는 파트너",
-      "pattern": "신뢰할 수 있는 파트너",
+      "pattern": "신뢰할\\s*수\\s*있는\\s*파트너",
       "flags": "iu"
     },
     {
       "id": "ko-45",
       "text": "업계 최고",
-      "pattern": "업계 최고",
+      "pattern": "업계\\s*최고",
       "flags": "iu"
     },
     {
       "id": "ko-46",
       "text": "단 하나의",
-      "pattern": "단 하나의",
+      "pattern": "(?<![가-힣])단 하나의",
       "flags": "iu"
     },
     {
       "id": "ko-47",
       "text": "마법 같은",
-      "pattern": "마법 같은",
+      "pattern": "마법 같(?:은|이|아)",
       "flags": "iu"
     },
     {
       "id": "ko-48",
       "text": "당신만을 위한",
-      "pattern": "당신만을 위한",
+      "pattern": "당신만을\\s*위한",
       "flags": "iu"
     }
   ]

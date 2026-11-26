@@ -144,3 +144,11 @@
 - 수정안(준비됨): 브랜치 `wip/blocked-m3-timeouts`(origin)에 타임아웃을 빼고 긴 반복을 항목별 it로 나눈 5파일. 판정 기준·매핑·수치는 그대로. guard:patterns ok·qa:trace --audit 리터럴 0 확인
 - 사람 절차: 브랜치 diff 검토 → 5파일을 main에 반영 → `pnpm guard:relock --human tests/acceptance/m3` → 커밋 → PROGRESS status를 IN_PROGRESS로
 - 상태: resolved 2026-11-26 — 사람이 PR #1 squash(01c9596)·해시 갱신(a0217bb)·재개(1ecf213). 4파일(scoring 무변경). `guard:relock` 명령은 없음(locked-hashes.json 직접 수정). a0217bb 메시지가 AC-09-11 형식 위반 → BLK-005에 추가
+
+## BLK-016 · M3 · locked-conflict · 2026-11-26T14:40Z
+- 대상: tests/acceptance/m3/linter.test.ts `specRules()`(자체 잠금) ↔ 04장 4.13.2 AIL-04·AIL-23 행
+- 증상: 표 행을 `split("|")`로 나누는데 AIL-04 패턴 칸(`/new|beta|…/i`)과 AIL-23 칸(`/lorem ipsum|your company|…/i`)에 `|`가 있어 칸이 밀림 → 심각도 칸을 "beta"·"your company"로 읽어 기대 심각도가 `[]`가 됨. 표의 실제 심각도는 둘 다 error라 "규칙 메타" 테스트가 항상 실패
+- 재현: pnpm -s exec vitest run tests/acceptance/m3/linter.test.ts -t "규칙 수·ID·단계·심각도"
+- 시도: (1) 규칙 메타를 `[]`로 → 장 표와 다른 거짓 메타라 하지 않음 (2) 테스트 수정 → 자체 잠금 entry 변경 금지
+- 제안 수정안(사람): 칸 분리를 백틱 구간 안의 `|`를 무시하도록 고친다(예: 줄에서 `` `[^`]*` `` 구간을 먼저 자리표시로 바꾼 뒤 split) 후 relock
+- 상태: open

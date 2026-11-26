@@ -2056,14 +2056,54 @@ function genGolden(ctx: Ctx): Out[] {
 }
 
 // ---------- B14 linter/cliche_{ko,en}.json (04장 4.6.4 사전 v1 그대로) ----------
+// 한국어 어간 정규식(4.6.4 "조사·어미 변화 포함", ASM-077 ⑤). 표에 없는 항목은 원문 그대로(공백은 \s*).
+const KO_STEM: Record<string, string> = {
+  혁신적인: "혁신적(?:인|으로|이)",
+  "한 차원 높은": "한 차원 높(?:은|아|여|이|게)",
+  원활한: "원활(?:한|하|히|합)",
+  손쉽게: "손(?:쉽|쉬[운웠워웁])",
+  획기적인: "획기적(?:인|으로|이)",
+  "판도를 바꾸": "판도를 바(?:꾸|꿉|꿔|꾼|꿨|꿀)",
+  "미래를 여는": "미래를 (?:여는|열|엽|여)",
+  "~의 미래": "[가-힣A-Za-z]+의 미래",
+  "비즈니스를 성장시키": "비즈니스를 성장시(?:키|켜|킵|킨|켰|킬)",
+  "잠재력을 깨우": "잠재력을 깨(?:우|워|웁|운|웠|울)",
+  "함께 만들어가는": "함께 만들어(?:가|갑|갈|간|갔)",
+  "지금 바로 경험해 보세요": "지금 바로 경험해\\s*보세요",
+  "끊김 없는": "끊김 없(?:는|이|어|고)",
+  놀라운: "놀(?:라운|랍|라워|라웠)",
+  압도적인: "압도적(?:인|으로|이)",
+  "단 하나의": "(?<![가-힣])단 하나의",
+  "마법 같은": "마법 같(?:은|이|아)",
+};
+// 영어 동사(-e로 끝나는 한 단어)는 활용형(-es·-ed·-ing)을 허용한다
+const EN_VERB_E = new Set([
+  "elevate",
+  "revolutionize",
+  "supercharge",
+  "reimagine",
+  "redefine",
+  "streamline",
+  "leverage",
+]);
 function clichePattern(text: string, lang: "ko" | "en"): string {
-  const esc = (x: string): string => x.replace(/[.*+?^${}[\]\\]/g, "\\$&");
-  if (lang === "ko") return esc(text.replace(/^~/, ""));
+  const esc = (x: string): string => x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  if (lang === "ko") return KO_STEM[text] ?? esc(text).replace(/ /g, "\\s*");
+  if (EN_VERB_E.has(text)) return `\\b${esc(text.slice(0, -1))}(?:e|es|ed|ing)\\b`;
   // "seamless(ly)"·"next-gen(eration)" → 선택 접미, "(er|ing)" → 필수 대안
-  return text
-    .split(/(\([^)]*\))/)
-    .map((part) => (part.startsWith("(") ? (part.includes("|") ? part : `${part}?`) : esc(part)))
-    .join("");
+  return (
+    "\\b" +
+    text
+      .split(/(\([^)]*\))/)
+      .map((part) =>
+        part.startsWith("(")
+          ? part.includes("|")
+            ? `(?:${part.slice(1, -1)})`
+            : `(?:${part.slice(1, -1)})?`
+          : esc(part).replace(/ /g, "\\s+"),
+      )
+      .join("")
+  );
 }
 
 function genCliche(ctx: Ctx): Out[] {

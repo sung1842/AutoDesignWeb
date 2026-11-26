@@ -576,3 +576,10 @@
 - 선택: ① M3 골든 노출 시안 = 골든 θ*로 compileSpecs한 변형별 `buildFallback({typeId, purpose, variant, spec, brand}, data)`(템플릿 카피·LLM 0). M5 파이프라인 시안은 M5 테스트가 같은 검사 함수로 다시 본다 ② linter `COPY_RULES`(CP-01~12)·`copyRules(tree, {brand, spec}) → {rule, message}[]` ③ worker `evaluateCandidate(..., data, {fallback?})`가 OriginalityReport까지 채움(레퍼런스 서명은 seed) ④ llm `assemblePrompt(role, input) → 메시지`: 입력에 references가 와도 출력에 넣지 않음 ⑤ AC-08-14 = 저장소의 프리셋 파일은 모두 사용 중(approved)으로 보고 `data:validate`가 cluster_median 프리셋의 eTLD+1(공개 접미사 처리) 수 < g1_min_domains이면 실패 ⑥ AC-08-16 보고서는 사람 2인 라벨이 필요하므로 provenance human·labelers ≥ 2·yes_count 0을 요구하고, 없으면 BLOCKED(temp 대체 없음) ⑦ AC-03-39 CF 픽스처 `packages/scoring/fixtures/conflicts/CF-xx/*.json` = `{cf, spec, tree}`, H ≤ 79는 harmonyFloor 미만으로 읽음 ⑧ AC-03-43 `presets:lint-matrix --json` 보고 `{presets[{presetId, combos, errors[{key, value, rules, cf}]}]}`, design-spec `editChoices(spec, data) → {key, value, disabled}[]`
 - 영향 범위: tests/acceptance/m3/golden.test.ts, design-spec, linter, llm, scoring, worker, scripts
 - 되돌리기 비용: 중간(자체 잠금 전까지 낮음)
+
+## ASM-082 · M3 · gap · 2026-11-26T14:40Z
+- 질문: AIL 규칙의 D·C·T 입력 형태(카피 역할·스냅숏 필드)와 표의 모호한 조건(AIL-04 pill 판정, AIL-12 항목 유형, AIL-14 고유명사, AIL-16 기본값 목록 위치)이 장에 없음
+- 근거 탐색: 04장 4.13.1·4.13.2·4.6.3 CP-10·4.6.4, 03장 3.1.7 radius 표·theme.css 초기화 목록, blocks.json(align·icon_grid), data/taxonomy/harmony.json(defaultsBlacklist 없음)
+- 선택: ① 카피 = `CopyItem{role, text, source?: llm|user, style?}[]`(role 예 hero.headline·hero.eyebrow·button·proof.quote·proof.author) ② AIL-04 pill = eyebrow style "pill" 또는 spec `shape.radius_family=pill`(태그 999) ③ AIL-12 항목 유형 = 숫자 포함→number, 인용부호 시작→quote, 그 밖→text, 섹션 image 슬롯→image 1칸 ④ AIL-14 키워드 = brand keywords·keyPoints·tags·properNouns·location, 고유명사 = 대문자 시작 라틴 단어 ⑤ AIL-16 목록은 harmony.json에 키가 없어 `packages/linter/data/defaults.json`(03장 목록 + 표 예시)에 둔다. 서체(Inter 등)는 AIL-03이 맡는다 ⑥ AIL-13 사용자 원문 슬롯의 사용자 표현은 4.6.4대로 warn(메타 심각도는 표대로 error) ⑦ D 탐지 상수는 rule-params.json에 추가 ⑧ 규칙이 받는 입력은 그 규칙 단계의 입력뿐(spec은 톤·프리셋 문맥으로 항상 전달)
+- 영향 범위: packages/linter(rules·data), apps/worker harness(lintSnapshot)
+- 되돌리기 비용: 낮음
