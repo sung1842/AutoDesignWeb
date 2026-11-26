@@ -92,6 +92,8 @@ function stimuli(synthetic: boolean, seed: number): Stimuli {
   return { items, perceived, source: synthetic ? "synthetic" : "x_card" };
 }
 
+/** --n: 조건당 인원 덮어쓰기(스모크 실행 전용, gate·tune에서는 무시). */
+let N_OVERRIDE: number | null = null;
 function runAll(st: Stimuli, seeds: number[], t: Tuned): Record<string, SimMetrics> {
   const S = (
     getThresholds().release as unknown as {
@@ -108,7 +110,7 @@ function runAll(st: Stimuli, seeds: number[], t: Tuned): Record<string, SimMetri
           perceived: st.perceived,
           types,
           condition: c,
-          n: c.population === "P-A" ? S.populationPA : S.populationPerSeed,
+          n: N_OVERRIDE ?? (c.population === "P-A" ? S.populationPA : S.populationPerSeed),
           seed,
           tuned: t,
         }),
@@ -204,6 +206,8 @@ function main(): number {
     );
     return 1;
   }
+  const nAt = process.argv.indexOf("--n");
+  if (nAt >= 0 && !gate && !args.has("--tune")) N_OVERRIDE = Number(process.argv[nAt + 1]);
   const st = stimuli(synthetic, S.seeds.dev[0] ?? 1);
   if (args.has("--tune")) {
     const tunable = (
