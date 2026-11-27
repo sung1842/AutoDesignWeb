@@ -136,6 +136,11 @@ export const KO = {
   "drafts.fallbackBadge": "기본 구성",
   "drafts.aiBadge": "AI 생성",
   "drafts.sample": "예시 콘텐츠",
+  "drafts.photoSubstituted": "업종에 맞는 사진이 없어 일부는 색면으로 구성했어요",
+  "drafts.mobile.cta": "PC에서 다듬기",
+  "drafts.mobile.copied":
+    "링크를 복사했어요. PC나 태블릿에서 이 링크를 열면 이어서 다듬을 수 있어요",
+  "drafts.mobile.share": "공유 링크 만들기",
   "variant.v_true.label": "취향 그대로",
   "variant.v_true.desc": "진단한 취향에 가장 가깝게 만들었어요",
   "variant.v_fit.label": "용도 최적",
