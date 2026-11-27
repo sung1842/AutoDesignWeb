@@ -202,9 +202,12 @@ function callTimeoutMs(o: CallSpec): number {
   return e.timeout_ms;
 }
 
-async function invoke(x: Ctx, o: CallSpec): Promise<MockResult> {
+/** invoke 결과 + 재시도 판단용 표식(skipped = 예산 거부, timedOut = 호출 타임아웃, slo = 잡 SLO). */
+type CallResult = MockResult & { skipped?: true; timedOut?: true; slo?: true };
+
+async function invoke(x: Ctx, o: CallSpec): Promise<CallResult> {
   // SLO 이후에는 새 호출을 출발시키지 않는다(폴백 경로, 6.10)
-  if (x.slo.aborted) return { kind: "aborted" };
+  if (x.slo.aborted) return { kind: "aborted", slo: true };
   const started = new Date();
   const ac = new AbortController();
   // 6.9.4 ③ 추정 → 예약(spent + reserved + est ≤ capEff, ⑤ 단계 생략 기준)
@@ -226,7 +229,7 @@ async function invoke(x: Ctx, o: CallSpec): Promise<MockResult> {
       { kind: "skipped" },
       hold.reason === "cost_cap" ? "COST_CAP" : hold.reason.toUpperCase(),
     );
-    return { kind: "provider_error", httpStatus: 0 };
+    return { kind: "provider_error", httpStatus: 0, skipped: true };
   }
   let r: MockResult;
   let thrown: string | null = null;
@@ -292,7 +295,78 @@ async function invoke(x: Ctx, o: CallSpec): Promise<MockResult> {
       ),
     );
   }
-  return r;
+  return abortStatus === "aborted"
+    ? { ...r, slo: true }
+    : abortStatus === "timeout"
+      ? { ...r, timedOut: true }
+      : r;
+}
+
+/**
+ * 06장 6.9.2 retry(models.yaml): 429는 Retry-After(상한 respect_retry_after_max_ms)만큼 기다려 max회,
+ * 5xx·네트워크·타임아웃은 backoff_ms 뒤 max회, 같은 모델 연속 실패가 switch_to_fallback_after_consecutive_failures에
+ * 이르면 첫 폴백 모델로 바꾼다(llm_calls.is_fallback). 예산 거부·안전 거부·SLO 중단·성공은 그대로 돌려준다.
+ * attempt는 호출마다 1씩 늘린다(재시도마다 새 예약 1개, AC-06-62 ②).
+ */
+async function callLlm(x: Ctx, o: CallSpec): Promise<CallResult> {
+  const m = loadModels();
+  const hasFallback = (m.roles[o.role].fallbacks.length ?? 0) > 0;
+  let isFallback = o.isFallback === true;
+  let attempt = o.attempt ?? 1;
+  let consecutive = 0;
+  let n429 = 0;
+  let n5xx = 0;
+  let first = true;
+  for (;;) {
+    const r = await invoke(x, {
+      ...o,
+      attempt,
+      isFallback,
+      ...(first ? {} : { onResponse: undefined }),
+    });
+    first = false;
+    if (r.kind === "ok" || r.kind === "refused" || r.skipped || r.slo) return r;
+    let waitMs: number;
+    if (r.kind === "rate_limited") {
+      if (n429 >= m.retry.rate_limited.max) return r;
+      n429++;
+      waitMs = Math.min(r.retryAfterMs, m.retry.rate_limited.respect_retry_after_max_ms);
+    } else {
+      consecutive++;
+      if (
+        !isFallback &&
+        hasFallback &&
+        consecutive >= m.retry.switch_to_fallback_after_consecutive_failures
+      ) {
+        isFallback = true;
+        consecutive = 0;
+        n5xx = 0;
+        attempt++;
+        continue;
+      }
+      if (n5xx >= m.retry.network_or_5xx.max) return r;
+      n5xx++;
+      waitMs = m.retry.network_or_5xx.backoff_ms;
+    }
+    if (!(await sleepUnlessAborted(waitMs, x.slo))) return { kind: "aborted", slo: true };
+    attempt++;
+  }
+}
+/** SLO 신호로 끊기는 대기. 끝까지 기다렸으면 true. */
+function sleepUnlessAborted(ms: number, signal: AbortSignal): Promise<boolean> {
+  if (signal.aborted) return Promise.resolve(false);
+  return new Promise((done) => {
+    const t = setTimeout(() => {
+      signal.removeEventListener("abort", stop);
+      done(true);
+    }, ms);
+    t.unref();
+    const stop = (): void => {
+      clearTimeout(t);
+      done(false);
+    };
+    signal.addEventListener("abort", stop, { once: true });
+  });
 }
 const setJob = (db: DbPort, id: unknown, fields: Obj): Promise<unknown> => {
   const keys = Object.keys(fields);
@@ -354,7 +428,7 @@ async function copyDeck(
     { callKind: "initial", isFallback: true },
   ];
   for (const t of tries) {
-    const r = await invoke(x, { role: "gen_copy", candidateIndex: null, input, ...t });
+    const r = await callLlm(x, { role: "gen_copy", candidateIndex: null, input, ...t });
     if (r.kind === "refused") return "refused";
     if (r.kind !== "ok") continue;
     const p = schema.safeParse(parseJson(r.text));
@@ -591,7 +665,7 @@ async function runJob(
       // 수리 호출은 확정 덱(범위·키)을 함께 준다
       const deckNow = kind === "repair_schema" ? await deckP : null;
       if (kind === "repair_schema" && !deckNow) return null;
-      const r = await invoke(x, {
+      const r = await callLlm(x, {
         role: "gen_layout",
         callKind: kind,
         candidateIndex: i,
@@ -797,7 +871,7 @@ async function runJob(
       round: 1,
     });
     const c: Cand = { ...old, id, valid: false, tree: null, html: "", cols: null };
-    const rr = await invoke(x, {
+    const rr = await callLlm(x, {
       role: "gen_layout",
       callKind: "repair_quality",
       candidateIndex: i,
@@ -830,7 +904,7 @@ async function runJob(
       [a, b],
       [b, a],
     ] as const)
-      await invoke(x, {
+      await callLlm(x, {
         role: "judge_vision",
         candidateIndex: p1.slot,
         candidateId: p1.id,

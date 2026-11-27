@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-27T03:07Z, since: 2026-11-27T04:10Z}
+- lock: {owner: 2026-11-27T03:07Z, since: 2026-11-27T04:12Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
@@ -160,7 +160,7 @@
   - [x] 02 AuthPort local·세션 쿠키·매직링크·attach_anon·/api/me·/api/consents(auth.test 7/7, ASM-104. MeView quota 등은 07·08)
   - [~] 03 동의(S05)·초대 코드: [x] API(consents·invites/redeem·inviteOk) [ ] S05 화면(09)
   - [x] 04 BrandInput zod·정규화·maskPII·judgeBrief(편집 거리 (c))·brief-drafts POST/GET(brief.test 8/8, ASM-106). 레퍼런스명 attestation(⑥)은 projects(08)
-  - [~] 05 packages/llm: [x] models.yaml(temp)·승인 검사·llm:check·시나리오 파서·MockProvider(ok·장애·usage)·CopyDeck(llm.test 19/20, BLK-027) [ ] callLlm(스키마 검증·재시도·폴백·예산·llm_calls·비용식) [ ] 효과표·mixed 2·4·low_score 트리·수리 규칙 [ ] 프롬프트 프런트매터·prompts.lock
+  - [~] 05 packages/llm: [x] models.yaml(temp)·승인 검사·llm:check·시나리오 파서·MockProvider(ok·장애·usage)·CopyDeck(llm.test 19/20, BLK-027) [x] callLlm 재시도(429 Retry-After·5xx backoff·연속 2회 → 폴백 모델, models.yaml retry) [ ] 효과표·mixed 2·4·low_score 트리·수리 규칙 [ ] 프롬프트 프런트매터·prompts.lock
   - [~] 06 pipeline: [x] a apps/worker/src/jobs/generation.ts S1~S9 1차(카피 폴백 체인·레이아웃 6·스키마 수리·평가·비전 기록·선택·폴백·R-15·예외 격리. axe 스텁 로컬 확인: ok·copy_schema_fail·copy_refusal·invalid_json@0·schema_violation@2·injection_echo·lint_error 기대대로) [~] b [x] 다양성 조건·재호출(packages/pipeline)·Mock 다양화·수리 규칙 [x] 수정 루프(≤3)·S3 덱 범위(→ repair_schema) [ ] 효과표(mock:effects)·mixed 2·4·low_score 트리·카피 패치(gen_copy repair_quality) [ ] c SLO 타이머 120/180s·예산 예약(6.9.4)·pg-boss 소비자
   - [~] 07 worker: [x] a quota_ledger reserve/refund·finishGenerationJob·applyKillSwitch·취소 API·JobBudget(packages/pipeline) [x] b JobBudget·finish 배선(budget_skipped·COST_CAP·A11, 스텁: ok 원가 0.23362 = C_base) [~] c [x] U-01 두 물결(카피 ∥ 후보 0 → t1 정산 → 1~5 예약, usage_overrun 거부 집합 = 6.9.4 ⑦ 표) [x] SLO 120s abort·호출 타임아웃 [ ] 180s 강제 종료·취소 신호 abort·GEN_MAX_CONCURRENT_JOBS
   - [~] 08 생성 API·폴링·이벤트: [x] a projects·generations·GET 폴링·ETag·멱등·attestation·retention brief_drafts [~] b [x] MockupCard 채우기 [ ] cancel·generate_request 이벤트·GET /api/projects(:id)
@@ -173,6 +173,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 13:12 | M5-05 callLlm 재시도·폴백 모델 전환(스텁: rate_limit 2회·server_error 4회/후보, ok 13호출 유지)
 - 2026-11-27 13:10 | M5-07c U-01 두 물결·SLO abort(axe 스텁 로컬 확인: ok 13호출 succeeded, usage_overrun 0.53933 succeeded·A11). 남은: low-score-trees·재시도·폴백 모델
 - 2026-11-27 12:55 | 미리보기 /healthz, industryTags·maxCharsJob(design-spec)·워커 배선. 앞 로그·ASM 시각 오기 정정(실제 커밋 시각)
 - 2026-11-27 12:50 | M5-01 완료: test(acc) 5a742c9, 자체 잠금 18파일(tests/acceptance/m5·e2e/m5·_support/pipe.ts). ≤M5 매핑 누락 0
