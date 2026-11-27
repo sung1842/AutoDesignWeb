@@ -16,7 +16,7 @@ import {
   type DesignSpec,
   type RawTree,
 } from "@tastefit/design-spec";
-import { findRepoRoot } from "@tastefit/config";
+import { findRepoRoot, thresholdNumber } from "@tastefit/config";
 import { maskText } from "@tastefit/compliance";
 import { flagValue, q, type DbPort, type Row, type Tx } from "@tastefit/db";
 import { CopyDeckSchema, LayoutTreeRawSchema, type DeckPurpose } from "@tastefit/layout-schema";
@@ -104,6 +104,8 @@ interface Ctx {
   costCapped: boolean;
   /** usage_overrun A11(잡당 1회, 6.9.4 ⑥). */
   overrunAlerted: boolean;
+  /** R-25 SLO: started_at + fallbackAtSec에 abort("slo") — 진행 중 호출은 aborted, 이후 호출은 출발하지 않는다(6.10, AC-06-40). */
+  slo: AbortSignal;
 }
 
 type CallSpec = {
@@ -144,6 +146,7 @@ async function recordCall(
   r: MockResult | { kind: "skipped" },
   errorCode: string | null,
   cost = 0,
+  status?: string,
 ): Promise<void> {
   const roles = (x.snapshot.roles ?? {}) as Record<string, Obj>;
   const rs = roles[o.role] ?? {};
@@ -175,10 +178,10 @@ async function recordCall(
         ok?.usage.cachedTokensIn ?? 0,
         ok?.usage.cacheWriteTokensIn ?? 0,
         cost,
-        ok?.latencyMs ?? null,
+        ok?.latencyMs ?? (r.kind === "aborted" ? Date.now() - started.getTime() : null),
         started.toISOString(),
         ok ? new Date().toISOString() : null,
-        r.kind === "skipped" ? "budget_skipped" : STATUS_OF[r.kind],
+        status ?? (r.kind === "skipped" ? "budget_skipped" : STATUS_OF[r.kind]),
         errorCode,
         requestHash(o.role, `${o.role}@v${Number(rs.promptVersion ?? 1)}`, o.input ?? null),
       ],
@@ -187,7 +190,16 @@ async function recordCall(
 }
 
 /** 호출 1회(예약 → 호출 → 정산) + llm_calls 1행. */
+/** models.yaml 역할별 호출 타임아웃(ms, 6.9.2). 폴백 호출은 첫 폴백 항목 값. */
+function callTimeoutMs(o: CallSpec): number {
+  const r = loadModels().roles[o.role];
+  const e = o.isFallback ? (r.fallbacks[0] ?? r.primary) : r.primary;
+  return e.timeout_ms;
+}
+
 async function invoke(x: Ctx, o: CallSpec): Promise<MockResult> {
+  // SLO 이후에는 새 호출을 출발시키지 않는다(폴백 경로, 6.10)
+  if (x.slo.aborted) return { kind: "aborted" };
   const started = new Date();
   const ac = new AbortController();
   // 6.9.4 ③ 추정 → 예약(spent + reserved + est ≤ capEff, ⑤ 단계 생략 기준)
@@ -213,6 +225,10 @@ async function invoke(x: Ctx, o: CallSpec): Promise<MockResult> {
   }
   let r: MockResult;
   let thrown: string | null = null;
+  const onSlo = (): void => ac.abort("slo");
+  x.slo.addEventListener("abort", onSlo, { once: true });
+  const tmo = setTimeout(() => ac.abort("timeout"), callTimeoutMs(o));
+  tmo.unref();
   try {
     r = await x.provider.complete({
       role: o.role,
@@ -227,13 +243,33 @@ async function invoke(x: Ctx, o: CallSpec): Promise<MockResult> {
     // 공급자 예외는 호출 실패로 기록하고 잡은 계속(AC-04-22 처리되지 않은 예외 0)
     thrown = (e as { code?: string }).code ?? "E_PROVIDER";
     r = { kind: "provider_error", httpStatus: 0 };
+  } finally {
+    clearTimeout(tmo);
+    x.slo.removeEventListener("abort", onSlo);
   }
+  // abort 사유: SLO(잡 120s) = aborted, 호출 타임아웃 = timeout
+  const abortStatus =
+    r.kind === "aborted" ? (ac.signal.reason === "slo" ? "aborted" : "timeout") : undefined;
   const ok = r.kind === "ok" ? r : null;
   const cost = ok ? costOf(o.role, ok) : 0;
   // ④ settle(실비) | release(usage 없음)
   if (ok) await x.budget.settle(hold.id, cost);
   else x.budget.release(hold.id);
-  await recordCall(x, o, started, r, r.kind === "ok" ? null : (thrown ?? r.kind), cost);
+  await recordCall(
+    x,
+    o,
+    started,
+    r,
+    r.kind === "ok"
+      ? null
+      : abortStatus === "aborted"
+        ? "SLO_ABORT"
+        : abortStatus === "timeout"
+          ? "TIMEOUT"
+          : (thrown ?? r.kind),
+    cost,
+    abortStatus,
+  );
   // ⑥ 실제 청구가 상한을 넘으면 A11 1건(잡당 1회), 이후 예약은 판정식으로 전부 실패
   if (x.budget.spent > x.budget.capEff && !x.overrunAlerted) {
     x.overrunAlerted = true;
@@ -477,6 +513,12 @@ async function runJob(
     d.provider ??
     createMockProvider({ scenario: (snapshot.mockScenario as string | undefined) ?? undefined });
   const jobCap = await d.db.withService((tx) => flagValue(tx, "JOB_COST_CAP_USD", JOB_CAP_DEFAULT));
+  const slo = new AbortController();
+  const sloTimer = setTimeout(
+    () => slo.abort("slo"),
+    thresholdNumber("generation.fallbackAtSec") * 1000,
+  );
+  sloTimer.unref();
   const x: Ctx = {
     d,
     job,
@@ -486,6 +528,7 @@ async function runJob(
     budget: createJobBudget({ jobCapUsd: Number(jobCap) }),
     costCapped: false,
     overrunAlerted: false,
+    slo: slo.signal,
   };
   const D = data();
   const purpose = String(project.purpose) as DeckPurpose;
