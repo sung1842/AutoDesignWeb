@@ -3,6 +3,7 @@ import type { L1, L2 } from "@tastefit/taxonomy";
 import type { DesignData } from "./data.js";
 import {
   DEFAULT_BRAND,
+  maxCharsJobImpl,
   patternRaw,
   resolveTree,
   STANDARD_PATTERN,
@@ -59,10 +60,16 @@ export interface CompileInput {
   purpose: Purpose;
   brand: { brand_color: string } | null;
   jobSeed: string;
+  /** 4.9.4 업종 태그(industryTags(BrandInput, data.imageTagKeywords), ASM-120). 없으면 []. */
+  industryTags?: string[];
 }
 /** 04장 4.2.2(ASM-037). */
 export function compileSpecs(input: CompileInput, data: DesignData): Record<Variant, DesignSpec> {
   return compileSpecsImpl(input, data);
+}
+/** 04장 4.6.2 maxChars_job(ASM-120 ③). */
+export function maxCharsJob(specs: Record<Variant, DesignSpec>, data: DesignData): number {
+  return maxCharsJobImpl(specs, data, expectedSizeImpl);
 }
 /** 03장 3.13(ASM-032). 반드시 4종 결과(+null) 중 하나로 끝나고 예외를 던지지 않는다. */
 export function applyBrandColor(

@@ -10,6 +10,8 @@ import {
   resolveTree,
   templateDeck,
   buildFallback,
+  industryTags,
+  maxCharsJob,
   type DesignData,
   type DesignSpec,
   type RawTree,
@@ -298,8 +300,10 @@ async function copyDeck(
   x: Ctx,
   brand: Obj,
   purpose: DeckPurpose,
+  maxChars: number,
 ): Promise<{ deck: Obj; source: "llm" | "template" } | "refused"> {
-  const input = { brand, purpose };
+  // 4.6.2 maxChars_job: 프롬프트 변수(덱 hero.headline 3옵션 중 ≥ 1개가 이 값 이하)
+  const input = { brand, purpose, maxCharsJob: maxChars };
   const schema = CopyDeckSchema(purpose);
   const tries: { callKind: CallKind; isFallback: boolean }[] = [
     { callKind: "initial", isFallback: false },
@@ -501,6 +505,7 @@ async function runJob(
       purpose,
       brand: brand.brandColor ? ({ brand_color: brand.brandColor } as never) : null,
       jobSeed: String(job.job_seed),
+      industryTags: industryTags(brand, D.imageTagKeywords),
     },
     D,
   );
@@ -521,7 +526,7 @@ async function runJob(
   });
 
   // S2 카피
-  const copy = await copyDeck(x, brand, purpose);
+  const copy = await copyDeck(x, brand, purpose, maxCharsJob(specs, D));
   if (copy === "refused") {
     await setJob(d.db, jobId, { error_message: "content_policy: 공급자 안전 거부" });
     await finishGenerationJob(d.db, jobId, {

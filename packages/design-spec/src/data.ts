@@ -75,6 +75,13 @@ export interface DesignData extends MapData {
   imageTags: string[];
   /** 05장 정규화기 최신 버전(data/normalizers/<시즌>.json 파일명). */
   normalizerVersion: string;
+  /** 04장 4.9.4 업종 키워드 사전(B24, config/image_tag_keywords.json). */
+  imageTagKeywords: ImageTagKeyword[];
+}
+
+export interface ImageTagKeyword {
+  keyword: string;
+  tags: string[];
 }
 
 export interface ImageEntry {
@@ -136,6 +143,9 @@ export function loadDesignData(root: string): DesignData {
         .sort()
         .at(-1) ?? "",
     imageTags: imageTagSet(read<JsonObj>(root, "data/images/manifest.json").items),
+    imageTagKeywords: read<ImageTagKeyword>(root, "config/image_tag_keywords.json").items.map(
+      (k) => ({ keyword: k.keyword, tags: [...k.tags] }),
+    ),
   };
 }
 

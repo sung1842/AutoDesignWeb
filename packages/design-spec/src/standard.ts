@@ -640,3 +640,42 @@ export function fitHeadline(
   }
   return { index: startIdx, step: null, warn: true };
 }
+
+/**
+ * 4.6.2 maxChars_job(S-39·T-30·U-11): 변형 3 × 각 변형 layout_constraints.hero_variants × {1280, 375}의
+ * headlineBudget.maxChars 최솟값(정수). t-display hero는 넘침 처리 ②를 적용한 t-1 크기로 계산한다.
+ * S1(명세 3개) 확정 뒤 S2(덱 호출) 전에 계산하므로 잡마다 결정론적으로 1개 값이다.
+ */
+export function maxCharsJobImpl(
+  specs: Readonly<
+    Record<
+      string,
+      { tokens: Record<string, unknown>; layout_constraints: { hero_variants: string[] } }
+    >
+  >,
+  data: DesignData,
+  sizeOf: (tokens: Record<string, unknown>, step: string, vw: number) => number,
+): number {
+  const hero = data.blocks.find((x) => x.id === "hero") as unknown as
+    { variants: { id: string; text_cols?: { lg: number; base: number } }[] } | undefined;
+  let min = Number.POSITIVE_INFINITY;
+  for (const v of Object.keys(specs).sort()) {
+    const spec = specs[v];
+    if (!spec) continue;
+    const lay = (spec.tokens.layout as Record<string, { $value?: { value?: number } }> | undefined)
+      ?.container;
+    const containerPx = lay?.$value?.value ?? HEADLINE_SPEC.contentMax;
+    for (const hv of spec.layout_constraints.hero_variants) {
+      const base = headlineStep(hv);
+      if (!base) continue;
+      const step = base === "t-display" ? (LOWER[base] ?? base) : base;
+      const cols = hero?.variants.find((x) => x.id === hv)?.text_cols ?? { lg: 12, base: 4 };
+      for (const vw of Object.keys(HEADLINE_LINES).map(Number))
+        min = Math.min(
+          min,
+          headlineBudget(sizeOf(spec.tokens, step, vw), vw, cols, containerPx).maxChars,
+        );
+    }
+  }
+  return Number.isFinite(min) ? Math.floor(min) : 0;
+}

@@ -130,6 +130,21 @@ export function patternSlots(
   return { v_true: vTrue, v_fit: [std, pick], v_bal: vBal };
 }
 
+/**
+ * 4.9.4 업종 태그(industryTags): BrandInput.description·keyPoints에 사전 keyword가 부분 문자열로 있으면 그 tags의 합집합
+ * (결정론, 정렬·중복 제거. 명사 추출 대신 부분 문자열, ASM-120 ①).
+ */
+export function industryTags(
+  brand: { description?: string; keyPoints?: readonly string[] } | null | undefined,
+  dict: readonly { keyword: string; tags: readonly string[] }[],
+): string[] {
+  const text = [brand?.description ?? "", ...(brand?.keyPoints ?? [])].join("\n");
+  if (!text.trim()) return [];
+  return uniq(
+    dict.filter((k) => k.keyword && text.includes(k.keyword)).flatMap((k) => [...k.tags]),
+  ).sort();
+}
+
 /** 4.2.1 image_tags_allowed(T-34·U-12). industryTags = BrandInput 업종 키워드에서 얻은 구체 태그. */
 export function imageTagsAllowed(
   purpose: Purpose,

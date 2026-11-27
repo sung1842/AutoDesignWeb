@@ -3,13 +3,13 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-27T03:07Z, since: 2026-11-27T06:12Z}
+- lock: {owner: 2026-11-27T03:07Z, since: 2026-11-27T03:55Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
 - review_pass_commit: 4519c49  # 원격 태그 푸시 403 → 태그 생성은 HUMAN_TODO(AD-020)
 - limit.next_reset_kst: 2026-11-27 17:07  # 이 세션 시작(12:07 KST)+5h 추정
-- 마지막 갱신: 2026-11-27 08:50 KST (verify:m4 1차 fail(환경 3건), M5 화면 1차)
+- 마지막 갱신: 2026-11-27 12:55 KST (M5-01 수용 테스트 완료·자체 잠금, 구현 재개)
 
 ## 실행 환경 사실(2026-11-18 점검)
 - Docker 데몬 없음(클라이언트만). 이미지 레지스트리·Playwright 브라우저 다운로드 프록시 차단.
@@ -173,14 +173,15 @@
 - [ ] release:check 요약
 
 ## 로그
-- 2026-11-27 15:12 | M5-01 완료: test(acc) 5a742c9, 자체 잠금 18파일(tests/acceptance/m5·e2e/m5·_support/pipe.ts). ≤M5 매핑 누락 0
-- 2026-11-27 15:06 | e2e/m5 구조 수정: 시나리오 env·준비/확인 분리(30s 러너 기본 유지, ASM-121). scenarios.test 실행 단계 분리
-- 2026-11-27 14:37 | M5-01h3 deck.test·golden 보강(AC-04-44·46, ASM-120). qa:trace ≤M5 매핑 누락 0, audit 리터럴 0
-- 2026-11-27 14:11 | M5-01h3 access.test(AC-06-59 ①~⑦, 5/7 녹색, ⑥ healthz 미구현, ASM-119)
-- 2026-11-27 13:56 | M5-01h3 fallback.test(AC-04-25)·abuse.test(AC-08-41b·41d, ASM-117·118). 남은 매핑 04-44·04-46·06-59
-- 2026-11-27 13:27 | M5-01h3a golden.test(32×3 Mock, AC-01-30·32·04-16·24·08-25, ASM-116)·AC-01-28 manual
-- 2026-11-27 13:06 | M5-01h2 화면 E2E(screens.spec·ui 브리지, 11 AC)·ko.ts 누락 키 4. audit 리터럴 0
-- 2026-11-27 12:20 | M5-01h1 scenarios.test(9.6.2 전 시나리오·비용·시간 10 AC)·pipe 헬퍼. 현재 BLK-008로 잡 failed
+- 2026-11-27 12:55 | 미리보기 /healthz, industryTags·maxCharsJob(design-spec)·워커 배선. 앞 로그·ASM 시각 오기 정정(실제 커밋 시각)
+- 2026-11-27 12:50 | M5-01 완료: test(acc) 5a742c9, 자체 잠금 18파일(tests/acceptance/m5·e2e/m5·_support/pipe.ts). ≤M5 매핑 누락 0
+- 2026-11-27 12:49 | e2e/m5 구조 수정: 시나리오 env·준비/확인 분리(30s 러너 기본 유지, ASM-121). scenarios.test 실행 단계 분리
+- 2026-11-27 12:39 | M5-01h3 deck.test·golden 보강(AC-04-44·46, ASM-120). qa:trace ≤M5 매핑 누락 0, audit 리터럴 0
+- 2026-11-27 12:32 | M5-01h3 access.test(AC-06-59 ①~⑦, 5/7 녹색, ⑥ healthz 미구현, ASM-119)
+- 2026-11-27 12:30 | M5-01h3 fallback.test(AC-04-25)·abuse.test(AC-08-41b·41d, ASM-117·118). 남은 매핑 04-44·04-46·06-59
+- 2026-11-27 12:26 | M5-01h3a golden.test(32×3 Mock, AC-01-30·32·04-16·24·08-25, ASM-116)·AC-01-28 manual
+- 2026-11-27 12:23 | M5-01h2 화면 E2E(screens.spec·ui 브리지, 11 AC)·ko.ts 누락 키 4. audit 리터럴 0
+- 2026-11-27 12:17 | M5-01h1 scenarios.test(9.6.2 전 시나리오·비용·시간 10 AC)·pipe 헬퍼. 현재 BLK-008로 잡 failed
 - 2026-11-27 12:08 | 잠금 회수(이전 23:52Z, 3h+). 새 컨테이너 복원(unshallow·태그·install·PG·seed·survey:build)
 - 2026-11-27 08:52 | M5-01g e2e/m5 흐름(로그인·동의·자동 제출·/g 통과, 카드는 BLK-008). mail 템플릿 경로 수정
 - 2026-11-27 08:50 | verify:m4 1차 fail: 비BLK 3건 모두 환경(간헐 env·폰트 캐시·빈 저장소). M5-09 화면 S04~S08 1차·next build 통과

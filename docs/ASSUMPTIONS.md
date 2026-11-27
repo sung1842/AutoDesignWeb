@@ -802,56 +802,56 @@
 - 영향 범위: tests/acceptance/m5/security.test.ts, e2e/m5, apps/web/src/app/{login,onboarding,brief,g,terms}, packages/config/src/env.ts
 - 되돌리기 비용: 낮음
 
-## ASM-114 · M5 · gap · 2026-11-27T03:40Z
+## ASM-114 · M5 · gap · 2026-11-27T03:17Z
 - 질문: 9.6.2 전 시나리오·비용·시간 AC(AC-00-14, 04-22·37, 06-07b·21·39·40·61, 07-02, 09-07)의 관측 방법
 - 근거 탐색: 09장 9.6.2 표, 07장 7.4.3 TC-R, 06장 6.9.4 ⑥⑦·AC-06-61·62, ASM-109·111
 - 선택: ① 시나리오마다 잡 1회(tests/acceptance/m5/scenarios.test.ts의 ran 캐시)를 돌려 AC-07-02(7.4.3 공통 기대)와 AC-09-07(TC-R 행별 기대)이 같은 결과를 본다. 헬퍼는 tests/acceptance/_support/pipe.ts로 묶고 pipeline.test도 이것을 쓴다 ② "미처리 예외 0" = 잡 실행 중 `[generation]` stderr(runGenerationJob 최상위 catch) 0줄 ③ TC-R-07(1차·폴백 모두 다운) = `timeout` 시나리오(전 호출 적용, 폴백 모델 포함) ④ AC-04-22 "스키마 위반 반복·린터 error 반복" = `schema_violation!`·`lint_error!`(9.6.2 `!` 형식) ⑤ A11 = generation_jobs.warnings의 'A11'(ASM-111, alerts 테이블 공백) ⑥ AC-06-40 abort 시각 = llm_calls.started_at + latency_ms ⑦ TC-R-17 가짜 시계 = 워커 now()가 첫 판독 뒤 61초 앞 ⑧ AC-06-61 ④ t0 = 후보 0 gen_layout initial started_at, est 값은 DB 열이 없어 budget_skipped 0과 출발 시각으로 본다 ⑨ AC-06-39 일 사용량 = /api/me quota.dayUsed(새 사용자 0 → 환불 뒤 0) ⑩ AC-04-37 ③은 일일 예산 플래그로 503 GEN_BUDGET_EXCEEDED(TC-C-01)
 - 영향 범위: tests/acceptance/m5/scenarios.test.ts, tests/acceptance/_support/pipe.ts, tests/acceptance/m5/pipeline.test.ts
 - 되돌리기 비용: 낮음
 
-## ASM-115 · M5 · gap · 2026-11-27T04:05Z
+## ASM-115 · M5 · gap · 2026-11-27T03:23Z
 - 질문: M5 화면 AC(AC-01-01·26·29·31·34·51·58)의 E2E 판정 방법과 픽스처
 - 근거 탐색: 01장 1.5~1.7·1.15.3, 06장 6.4(GenerationView·queuePosition), 09장 9.6.2, ASM-100·113
 - 선택: ① 화면 E2E는 e2e/m5/screens.spec.ts, vitest 브리지 tests/acceptance/m5/ui.test.ts(스펙 파일의 test 개수 = 결과 수, 전부 통과) ② 사용자·잡 준비는 브라우저 안 fetch(쿠키·Origin 동일)로 진단·프로젝트·생성(x-mock-scenario), 로그인·동의만 화면으로(e2e/m5/helpers.ts) ③ AC-01-01 로그인 요청 UI = 이름에 "로그인"이 든 링크·버튼, 이벤트는 events.name='login_prompt_view' ∧ 그 anon_id ④ AC-01-26 "입력값 복원" = 자동 제출된 잡의 projects.brand(name·description·primaryAction)·purpose가 다른 브라우저에서 입력한 값과 같음 ⑤ AC-01-29 "목 서버 지연" = page.route로 첫 응답은 running 보기, 이후 응답을 10초 보류하고 5초 동안 data-testid=steps 텍스트 표본이 1종 ⑥ AC-01-31 "그대로" = 재접속 화면의 준비된 카드 수 = 그 시각 GenerationView.mockups 수, 진행 중이면 aria-current=step 1개 ⑦ AC-01-34 등록 도메인 다름 = 호스트가 다르고 서로의 하위 도메인이 아님(localhost ↔ 127.0.0.1) ⑧ AC-01-51 "전역 실행 5건" = slow 잡 5건을 먼저 넣은 뒤 새 요청, 순번은 API queuePosition 폴링 최대 5회가 증가 0(관찰 구간 안의 감소는 요구하지 않음), 끝나면 6건 모두 취소 ⑨ AC-01-58 ② 비폴백 2 + 폴백 1 픽스처 = cost_ramp(6.9.4 ⑦ 변형 C 폴백), ③ 업종 매칭 0 = 업종 사전 낱말이 없는 브리프, 카드별 배지 유무 = mockups[].photoSubstituted ⑩ AC-01-58 ④ 문구 대조는 자리표시자 이름({용도 라벨} ↔ {purpose})을 같은 표식으로 맞춰 비교. 누락 키 drafts.photoSubstituted·drafts.mobile.* 3개는 1.15.3 원문으로 ko.ts에 추가
 - 영향 범위: e2e/m5/screens.spec.ts·helpers.ts, tests/acceptance/m5/ui.test.ts, apps/web/src/copy/ko.ts
 - 되돌리기 비용: 낮음
 
-## ASM-116 · M5 · gap · 2026-11-27T04:25Z
+## ASM-116 · M5 · gap · 2026-11-27T03:26Z
 - 질문: M5 골든 집계 AC(AC-01-30·32, AC-04-16·24, AC-08-25)를 골든 답안 없이(BLK-022) 어떻게 실행하나
 - 근거 탐색: 07장 골든 세트·R-11, 04장 AC-04-16·24, 01장 AC-01-30·32, 08장 AC-08-25, M4 build-answers(계획 L1 픽스처), BLK-022
 - 선택: ① tests/acceptance/m5/golden.test.ts가 케이스마다 진단 픽스처 사용자 → 프로젝트 생성 → taste_snapshot.mu = persona.thetaStar, type_id = expected.typeId 주입 → Mock `ok` 생성 × runsPerCase(케이스당 it 1개, 각 ≈ 30s). 골든 답안이 생기면 답안 재생 결과(replayGolden)로 바꾼다 ② AC-04-16 "노출 집합 다양성 충족" = 노출 비폴백 후보 전부 eligible·hide_reason 없음, D = 슬롯 0~5 QualityReport.taste.v(렌더 L1) 유클리드 평균 쌍 거리 ③ AC-01-30 첫 카드 노출 = 잡 첫 mockups.created_at − queued_at, 전체 = finished_at − queued_at, 표본 = 실행 순서 첫 20잡 ④ AC-01-32 = 실행 뒤 queued/running ∧ killAtSec 초과 잡 0 + 모든 골든 잡 경과 ≤ killAtSec ⑤ AC-08-25 = copy_deck에 다른 케이스 브랜드명(자기 이름에 포함된 이름은 제외) 0 ⑥ AC-01-28 = 수동(usability-*) 체크리스트
 - 영향 범위: tests/acceptance/m5/golden.test.ts, tests/acceptance/_support/pipe.ts(beforeGenerate), release/manual-checklist.md
 - 되돌리기 비용: 낮음
 
-## ASM-117 · M5 · gap · 2026-11-27T04:35Z
+## ASM-117 · M5 · gap · 2026-11-27T03:27Z
 - 질문: AC-04-25(M5 배정) "72개 폴백 조합 G-01~G-13 통과, H ≥ 80"이 M3 골격 폴백 테스트(tests/acceptance/m3, 배정 밖)와 어떻게 다른가
 - 근거 탐색: 04장 4.12, 07장 7.12.1 배정표, apps/worker generation.ts 폴백 경로(buildFallback + brand), ASM-081
 - 선택: M5 판정은 워커가 실제로 쓰는 `buildFallback({typeId, purpose, variant, brand})`(브랜드 카피 포함) 산출을 evaluateCandidate(fallback)로 본다(tests/acceptance/m5/fallback.test.ts). 용도별 대표 브리프 1개, 유형마다 it 1개(9조합) + 조합 수 72 확인. 현재 G-08은 BLK-008(axe)로 실패
 - 영향 범위: tests/acceptance/m5/fallback.test.ts
 - 되돌리기 비용: 낮음
 
-## ASM-118 · M5 · gap · 2026-11-27T04:55Z
+## ASM-118 · M5 · gap · 2026-11-27T03:30Z
 - 질문: AC-08-41b·41d의 요청 모양(편집 저장 EditState의 텍스트 반영, 권리 요청 필드 이름, "그 버전으로 공유")
 - 근거 탐색: 01장 1.8.5·1.8.6 EditOp, 06장 6.4 versions·share·report·rights-requests 행, 08장 8.1.6 RightsRequest·8.9.2 표·피싱 문구 필터
 - 선택: ① 텍스트 수정은 EditState.texts(경로 → 문자열, 예 'slots.hero.headline') + ops에 kind 'text' op 1개(before·after). 서버는 texts를 G-13 판정·재컴파일 입력으로 쓴다 ② 저장 거부(422)는 버전을 만들지 않으므로 "그 버전으로 공유"는 게이트를 아직 통과하지 않은(pending) 버전으로 POST /api/share → 409 VERSION_GATE_NOT_PASSED로 본다 ③ 피싱 문구 11종은 08장 원문 줄에서 읽고 "지금 {문구} 하세요"로 넣는다, 고위험 20종은 fixtures/brands/high-risk.json ④ 권리 요청 본문 = 08장 RightsRequest 입력 필드의 camelCase(type·domain·targetUrl·requesterEmail·requesterRole·details) + turnstileToken(API 본문 관례), 공유 신고 reason = 'phishing' ⑤ 41d 공유는 결과 공유(targetType 'result')
 - 영향 범위: tests/acceptance/m5/abuse.test.ts, apps/web(M6 편집·공유 라우트 구현 시)
 - 되돌리기 비용: 낮음
 
-## ASM-119 · M5 · gap · 2026-11-27T05:10Z
+## ASM-119 · M5 · gap · 2026-11-27T03:32Z
 - 질문: AC-06-59 ①~⑦의 검사 범위(정규식 원문, E2E 대상, 미리보기 healthz)
 - 근거 탐색: 06장 6.13·AC-06-59, 6.4.3 _storage 라우트, 6.11.4 미리보기, M7 ③ 계정 삭제, security.test 기동 방식(start:check-env)
 - 선택: ① 원문 rg 패턴 `"\.from\(\|\.rpc\("`은 rg에서 `\|`가 문자 그대로라 의도(쿼리 빌더 호출)를 따라 `.rpc(`와 `.from('<소문자_표>')`(Array·Buffer·Uint8Array·Object·Set·Map.from 제외)로 검사, 범위 apps/web·apps/worker·packages(테스트·dist·node_modules 제외, supabase 드라이버 제외). pg·kysely import는 packages/db 밖 0. .next/static이 있으면 @supabase/ 문자열 0 ② db:types는 DOCKER_HOST를 없는 소켓으로 두고 실행, web·worker typecheck ③ 브라우저 대신 in-process handle로 survey-items URL → /api/_storage 200 image/webp(자산은 manifest.lock, serve.ts와 같은 방식). CSP 위반 보고는 e2e/m4 화면이 같은 URL을 쓰므로 거기서 본다 ④ 계정 삭제 E2E 전체는 M7 ③. M5는 AuthPort.adminSignOutAll → 이전 쿠키 401, adminDeleteUser → auth.users 0행 ⑤ start:check-env 종료 코드(native local 0, staging·supabase에서 4개 중 하나 비우면 1) ⑥ APP_ENV=prod in-process 404, 미리보기 handlePreview GET /healthz 200(미리보기 서버 = handlePreview). api-parity 대조는 M7 ⑪(verify:api-parity)에서 ⑦ 문자열 검사 범위 = ① 범위 + .env.example
 - 영향 범위: tests/acceptance/m5/access.test.ts, apps/web/src/lib/preview.ts(/healthz 추가 필요)
 - 되돌리기 비용: 낮음
 
-## ASM-120 · M5 · gap · 2026-11-27T05:35Z
+## ASM-120 · M5 · gap · 2026-11-27T03:39Z
 - 질문: AC-04-44·46의 함수 계약·픽스처·판정(업종 태그 추출, maxChars_job, README 교체 목록, cta 줄 수, 클라이언트 미리보기)
 - 근거 탐색: 04장 4.2.1·4.6.2·4.9.4·4.10.2·AC-04-44·46, 03장 3.6.5·3.8.1, config/image_tag_keywords.json(B24)
 - 선택: ① `industryTags(brand: {description, keyPoints?}, dict: {keyword, tags}[]): string[]`(@tastefit/design-spec) = description·keyPoints 문자열에 사전 keyword가 부분 문자열로 들어 있으면 그 tags의 합집합(명사 추출 대신 결정론 부분 문자열, 정렬·중복 제거). 픽스처 fixtures/image-tags/briefs.json(30건, 기대 집합은 이 규칙 + 4.9.4 교집합 규칙으로 계산, provenance temp) ② ②의 "MockProvider가 허용 밖 태그를 내는 픽스처" = 폴백 트리의 첫 이미지 태그를 다른 용도 태그로 바꾼 트리 → treeLint LT-10 error ③ `maxCharsJob(specs: {v_true, v_fit, v_bal}, data): number`(@tastefit/design-spec) = 4.6.2 정의(변형 3 × hero_variants × {1280, 375} headlineBudget 최소, t-display는 t-1) ④ Mock gen_copy는 input.maxCharsJob을 받아 hero.headline 3옵션 중 ≥ 1개를 그 이하로 합성한다 ⑤ AC-04-46 ② 워드마크 판정 = 폴백 v_true 페이지의 G-04·G-06(뷰포트 375·1280 또는 뷰포트 미표기 집계) pass ⑥ ③ "cta big-type 1280 ≤ 2줄, 375 ≤ 3줄" = 노출 후보 QualityReport에 AIL-24 0 + G-05 pass(줄 수 직접 측정은 M7 골든 평가기) ⑦ ④ S09 E2E는 M6 편집 화면 전이라 harness.compileInBrowser(클라이언트)와 compilePage(서버)의 data-step 열 비교로 대신하고, M6 S09에서 E2E로 옮긴다 ⑧ AC-04-44 ④ README "교체 필요 이미지" 원천 = 트리 이미지 슬롯 placeholder:true, portfolio 작업물 블록 = gallery(work.items 덱)·showcase ⑨ 톤 판정은 manifest 태그 tone.warm·tone.cool(질감 이미지 제외)
 - 영향 범위: tests/acceptance/m5/deck.test.ts·golden.test.ts, fixtures/image-tags/briefs.json, packages/design-spec(industryTags·maxCharsJob 추가 필요), packages/llm mock(gen_copy maxCharsJob)
 - 되돌리기 비용: 중간(함수 시그니처)
 
-## ASM-121 · M5 · gap · 2026-11-27T06:05Z
+## ASM-121 · M5 · gap · 2026-11-27T03:49Z
 - 질문: e2e/m5 화면 테스트가 생성 잡을 기다리는데 Playwright 테스트당 기본 타임아웃(30s, 러너 설정 1곳 원칙·상향 금지)과 next start(NODE_ENV=production → x-mock-scenario 금지)에서 어떻게 시나리오·대기를 다루나
 - 근거 탐색: 09장 9.6.2(MOCK_LLM_SCENARIO env 또는 헤더, 헤더는 NODE_ENV≠production만), ASM-004, playwright.config(타임아웃 미지정), e2e/serve.ts(process.env 전달)
 - 선택: ① 시나리오는 실행 env MOCK_LLM_SCENARIO로만 준다. 브리지(tests/acceptance/m5/ui.test)가 시나리오별로 `-g`로 고른 테스트만 따로 돌리고, 각 테스트는 needScenario()로 env가 맞는지 먼저 단언(틀린 env로 돌리면 실패) ② 생성 대기가 필요한 확인(AC-01-31·34·58 ③)은 "준비" 테스트(잡 생성·storageState 파일 저장)와 확인 테스트로 나누고, 그 사이에 다른 테스트를 두어 대기를 테스트당 타임아웃 밖으로 뺀다. AC-01-31 ②는 닫은 시각 + 30초까지 남은 만큼만 기다린다 ③ AC-01-51 바쁜 잡 5건은 병렬 컨텍스트로 만들고 순번 폴링은 3회 ④ 러너 타임아웃은 바꾸지 않는다
