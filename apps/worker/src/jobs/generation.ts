@@ -117,6 +117,8 @@ type CallSpec = {
   attempt?: number;
   isFallback?: boolean;
   cacheState?: CacheState;
+  /** 공급자 응답 직후(정산 대기열에 넣은 뒤, 정산 완료 전) 동기 호출 — U-01 사건 t1. */
+  onResponse?: (ok: boolean) => void;
 };
 /** 6.9.4 ③ 추정식: Σ블록(실측 토큰 × 1.1) × 블록 단가 + maxOutputTokens × 출력 단가 + 이미지 × per_image, 소수 5자리 half-up. */
 function estimateOf(role: LlmRole, pv: { usage: MockUsage; estimateMultiplier: number }): number {
@@ -190,6 +192,9 @@ async function recordCall(
 }
 
 /** 호출 1회(예약 → 호출 → 정산) + llm_calls 1행. */
+/** U-01 두 번째 물결 출발 상한(t0 + 3s, 06장 6.9.4 ③·V-01. 사양 상수). */
+const WAVE2_DELAY_MS = 3000;
+
 /** models.yaml 역할별 호출 타임아웃(ms, 6.9.2). 폴백 호출은 첫 폴백 항목 값. */
 function callTimeoutMs(o: CallSpec): number {
   const r = loadModels().roles[o.role];
@@ -253,8 +258,10 @@ async function invoke(x: Ctx, o: CallSpec): Promise<MockResult> {
   const ok = r.kind === "ok" ? r : null;
   const cost = ok ? costOf(o.role, ok) : 0;
   // ④ settle(실비) | release(usage 없음)
-  if (ok) await x.budget.settle(hold.id, cost);
-  else x.budget.release(hold.id);
+  const settled = ok ? x.budget.settle(hold.id, cost) : Promise.resolve();
+  if (!ok) x.budget.release(hold.id);
+  o.onResponse?.(ok !== null);
+  await settled;
   await recordCall(
     x,
     o,
@@ -568,24 +575,6 @@ async function runJob(
     progress_pct: 15,
   });
 
-  // S2 카피
-  const copy = await copyDeck(x, brand, purpose, maxCharsJob(specs, D));
-  if (copy === "refused") {
-    await setJob(d.db, jobId, { error_message: "content_policy: 공급자 안전 거부" });
-    await finishGenerationJob(d.db, jobId, {
-      now: d.now?.() ?? new Date(),
-      errorCode: "BLOCKED_BRAND",
-    });
-    return { status: "failed" };
-  }
-  const warnings = copy.source === "template" ? ["COPY_FALLBACK"] : [];
-  await setJob(d.db, jobId, {
-    copy_deck: JSON.stringify(copy.deck),
-    copy_source: copy.source,
-    warnings,
-    progress_pct: 30,
-  });
-
   // S2 레이아웃 6 + 스키마 수리
   const cands: Cand[] = [];
   const raws: (RawTree | null)[] = [];
@@ -594,20 +583,34 @@ async function runJob(
     c: Cand,
     callKind: CallKind,
     extra: Obj = {},
+    firstState?: CacheState,
+    onResponse?: (ok: boolean) => void,
   ): Promise<RawTree | null> => {
-    const input = { spec: c.spec, purpose, brand, deck: copy.deck, ...extra };
+    const base = { spec: c.spec, purpose, brand, ...extra };
     for (const kind of [callKind, "repair_schema"] as const) {
+      // 수리 호출은 확정 덱(범위·키)을 함께 준다
+      const deckNow = kind === "repair_schema" ? await deckP : null;
+      if (kind === "repair_schema" && !deckNow) return null;
       const r = await invoke(x, {
         role: "gen_layout",
         callKind: kind,
         candidateIndex: i,
         candidateId: c.id,
-        input,
-        cacheState: i === 0 && callKind === "initial" ? "cache_write" : "cached",
+        input: deckNow ? { ...base, deck: deckNow } : base,
+        ...(kind === callKind && onResponse ? { onResponse } : {}),
+        cacheState:
+          kind === callKind && firstState
+            ? firstState
+            : i === 0 && callKind === "initial"
+              ? "cache_write"
+              : "cached",
       });
       if (r.kind !== "ok") return null;
       const p = LayoutTreeRawSchema.safeParse(parseJson(r.text));
-      if (p.success && deckRefsOk(p.data, copy.deck)) return p.data as unknown as RawTree;
+      if (!p.success) continue;
+      const deck = await deckP;
+      if (!deck) return null;
+      if (deckRefsOk(p.data, deck)) return p.data as unknown as RawTree;
     }
     return null;
   };
@@ -615,10 +618,64 @@ async function runJob(
     const variant = VARIANTS[Math.floor(i / 2)] ?? "v_true";
     const spec = specs[variant];
     const id = await insertCandidate(x, { slot: i, variant, spec, origin: "llm", round: 0 });
-    const c: Cand = { id, slot: i, variant, spec, valid: false, tree: null, html: "", cols: null };
-    cands.push(c);
-    raws.push(await layoutCall(i, c, "initial"));
+    cands.push({ id, slot: i, variant, spec, valid: false, tree: null, html: "", cols: null });
   }
+  // U-01 두 물결(6.9.4 ③, V-01): 후보 0이 t0에 출발하고, 후보 1~5는 t1 = min(후보 0 사건 t1, t0 + 3s)에 함께 출발한다.
+  // 후보 0이 t1 전에 실패했으면 1~5의 추정 cacheState는 cache_write, 아니면(진행 중·완료) cached.
+  // 예약은 출발 순서(후보 1 → 5)대로 동기 호출되므로 거부 집합이 결정론이다(AC-06-61).
+  // S2 카피 ∥ 후보 0(U-01 t0 동시 출발). 레이아웃 첫 호출은 덱 참조만 쓰므로 카피를 기다리지 않는다.
+  // 사건 t1 = 후보 0 응답(Mock·비스트리밍). 그 정산 → 후보 1~5 예약·출발을 다른 정산보다 먼저 대기열에 넣는다(6.9.4 ③).
+  const c0 = cands[0] as Cand;
+  const t0 = Date.now();
+  let onT1: (ok: boolean) => void = () => undefined;
+  const t1 = new Promise<boolean>((res) => {
+    onT1 = res;
+  });
+  const p0 = layoutCall(0, c0, "initial", {}, undefined, (ok) => onT1(ok));
+  const copyP = copyDeck(x, brand, purpose, maxCharsJob(specs, D));
+  const deckP = copyP.then((cp) => (cp === "refused" ? null : cp.deck));
+  // 후보 0이 응답 없이 끝나면(예약 거부·SLO) t1은 오지 않으므로 p0 종료도 실패로 본다
+  void p0.then(() => onT1(false));
+  let wave: ReturnType<typeof setTimeout> | undefined;
+  const at1 = await Promise.race([
+    t1,
+    new Promise<"timeout">((ok) => {
+      wave = setTimeout(() => ok("timeout"), WAVE2_DELAY_MS);
+      wave.unref();
+    }),
+  ]);
+  clearTimeout(wave);
+  const failedEarly = at1 === false;
+  // 후보 0이 t1 전에 실패했으면 1~5는 t0 + 3s에 그대로 출발한다
+  const left = t0 + WAVE2_DELAY_MS - Date.now();
+  if (failedEarly && left > 0) await new Promise((ok) => setTimeout(ok, left).unref());
+  const rest = cands
+    .slice(1)
+    .map((c, k) => layoutCall(k + 1, c, "initial", {}, failedEarly ? "cache_write" : "cached"));
+  raws.push(await p0, ...(await Promise.all(rest)));
+  // S2 카피 결과(레이아웃 6이 모두 끝난 뒤 판정해 남은 호출이 잡 종료 뒤에 기록되지 않게 한다)
+  const copy = await copyP;
+  if (copy === "refused") {
+    await setJob(d.db, jobId, { error_message: "content_policy: 공급자 안전 거부" });
+    await finishGenerationJob(d.db, jobId, {
+      now: d.now?.() ?? new Date(),
+      errorCode: "BLOCKED_BRAND",
+    });
+    return { status: "failed" };
+  }
+  await setJob(d.db, jobId, {
+    copy_deck: JSON.stringify(copy.deck),
+    copy_source: copy.source,
+    progress_pct: 30,
+  });
+  if (copy.source === "template")
+    await d.db.withService((tx) =>
+      q(
+        tx,
+        "update generation_jobs set warnings = array_append(warnings, 'COPY_FALLBACK') where id = $1 and not ('COPY_FALLBACK' = any(warnings))",
+        [jobId],
+      ),
+    );
 
   // 4.8 다양성: 위반 후보만 재호출 1회(origin diversity, round 1). 재호출도 위반이면 eligible=false(DIVERSITY)
   const info = (i: number, r: RawTree | null): SeqInfo | null =>
