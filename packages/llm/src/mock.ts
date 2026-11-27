@@ -168,6 +168,9 @@ const CTA: Record<string, [string, string, string]> = {
   local_business: ["예약하기", "오시는 길", "메뉴 보기"],
   portfolio: ["작업 보기", "작업 의뢰하기", "이력 보기"],
 };
+/** 테스트가 9.6.2 사양 상수를 리터럴 없이 참조하도록 읽기 전용으로 내보낸다. */
+export const MOCK_SPEC: Readonly<typeof MOCK> = MOCK;
+
 const EYEBROW: Record<string, string> = {
   saas: "서비스 소개",
   local_business: "동네 가게",

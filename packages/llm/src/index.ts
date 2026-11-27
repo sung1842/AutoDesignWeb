@@ -39,6 +39,7 @@ export {
 export {
   createMockProvider,
   mockSeed,
+  MOCK_SPEC,
   type CacheState,
   type CallKind,
   type MockCall,

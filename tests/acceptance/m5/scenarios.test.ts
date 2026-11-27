@@ -4,18 +4,20 @@
 // 계약: ASSUMPTIONS ASM-109(파이프라인)·ASM-111(A11 = generation_jobs.warnings)·ASM-114(이 파일).
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { randomUUID } from "node:crypto";
+import { thresholdNumber } from "../../../packages/config/src/index.js";
+import { MOCK_SPEC } from "../../../packages/llm/src/index.js";
 import { openPipe, r15, type Jar, type Pipe, type Row } from "../_support/pipe.js";
 
 /** 06장 6.9.4 잡 상한 기본값(JOB_COST_CAP_USD 미설정). */
-const CAP_EFF = 0.3;
+const CAP_EFF = thresholdNumber("generation.costGuard.capUsd");
 /** AC-06-61 비용 일치 허용 오차. */
 const COST_EPS = 0.00001;
 /** AC-06-40 SLO 진입 시각(초)·허용 오차·종료 상한. */
-const SLO_S = 120;
-const SLO_TOL_S = 2;
+const SLO_S = thresholdNumber("generation.fallbackAtSec");
+const SLO_TOL_S = thresholdNumber("generation.fallbackAbortToleranceSec");
 const SLO_END_S = 135;
 /** TC-R-03 Mock Retry-After(ms, 9.6.2 rate_limit). */
-const RETRY_AFTER_MS = 1000;
+const RETRY_AFTER_MS = MOCK_SPEC.retryAfterMs;
 /** AC-06-61 ④ 지연·두 물결 간격·허용 오차(ms, U-01·V-01). */
 const SLOW_T1_MS = 4000;
 const WAVE_GAP_MS = 3000;
@@ -170,7 +172,7 @@ const TCR: Record<string, (r: Ran) => void> = {
   },
   server_error: (r) => {
     // TC-R-02: 연속 2회 500이면 폴백 모델 전환
-    expect(r.calls.filter((c) => c.status === "provider_error").length).toBeGreaterThanOrEqual(2);
+    expect(r.calls.filter((c) => c.status === "provider_error").length).toBeGreaterThan(1);
     expect(r.calls.some((c) => c.is_fallback === true)).toBe(true);
   },
   injection_echo: (r) => {
