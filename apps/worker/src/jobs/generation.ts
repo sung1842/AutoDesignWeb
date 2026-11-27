@@ -498,6 +498,10 @@ async function evaluate(
       navVariant: c.spec.layout_constraints.allowed_variants.nav?.[0] ?? "nav.split",
       mediaMode: String(c.spec.l2["media.mode"]),
       budget: { tokens: c.spec.tokens, sizeOf: expectedSize },
+      purpose: c.spec.purpose,
+      industryMatched: industryTags(brand, D.imageTagKeywords).some((t) =>
+        t.startsWith(`${c.spec.purpose}.`),
+      ),
     });
   }
   let report;

@@ -11,6 +11,7 @@ import {
   type Brand,
 } from "./standard.js";
 import { compileSpecsImpl } from "./compile.js";
+import { industryTags } from "./layout.js";
 import { predictL1Vec } from "./predict.js";
 import { exportTokensImpl } from "./export.js";
 import { deriveTokensImpl, expectedSizeImpl } from "./tokens.js";
@@ -123,6 +124,14 @@ function treeFor(
   const deck = templateDeck(purpose, data.root, brand);
   if (opts.copyOverride !== undefined) deck["hero.headline"] = [opts.copyOverride];
   const raw = patternRaw(spec, STANDARD_PATTERN[purpose] ?? "PS-1", deck, data);
+  // 4.9.4 업종 매칭: 브랜드 입력(description·key_points)이 있을 때만 판정한다(골격 폴백은 판정 안 함)
+  const matched =
+    opts.brand?.description !== undefined
+      ? industryTags(
+          { description: opts.brand.description, keyPoints: opts.brand.key_points ?? [] },
+          data.imageTagKeywords,
+        ).some((t) => t.startsWith(`${purpose}.`))
+      : undefined;
   return resolveTree(raw, data, {
     deck,
     brand,
@@ -130,6 +139,8 @@ function treeFor(
     navVariant: spec.layout_constraints.allowed_variants.nav?.[0] ?? "nav.split",
     mediaMode: String(spec.l2["media.mode"]),
     budget: { tokens: spec.tokens, sizeOf: expectedSizeImpl },
+    purpose,
+    ...(matched !== undefined ? { industryMatched: matched } : {}),
   }) as unknown as LayoutTreeLike;
 }
 

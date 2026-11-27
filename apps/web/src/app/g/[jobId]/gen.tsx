@@ -197,6 +197,9 @@ export function Gen({ jobId }: { jobId: string }) {
                   {m.useSampleContent ? (
                     <span className="svc-badge">{KO["drafts.sample"]}</span>
                   ) : null}
+                  {m.photoSubstituted ? (
+                    <p className="svc-muted">{KO["drafts.photoSubstituted"]}</p>
+                  ) : null}
                   {m.screenshotUrl ? (
                     <img src={m.screenshotUrl} alt={KO[`variant.${variant}.label`]} />
                   ) : null}

@@ -100,7 +100,7 @@ function diffVector(spec: unknown): Record<string, string> {
 async function cardsOf(tx: Tx, job: Row): Promise<GenerationView["mockups"]> {
   const r = await q(
     tx,
-    `select m.id, m.variant, m.is_fallback, c.harmony_score, c.taste_score, p.use_sample_content
+    `select m.id, m.variant, m.is_fallback, c.harmony_score, c.taste_score, c.layout_tree, p.use_sample_content
        from mockups m join candidates c on c.id = m.candidate_id join projects p on p.id = m.project_id
       where m.job_id = $1 order by array_position(array['v_true','v_fit','v_bal'], m.variant)`,
     [job.id],
@@ -132,7 +132,8 @@ async function cardsOf(tx: Tx, job: Row): Promise<GenerationView["mockups"]> {
       previewUrl: "",
       screenshotUrl: "",
       labelKey: `variant.${v}` as const,
-      photoSubstituted: false,
+      // 4.9.4: 이 페이지의 사진 슬롯 중 색면으로 대체된 것이 있으면 true(트리 image.substituted)
+      photoSubstituted: JSON.stringify(m.layout_tree ?? null).includes('"substituted":true'),
       brandColorNotice:
         (at(spec, "brand_color_notice") as
           GenerationView["mockups"][number]["brandColorNotice"] | undefined) ?? null,

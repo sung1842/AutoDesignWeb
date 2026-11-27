@@ -17,7 +17,17 @@ type PSlot =
   | { copy: PText }
   | { list: { copy: PText }[] }
   | {
-      image: { tag: string; ratio: string; asset_id: string; alt: string; focal: [number, number] };
+      image: {
+        tag: string;
+        ratio: string;
+        asset_id: string;
+        alt: string;
+        focal: [number, number];
+        /** 4.9.4 portfolio 작업물·showcase 사진: 교체 필요(README·미리보기 오버레이·E-12). */
+        placeholder?: true;
+        /** 4.9.4 업종 매칭 0·톤 후보 없음으로 색면 대체됨(MockupCard.photoSubstituted 원천). */
+        substituted?: true;
+      };
     }
   | { link: { label: PText; target: string } };
 export interface PSection {
@@ -205,9 +215,13 @@ export interface ResolveOpts {
   seed: string;
   navVariant?: string;
   mediaMode?: string;
+  /** 4.9.4 용도(portfolio 작업물 placeholder 판정). */
+  purpose?: string;
+  /** 4.9.4 purposeTags ∩ industryTags ≠ ∅. false면 hero 외 사진 슬롯을 색면으로 대체한다. 없으면 판정 안 함. */
+  industryMatched?: boolean;
 }
 
-/** 4.5.2 원시 트리 → 확정 트리(PageSchema). 이미지: 같은 태그·미사용 후보 중 seed 선택(4.9.4, 톤 규칙은 M5). */
+/** 4.5.2 원시 트리 → 확정 트리(PageSchema). 이미지: 같은 태그·미사용 후보 중 seed 선택(4.9.4 톤·업종 대체·placeholder). */
 /** 3.1.5a 헤드라인 역할의 기본 단계(조건부 variant 포함). */
 function headlineStep(variant: string): string | null {
   if (variant === "hero.type-only" || variant === "hero.full-bleed-image") return "t-display";
@@ -266,15 +280,54 @@ export function resolveTree(raw: RawTree, data: DesignData, o: ResolveOpts): Pag
   for (const s of raw.sections)
     for (const v of Object.values(s.slots)) if ("copy" in v) taken.add(v.copy);
   const blocks = new Map(data.blocks.map((b) => [b.id as string, b]));
-  const pickImage = (sec: string, slot: string, tag: string, ratio: string): PSlot => {
-    const cands = data.images
+  // 4.9.4 톤: pageTone = 섹션·슬롯 순서로 처음 고른 사진(질감 제외)의 톤. 이후 C1(같은 톤) → C2(neutral), 반대 톤은 제외
+  const toneOf = (tags: readonly string[]): string =>
+    tags.includes("tone.warm") ? "warm" : tags.includes("tone.cool") ? "cool" : "neutral";
+  let pageTone: string | null = null;
+  const shape = (tag: string, ratio: string, substituted: boolean): PSlot => ({
+    image: {
+      tag,
+      ratio,
+      asset_id: SHAPE_ASSET,
+      alt: "",
+      focal: [0.5, 0.5],
+      ...(substituted ? { substituted: true as const } : {}),
+    },
+  });
+  const pickImage = (
+    sec: string,
+    block: string,
+    slot: string,
+    tag: string,
+    ratio: string,
+  ): PSlot => {
+    const texture = tag.startsWith("common.texture-");
+    if (o.mediaMode === "shape-graphic") return shape(tag, ratio, false);
+    // 업종 매칭 0(교집합 0 포함): hero 외 사진 슬롯은 색면으로 대체(이 절의 업종 처리는 이것 하나)
+    if (o.industryMatched === false && block !== "hero" && !texture) return shape(tag, ratio, true);
+    const all = data.images
       .filter((m) => m.tags.includes(tag) && !used.has(m.id))
       .sort((a, b) => (a.id < b.id ? -1 : 1));
-    if (cands.length === 0 || o.mediaMode === "shape-graphic")
-      return { image: { tag, ratio, asset_id: SHAPE_ASSET, alt: "", focal: [0.5, 0.5] } };
+    let cands = all;
+    if (!texture && pageTone !== null) {
+      const c1 = all.filter((m) => toneOf(m.tags) === pageTone);
+      cands = c1.length > 0 ? c1 : all.filter((m) => toneOf(m.tags) === "neutral");
+    }
+    if (cands.length === 0) return shape(tag, ratio, !texture);
     const m = cands[seedIndex(`${o.seed}|${sec}|${slot}`, cands.length)]!;
     used.add(m.id);
-    return { image: { tag, ratio, asset_id: m.id, alt: m.altKo, focal: m.focalPoint } };
+    if (!texture && pageTone === null) pageTone = toneOf(m.tags);
+    const placeholder = o.purpose === "portfolio" && (block === "gallery" || block === "showcase");
+    return {
+      image: {
+        tag,
+        ratio,
+        asset_id: m.id,
+        alt: m.altKo,
+        focal: m.focalPoint,
+        ...(placeholder ? { placeholder: true as const } : {}),
+      },
+    };
   };
   const sections: PSection[] = raw.sections.map((s) => {
     const slots: Record<string, PSlot> = {};
@@ -282,7 +335,7 @@ export function resolveTree(raw: RawTree, data: DesignData, o: ResolveOpts): Pag
       if ("copy" in v) slots[k] = { copy: resolveRef(v.copy, o.deck) };
       else if ("link" in v)
         slots[k] = { link: { label: resolveRef(v.link.label, o.deck), target: v.link.target } };
-      else if ("image" in v) slots[k] = pickImage(s.id, k, v.image.tag, v.image.ratio);
+      else if ("image" in v) slots[k] = pickImage(s.id, s.block, k, v.image.tag, v.image.ratio);
       else if ("list" in v) {
         const items =
           s.block === "menu"

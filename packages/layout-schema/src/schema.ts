@@ -161,6 +161,9 @@ const PAGE_SLOT_VALUE = {
           asset_id: z.string().regex(/^[a-z0-9_.:-]{1,64}$/),
           alt: z.string().max(120),
           focal: z.tuple([z.number().min(0).max(1), z.number().min(0).max(1)]),
+          // 4.9.4: portfolio 작업물·showcase 교체 필요 사진, 업종 매칭 0·톤 후보 없음 색면 대체
+          placeholder: z.literal(true).optional(),
+          substituted: z.literal(true).optional(),
         })
         .strict(),
     })
