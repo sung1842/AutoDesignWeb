@@ -1759,6 +1759,114 @@
       "lockedBy": "agent",
       "lockedAt": "2026-11-26T19:50:10Z",
       "commit": "f4dc6b6"
+    },
+    "tests/acceptance/m5/abuse.test.ts": {
+      "sha256": "727e30f36bc95da7a45d90210330c6e302f2cf02cf65e5ddc6edbda30cbb201e",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-27T03:50:35Z",
+      "commit": "5a742c9"
+    },
+    "tests/acceptance/m5/access.test.ts": {
+      "sha256": "b27538c7aeade2d1d178e79f8db48fa36d2c03a6f1d8d2afe3b8f59ed65a0388",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-27T03:50:35Z",
+      "commit": "5a742c9"
+    },
+    "tests/acceptance/m5/auth.test.ts": {
+      "sha256": "50a9eb8ec8a7be909eed8637c2ba87bbdb1b10c32eaf55a3dd38c39612144482",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-27T03:50:35Z",
+      "commit": "5a742c9"
+    },
+    "tests/acceptance/m5/brief.test.ts": {
+      "sha256": "ee2a9670bc1593ace2793e156125e6ab6202975e025fa1103dec83e5a1e90a23",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-27T03:50:35Z",
+      "commit": "5a742c9"
+    },
+    "tests/acceptance/m5/deck.test.ts": {
+      "sha256": "ff37e80530b560484dbb57a2965c322bfa738d4a5402350bab2b64bb53b353f2",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-27T03:50:35Z",
+      "commit": "5a742c9"
+    },
+    "tests/acceptance/m5/fallback.test.ts": {
+      "sha256": "5c227e243abecbc4f57be714783addbe859ead64eaa186afaadb8c030b8ec6c3",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-27T03:50:35Z",
+      "commit": "5a742c9"
+    },
+    "tests/acceptance/m5/generation-api.test.ts": {
+      "sha256": "ed46bc28cf3fe628e044a03d5af0d21d3a604b787dd56e0624e690d644911bbb",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-27T03:50:35Z",
+      "commit": "5a742c9"
+    },
+    "tests/acceptance/m5/golden.test.ts": {
+      "sha256": "6b662820756fe9d597995a2c70a63ef440836262182122cf8ecca84620a45266",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-27T03:50:35Z",
+      "commit": "5a742c9"
+    },
+    "tests/acceptance/m5/llm.test.ts": {
+      "sha256": "70fbf1d3affb941e3d8c1cc2dfaecd37dfeacfe182472dbbcfecf841dfcb0c9d",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-27T03:50:35Z",
+      "commit": "5a742c9"
+    },
+    "tests/acceptance/m5/pipeline.test.ts": {
+      "sha256": "b745ee28a5848209221c9f4888ae392c8b2f5d0cac1d49cb6d4a979707491fb4",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-27T03:50:35Z",
+      "commit": "5a742c9"
+    },
+    "tests/acceptance/m5/quota.test.ts": {
+      "sha256": "62f4366f81ec9959bc243aa089e7e8612dd170858a868415c6465d4a35891a26",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-27T03:50:35Z",
+      "commit": "5a742c9"
+    },
+    "tests/acceptance/m5/scenarios.test.ts": {
+      "sha256": "c95231eafc915667dbb85ca9ad864d011ef27f06d015e1a47b4dca3a76a7f8d8",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-27T03:50:35Z",
+      "commit": "5a742c9"
+    },
+    "tests/acceptance/m5/security.test.ts": {
+      "sha256": "51e1f961c3c02b4b20375ae691638b5e7013b3c60353a9f4db2c638eeca38b39",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-27T03:50:35Z",
+      "commit": "5a742c9"
+    },
+    "tests/acceptance/m5/ui.test.ts": {
+      "sha256": "caab9fb4a1a74562923292757df5bd53fbd499fd4cc18f3ff3c6f9cd157d658e",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-27T03:50:35Z",
+      "commit": "5a742c9"
+    },
+    "e2e/m5/flow.spec.ts": {
+      "sha256": "bbcfa33ee6a27e7c75b47894feb12f1b036a882046cb3e9df52746c5d362a70e",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-27T03:50:35Z",
+      "commit": "5a742c9"
+    },
+    "e2e/m5/helpers.ts": {
+      "sha256": "41bc81b0ffbf2f7960bb3fad2160bbc58835eca35f20d29e97bc03f161bc25a0",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-27T03:50:35Z",
+      "commit": "5a742c9"
+    },
+    "e2e/m5/screens.spec.ts": {
+      "sha256": "cf965a6f33a13a7d1f3c745d2a28a741fdc3572ec9ce23c64adafa559419b4f2",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-27T03:50:35Z",
+      "commit": "5a742c9"
+    },
+    "tests/acceptance/_support/pipe.ts": {
+      "sha256": "f4896b5c9cbc24f2c5f4def4855984cf9de235b0f2a12b4f925a3d20fa8011eb",
+      "lockedBy": "agent",
+      "lockedAt": "2026-11-27T03:50:35Z",
+      "commit": "5a742c9"
     }
   }
 }

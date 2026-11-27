@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-27T03:07Z, since: 2026-11-27T06:06Z}
+- lock: {owner: 2026-11-27T03:07Z, since: 2026-11-27T06:12Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
@@ -156,7 +156,7 @@
   - [~] 09 eval:golden:build-answers·골든 자체 잠금: [x] buildGoldenAnswers·replayGolden·CLI(엔진 beta 덮어쓰기, 계획 L1 픽스처 32/32·M1a 24/24·β8.5 9/24) [ ] 실데이터 실행(BLK-022로 0/32) [ ] m4-done에서 data/golden 자체 잠금
   - [ ] 10 verify:m4 → m4-done: [x] 1차(592aa1f 워크트리, reports/verify-m4.json) fail — 비BLK 3건: AC-06-32 m0(verify 안에서만, 단독 통과·재발), AC-03-33(빈 폰트 캐시 + 동시 부하 180s), e2e/m4 quiz(빈 /tmp/tastefit-storage). [ ] 2차: survey:build·폰트 캐시 데운 뒤 조용한 상태에서 재실행
 - M5 계획(9.4.7, AC: 00-14~17, 01-01·02·22~34·51·58, 04-01·02·14~16·22~25·37·38·44·46·47, 06-07b·09·10·13·15~18·20~23·38~40·45·47·52·55·56·59~63, 07-02·13, 08-24~26·38~42, 09-07·13·18. 읽을 장은 CLAUDE.md 구현 규칙 3절):
-  - [ ] 01 M5 수용 테스트(tests/acceptance/m5, AD-031): [x] a 인증·귀속(AuthPort local·매직링크·dev_mail_outbox·attach_anon, auth.test WIP, ASM-103) [x] b 브랜드 입력·BrandInput 검증·인젝션 방어(brief.test WIP, fixtures/brands 3파일, ASM-105) [x] c 생성 API·Idempotency·진행 잡 1개·폴링(generation-api.test 9/9, ASM-108) [x] d llm gateway·models.yaml·MockProvider 시나리오(llm.test WIP 20건, ASM-107) [x] e pipeline 3변형→후보 6→검증·수리→렌더→게이트→점수→노출·재생성·폴백(pipeline.test WIP 14건, ASM-109. 시간·비용 시나리오는 f) [x] f 비용·quota_ledger·킬 스위치·초대·환불(quota.test 12/12, ASM-110. 비용 시나리오 AC-06-21·61·07b는 워커 예산 배선 후 pipeline 테스트에 추가) [x] g S04~S08 화면 E2E(e2e/m5/flow.spec: /g 도달까지 통과, 카드 3은 BLK-008) [ ] h traceability M5·qa:trace --audit·단일 test(acc)·자체 잠금: [x] h1 시나리오·비용·시간(scenarios.test, 10 AC, ASM-114) [x] h2 화면 E2E(screens.spec 9 + flow, ui.test 브리지·문구 대조, ASM-115) [x] h3 나머지(golden·fallback·abuse·access·deck, ASM-116~120) [ ] h4 audit·test(acc)·자체 잠금
+  - [x] 01 M5 수용 테스트(tests/acceptance/m5, AD-031): [x] a 인증·귀속(AuthPort local·매직링크·dev_mail_outbox·attach_anon, auth.test WIP, ASM-103) [x] b 브랜드 입력·BrandInput 검증·인젝션 방어(brief.test WIP, fixtures/brands 3파일, ASM-105) [x] c 생성 API·Idempotency·진행 잡 1개·폴링(generation-api.test 9/9, ASM-108) [x] d llm gateway·models.yaml·MockProvider 시나리오(llm.test WIP 20건, ASM-107) [x] e pipeline 3변형→후보 6→검증·수리→렌더→게이트→점수→노출·재생성·폴백(pipeline.test WIP 14건, ASM-109. 시간·비용 시나리오는 f) [x] f 비용·quota_ledger·킬 스위치·초대·환불(quota.test 12/12, ASM-110. 비용 시나리오 AC-06-21·61·07b는 워커 예산 배선 후 pipeline 테스트에 추가) [x] g S04~S08 화면 E2E(e2e/m5/flow.spec: /g 도달까지 통과, 카드 3은 BLK-008) [ ] h traceability M5·qa:trace --audit·단일 test(acc)·자체 잠금: [x] h1 시나리오·비용·시간(scenarios.test, 10 AC, ASM-114) [x] h2 화면 E2E(screens.spec 9 + flow, ui.test 브리지·문구 대조, ASM-115) [x] h3 나머지(golden·fallback·abuse·access·deck, ASM-116~120) [x] h4 audit 리터럴 0·test(acc) 5a742c9·자체 잠금 18파일
   - [x] 02 AuthPort local·세션 쿠키·매직링크·attach_anon·/api/me·/api/consents(auth.test 7/7, ASM-104. MeView quota 등은 07·08)
   - [~] 03 동의(S05)·초대 코드: [x] API(consents·invites/redeem·inviteOk) [ ] S05 화면(09)
   - [x] 04 BrandInput zod·정규화·maskPII·judgeBrief(편집 거리 (c))·brief-drafts POST/GET(brief.test 8/8, ASM-106). 레퍼런스명 attestation(⑥)은 projects(08)
@@ -173,6 +173,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 15:12 | M5-01 완료: test(acc) 5a742c9, 자체 잠금 18파일(tests/acceptance/m5·e2e/m5·_support/pipe.ts). ≤M5 매핑 누락 0
 - 2026-11-27 15:06 | e2e/m5 구조 수정: 시나리오 env·준비/확인 분리(30s 러너 기본 유지, ASM-121). scenarios.test 실행 단계 분리
 - 2026-11-27 14:37 | M5-01h3 deck.test·golden 보강(AC-04-44·46, ASM-120). qa:trace ≤M5 매핑 누락 0, audit 리터럴 0
 - 2026-11-27 14:11 | M5-01h3 access.test(AC-06-59 ①~⑦, 5/7 녹색, ⑥ healthz 미구현, ASM-119)
