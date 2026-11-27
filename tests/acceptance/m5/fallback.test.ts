@@ -46,6 +46,7 @@ afterAll(async () => {
 
 describe("AC-04-25 워커 폴백 72조합: G-01~G-13 통과, H ≥ harmonyFloor", () => {
   let n = 0;
+  const allBad: string[] = [];
   for (const t of TYPES)
     it(`AC-04-25 폴백 ${t} × 용도 3 × 변형 3(브랜드 카피)`, async () => {
       const bad: string[] = [];
@@ -65,9 +66,11 @@ describe("AC-04-25 워커 폴백 72조합: G-01~G-13 통과, H ≥ harmonyFloor"
           if (report.harmony < H_FLOOR) bad.push(`${t}/${p}/${v} H ${report.harmony}`);
           n++;
         }
+      allBad.push(...bad);
       expect(bad).toEqual([]);
     });
-  it("AC-04-25 폴백 조합 수 = 72", () => {
+  it("AC-04-25 폴백 72조합 전부 G-01~G-13 통과·H ≥ harmonyFloor(평가 조합 수 72)", () => {
     expect(n).toBe(TYPES.length * PURPOSES.length * VARIANTS.length);
+    expect(allBad).toEqual([]);
   });
 });
