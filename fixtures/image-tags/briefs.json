@@ -1,0 +1,501 @@
+{
+ "fixture": "image-tags-briefs",
+ "provenance": "temp",
+ "source": "04장 4.9.4 업종 태그 규칙(config/image_tag_keywords.json 부분 문자열 일치, ASM-120)",
+ "items": [
+  {
+   "id": "itk-01",
+   "purpose": "saas",
+   "brand": {
+    "description": "팀 협업을 돕는 업무 도구",
+    "keyPoints": []
+   },
+   "kind": "match",
+   "industryTags": [
+    "portfolio.tools",
+    "saas.meeting-back",
+    "saas.workspace"
+   ],
+   "expected": [
+    "saas.meeting-back",
+    "saas.workspace"
+   ]
+  },
+  {
+   "id": "itk-02",
+   "purpose": "saas",
+   "brand": {
+    "description": "클라우드 인프라를 한눈에",
+    "keyPoints": [
+     "보안 점검"
+    ]
+   },
+   "kind": "match",
+   "industryTags": [
+    "saas.architecture"
+   ],
+   "expected": [
+    "saas.architecture"
+   ]
+  },
+  {
+   "id": "itk-03",
+   "purpose": "saas",
+   "brand": {
+    "description": "모바일 앱으로 간편 결제",
+    "keyPoints": []
+   },
+   "kind": "match",
+   "industryTags": [
+    "saas.hands-device"
+   ],
+   "expected": [
+    "saas.hands-device"
+   ]
+  },
+  {
+   "id": "itk-04",
+   "purpose": "saas",
+   "brand": {
+    "description": "데이터 분석 리포트를 자동으로",
+    "keyPoints": []
+   },
+   "kind": "match",
+   "industryTags": [
+    "saas.material"
+   ],
+   "expected": [
+    "saas.material"
+   ]
+  },
+  {
+   "id": "itk-05",
+   "purpose": "saas",
+   "brand": {
+    "description": "회의록과 문서를 한곳에",
+    "keyPoints": [
+     "고객관리"
+    ]
+   },
+   "kind": "match",
+   "industryTags": [
+    "saas.material",
+    "saas.meeting-back"
+   ],
+   "expected": [
+    "saas.material",
+    "saas.meeting-back"
+   ]
+  },
+  {
+   "id": "itk-06",
+   "purpose": "saas",
+   "brand": {
+    "description": "재택 근무자를 위한 메신저",
+    "keyPoints": []
+   },
+   "kind": "match",
+   "industryTags": [
+    "saas.hands-device",
+    "saas.workspace"
+   ],
+   "expected": [
+    "saas.hands-device",
+    "saas.workspace"
+   ]
+  },
+  {
+   "id": "itk-07",
+   "purpose": "saas",
+   "brand": {
+    "description": "채용 담당자를 위한 플랫폼",
+    "keyPoints": []
+   },
+   "kind": "match",
+   "industryTags": [
+    "saas.architecture",
+    "saas.meeting-back"
+   ],
+   "expected": [
+    "saas.architecture",
+    "saas.meeting-back"
+   ]
+  },
+  {
+   "id": "itk-08",
+   "purpose": "portfolio",
+   "brand": {
+    "description": "브랜딩 디자인 스튜디오",
+    "keyPoints": []
+   },
+   "kind": "match",
+   "industryTags": [
+    "portfolio.studio"
+   ],
+   "expected": [
+    "portfolio.studio"
+   ]
+  },
+  {
+   "id": "itk-09",
+   "purpose": "portfolio",
+   "brand": {
+    "description": "손으로 그린 일러스트 작업",
+    "keyPoints": [
+     "그림 의뢰"
+    ]
+   },
+   "kind": "match",
+   "industryTags": [
+    "portfolio.tools"
+   ],
+   "expected": [
+    "portfolio.tools"
+   ]
+  },
+  {
+   "id": "itk-10",
+   "purpose": "portfolio",
+   "brand": {
+    "description": "제품촬영 전문 사진가",
+    "keyPoints": []
+   },
+   "kind": "match",
+   "industryTags": [
+    "portfolio.still-life"
+   ],
+   "expected": [
+    "portfolio.still-life"
+   ]
+  },
+  {
+   "id": "itk-11",
+   "purpose": "portfolio",
+   "brand": {
+    "description": "주거 인테리어와 건축 설계",
+    "keyPoints": []
+   },
+   "kind": "match",
+   "industryTags": [
+    "portfolio.interior"
+   ],
+   "expected": [
+    "portfolio.interior"
+   ]
+  },
+  {
+   "id": "itk-12",
+   "purpose": "portfolio",
+   "brand": {
+    "description": "여행 풍경을 담는 기록",
+    "keyPoints": []
+   },
+   "kind": "match",
+   "industryTags": [
+    "portfolio.nature"
+   ],
+   "expected": [
+    "portfolio.nature"
+   ]
+  },
+  {
+   "id": "itk-13",
+   "purpose": "local_business",
+   "brand": {
+    "description": "매일 굽는 빵과 케이크",
+    "keyPoints": []
+   },
+   "kind": "match",
+   "industryTags": [
+    "local_business.bakery"
+   ],
+   "expected": [
+    "local_business.bakery"
+   ]
+  },
+  {
+   "id": "itk-14",
+   "purpose": "local_business",
+   "brand": {
+    "description": "직접 볶은 원두 로스터리",
+    "keyPoints": [
+     "커피 클래스"
+    ]
+   },
+   "kind": "match",
+   "industryTags": [
+    "local_business.coffee"
+   ],
+   "expected": [
+    "local_business.coffee"
+   ]
+  },
+  {
+   "id": "itk-15",
+   "purpose": "local_business",
+   "brand": {
+    "description": "동네 한식 도시락 가게",
+    "keyPoints": []
+   },
+   "kind": "match",
+   "industryTags": [
+    "local_business.food",
+    "local_business.storefront"
+   ],
+   "expected": [
+    "local_business.food",
+    "local_business.storefront"
+   ]
+  },
+  {
+   "id": "itk-16",
+   "purpose": "local_business",
+   "brand": {
+    "description": "가죽 공방 원데이 클래스",
+    "keyPoints": []
+   },
+   "kind": "match",
+   "industryTags": [
+    "local_business.craft"
+   ],
+   "expected": [
+    "local_business.craft"
+   ]
+  },
+  {
+   "id": "itk-17",
+   "purpose": "local_business",
+   "brand": {
+    "description": "계절 꽃과 식물 꽃집",
+    "keyPoints": []
+   },
+   "kind": "match",
+   "industryTags": [
+    "local_business.flower"
+   ],
+   "expected": [
+    "local_business.flower"
+   ]
+  },
+  {
+   "id": "itk-18",
+   "purpose": "local_business",
+   "brand": {
+    "description": "조용한 디저트카페",
+    "keyPoints": []
+   },
+   "kind": "match",
+   "industryTags": [
+    "local_business.cafe-interior"
+   ],
+   "expected": [
+    "local_business.cafe-interior"
+   ]
+  },
+  {
+   "id": "itk-19",
+   "purpose": "local_business",
+   "brand": {
+    "description": "저녁 레스토랑과 주점",
+    "keyPoints": []
+   },
+   "kind": "match",
+   "industryTags": [
+    "local_business.restaurant-interior"
+   ],
+   "expected": [
+    "local_business.restaurant-interior"
+   ]
+  },
+  {
+   "id": "itk-20",
+   "purpose": "local_business",
+   "brand": {
+    "description": "도자기와 목공 작업",
+    "keyPoints": [
+     "소품 매장"
+    ]
+   },
+   "kind": "match",
+   "industryTags": [
+    "local_business.craft",
+    "local_business.storefront"
+   ],
+   "expected": [
+    "local_business.craft",
+    "local_business.storefront"
+   ]
+  },
+  {
+   "id": "itk-21",
+   "purpose": "saas",
+   "brand": {
+    "description": "숫자를 더 쉽게 다루게 해 줘요",
+    "keyPoints": []
+   },
+   "kind": "no_match",
+   "industryTags": [],
+   "expected": [
+    "common.texture-concrete",
+    "common.texture-fabric",
+    "common.texture-paper",
+    "saas.architecture"
+   ]
+  },
+  {
+   "id": "itk-22",
+   "purpose": "portfolio",
+   "brand": {
+    "description": "오래 남을 이야기를 씁니다",
+    "keyPoints": []
+   },
+   "kind": "no_match",
+   "industryTags": [],
+   "expected": [
+    "common.texture-concrete",
+    "common.texture-fabric",
+    "common.texture-paper",
+    "portfolio.studio"
+   ]
+  },
+  {
+   "id": "itk-23",
+   "purpose": "local_business",
+   "brand": {
+    "description": "동네 사람들이 모이는 곳",
+    "keyPoints": []
+   },
+   "kind": "no_match",
+   "industryTags": [],
+   "expected": [
+    "common.texture-concrete",
+    "common.texture-fabric",
+    "common.texture-paper",
+    "local_business.storefront"
+   ]
+  },
+  {
+   "id": "itk-24",
+   "purpose": "saas",
+   "brand": {
+    "description": "카페 사장님이 쓰는 꽃 주문 관리",
+    "keyPoints": []
+   },
+   "kind": "no_intersection",
+   "industryTags": [
+    "local_business.cafe-interior",
+    "local_business.flower"
+   ],
+   "expected": [
+    "common.texture-concrete",
+    "common.texture-fabric",
+    "common.texture-paper",
+    "saas.architecture"
+   ]
+  },
+  {
+   "id": "itk-25",
+   "purpose": "portfolio",
+   "brand": {
+    "description": "빵과 커피를 좋아하는 개발자",
+    "keyPoints": []
+   },
+   "kind": "no_intersection",
+   "industryTags": [
+    "local_business.bakery",
+    "local_business.coffee"
+   ],
+   "expected": [
+    "common.texture-concrete",
+    "common.texture-fabric",
+    "common.texture-paper",
+    "portfolio.studio"
+   ]
+  },
+  {
+   "id": "itk-26",
+   "purpose": "local_business",
+   "brand": {
+    "description": "클라우드 협업 컨설팅",
+    "keyPoints": []
+   },
+   "kind": "no_intersection",
+   "industryTags": [
+    "saas.architecture",
+    "saas.workspace"
+   ],
+   "expected": [
+    "common.texture-concrete",
+    "common.texture-fabric",
+    "common.texture-paper",
+    "local_business.storefront"
+   ]
+  },
+  {
+   "id": "itk-27",
+   "purpose": "saas",
+   "brand": {
+    "description": "쉽고 빠르게 시작하세요",
+    "keyPoints": [
+     "무료로 써 보세요"
+    ]
+   },
+   "kind": "no_match",
+   "industryTags": [],
+   "expected": [
+    "common.texture-concrete",
+    "common.texture-fabric",
+    "common.texture-paper",
+    "saas.architecture"
+   ]
+  },
+  {
+   "id": "itk-28",
+   "purpose": "portfolio",
+   "brand": {
+    "description": "편지와 엽서를 만듭니다",
+    "keyPoints": []
+   },
+   "kind": "no_match",
+   "industryTags": [],
+   "expected": [
+    "common.texture-concrete",
+    "common.texture-fabric",
+    "common.texture-paper",
+    "portfolio.studio"
+   ]
+  },
+  {
+   "id": "itk-29",
+   "purpose": "local_business",
+   "brand": {
+    "description": "반려동물 미용실",
+    "keyPoints": []
+   },
+   "kind": "no_match",
+   "industryTags": [],
+   "expected": [
+    "common.texture-concrete",
+    "common.texture-fabric",
+    "common.texture-paper",
+    "local_business.storefront"
+   ]
+  },
+  {
+   "id": "itk-30",
+   "purpose": "local_business",
+   "brand": {
+    "description": "세탁과 수선을 합니다",
+    "keyPoints": []
+   },
+   "kind": "no_match",
+   "industryTags": [],
+   "expected": [
+    "common.texture-concrete",
+    "common.texture-fabric",
+    "common.texture-paper",
+    "local_business.storefront"
+   ]
+  }
+ ]
+}

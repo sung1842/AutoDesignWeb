@@ -1,5 +1,5 @@
 // M5 수용 테스트(9): 골든 세트 Mock 실행(32케이스 × 3회, R-11) 위의 잡 집계 AC.
-// AC-01-30·32, AC-04-16·24, AC-08-25. 케이스 취향은 페르소나 계획 L1(thetaStar)·기대 유형을 프로젝트 taste_snapshot에 주입한다
+// AC-01-30·32, AC-04-16·24, AC-04-44 ①(U-12)·③·④, AC-04-46 ①(U-11)·③, AC-08-25. 케이스 취향은 페르소나 계획 L1(thetaStar)·기대 유형을 프로젝트 taste_snapshot에 주입한다
 // (골든 답안은 BLK-022로 아직 없다 — M4 build-answers의 "계획 L1 픽스처"와 같은 방식). 계약: ASSUMPTIONS ASM-116.
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { readdirSync, readFileSync } from "node:fs";
@@ -30,6 +30,33 @@ const ALL_P95 = thresholdNumber("perf.latencyP95Sec");
 const KILL_S = thresholdNumber("generation.killAtSec");
 /** AC-01-30 표본 크기(생성 20회). */
 const LATENCY_SAMPLE = 20;
+
+/** portfolio 작업물(work.items 덱을 쓰는 gallery)·showcase 블록(ASM-120). */
+const WORK_BLOCKS = new Set(["gallery", "showcase"]);
+/** 03장 이미지 팩 manifest: asset_id → 태그. */
+const IMG = new Map(
+  (
+    JSON.parse(readFileSync(join(ROOT, "data/images/manifest.json"), "utf8")) as {
+      items: { id: string; tags: string[] }[];
+    }
+  ).items.map((i) => [i.id, i.tags]),
+);
+/** 트리 안 이미지 슬롯(asset_id를 가진 객체). */
+function imageSlots(v: unknown): { asset_id: string; placeholder?: boolean }[] {
+  const out: { asset_id: string; placeholder?: boolean }[] = [];
+  const walk = (x: unknown): void => {
+    if (Array.isArray(x)) x.forEach(walk);
+    else if (x && typeof x === "object") {
+      const o = x as Record<string, unknown>;
+      if (typeof o.asset_id === "string")
+        out.push(o as { asset_id: string; placeholder?: boolean });
+      Object.values(o).forEach(walk);
+    }
+  };
+  walk(v);
+  return out;
+}
+const assetIds = (tree: unknown): string[] => imageSlots(tree).map((i) => i.asset_id);
 
 let P: Pipe;
 type Run = { case: GoldenCase; jobId: string; row: Row; mockups: Row[]; cands: Row[] };
@@ -117,6 +144,63 @@ describe("골든 집계", () => {
           n++;
         }
       expect(sum / n, `${r.case.id} D`).toBeGreaterThanOrEqual(PAIR_D_MIN);
+    }
+  });
+  it("AC-04-44 ①(U-12) saas·portfolio 골든 노출 시안의 local_business.* 이미지 0건 · ③ 한 페이지 warm↔cool 혼용 0, pageTone 반대 톤 사진 0(manifest 대조)", () => {
+    expect(runs.length).toBeGreaterThan(0);
+    const bad: string[] = [];
+    for (const r of runs)
+      for (const m of r.mockups) {
+        const ids = assetIds(m.layout_tree);
+        const tags = ids.map((id) => IMG.get(id) ?? []);
+        if (
+          r.case.purpose !== "local_business" &&
+          tags.some((t) => t.some((x) => x.startsWith("local_business.")))
+        )
+          bad.push(`${r.case.id} ${String(m.variant)} local_business 이미지`);
+        const tones = new Set(
+          tags
+            .filter((t) => !t.some((x) => x.startsWith("common.texture-")))
+            .flatMap((t) => t.filter((x) => x === "tone.warm" || x === "tone.cool")),
+        );
+        if (tones.size > 1) bad.push(`${r.case.id} ${String(m.variant)} warm·cool 혼용`);
+      }
+    expect(bad).toEqual([]);
+  });
+  it("AC-04-44 ④ portfolio 골든 시안의 work·showcase 이미지 슬롯 100% placeholder(README 교체 필요 이미지 목록의 원천)", () => {
+    const port = runs.filter((r) => r.case.purpose === "portfolio");
+    expect(port.length).toBeGreaterThan(0);
+    let seen = 0;
+    const bad: string[] = [];
+    for (const r of port)
+      for (const m of r.mockups) {
+        const t = m.layout_tree as { sections?: { block?: string; slots?: unknown }[] } | null;
+        for (const sec of t?.sections ?? [])
+          if (WORK_BLOCKS.has(String(sec.block)))
+            for (const img of imageSlots(sec.slots)) {
+              seen++;
+              if (img.placeholder !== true)
+                bad.push(`${r.case.id} ${String(m.variant)} ${sec.block}`);
+            }
+      }
+    expect(seen).toBeGreaterThan(0);
+    expect(bad).toEqual([]);
+  });
+  it("AC-04-46 ①(U-11) 골든 T5·T8 케이스에서 G-01 덱 실패로 생긴 템플릿 덱 0건 · ③ 노출 시안 AIL-24(cta big-type 1280 > 2줄) 0·G-05 통과", () => {
+    const t58 = runs.filter(
+      (r) => r.case.expected.typeId === "T5" || r.case.expected.typeId === "T8",
+    );
+    expect(t58.length).toBeGreaterThan(0);
+    for (const r of t58) expect(r.row.copy_source, `${r.case.id} ${r.jobId}`).not.toBe("template");
+    for (const r of runs) {
+      const ids = new Set(r.mockups.map((m) => String(m.candidate_id)));
+      for (const c of r.cands.filter((x) => ids.has(String(x.id)))) {
+        const q = JSON.stringify(c.quality_report ?? {});
+        expect(q.includes('"AIL-24"'), `${r.case.id} AIL-24`).toBe(false);
+        const hard =
+          (c.quality_report as { hard?: { id: string; status: string }[] } | null)?.hard ?? [];
+        expect(hard.find((g) => g.id === "G-05")?.status, `${r.case.id} G-05`).toBe("pass");
+      }
     }
   });
   it("AC-08-25 골든 연속 실행에서 다른 가상 사용자의 브랜드명이 결과 카피에 출현 0건", () => {
