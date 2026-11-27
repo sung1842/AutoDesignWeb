@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-27T03:07Z, since: 2026-11-27T04:24Z}
+- lock: {owner: 2026-11-27T03:07Z, since: 2026-11-27T04:10Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
@@ -173,7 +173,7 @@
 - [ ] release:check 요약
 
 ## 로그
-- 2026-11-27 13:24 | M5-07c U-01 두 물결·SLO abort(axe 스텁 로컬 확인: ok 13호출 succeeded, usage_overrun 0.53933 succeeded·A11). 남은: low-score-trees·재시도·폴백 모델
+- 2026-11-27 13:10 | M5-07c U-01 두 물결·SLO abort(axe 스텁 로컬 확인: ok 13호출 succeeded, usage_overrun 0.53933 succeeded·A11). 남은: low-score-trees·재시도·폴백 모델
 - 2026-11-27 12:55 | 미리보기 /healthz, industryTags·maxCharsJob(design-spec)·워커 배선. 앞 로그·ASM 시각 오기 정정(실제 커밋 시각)
 - 2026-11-27 12:50 | M5-01 완료: test(acc) 5a742c9, 자체 잠금 18파일(tests/acceptance/m5·e2e/m5·_support/pipe.ts). ≤M5 매핑 누락 0
 - 2026-11-27 12:49 | e2e/m5 구조 수정: 시나리오 env·준비/확인 분리(30s 러너 기본 유지, ASM-121). scenarios.test 실행 단계 분리
