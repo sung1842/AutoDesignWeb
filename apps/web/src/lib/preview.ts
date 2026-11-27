@@ -61,6 +61,12 @@ function sigOk(
 /** GET {PREVIEW_ORIGIN}/render/{kind}/{id}?vp&exp&sig. share는 공개 링크 확인(M6)이라 여기서는 candidate·version만. */
 export async function handlePreview(req: Request, deps: PreviewDeps): Promise<Response> {
   const url = new URL(req.url);
+  // 6.13.1 native 기동 확인(AC-06-59 ⑥): 200 "ok", 미리보기 보안 헤더는 그대로
+  if (url.pathname === "/healthz" && req.method === "GET")
+    return new Response("ok", {
+      status: 200,
+      headers: { ...previewHeaders(deps.env), "content-type": "text/plain" },
+    });
   const m = /^\/render\/(candidate|version|share)\/([A-Za-z0-9_-]{1,64})$/.exec(url.pathname);
   if (!m || req.method !== "GET") return deny(404);
   const kind = m[1] as PreviewKind;
