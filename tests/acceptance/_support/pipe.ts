@@ -80,6 +80,8 @@ export interface Pipe {
       now?: () => Date;
       /** 같은 사용자·프로젝트로 다음 잡(AC-04-02 재현성). */
       reuse?: { jar: Jar; projectId: string };
+      /** 프로젝트 생성 뒤·생성 요청 전에 실행(골든 케이스 취향 주입, ASM-116). */
+      beforeGenerate?: (projectId: string) => Promise<void>;
     },
   ): Promise<{ jobId: string; row: Row; view: Row; jar: Jar; projectId: string }>;
   rows(sql: string, p: unknown[]): Promise<Row[]>;
@@ -179,6 +181,7 @@ export async function openPipe(dbName: string, env: Record<string, string> = {})
       expect(p.status, JSON.stringify(p.body)).toBe(201);
       projectId = String(p.body.projectId);
     }
+    if (o.beforeGenerate) await o.beforeGenerate(projectId);
     const g = await call(
       jar,
       "POST",
@@ -215,7 +218,7 @@ export async function openPipe(dbName: string, env: Record<string, string> = {})
       ),
     mockups: (jobId) =>
       rows(
-        "select m.variant, m.is_fallback, c.layout_tree, c.render_hash from mockups m join candidates c on c.id = m.candidate_id where m.job_id = $1 order by m.variant",
+        "select m.variant, m.is_fallback, m.candidate_id, c.layout_tree, c.render_hash from mockups m join candidates c on c.id = m.candidate_id where m.job_id = $1 order by m.variant",
         [jobId],
       ),
     close: async () => {

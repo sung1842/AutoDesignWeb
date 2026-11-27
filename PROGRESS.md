@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-27T03:07Z, since: 2026-11-27T04:06Z}
+- lock: {owner: 2026-11-27T03:07Z, since: 2026-11-27T04:27Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
@@ -173,6 +173,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 13:27 | M5-01h3a golden.test(32×3 Mock, AC-01-30·32·04-16·24·08-25, ASM-116)·AC-01-28 manual
 - 2026-11-27 13:06 | M5-01h2 화면 E2E(screens.spec·ui 브리지, 11 AC)·ko.ts 누락 키 4. audit 리터럴 0
 - 2026-11-27 12:20 | M5-01h1 scenarios.test(9.6.2 전 시나리오·비용·시간 10 AC)·pipe 헬퍼. 현재 BLK-008로 잡 failed
 - 2026-11-27 12:08 | 잠금 회수(이전 23:52Z, 3h+). 새 컨테이너 복원(unshallow·태그·install·PG·seed·survey:build)
