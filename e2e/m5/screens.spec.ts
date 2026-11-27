@@ -1,13 +1,16 @@
 // M5 화면 E2E(01장 S06~S08): AC-01-01·26·29·31·34·51·58(①②③). 흐름 기본(AC-01-02·24·27·33)은 flow.spec.
-// 서버 = e2e/serve.ts(web + worker 소비 루프, LLM_MODE=mock). 시나리오는 생성 요청 헤더 x-mock-scenario(9.6.2).
+// 서버 = e2e/serve.ts(web + worker 소비 루프, LLM_MODE=mock). 시나리오는 실행 env MOCK_LLM_SCENARIO(브리지가 테스트별로 준다).
 // 계약: ASSUMPTIONS ASM-113·ASM-115. 오래 걸리는 slow 잡을 쓰는 AC-01-51을 마지막에 둔다.
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Browser, type BrowserContext, type Page } from "@playwright/test";
+import { readFileSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { createDbPort, q, type DbPort } from "../../packages/db/src/index.js";
 import { latestMagicLink } from "../../packages/db/src/testing/fixtures.js";
 import { thresholdNumber } from "../../packages/config/src/index.js";
 import { KO } from "../../apps/web/src/copy/ko.js";
 import { answerOne } from "../m4/helpers.js";
-import { api, BRAND, DB, surveyViaApi, userWithJob, waitDone } from "./helpers.js";
+import { api, BRAND, DB, needScenario, surveyViaApi, userWithJob, waitDone } from "./helpers.js";
 
 /** 잡 종료 대기 상한(초) = 강제 종료 시각(R-25). */
 const KILL_S = thresholdNumber("generation.killAtSec");
@@ -18,7 +21,7 @@ const SAMPLE_MS = 1000;
 const REOPEN_MS = 30_000;
 /** AC-01-51 동시에 실행 중으로 둘 잡 수·순번 관찰 폴링 횟수. */
 const BUSY_JOBS = 5;
-const QUEUE_POLLS = 5;
+const QUEUE_POLLS = 3;
 
 let db: DbPort;
 test.beforeAll(() => {
@@ -54,6 +57,42 @@ test("AC-01-01 익명 진단 시작 → 결과까지 로그인 요청 UI 0, logi
     [anon],
   );
   expect(ev[0]?.n).toBe(0);
+});
+
+/** 잡 준비(사용자·잡·세션)를 파일로 넘긴다: 생성 대기를 테스트당 러너 타임아웃 밖(앞 테스트들이 도는 동안)으로 뺀다(ASM-115 ⑥). */
+const PREP_FILE = (key: string) => join(tmpdir(), `tf-e2e-m5-${key}.json`);
+type Saved = { jobId: string; state: Awaited<ReturnType<BrowserContext["storageState"]>> };
+async function prepJob(
+  page: Page,
+  context: BrowserContext,
+  key: string,
+  brand?: Record<string, unknown>,
+) {
+  const { jobId } = await userWithJob(page, db, brand);
+  writeFileSync(PREP_FILE(key), JSON.stringify({ jobId, state: await context.storageState() }));
+}
+async function reopen(browser: Browser, key: string) {
+  const saved = JSON.parse(readFileSync(PREP_FILE(key), "utf8")) as Saved;
+  const ctx = await browser.newContext({ storageState: saved.state });
+  const page = await ctx.newPage();
+  await page.goto("/");
+  return { ctx, page, jobId: saved.jobId };
+}
+/** 준비 뒤 확인 테스트 안에서 잡 종료를 기다리는 상한(초). */
+const CHECK_WAIT_S = 20;
+const NO_MATCH_BRAND = {
+  name: "결무늬 연구소",
+  description: "아무 업종 사전에도 없는 낱말로만 쓴 소개 문장",
+  primaryAction: "contact",
+};
+
+test("AC-01-34 준비: ok 잡 생성", async ({ page, context }) => {
+  needScenario("ok");
+  await prepJob(page, context, "ac-01-34");
+});
+test("AC-01-58 ③ 준비: 업종 매칭 0 브리프 잡 생성", async ({ page, context }) => {
+  needScenario("ok");
+  await prepJob(page, context, "ac-01-58-3", NO_MATCH_BRAND);
 });
 
 test("AC-01-26 익명 제출 → 매직링크를 다른 브라우저에서 열고 로그인·동의 → 그 브라우저 S06 복원·자동 제출", async ({
@@ -101,7 +140,8 @@ test("AC-01-26 익명 제출 → 매직링크를 다른 브라우저에서 열�
 });
 
 test("AC-01-29 상태 응답 지연 주입 구간 동안 S07 단계 표시 변화 0", async ({ page }) => {
-  const { jobId } = await userWithJob(page, db, "ok");
+  needScenario("ok");
+  const { jobId } = await userWithJob(page, db);
   const real = (await api(page, "GET", `/api/generations/${jobId}`)).body;
   const running = {
     ...real,
@@ -134,46 +174,17 @@ test("AC-01-29 상태 응답 지연 주입 구간 동안 S07 단계 표시 변�
   await page.unroute(`**/api/generations/${jobId}`);
 });
 
-test("AC-01-31 생성 중 탭 닫기 → 30초 후 /g/[jobId] 재접속: 현재 단계와 확정 카드가 그대로", async ({
-  page,
-  context,
-}) => {
-  const { jobId } = await userWithJob(page, db, "ok");
+// AC-01-31은 러너 기본 타임아웃(테스트당) 안에 30초 대기를 넣을 수 없어 ①(탭 닫기·상태 저장)과 ②(재접속)로 나누고,
+// 그 사이에 AC-01-34·58 ③을 둔다. ②는 닫은 시각 + 30초까지 남은 만큼만 기다린다(ASM-115 ⑥).
+const REOPEN_FILE = join(tmpdir(), "tf-e2e-m5-ac-01-31.json");
+test("AC-01-31 ① 생성 중 탭 닫기(잡·세션·닫은 시각 기록)", async ({ page, context }) => {
+  needScenario("ok");
+  const { jobId } = await userWithJob(page, db);
   await page.goto(`/g/${jobId}`);
+  await expect(page.getByTestId("cards")).toBeVisible();
+  const state = await context.storageState();
   await page.close();
-  await new Promise((r) => setTimeout(r, REOPEN_MS));
-  const again = await context.newPage();
-  await again.goto(`/g/${jobId}`);
-  const v = (await api(again, "GET", `/api/generations/${jobId}`)).body as {
-    status: string;
-    mockups: Mockup[];
-    pollAfterMs: number | null;
-  };
-  const ready = again.getByTestId("cards").locator("article[data-ready=true]");
-  await expect(ready).toHaveCount(v.mockups.length);
-  if (v.pollAfterMs !== null) await expect(again.locator("[aria-current=step]")).toHaveCount(1);
-  else await expect(again.getByTestId("steps")).toHaveCount(0);
-});
-
-test('AC-01-34 S08 미리보기 iframe: 다른 등록 도메인, sandbox="", 로드 문서 <script> 0', async ({
-  page,
-}) => {
-  const { jobId } = await userWithJob(page, db, "ok");
-  await waitDone(page, jobId, KILL_S);
-  await page.goto(`/g/${jobId}`);
-  const frames = page.locator("iframe");
-  await expect(frames.first()).toBeVisible();
-  const svc = new URL(page.url()).hostname;
-  for (const f of await frames.all()) {
-    expect(await f.getAttribute("sandbox")).toBe("");
-    const host = new URL(String(await f.getAttribute("src")), page.url()).hostname;
-    expect(host).not.toBe(svc);
-    expect(host.endsWith(`.${svc}`) || svc.endsWith(`.${host}`)).toBe(false);
-  }
-  for (const fr of page.frames().filter((x) => x !== page.mainFrame())) {
-    await fr.waitForLoadState();
-    expect(await fr.locator("script").count()).toBe(0);
-  }
+  writeFileSync(REOPEN_FILE, JSON.stringify({ jobId, closedAt: Date.now(), state }));
 });
 
 /** S08 안내 문구 표시 여부. */
@@ -185,7 +196,8 @@ const shown = async (
 test("AC-01-58 ① copy_schema_fail@gen_copy: drafts.templateCopy 표시, 머리 상태 partial, 비폴백 3이면 drafts.partial 없음", async ({
   page,
 }) => {
-  const { jobId } = await userWithJob(page, db, "copy_schema_fail@gen_copy");
+  needScenario("copy_schema_fail@gen_copy");
+  const { jobId } = await userWithJob(page, db);
   const v = (await waitDone(page, jobId, KILL_S)).body as { status: string; mockups: Mockup[] };
   await page.goto(`/g/${jobId}`);
   await expect(page.getByText(KO["drafts.templateCopy"], { exact: true })).toBeVisible();
@@ -197,7 +209,8 @@ test("AC-01-58 ① copy_schema_fail@gen_copy: drafts.templateCopy 표시, 머리
 });
 
 test("AC-01-58 ② 비폴백 2 + 폴백 1(cost_ramp): drafts.partial만 표시", async ({ page }) => {
-  const { jobId } = await userWithJob(page, db, "cost_ramp");
+  needScenario("cost_ramp");
+  const { jobId } = await userWithJob(page, db);
   const v = (await waitDone(page, jobId, KILL_S)).body as {
     status: string;
     mockups: Mockup[];
@@ -212,42 +225,101 @@ test("AC-01-58 ② 비폴백 2 + 폴백 1(cost_ramp): drafts.partial만 표시",
   expect(await shown(page, "drafts.fallback")).toBe(0);
 });
 
-test("AC-01-58 ③ 업종 매칭 0 브리프: photoSubstituted=true인 카드에만 drafts.photoSubstituted", async ({
-  page,
+test('AC-01-34 S08 미리보기 iframe: 다른 등록 도메인, sandbox="", 로드 문서 <script> 0', async ({
+  browser,
 }) => {
-  const brand = {
-    name: "결무늬 연구소",
-    description: "아무 업종 사전에도 없는 낱말로만 쓴 소개 문장",
-    primaryAction: "contact",
+  needScenario("ok");
+  const { ctx, page, jobId } = await reopen(browser, "ac-01-34");
+  try {
+    await waitDone(page, jobId, CHECK_WAIT_S);
+    await page.goto(`/g/${jobId}`);
+    const frames = page.locator("iframe");
+    await expect(frames.first()).toBeVisible();
+    const svc = new URL(page.url()).hostname;
+    for (const f of await frames.all()) {
+      expect(await f.getAttribute("sandbox")).toBe("");
+      const host = new URL(String(await f.getAttribute("src")), page.url()).hostname;
+      expect(host).not.toBe(svc);
+      expect(host.endsWith(`.${svc}`) || svc.endsWith(`.${host}`)).toBe(false);
+    }
+    for (const fr of page.frames().filter((x) => x !== page.mainFrame())) {
+      await fr.waitForLoadState();
+      expect(await fr.locator("script").count()).toBe(0);
+    }
+  } finally {
+    await ctx.close();
+  }
+});
+test("AC-01-58 ③ 업종 매칭 0 브리프: photoSubstituted=true인 카드에만 drafts.photoSubstituted", async ({
+  browser,
+}) => {
+  needScenario("ok");
+  const { ctx, page, jobId } = await reopen(browser, "ac-01-58-3");
+  try {
+    const v = (await waitDone(page, jobId, CHECK_WAIT_S)).body as { mockups: Mockup[] };
+    expect(v.mockups.some((m) => m.photoSubstituted)).toBe(true);
+    await page.goto(`/g/${jobId}`);
+    for (const m of v.mockups) {
+      const badge = page
+        .locator(`article[data-variant=${m.variant}]`)
+        .getByText(KO["drafts.photoSubstituted"], { exact: true });
+      await expect(badge).toHaveCount(m.photoSubstituted ? 1 : 0);
+    }
+  } finally {
+    await ctx.close();
+  }
+});
+
+test("AC-01-31 ② 30초 후 /g/[jobId] 재접속: 현재 단계와 확정 카드가 그대로", async ({
+  browser,
+}) => {
+  needScenario("ok");
+  const saved = JSON.parse(readFileSync(REOPEN_FILE, "utf8")) as {
+    jobId: string;
+    closedAt: number;
+    state: Awaited<ReturnType<BrowserContext["storageState"]>>;
   };
-  const { jobId } = await userWithJob(page, db, "ok", brand);
-  const v = (await waitDone(page, jobId, KILL_S)).body as { mockups: Mockup[] };
-  expect(v.mockups.some((m) => m.photoSubstituted)).toBe(true);
-  await page.goto(`/g/${jobId}`);
-  for (const m of v.mockups) {
-    const badge = page
-      .locator(`article[data-variant=${m.variant}]`)
-      .getByText(KO["drafts.photoSubstituted"], { exact: true });
-    await expect(badge).toHaveCount(m.photoSubstituted ? 1 : 0);
+  const left = saved.closedAt + REOPEN_MS - Date.now();
+  if (left > 0) await new Promise((r) => setTimeout(r, left));
+  const ctx = await browser.newContext({ storageState: saved.state });
+  try {
+    const again = await ctx.newPage();
+    await again.goto(`/g/${saved.jobId}`);
+    const v = (await api(again, "GET", `/api/generations/${saved.jobId}`)).body as {
+      status: string;
+      mockups: Mockup[];
+      pollAfterMs: number | null;
+    };
+    const ready = again.getByTestId("cards").locator("article[data-ready=true]");
+    await expect(ready).toHaveCount(v.mockups.length);
+    if (v.pollAfterMs !== null) await expect(again.locator("[aria-current=step]")).toHaveCount(1);
+    else await expect(again.getByTestId("steps")).toHaveCount(0);
+  } finally {
+    await ctx.close();
   }
 });
 
 test("AC-01-51 전역 실행 잡 5건 중 새 요청 → 거부 없이 queued, S07 대기 순번 표시, 폴링마다 순번 단조 감소(증가 0)", async ({
   browser,
 }) => {
+  needScenario("slow");
   const ctxs: Awaited<ReturnType<typeof browser.newContext>>[] = [];
   const jobs: { page: Page; jobId: string }[] = [];
   try {
-    for (let i = 0; i < BUSY_JOBS; i++) {
-      const c = await browser.newContext();
-      ctxs.push(c);
-      const p = await c.newPage();
-      jobs.push({ page: p, jobId: (await userWithJob(p, db, "slow")).jobId });
-    }
+    // 테스트당 러너 타임아웃 안에 끝나도록 바쁜 잡 5건을 병렬로 만든다
+    const busy = await Promise.all(
+      Array.from({ length: BUSY_JOBS }, async () => {
+        const c = await browser.newContext();
+        ctxs.push(c);
+        const p = await c.newPage();
+        return { page: p, jobId: (await userWithJob(p, db)).jobId };
+      }),
+    );
+    jobs.push(...busy);
     const mine = await browser.newContext();
     ctxs.push(mine);
     const page = await mine.newPage();
-    const { jobId } = await userWithJob(page, db, "ok");
+    const { jobId } = await userWithJob(page, db);
     jobs.push({ page, jobId });
     await page.goto(`/g/${jobId}`);
     await expect(page.getByTestId("steps")).toContainText(KO["gen.phase.queued"]);

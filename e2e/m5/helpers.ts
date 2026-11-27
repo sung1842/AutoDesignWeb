@@ -69,6 +69,7 @@ export async function loginAndConsent(page: Page, db: DbPort, next = "/me"): Pro
   await page.getByLabel("만 14세 이상입니다.").check();
   await page.getByLabel(/이용약관/).check();
   await page.getByRole("button", { name: "시작하기" }).click();
+  await expect(page).not.toHaveURL(/\/onboarding\/consent/);
   return email;
 }
 
@@ -79,11 +80,18 @@ export const BRAND = {
   keyPoints: ["매일 아침 굽는 빵", "천연 발효종"],
 };
 
-/** 로그인·동의를 마친 사용자 1명 + 프로젝트 → 생성 요청(x-mock-scenario). 잡은 serve.ts 워커가 돈다. */
+/**
+ * 이 실행의 Mock 시나리오(9.6.2 MOCK_LLM_SCENARIO env). next start는 NODE_ENV=production이라 요청 헤더
+ * x-mock-scenario를 쓸 수 없으므로, 시나리오가 필요한 테스트는 브리지(tests/acceptance/m5/ui.test)가 env를 주고 -g로 따로 돌린다(ASM-115 ⑪).
+ */
+export function needScenario(name: string): void {
+  expect(process.env.MOCK_LLM_SCENARIO ?? "ok", "MOCK_LLM_SCENARIO").toBe(name);
+}
+
+/** 로그인·동의를 마친 사용자 1명 + 프로젝트 → 생성 요청. 잡은 serve.ts 워커가 돈다. */
 export async function userWithJob(
   page: Page,
   db: DbPort,
-  scenario = "ok",
   brand: Record<string, unknown> = BRAND,
 ): Promise<{ jobId: string; projectId: string }> {
   await page.goto("/");
@@ -102,7 +110,7 @@ export async function userWithJob(
     "POST",
     `/api/projects/${projectId}/generations`,
     { kind: "initial" },
-    { "idempotency-key": `k_${crypto.randomUUID()}`, "x-mock-scenario": scenario },
+    { "idempotency-key": `k_${crypto.randomUUID()}` },
   );
   expect(g.status, JSON.stringify(g.body)).toBe(202);
   return { jobId: String(g.body.jobId), projectId };

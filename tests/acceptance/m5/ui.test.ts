@@ -15,14 +15,23 @@ interface PwSuite {
 /** 스펙 파일 1개 실행 → {제목: 통과}. */
 async function playwright(
   spec: string,
+  o: { grep?: string; scenario?: string } = {},
 ): Promise<{ code: number; out: string; results: Map<string, boolean> }> {
   const dir = mkdtempSync(join(tmpdir(), "tf-pw-"));
   const file = join(dir, "report.json");
   const r = await run(
     "pnpm",
-    ["exec", "playwright", "test", spec, "--retries=0", "--reporter=json"],
+    [
+      "exec",
+      "playwright",
+      "test",
+      spec,
+      "--retries=0",
+      "--reporter=json",
+      ...(o.grep ? ["-g", o.grep] : []),
+    ],
     ROOT,
-    { PLAYWRIGHT_JSON_OUTPUT_NAME: file },
+    { PLAYWRIGHT_JSON_OUTPUT_NAME: file, MOCK_LLM_SCENARIO: o.scenario ?? "ok" },
   );
   const results = new Map<string, boolean>();
   try {
@@ -37,9 +46,22 @@ async function playwright(
   }
   return { ...r, results };
 }
-/** 스펙 파일 안 test("…") 개수(이름이 바뀌어도 전부 실행됐는지 본다). */
-const declared = (spec: string): number =>
-  [...readFileSync(join(ROOT, spec), "utf8").matchAll(/^test\(/gm)].length;
+/** 스펙 파일 안 최상위 test("…") 제목(grep으로 고른 것만). */
+const declared = (spec: string, grep?: string): string[] =>
+  [...readFileSync(join(ROOT, spec), "utf8").matchAll(/^test\(\s*(["'`])(.*?)\1/gm)]
+    .map((m) => (m[2] ?? "").replace(/\\"/g, '"'))
+    .filter((t) => !grep || new RegExp(grep).test(t));
+/** 고른 테스트가 전부 실행·통과했는가. */
+async function passAll(spec: string, o: { grep?: string; scenario?: string } = {}) {
+  const want = declared(spec, o.grep);
+  expect(want.length, `선택된 테스트 ${o.grep ?? "*"}`).toBeGreaterThan(0);
+  const r = await playwright(spec, o);
+  expect([...r.results.keys()].sort(), r.out.slice(-3000)).toEqual([...want].sort());
+  expect(
+    [...r.results].filter(([, ok]) => !ok),
+    r.out.slice(-3000),
+  ).toEqual([]);
+}
 
 /** 01장 원문(FINAL)에서 1.15.3 카피 표(키 → 문구)를 읽는다. */
 function copyTable(): Map<string, string> {
@@ -62,23 +84,23 @@ function section(head: string): string {
 }
 
 describe("M5 화면 E2E(e2e/m5)", () => {
+  const SCREENS = "e2e/m5/screens.spec.ts";
   it("AC-01-02 · AC-01-24 · AC-01-27 · AC-01-33 e2e/m5/flow.spec.ts: 로그인·동의 후 S06 복귀·자동 제출, 필수 무효 오류, 연락처 입력 0·고지, AI 배지", async () => {
-    const spec = "e2e/m5/flow.spec.ts";
-    const r = await playwright(spec);
-    expect(r.results.size, r.out.slice(-3000)).toBe(declared(spec));
-    expect(
-      [...r.results].filter(([, ok]) => !ok),
-      r.out.slice(-3000),
-    ).toEqual([]);
+    await passAll("e2e/m5/flow.spec.ts");
   });
-  it("AC-01-01 · AC-01-26 · AC-01-29 · AC-01-31 · AC-01-34 · AC-01-51 · AC-01-58 e2e/m5/screens.spec.ts 전부 통과", async () => {
-    const spec = "e2e/m5/screens.spec.ts";
-    const r = await playwright(spec);
-    expect(r.results.size, r.out.slice(-3000)).toBe(declared(spec));
-    expect(
-      [...r.results].filter(([, ok]) => !ok),
-      r.out.slice(-3000),
-    ).toEqual([]);
+  it("AC-01-01 · AC-01-26 · AC-01-29 · AC-01-31 · AC-01-34 · AC-01-58 ③ e2e/m5/screens.spec.ts(ok): 로그인 요청 0, 다른 브라우저 복원·자동 제출, 지연 중 단계 변화 0, 재접속 상태 유지, 미리보기 격리, photoSubstituted 배지", async () => {
+    await passAll(SCREENS, {
+      grep: "AC-01-01 |AC-01-26 |AC-01-29 |AC-01-31 |AC-01-34 |AC-01-58 ③",
+    });
+  });
+  it("AC-01-58 ① e2e/m5/screens.spec.ts(copy_schema_fail@gen_copy): 템플릿 문구 안내·머리 상태", async () => {
+    await passAll(SCREENS, { grep: "AC-01-58 ①", scenario: "copy_schema_fail@gen_copy" });
+  });
+  it("AC-01-58 ② e2e/m5/screens.spec.ts(cost_ramp): 비폴백 2 + 폴백 1 → drafts.partial만", async () => {
+    await passAll(SCREENS, { grep: "AC-01-58 ②", scenario: "cost_ramp" });
+  });
+  it("AC-01-51 e2e/m5/screens.spec.ts(slow): 전역 실행 5건 중 새 요청 queued·순번 표시·단조", async () => {
+    await passAll(SCREENS, { grep: "AC-01-51 ", scenario: "slow" });
   });
 });
 

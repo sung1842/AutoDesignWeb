@@ -48,6 +48,16 @@ const SCENARIOS = [
   "judge_position_bias@judge_vision",
 ];
 
+/** AC-04-22 장애 주입(타임아웃·500·429·깨진 JSON·스키마 위반 반복·린터 error 반복, 1차·폴백 모두 다운 = timeout 전 호출). */
+const FAULTS = [
+  "timeout",
+  "server_error",
+  "rate_limit",
+  "invalid_json",
+  "schema_violation!",
+  "lint_error!",
+];
+
 let P: Pipe;
 type Ran = {
   jobId: string;
@@ -219,6 +229,14 @@ beforeAll(async () => {
 });
 afterAll(async () => {
   await P?.close();
+});
+
+describe("시나리오 잡 실행(시나리오마다 1회, 집계 테스트가 결과를 본다)", () => {
+  for (const s of [...new Set([...SCENARIOS, ...FAULTS])])
+    it(`시나리오 ${s} 실행`, async () => {
+      const r = await scenario(s, opts(s));
+      expect(r.jobId).not.toBe("");
+    });
 });
 
 describe("비용 시나리오(06장 6.9.4 ⑦)", () => {
@@ -396,14 +414,7 @@ describe("점수 미달·시간(06장 6.9.4·6.10)", () => {
 
 describe("장애 주입 8종(AC-04-22)", () => {
   // 타임아웃, 500, 429, 깨진 JSON, 스키마 위반 반복, 린터 error 반복, 1차·폴백 모두 다운(timeout 전 호출), 동시 요청 2건
-  const FAULTS = [
-    "timeout",
-    "server_error",
-    "rate_limit",
-    "invalid_json",
-    "schema_violation!",
-    "lint_error!",
-  ];
+
   it("AC-04-22 장애 6종(timeout·server_error·rate_limit·invalid_json·schema_violation!·lint_error!): 무한 대기 0, 미처리 예외 0, 시안 ≥ 1 또는 재시도 화면", async () => {
     for (const f of FAULTS) commonOk(f, await scenario(f));
   });

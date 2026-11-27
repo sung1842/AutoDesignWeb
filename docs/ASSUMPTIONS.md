@@ -850,3 +850,10 @@
 - 선택: ① `industryTags(brand: {description, keyPoints?}, dict: {keyword, tags}[]): string[]`(@tastefit/design-spec) = description·keyPoints 문자열에 사전 keyword가 부분 문자열로 들어 있으면 그 tags의 합집합(명사 추출 대신 결정론 부분 문자열, 정렬·중복 제거). 픽스처 fixtures/image-tags/briefs.json(30건, 기대 집합은 이 규칙 + 4.9.4 교집합 규칙으로 계산, provenance temp) ② ②의 "MockProvider가 허용 밖 태그를 내는 픽스처" = 폴백 트리의 첫 이미지 태그를 다른 용도 태그로 바꾼 트리 → treeLint LT-10 error ③ `maxCharsJob(specs: {v_true, v_fit, v_bal}, data): number`(@tastefit/design-spec) = 4.6.2 정의(변형 3 × hero_variants × {1280, 375} headlineBudget 최소, t-display는 t-1) ④ Mock gen_copy는 input.maxCharsJob을 받아 hero.headline 3옵션 중 ≥ 1개를 그 이하로 합성한다 ⑤ AC-04-46 ② 워드마크 판정 = 폴백 v_true 페이지의 G-04·G-06(뷰포트 375·1280 또는 뷰포트 미표기 집계) pass ⑥ ③ "cta big-type 1280 ≤ 2줄, 375 ≤ 3줄" = 노출 후보 QualityReport에 AIL-24 0 + G-05 pass(줄 수 직접 측정은 M7 골든 평가기) ⑦ ④ S09 E2E는 M6 편집 화면 전이라 harness.compileInBrowser(클라이언트)와 compilePage(서버)의 data-step 열 비교로 대신하고, M6 S09에서 E2E로 옮긴다 ⑧ AC-04-44 ④ README "교체 필요 이미지" 원천 = 트리 이미지 슬롯 placeholder:true, portfolio 작업물 블록 = gallery(work.items 덱)·showcase ⑨ 톤 판정은 manifest 태그 tone.warm·tone.cool(질감 이미지 제외)
 - 영향 범위: tests/acceptance/m5/deck.test.ts·golden.test.ts, fixtures/image-tags/briefs.json, packages/design-spec(industryTags·maxCharsJob 추가 필요), packages/llm mock(gen_copy maxCharsJob)
 - 되돌리기 비용: 중간(함수 시그니처)
+
+## ASM-121 · M5 · gap · 2026-11-27T06:05Z
+- 질문: e2e/m5 화면 테스트가 생성 잡을 기다리는데 Playwright 테스트당 기본 타임아웃(30s, 러너 설정 1곳 원칙·상향 금지)과 next start(NODE_ENV=production → x-mock-scenario 금지)에서 어떻게 시나리오·대기를 다루나
+- 근거 탐색: 09장 9.6.2(MOCK_LLM_SCENARIO env 또는 헤더, 헤더는 NODE_ENV≠production만), ASM-004, playwright.config(타임아웃 미지정), e2e/serve.ts(process.env 전달)
+- 선택: ① 시나리오는 실행 env MOCK_LLM_SCENARIO로만 준다. 브리지(tests/acceptance/m5/ui.test)가 시나리오별로 `-g`로 고른 테스트만 따로 돌리고, 각 테스트는 needScenario()로 env가 맞는지 먼저 단언(틀린 env로 돌리면 실패) ② 생성 대기가 필요한 확인(AC-01-31·34·58 ③)은 "준비" 테스트(잡 생성·storageState 파일 저장)와 확인 테스트로 나누고, 그 사이에 다른 테스트를 두어 대기를 테스트당 타임아웃 밖으로 뺀다. AC-01-31 ②는 닫은 시각 + 30초까지 남은 만큼만 기다린다 ③ AC-01-51 바쁜 잡 5건은 병렬 컨텍스트로 만들고 순번 폴링은 3회 ④ 러너 타임아웃은 바꾸지 않는다
+- 영향 범위: e2e/m5/screens.spec.ts·helpers.ts, tests/acceptance/m5/ui.test.ts
+- 되돌리기 비용: 낮음
