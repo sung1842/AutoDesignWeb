@@ -822,3 +822,10 @@
 - 선택: ① tests/acceptance/m5/golden.test.ts가 케이스마다 진단 픽스처 사용자 → 프로젝트 생성 → taste_snapshot.mu = persona.thetaStar, type_id = expected.typeId 주입 → Mock `ok` 생성 × runsPerCase(케이스당 it 1개, 각 ≈ 30s). 골든 답안이 생기면 답안 재생 결과(replayGolden)로 바꾼다 ② AC-04-16 "노출 집합 다양성 충족" = 노출 비폴백 후보 전부 eligible·hide_reason 없음, D = 슬롯 0~5 QualityReport.taste.v(렌더 L1) 유클리드 평균 쌍 거리 ③ AC-01-30 첫 카드 노출 = 잡 첫 mockups.created_at − queued_at, 전체 = finished_at − queued_at, 표본 = 실행 순서 첫 20잡 ④ AC-01-32 = 실행 뒤 queued/running ∧ killAtSec 초과 잡 0 + 모든 골든 잡 경과 ≤ killAtSec ⑤ AC-08-25 = copy_deck에 다른 케이스 브랜드명(자기 이름에 포함된 이름은 제외) 0 ⑥ AC-01-28 = 수동(usability-*) 체크리스트
 - 영향 범위: tests/acceptance/m5/golden.test.ts, tests/acceptance/_support/pipe.ts(beforeGenerate), release/manual-checklist.md
 - 되돌리기 비용: 낮음
+
+## ASM-117 · M5 · gap · 2026-11-27T04:35Z
+- 질문: AC-04-25(M5 배정) "72개 폴백 조합 G-01~G-13 통과, H ≥ 80"이 M3 골격 폴백 테스트(tests/acceptance/m3, 배정 밖)와 어떻게 다른가
+- 근거 탐색: 04장 4.12, 07장 7.12.1 배정표, apps/worker generation.ts 폴백 경로(buildFallback + brand), ASM-081
+- 선택: M5 판정은 워커가 실제로 쓰는 `buildFallback({typeId, purpose, variant, brand})`(브랜드 카피 포함) 산출을 evaluateCandidate(fallback)로 본다(tests/acceptance/m5/fallback.test.ts). 용도별 대표 브리프 1개, 유형마다 it 1개(9조합) + 조합 수 72 확인. 현재 G-08은 BLK-008(axe)로 실패
+- 영향 범위: tests/acceptance/m5/fallback.test.ts
+- 되돌리기 비용: 낮음

@@ -267,3 +267,4 @@ AC-04-16: [tests/acceptance/m5/golden.test.ts#"AC-04-16 노출 집합 다양성 
 AC-04-24: [tests/acceptance/m5/golden.test.ts#"AC-04-24 succeeded 비율 ≥ fullSuccessMin, 시안 ≥ 1개 보장률 ≥ minGuarantee(32 × 3)"]
 AC-08-25: [tests/acceptance/m5/golden.test.ts#"AC-08-25 골든 연속 실행에서 다른 가상 사용자의 브랜드명이 결과 카피에 출현 0건"]
 AC-01-28: [release/manual-checklist.md#"AC-01-28"]
+AC-04-25: [tests/acceptance/m5/fallback.test.ts#"AC-04-25 폴백 조합 수 = 72"]
