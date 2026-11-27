@@ -836,3 +836,10 @@
 - 선택: ① 텍스트 수정은 EditState.texts(경로 → 문자열, 예 'slots.hero.headline') + ops에 kind 'text' op 1개(before·after). 서버는 texts를 G-13 판정·재컴파일 입력으로 쓴다 ② 저장 거부(422)는 버전을 만들지 않으므로 "그 버전으로 공유"는 게이트를 아직 통과하지 않은(pending) 버전으로 POST /api/share → 409 VERSION_GATE_NOT_PASSED로 본다 ③ 피싱 문구 11종은 08장 원문 줄에서 읽고 "지금 {문구} 하세요"로 넣는다, 고위험 20종은 fixtures/brands/high-risk.json ④ 권리 요청 본문 = 08장 RightsRequest 입력 필드의 camelCase(type·domain·targetUrl·requesterEmail·requesterRole·details) + turnstileToken(API 본문 관례), 공유 신고 reason = 'phishing' ⑤ 41d 공유는 결과 공유(targetType 'result')
 - 영향 범위: tests/acceptance/m5/abuse.test.ts, apps/web(M6 편집·공유 라우트 구현 시)
 - 되돌리기 비용: 낮음
+
+## ASM-119 · M5 · gap · 2026-11-27T05:10Z
+- 질문: AC-06-59 ①~⑦의 검사 범위(정규식 원문, E2E 대상, 미리보기 healthz)
+- 근거 탐색: 06장 6.13·AC-06-59, 6.4.3 _storage 라우트, 6.11.4 미리보기, M7 ③ 계정 삭제, security.test 기동 방식(start:check-env)
+- 선택: ① 원문 rg 패턴 `"\.from\(\|\.rpc\("`은 rg에서 `\|`가 문자 그대로라 의도(쿼리 빌더 호출)를 따라 `.rpc(`와 `.from('<소문자_표>')`(Array·Buffer·Uint8Array·Object·Set·Map.from 제외)로 검사, 범위 apps/web·apps/worker·packages(테스트·dist·node_modules 제외, supabase 드라이버 제외). pg·kysely import는 packages/db 밖 0. .next/static이 있으면 @supabase/ 문자열 0 ② db:types는 DOCKER_HOST를 없는 소켓으로 두고 실행, web·worker typecheck ③ 브라우저 대신 in-process handle로 survey-items URL → /api/_storage 200 image/webp(자산은 manifest.lock, serve.ts와 같은 방식). CSP 위반 보고는 e2e/m4 화면이 같은 URL을 쓰므로 거기서 본다 ④ 계정 삭제 E2E 전체는 M7 ③. M5는 AuthPort.adminSignOutAll → 이전 쿠키 401, adminDeleteUser → auth.users 0행 ⑤ start:check-env 종료 코드(native local 0, staging·supabase에서 4개 중 하나 비우면 1) ⑥ APP_ENV=prod in-process 404, 미리보기 handlePreview GET /healthz 200(미리보기 서버 = handlePreview). api-parity 대조는 M7 ⑪(verify:api-parity)에서 ⑦ 문자열 검사 범위 = ① 범위 + .env.example
+- 영향 범위: tests/acceptance/m5/access.test.ts, apps/web/src/lib/preview.ts(/healthz 추가 필요)
+- 되돌리기 비용: 낮음
