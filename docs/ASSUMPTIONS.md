@@ -829,3 +829,10 @@
 - 선택: M5 판정은 워커가 실제로 쓰는 `buildFallback({typeId, purpose, variant, brand})`(브랜드 카피 포함) 산출을 evaluateCandidate(fallback)로 본다(tests/acceptance/m5/fallback.test.ts). 용도별 대표 브리프 1개, 유형마다 it 1개(9조합) + 조합 수 72 확인. 현재 G-08은 BLK-008(axe)로 실패
 - 영향 범위: tests/acceptance/m5/fallback.test.ts
 - 되돌리기 비용: 낮음
+
+## ASM-118 · M5 · gap · 2026-11-27T04:55Z
+- 질문: AC-08-41b·41d의 요청 모양(편집 저장 EditState의 텍스트 반영, 권리 요청 필드 이름, "그 버전으로 공유")
+- 근거 탐색: 01장 1.8.5·1.8.6 EditOp, 06장 6.4 versions·share·report·rights-requests 행, 08장 8.1.6 RightsRequest·8.9.2 표·피싱 문구 필터
+- 선택: ① 텍스트 수정은 EditState.texts(경로 → 문자열, 예 'slots.hero.headline') + ops에 kind 'text' op 1개(before·after). 서버는 texts를 G-13 판정·재컴파일 입력으로 쓴다 ② 저장 거부(422)는 버전을 만들지 않으므로 "그 버전으로 공유"는 게이트를 아직 통과하지 않은(pending) 버전으로 POST /api/share → 409 VERSION_GATE_NOT_PASSED로 본다 ③ 피싱 문구 11종은 08장 원문 줄에서 읽고 "지금 {문구} 하세요"로 넣는다, 고위험 20종은 fixtures/brands/high-risk.json ④ 권리 요청 본문 = 08장 RightsRequest 입력 필드의 camelCase(type·domain·targetUrl·requesterEmail·requesterRole·details) + turnstileToken(API 본문 관례), 공유 신고 reason = 'phishing' ⑤ 41d 공유는 결과 공유(targetType 'result')
+- 영향 범위: tests/acceptance/m5/abuse.test.ts, apps/web(M6 편집·공유 라우트 구현 시)
+- 되돌리기 비용: 낮음
