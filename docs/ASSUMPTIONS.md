@@ -801,3 +801,10 @@
 - 선택: ① AC-06-60 ①의 "마이그레이션 SQL 전체"는 실행되는 SQL로 본다(주석 제외). 생성 마이그레이션은 06장 6.3.3 DDL 원문을 옮긴 것이라 주석에 키 이름 설명(HMAC 키 출처)이 있고, 잠긴 원문을 고칠 수 없다. 의도(키를 DB에 두지 않음, GUC 미사용)는 실행문 검사로 확인된다 ② AC-09-13은 기동 검사(`loadEnvOrExit` = web check-env·worker main)에서만 적용한다. 런타임 loadEnv에 넣으면 next start(NODE_ENV=production)로 도는 로컬 E2E(mock)가 깨진다 ③ /terms = legal/terms.md(temp)를 제목·단락만 렌더(HTML 해석 없음). 8.5.1 조항 초안을 그대로 넣었다(원문 확인 대상) ④ AC-08-42는 fixtures/layouts 31종 × 변형 3의 폴백 경로 컴파일 산출물로 검사(생성 잡 노출 시안 검사는 pipeline 테스트가 BLK-008 해소 후) ⑤ 화면 식별자(e2e/m5): S06 필드 라벨 = 1.5.5 문구, 카드 `article[data-variant][data-ready]`, AI 배지 aria-label "AI로 생성된 시안", 진행 `data-testid=steps`, 실패 `data-testid=failed`, 매직링크 전송 `data-testid=sent`
 - 영향 범위: tests/acceptance/m5/security.test.ts, e2e/m5, apps/web/src/app/{login,onboarding,brief,g,terms}, packages/config/src/env.ts
 - 되돌리기 비용: 낮음
+
+## ASM-114 · M5 · gap · 2026-11-27T03:40Z
+- 질문: 9.6.2 전 시나리오·비용·시간 AC(AC-00-14, 04-22·37, 06-07b·21·39·40·61, 07-02, 09-07)의 관측 방법
+- 근거 탐색: 09장 9.6.2 표, 07장 7.4.3 TC-R, 06장 6.9.4 ⑥⑦·AC-06-61·62, ASM-109·111
+- 선택: ① 시나리오마다 잡 1회(tests/acceptance/m5/scenarios.test.ts의 ran 캐시)를 돌려 AC-07-02(7.4.3 공통 기대)와 AC-09-07(TC-R 행별 기대)이 같은 결과를 본다. 헬퍼는 tests/acceptance/_support/pipe.ts로 묶고 pipeline.test도 이것을 쓴다 ② "미처리 예외 0" = 잡 실행 중 `[generation]` stderr(runGenerationJob 최상위 catch) 0줄 ③ TC-R-07(1차·폴백 모두 다운) = `timeout` 시나리오(전 호출 적용, 폴백 모델 포함) ④ AC-04-22 "스키마 위반 반복·린터 error 반복" = `schema_violation!`·`lint_error!`(9.6.2 `!` 형식) ⑤ A11 = generation_jobs.warnings의 'A11'(ASM-111, alerts 테이블 공백) ⑥ AC-06-40 abort 시각 = llm_calls.started_at + latency_ms ⑦ TC-R-17 가짜 시계 = 워커 now()가 첫 판독 뒤 61초 앞 ⑧ AC-06-61 ④ t0 = 후보 0 gen_layout initial started_at, est 값은 DB 열이 없어 budget_skipped 0과 출발 시각으로 본다 ⑨ AC-06-39 일 사용량 = /api/me quota.dayUsed(새 사용자 0 → 환불 뒤 0) ⑩ AC-04-37 ③은 일일 예산 플래그로 503 GEN_BUDGET_EXCEEDED(TC-C-01)
+- 영향 범위: tests/acceptance/m5/scenarios.test.ts, tests/acceptance/_support/pipe.ts, tests/acceptance/m5/pipeline.test.ts
+- 되돌리기 비용: 낮음
