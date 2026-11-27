@@ -126,6 +126,8 @@ export function json(
   );
 }
 export const noContent = (c: Ctx): Response => finish(c, new Response(null, { status: 204 }));
+/** 202 접수(본문 없음). */
+export const accepted = (c: Ctx): Response => finish(c, new Response(null, { status: 202 }));
 /** 302 리다이렉트(Location은 동일 오리진 경로). */
 export const redirect = (c: Ctx, location: string): Response =>
   finish(c, new Response(null, { status: 302, headers: { location } }));

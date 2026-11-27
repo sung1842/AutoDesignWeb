@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-27T03:07Z, since: 2026-11-27T04:17Z}
+- lock: {owner: 2026-11-27T03:07Z, since: 2026-11-27T04:20Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
@@ -173,6 +173,7 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 13:20 | 공유 생성·신고·권리 요청 최소 경로(AC-08-41d 2/2 녹색, ASM-122). m2 render 재확인 진행 중
 - 2026-11-27 13:17 | 4.9.4 이미지: 톤 규칙·업종 매칭 0 색면 대체(substituted)·portfolio placeholder, photoSubstituted 뷰·S08 문구(스텁 확인)
 - 2026-11-27 13:12 | M5-05 callLlm 재시도·폴백 모델 전환(스텁: rate_limit 2회·server_error 4회/후보, ok 13호출 유지)
 - 2026-11-27 13:10 | M5-07c U-01 두 물결·SLO abort(axe 스텁 로컬 확인: ok 13호출 succeeded, usage_overrun 0.53933 succeeded·A11). 남은: low-score-trees·재시도·폴백 모델

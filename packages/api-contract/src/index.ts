@@ -7,3 +7,4 @@ export * from "./routes.js";
 export * from "./account.js";
 export * from "./brand.js";
 export * from "./generation.js";
+export * from "./share.js";

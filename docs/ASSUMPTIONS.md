@@ -857,3 +857,10 @@
 - 선택: ① 시나리오는 실행 env MOCK_LLM_SCENARIO로만 준다. 브리지(tests/acceptance/m5/ui.test)가 시나리오별로 `-g`로 고른 테스트만 따로 돌리고, 각 테스트는 needScenario()로 env가 맞는지 먼저 단언(틀린 env로 돌리면 실패) ② 생성 대기가 필요한 확인(AC-01-31·34·58 ③)은 "준비" 테스트(잡 생성·storageState 파일 저장)와 확인 테스트로 나누고, 그 사이에 다른 테스트를 두어 대기를 테스트당 타임아웃 밖으로 뺀다. AC-01-31 ②는 닫은 시각 + 30초까지 남은 만큼만 기다린다 ③ AC-01-51 바쁜 잡 5건은 병렬 컨텍스트로 만들고 순번 폴링은 3회 ④ 러너 타임아웃은 바꾸지 않는다
 - 영향 범위: e2e/m5/screens.spec.ts·helpers.ts, tests/acceptance/m5/ui.test.ts
 - 되돌리기 비용: 낮음
+
+## ASM-122 · M5 · gap · 2026-11-27T04:20Z
+- 질문: AC-08-41b·41d가 M5에 배정됐는데 공유(POST /api/share, M6)·신고·권리 요청(M7) 라우트가 레지스트리상 뒤 마일스톤이다
+- 근거 탐색: 06장 6.4.3 표, 08장 8.1.6·8.9.5, 07장 7.12.1 배정표, 0005_share_ops·0003_references DDL
+- 선택: M5에서 최소 경로를 먼저 만든다 — POST /api/share(결과: anon·user 소유·기본 공개, 시안: user 소유·버전 gate_status = passed만, 아니면 409 VERSION_GATE_NOT_PASSED, 기존이면 200), POST /api/share/:shareId/report(202, 본문 낱말 필터 없음, 증거 스냅샷 {targetType, versionId, ownerHash, objectPaths:[]}·ip_hmac), POST /api/rights-requests(201 {requestId, dueAt}, 기한 7d/10d/24h, privacy_request는 awaiting_verification + 토큰 해시·24h 만료, 메일 발송은 M7). TURNSTILE local = 비어 있지 않은 토큰. 공개 보기(GET /api/share/:id)·신고 자동 비공개·abuse_holds는 M6·M7. 레지스트리 milestone 값은 그대로 두고 req·res 스키마만 채운다
+- 영향 범위: apps/web/src/server/share.ts·api.ts, apps/web/src/app/api/{share,rights-requests}, packages/api-contract/src/share.ts·errors.ts·routes.ts
+- 되돌리기 비용: 낮음

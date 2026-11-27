@@ -2,6 +2,13 @@
 import { z } from "zod";
 import { EventBatchSchema } from "./events.js";
 import {
+  RightsRequestReqSchema,
+  RightsRequestResSchema,
+  ShareCreateReqSchema,
+  ShareCreateResSchema,
+  ShareReportReqSchema,
+} from "./share.js";
+import {
   AnchorOverrideReqSchema,
   RatingReqSchema,
   RatingResSchema,
@@ -70,13 +77,17 @@ export const ROUTES: Record<string, RouteContract> = {
   "POST /api/mockups/:id/adoption-followup": { milestone: "M6" },
   "POST /api/mockup-versions/:id/exports": { milestone: "M6" },
   "GET /api/exports/:id": { milestone: "M6" },
-  "POST /api/share": { milestone: "M6" },
+  "POST /api/share": { milestone: "M6", req: ShareCreateReqSchema, res: ShareCreateResSchema },
   "PATCH /api/share/:shareId": { milestone: "M6" },
   "DELETE /api/share/:shareId": { milestone: "M6" },
   "GET /api/share/:shareId": { milestone: "M6" },
-  "POST /api/share/:shareId/report": { milestone: "M7" },
+  "POST /api/share/:shareId/report": { milestone: "M7", req: ShareReportReqSchema, res: NoContent },
   "POST /api/support": { milestone: "M7" },
-  "POST /api/rights-requests": { milestone: "M7" },
+  "POST /api/rights-requests": {
+    milestone: "M7",
+    req: RightsRequestReqSchema,
+    res: RightsRequestResSchema,
+  },
   "GET /api/rights-requests/:id/verify": { milestone: "M7" },
   "POST /api/events": { milestone: "M4", req: EventBatchSchema, res: NoContent },
   "GET /api/admin/metrics": { milestone: "M7" },

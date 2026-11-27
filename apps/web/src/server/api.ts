@@ -1,4 +1,5 @@
 // API 진입점(ASM-095 ①): Next 라우트 파일은 handle(req, deps)에 위임만 한다. 표준 Fetch Request/Response.
+import { createRightsRequest, createShare, reportShare } from "./share";
 import {
   AnchorOverrideReqSchema,
   RatingReqSchema,
@@ -23,6 +24,7 @@ import {
   json,
   makeCtx,
   noContent,
+  accepted,
   parsed,
   readJson,
   type Ctx,
@@ -96,6 +98,27 @@ const R: [string, RegExp, Route][] = [
     },
   ],
   ["GET", /^\/api\/me$/, async (c, d) => json(c, 200, await me(c, d))],
+  [
+    "POST",
+    /^\/api\/share$/,
+    async (c, d) => {
+      const r = await createShare(c, d, await readJson(c));
+      return json(c, r.status, r.body);
+    },
+  ],
+  [
+    "POST",
+    /^\/api\/share\/([A-Za-z0-9_-]+)\/report$/,
+    async (c, d, m) => {
+      await reportShare(c, d, m[1] ?? "", await readJson(c));
+      return accepted(c);
+    },
+  ],
+  [
+    "POST",
+    /^\/api\/rights-requests$/,
+    async (c, d) => json(c, 201, await createRightsRequest(c, d, await readJson(c))),
+  ],
   [
     "POST",
     /^\/api\/consents$/,
