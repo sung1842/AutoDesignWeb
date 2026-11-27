@@ -3,7 +3,7 @@
 ## 현재 상태
 - status: IN_PROGRESS
 - phase: P4
-- lock: {owner: 2026-11-27T03:07Z, since: 2026-11-27T03:08Z}
+- lock: {owner: 2026-11-27T03:07Z, since: 2026-11-27T03:20Z}
 - limit.weekly_block_until_kst:   # 주간 한도 소진 시 초기화 시각(KST). 비어 있으면 게이트 없음(CLAUDE.md 0.6)
 - review_pass_hashes: {thresholds: 9756b595efb0a9e8795cfff39018c5587bf621fd88c46aa1f20d0df5c81d57c4, testPolicy: 3bb46516432f148f6dea25b8c019d2fc20a2c5a7331591b8aed94cc25dbba481}  # 계산법 AD-019
 - tags: {review-pass: 4519c49, spec-lock: acd413d, m0-done: 089cc76, m1-done: f1d5770, m2-done: ae60108, m3-done: 25e1b05}  # 원격 태그 푸시 불가 → 세션마다 로컬 복원(AD-022)
@@ -21,6 +21,7 @@
 - 하네스 폰트 캐시 `/tmp/tastefit-harness-fonts`: 빈 캐시면 AC-03-33·03-18이 2코어에서 180s 근처(페이지별 서브셋). 3차 verify 전 같은 컨테이너에서 한 번 돌려 데운다(캐시는 결과에 영향 없음)
 - 폰트 서브셋(M2-07b2~)은 python3 fontTools(기본 설치) + brotli 필요. 컨테이너마다 `pip install --break-system-packages brotli` 1회(AD-032).
 - 새 컨테이너: fs 저장소 기본 루트 `/tmp/tastefit-storage`가 비어 있어 설문 WebP가 없다 → verify:m4 전에 `pnpm survey:build`로 재생성(없으면 e2e/m4 quiz가 모든 카드 대체 텍스트로 실패)
+- 새 컨테이너: `pnpm env:init`은 비밀값 4개만 쓴다 → .env.example의 값 있는 비밀 아닌 줄(DATABASE_URL_DIRECT 등)을 .env.local에 덧붙여야 db:seed·survey:build 동작
 - verify는 작업 트리를 읽는다: 실행 중 커밋하면 결과가 오염된다 → `git worktree add /home/claude/tf-verify-mN <커밋>` 후 그 안에서 실행
 
 ## 배경
@@ -155,7 +156,7 @@
   - [~] 09 eval:golden:build-answers·골든 자체 잠금: [x] buildGoldenAnswers·replayGolden·CLI(엔진 beta 덮어쓰기, 계획 L1 픽스처 32/32·M1a 24/24·β8.5 9/24) [ ] 실데이터 실행(BLK-022로 0/32) [ ] m4-done에서 data/golden 자체 잠금
   - [ ] 10 verify:m4 → m4-done: [x] 1차(592aa1f 워크트리, reports/verify-m4.json) fail — 비BLK 3건: AC-06-32 m0(verify 안에서만, 단독 통과·재발), AC-03-33(빈 폰트 캐시 + 동시 부하 180s), e2e/m4 quiz(빈 /tmp/tastefit-storage). [ ] 2차: survey:build·폰트 캐시 데운 뒤 조용한 상태에서 재실행
 - M5 계획(9.4.7, AC: 00-14~17, 01-01·02·22~34·51·58, 04-01·02·14~16·22~25·37·38·44·46·47, 06-07b·09·10·13·15~18·20~23·38~40·45·47·52·55·56·59~63, 07-02·13, 08-24~26·38~42, 09-07·13·18. 읽을 장은 CLAUDE.md 구현 규칙 3절):
-  - [ ] 01 M5 수용 테스트(tests/acceptance/m5, AD-031): [x] a 인증·귀속(AuthPort local·매직링크·dev_mail_outbox·attach_anon, auth.test WIP, ASM-103) [x] b 브랜드 입력·BrandInput 검증·인젝션 방어(brief.test WIP, fixtures/brands 3파일, ASM-105) [x] c 생성 API·Idempotency·진행 잡 1개·폴링(generation-api.test 9/9, ASM-108) [x] d llm gateway·models.yaml·MockProvider 시나리오(llm.test WIP 20건, ASM-107) [x] e pipeline 3변형→후보 6→검증·수리→렌더→게이트→점수→노출·재생성·폴백(pipeline.test WIP 14건, ASM-109. 시간·비용 시나리오는 f) [x] f 비용·quota_ledger·킬 스위치·초대·환불(quota.test 12/12, ASM-110. 비용 시나리오 AC-06-21·61·07b는 워커 예산 배선 후 pipeline 테스트에 추가) [x] g S04~S08 화면 E2E(e2e/m5/flow.spec: /g 도달까지 통과, 카드 3은 BLK-008) [ ] h traceability M5·qa:trace --audit·단일 test(acc)·자체 잠금
+  - [ ] 01 M5 수용 테스트(tests/acceptance/m5, AD-031): [x] a 인증·귀속(AuthPort local·매직링크·dev_mail_outbox·attach_anon, auth.test WIP, ASM-103) [x] b 브랜드 입력·BrandInput 검증·인젝션 방어(brief.test WIP, fixtures/brands 3파일, ASM-105) [x] c 생성 API·Idempotency·진행 잡 1개·폴링(generation-api.test 9/9, ASM-108) [x] d llm gateway·models.yaml·MockProvider 시나리오(llm.test WIP 20건, ASM-107) [x] e pipeline 3변형→후보 6→검증·수리→렌더→게이트→점수→노출·재생성·폴백(pipeline.test WIP 14건, ASM-109. 시간·비용 시나리오는 f) [x] f 비용·quota_ledger·킬 스위치·초대·환불(quota.test 12/12, ASM-110. 비용 시나리오 AC-06-21·61·07b는 워커 예산 배선 후 pipeline 테스트에 추가) [x] g S04~S08 화면 E2E(e2e/m5/flow.spec: /g 도달까지 통과, 카드 3은 BLK-008) [ ] h traceability M5·qa:trace --audit·단일 test(acc)·자체 잠금: [x] h1 시나리오·비용·시간(scenarios.test, 10 AC, ASM-114) [ ] h2 화면 E2E(01-01·02·24·26·27·29·31·33·34·51·58, e2e/m5 + ui 브리지) [ ] h3 나머지(01-28 manual, 01-30·32, 04-16·24·25·44·46, 06-59, 08-25·41b·41d) [ ] h4 audit·test(acc)·자체 잠금
   - [x] 02 AuthPort local·세션 쿠키·매직링크·attach_anon·/api/me·/api/consents(auth.test 7/7, ASM-104. MeView quota 등은 07·08)
   - [~] 03 동의(S05)·초대 코드: [x] API(consents·invites/redeem·inviteOk) [ ] S05 화면(09)
   - [x] 04 BrandInput zod·정규화·maskPII·judgeBrief(편집 거리 (c))·brief-drafts POST/GET(brief.test 8/8, ASM-106). 레퍼런스명 attestation(⑥)은 projects(08)
@@ -172,6 +173,8 @@
 - [ ] release:check 요약
 
 ## 로그
+- 2026-11-27 12:20 | M5-01h1 scenarios.test(9.6.2 전 시나리오·비용·시간 10 AC)·pipe 헬퍼. 현재 BLK-008로 잡 failed
+- 2026-11-27 12:08 | 잠금 회수(이전 23:52Z, 3h+). 새 컨테이너 복원(unshallow·태그·install·PG·seed·survey:build)
 - 2026-11-27 08:52 | M5-01g e2e/m5 흐름(로그인·동의·자동 제출·/g 통과, 카드는 BLK-008). mail 템플릿 경로 수정
 - 2026-11-27 08:50 | verify:m4 1차 fail: 비BLK 3건 모두 환경(간헐 env·폰트 캐시·빈 저장소). M5-09 화면 S04~S08 1차·next build 통과
 - 2026-11-27 08:39 | M5-07b 워커 예산 예약·정산(ok 원가 = C_base), A11은 alerts 테이블 부재로 warnings(ASM-111)
